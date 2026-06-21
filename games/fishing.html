@@ -792,5 +792,17 @@ document.getElementById('startBtn').onclick=()=>{
   updateHUD();
 };
 </script>
+
+<!-- 通用全屏按钮 -->
+<button id="__fsbtn" title="全屏" aria-label="全屏" style="position:fixed;top:12px;right:12px;z-index:99999;width:40px;height:40px;border:none;border-radius:10px;background:rgba(0,0,0,.4);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);"></button>
+<script>(function(){var b=document.getElementById('__fsbtn'),
+F='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4"/></svg>',
+X='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h4V4M20 8h-4V4M4 16h4v4M20 16h-4v4"/></svg>';
+function fs(){return document.fullscreenElement||document.webkitFullscreenElement;}
+function u(){b.innerHTML=fs()?X:F;}u();
+b.onclick=function(){var e=document.documentElement;if(!fs()){(e.requestFullscreen||e.webkitRequestFullscreen).call(e);}else{(document.exitFullscreen||document.webkitExitFullscreen).call(document);}b.blur();};
+function onfs(){u();setTimeout(function(){window.dispatchEvent(new Event('resize'));},60);}
+document.addEventListener('fullscreenchange',onfs);
+document.addEventListener('webkitfullscreenchange',onfs);})();</script>
 </body>
 </html>

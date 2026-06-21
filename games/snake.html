@@ -474,6 +474,19 @@
     }
   }
 
+  // 可见的全屏按钮（与 F 键等效）
+  (function(){
+    const b = document.createElement('button');
+    b.id = '__fsbtn'; b.title = '全屏'; b.setAttribute('aria-label','全屏');
+    b.style.cssText = 'position:fixed;top:12px;right:12px;z-index:99999;width:40px;height:40px;border:none;border-radius:10px;background:rgba(0,0,0,.4);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);';
+    const F='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4"/></svg>';
+    const X='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h4V4M20 8h-4V4M4 16h4v4M20 16h-4v4"/></svg>';
+    const u=()=>{ b.innerHTML = document.fullscreenElement ? X : F; };
+    b.onclick=()=>{ toggleFullscreen(); b.blur(); };
+    document.addEventListener('fullscreenchange',u);
+    document.body.appendChild(b); u();
+  })();
+
   document.addEventListener('keydown', e => {
     const k = e.key;
     if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(k)) e.preventDefault();

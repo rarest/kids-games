@@ -31,6 +31,7 @@
     touch-action: none;
     overflow: hidden;
   }
+  body { align-self: stretch; width: 100%; }
   h1 { font-size: 22px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 8px rgba(0,0,0,.4); }
   h1 span { color: var(--accent); }
   .hud {
@@ -44,12 +45,20 @@
   .hud .lvl b { color: var(--accent2); }
   .stage {
     position: relative;
+    flex: 1 1 auto;
+    align-self: stretch;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    min-height: 0;
     border-radius: 18px;
     box-shadow: 0 16px 50px rgba(0,0,0,.5), inset 0 0 0 2px rgba(255,255,255,.06);
     overflow: hidden;
     background: linear-gradient(180deg, #0a7ab0, #045b86 60%, #023a5c);
   }
-  canvas { display: block; touch-action: none; }
+  canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  :fullscreen .stage { max-width: none; border-radius: 0; }
+  :-webkit-full-screen .stage { max-width: none; border-radius: 0; }
 
   /* Overlay panels */
   .overlay {
@@ -200,13 +209,15 @@
   // Logical play-field size
   let W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 2);
 
+  const stageEl = document.getElementById('stage');
   function fitCanvas() {
-    const maxW = Math.min(window.innerWidth - 28, 480);
-    const maxH = Math.min(window.innerHeight - 220, 640);
-    W = Math.max(280, Math.floor(maxW));
-    H = Math.max(360, Math.floor(maxH));
-    canvas.style.width = W + 'px';
-    canvas.style.height = H + 'px';
+    // 跟随 .stage 的实际尺寸自适应（弹性填满，全屏时撑满整屏）
+    const w = stageEl.clientWidth || (window.innerWidth - 28);
+    const h = stageEl.clientHeight || (window.innerHeight - 180);
+    W = Math.max(280, Math.floor(w));
+    H = Math.max(320, Math.floor(h));
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
     canvas.width = Math.floor(W * DPR);
     canvas.height = Math.floor(H * DPR);
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -892,5 +903,17 @@
   });
 })();
 </script>
+
+<!-- 通用全屏按钮 -->
+<button id="__fsbtn" title="全屏" aria-label="全屏" style="position:fixed;top:12px;right:12px;z-index:99999;width:40px;height:40px;border:none;border-radius:10px;background:rgba(0,0,0,.4);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);"></button>
+<script>(function(){var b=document.getElementById('__fsbtn'),
+F='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4"/></svg>',
+X='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h4V4M20 8h-4V4M4 16h4v4M20 16h-4v4"/></svg>';
+function fs(){return document.fullscreenElement||document.webkitFullscreenElement;}
+function u(){b.innerHTML=fs()?X:F;}u();
+b.onclick=function(){var e=document.documentElement;if(!fs()){(e.requestFullscreen||e.webkitRequestFullscreen).call(e);}else{(document.exitFullscreen||document.webkitExitFullscreen).call(document);}b.blur();};
+function onfs(){u();setTimeout(function(){window.dispatchEvent(new Event('resize'));},60);}
+document.addEventListener('fullscreenchange',onfs);
+document.addEventListener('webkitfullscreenchange',onfs);})();</script>
 </body>
 </html>
