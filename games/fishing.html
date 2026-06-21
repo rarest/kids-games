@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>捕鱼达人 · Fishing Master</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    background: #02141f;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+  #wrap {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #game {
+    display: block;
+    background: radial-gradient(ellipse at 50% 20%, #1a6a8a 0%, #0a3a55 45%, #052235 100%);
+    box-shadow: 0 0 60px rgba(0,0,0,.6) inset;
+    cursor: crosshair;
+    touch-action: none;
+  }
+  /* HUD */
+  #hud {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 14px 18px;
+    pointer-events: none;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,.6);
+  }
+  .panel {
+    background: rgba(2,30,48,.55);
+    border: 1px solid rgba(120,220,255,.35);
+    border-radius: 14px;
+    padding: 8px 14px;
+    backdrop-filter: blur(4px);
+  }
+  .coin {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffd75e;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .coin::before {
+    content: "🪙"; font-size: 22px;
+  }
+  .stat { font-size: 13px; opacity: .85; margin-top: 2px; }
+  #hud .right { display: flex; gap: 10px; align-items: flex-start; }
+
+  /* power / cannon selector */
+  #bottombar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    padding: 12px;
+    pointer-events: none;
+  }
+  .cannonpick {
+    pointer-events: auto;
+    background: rgba(2,30,48,.6);
+    border: 1px solid rgba(120,220,255,.35);
+    border-radius: 16px;
+    padding: 8px 10px;
+    display: flex; gap: 8px; align-items: center;
+  }
+  .lvl {
+    width: 40px; height: 40px; border-radius: 10px;
+    border: 2px solid rgba(255,255,255,.25);
+    background: linear-gradient(180deg,#2b6f93,#15435c);
+    color: #fff; font-weight: 700; font-size: 16px;
+    cursor: pointer; transition: .12s;
+  }
+  .lvl.active { border-color: #ffd75e; box-shadow: 0 0 14px rgba(255,215,94,.7); transform: translateY(-3px); }
+  .lvl .c { font-size: 9px; display:block; opacity:.8; }
+  button.icon {
+    pointer-events: auto;
+    width: 44px; height: 44px; border-radius: 12px;
+    border: 1px solid rgba(120,220,255,.35);
+    background: rgba(2,30,48,.6); color: #fff; font-size: 20px; cursor: pointer;
+  }
+  button.icon.off { opacity: .4; }
+
+  /* Start overlay */
+  #overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(8,60,90,.85), rgba(2,18,30,.96));
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: #fff; text-align: center; z-index: 20;
+  }
+  #overlay h1 {
+    font-size: 54px; letter-spacing: 4px;
+    background: linear-gradient(180deg,#bfefff,#ffd75e);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 6px 30px rgba(0,180,255,.4);
+  }
+  #overlay p { opacity:.85; margin-top: 10px; font-size: 15px; line-height: 1.7; }
+  #startBtn {
+    margin-top: 30px; padding: 16px 50px; font-size: 22px; font-weight: 700;
+    border: none; border-radius: 40px; cursor: pointer; color:#063;
+    background: linear-gradient(180deg,#9be8a0,#37b24d);
+    box-shadow: 0 8px 24px rgba(55,178,77,.5);
+    transition: transform .1s;
+  }
+  #startBtn:active { transform: scale(.96); }
+  .hide { display: none !important; }
+  #toast {
+    position:absolute; left:50%; top:18%; transform:translateX(-50%);
+    color:#ffe27a; font-size:15px; font-weight:600; pointer-events:none;
+    text-shadow:0 2px 6px #000; opacity:0; transition:opacity .3s; z-index:15;
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="game"></canvas>
+
+  <div id="hud" class="hide">
+    <div class="panel">
+      <div class="coin" id="coin">100</div>
+      <div class="stat">命中率 <span id="acc">0%</span> · 已捕 <span id="caught">0</span></div>
+    </div>
+    <div class="right">
+      <button class="icon" id="musicBtn" title="背景音乐">🎵</button>
+      <button class="icon" id="sfxBtn" title="音效">🔊</button>
+    </div>
+  </div>
+
+  <div id="bottombar" class="hide">
+    <div class="cannonpick" id="cannonpick"></div>
+  </div>
+
+  <div id="toast"></div>
+
+  <div id="overlay">
+    <h1>捕鱼达人</h1>
+    <p>
+      移动鼠标 / 手指 瞄准 &nbsp;·&nbsp; 点击发射炮弹<br>
+      鱼越大金币越多 &nbsp;·&nbsp; 切换炮台等级提升威力<br>
+      🎶 背景音乐：帕赫贝尔《卡农》
+    </p>
+    <button id="startBtn">▶ 开始游戏</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   捕鱼达人 Fishing Master — single file, no assets.
+   All audio synthesized with the Web Audio API.
+   ============================================================ */
+
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+let W = 0, H = 0, DPR = 1;
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  canvas.width = Math.floor(W * DPR);
+  canvas.height = Math.floor(H * DPR);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+/* ---------------- Audio engine ---------------- */
+const Audio = (() => {
+  let actx = null;
+  let master = null;
+  let musicGain = null, sfxGain = null;
+  let musicOn = true, sfxOn = true;
+  let musicTimer = null;
+
+  function ensure() {
+    if (actx) return;
+    actx = new (window.AudioContext || window.webkitAudioContext)();
+    master = actx.createGain(); master.gain.value = 0.9; master.connect(actx.destination);
+    musicGain = actx.createGain(); musicGain.gain.value = 0.32; musicGain.connect(master);
+    sfxGain = actx.createGain(); sfxGain.gain.value = 0.6; sfxGain.connect(master);
+  }
+  function resume() { if (actx && actx.state === 'suspended') actx.resume(); }
+
+  // ---- SFX ----
+  function tone(freq, dur, type, vol, slideTo) {
+    if (!actx || !sfxOn) return;
+    const o = actx.createOscillator();
+    const g = actx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, actx.currentTime);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, actx.currentTime + dur);
+    g.gain.setValueAtTime(0.0001, actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(vol || 0.3, actx.currentTime + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + dur);
+    o.connect(g); g.connect(sfxGain);
+    o.start(); o.stop(actx.currentTime + dur + 0.02);
+  }
+  function noiseBurst(dur, vol, freq) {
+    if (!actx || !sfxOn) return;
+    const buf = actx.createBuffer(1, actx.sampleRate * dur, actx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+    const src = actx.createBufferSource(); src.buffer = buf;
+    const f = actx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq || 900; f.Q.value = 0.8;
+    const g = actx.createGain(); g.gain.value = vol || 0.3;
+    src.connect(f); f.connect(g); g.connect(sfxGain);
+    src.start();
+  }
+
+  const sfx = {
+    fire()  { tone(620, 0.12, 'square', 0.18, 220); },
+    hit()   { tone(320, 0.07, 'triangle', 0.22, 180); },
+    catch(big) {
+      // little arpeggio sparkle
+      const base = big ? 523 : 660;
+      [0, 1, 2, 3].forEach((i) => setTimeout(() => tone(base * Math.pow(2, i / 12 * 2), 0.16, 'sine', 0.28), i * 55));
+      setTimeout(() => noiseBurst(0.25, 0.18, 2500), 30); // coin shimmer
+    },
+    coin()  { tone(1180, 0.08, 'square', 0.16, 1480); },
+    empty() { tone(160, 0.1, 'sawtooth', 0.12, 110); },
+  };
+
+  // ---- Background music: Pachelbel's Canon in D ----
+  // Bass progression (D A Bm F#m G D G A) — canonical 8-chord ground bass.
+  // We render it on a setInterval scheduler, looping forever.
+  const N = (n) => 440 * Math.pow(2, (n - 69) / 12); // midi->freq
+  // chord roots (midi) for bass, two notes per chord (root + fifth) over 8 bars
+  const bassRoots = [50, 45, 47, 42, 43, 38, 43, 45]; // D A B F# G D G A
+  // a flowing melody (Canon's famous descant), midi notes, 2 per chord region
+  const melody = [
+    [69,74,73,69], [64,69,68,64], [66,71,69,66], [61,66,64,61],
+    [62,67,66,62], [57,62,61,57], [62,66,67,69], [64,69,68,64]
+  ];
+  let step = 0;
+  const beat = 0.5; // seconds per melody note
+
+  function playNote(freq, t, dur, type, vol, dest) {
+    const o = actx.createOscillator();
+    const g = actx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(dest);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+
+  function scheduleBar(barIndex, t) {
+    const root = bassRoots[barIndex];
+    // bass: root then fifth, half notes
+    playNote(N(root - 12), t, beat * 2, 'triangle', 0.22, musicGain);
+    playNote(N(root - 5), t + beat * 2, beat * 2, 'triangle', 0.20, musicGain);
+    // pad chord (root, third-ish, fifth) sustained, soft
+    [root, root + 4, root + 7].forEach((m) =>
+      playNote(N(m), t + 0.02, beat * 4, 'sine', 0.06, musicGain));
+    // melody: 4 notes across the bar
+    const mel = melody[barIndex];
+    mel.forEach((m, i) =>
+      playNote(N(m), t + i * beat, beat * 0.95, 'sine', 0.16, musicGain));
+  }
+
+  let nextBarTime = 0, barCount = 0;
+  function tick() {
+    if (!actx) return;
+    const ahead = actx.currentTime + 0.6;
+    while (nextBarTime < ahead) {
+      scheduleBar(barCount % 8, nextBarTime);
+      nextBarTime += beat * 4;
+      barCount++;
+    }
+  }
+  function startMusic() {
+    ensure(); resume();
+    if (musicTimer) return;
+    nextBarTime = actx.currentTime + 0.1; barCount = 0;
+    tick();
+    musicTimer = setInterval(tick, 250);
+  }
+  function stopMusic() {
+    if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+  }
+
+  return {
+    init() { ensure(); resume(); },
+    resume,
+    sfx,
+    startMusic, stopMusic,
+    toggleMusic() {
+      musicOn = !musicOn;
+      if (musicOn) startMusic(); else stopMusic();
+      return musicOn;
+    },
+    toggleSfx() { sfxOn = !sfxOn; return sfxOn; },
+    get musicOn() { return musicOn; },
+    get sfxOn() { return sfxOn; },
+  };
+})();
+
+/* ---------------- Game state ---------------- */
+const state = {
+  coins: 100,
+  shots: 0,
+  hits: 0,
+  caught: 0,
+  cannonLevel: 0,
+  running: false,
+};
+
+// cannon levels: cost per shot, damage, color, net radius
+const CANNONS = [
+  { cost: 1,  dmg: 1,  color: '#7fd6ff', size: 5, label: '1', name: '初级' },
+  { cost: 2,  dmg: 2,  color: '#ffd75e', size: 6, label: '2', name: '中级' },
+  { cost: 5,  dmg: 5,  color: '#ff8f5e', size: 7, label: '5', name: '高级' },
+  { cost: 10, dmg: 12, color: '#ff6ad5', size: 9, label: '10', name: '黄金' },
+];
+
+// fish species: hp, value, size(px radius-ish), speed, color, weightForSpawn, emoji-ish drawing
+const SPECIES = [
+  { name:'小鱼',  hp:2,  value:2,  len:34,  spd:[40,75],  color:'#7fe3c0', body:'#5fcfa8', rare:0,   w:34 },
+  { name:'热带鱼',hp:4,  value:5,  len:46,  spd:[35,65],  color:'#ffc94d', body:'#ffae42', rare:0,   w:26 },
+  { name:'河豚',  hp:7,  value:10, len:54,  spd:[25,45],  color:'#ff9fb0', body:'#ff7d95', rare:0,   w:16 },
+  { name:'魟鱼',  hp:12, value:22, len:78,  spd:[20,38],  color:'#b69cff', body:'#9b7bff', rare:1,   w:10 },
+  { name:'鲨鱼',  hp:22, value:50, len:104, spd:[28,46],  color:'#9fb6c4', body:'#7d97a8', rare:1,   w:6  },
+  { name:'金龙王',hp:40, value:130,len:120, spd:[18,30],  color:'#ffe27a', body:'#ffcd2e', rare:2,   w:3  },
+];
+
+let fishes = [];
+let bullets = [];
+let nets = [];      // expanding catch animations
+let coinFx = [];    // flying coin particles
+let bubbles = [];
+let aim = { x: W/2, y: H/2 };
+
+const cannon = { x: W/2, y: H - 70, angle: -Math.PI/2 };
+
+/* ---------------- Spawning ---------------- */
+function weightedSpecies() {
+  const total = SPECIES.reduce((s,f)=>s+f.w,0);
+  let r = Math.random()*total;
+  for (const f of SPECIES){ if ((r-=f.w)<=0) return f; }
+  return SPECIES[0];
+}
+
+function spawnFish(force) {
+  const sp = weightedSpecies();
+  const fromLeft = Math.random() < 0.5;
+  const margin = sp.len + 20;
+  const y = 60 + Math.random() * (H - 220);
+  const speed = sp.spd[0] + Math.random()*(sp.spd[1]-sp.spd[0]);
+  fishes.push({
+    sp,
+    x: fromLeft ? -margin : W + margin,
+    y,
+    dir: fromLeft ? 1 : -1,
+    vx: (fromLeft ? 1 : -1) * speed,
+    baseY: y,
+    wob: Math.random()*Math.PI*2,
+    wobAmp: 8 + Math.random()*16,
+    hp: sp.hp,
+    maxhp: sp.hp,
+    scale: 0.9 + Math.random()*0.35,
+    hitFlash: 0,
+    dead: false,
+    tail: Math.random()*Math.PI*2,
+  });
+}
+
+function ensurePopulation() {
+  const want = Math.min(14, 7 + Math.floor(W/180));
+  while (fishes.length < want) spawnFish();
+}
+
+/* ---------------- Shooting ---------------- */
+function fire() {
+  if (!state.running) return;
+  const c = CANNONS[state.cannonLevel];
+  if (state.coins < c.cost) { Audio.sfx.empty(); toast('金币不足！'); return; }
+  state.coins -= c.cost;
+  state.shots++;
+  Audio.sfx.fire();
+  const ang = cannon.angle;
+  const sp = 760;
+  bullets.push({
+    x: cannon.x + Math.cos(ang)*46,
+    y: cannon.y + Math.sin(ang)*46,
+    vx: Math.cos(ang)*sp,
+    vy: Math.sin(ang)*sp,
+    dmg: c.dmg,
+    color: c.color,
+    size: c.size,
+    life: 2.2,
+  });
+  updateHUD();
+}
+
+function hitFish(f, dmg) {
+  f.hp -= dmg;
+  f.hitFlash = 0.18;
+  Audio.sfx.hit();
+  if (f.hp <= 0 && !f.dead) {
+    f.dead = true;
+    state.caught++;
+    state.coins += f.sp.value;
+    const big = f.sp.value >= 50;
+    Audio.sfx.catch(big);
+    // net + coin burst
+    nets.push({ x: f.x, y: f.y, r: f.sp.len*0.5, max: f.sp.len*1.4, t: 0 });
+    spawnCoins(f.x, f.y, Math.min(18, 4 + Math.floor(f.sp.value/4)));
+    floatText(f.x, f.y, '+' + f.sp.value, big ? '#ffd75e' : '#bff5ff', big);
+    updateHUD();
+  }
+}
+
+function spawnCoins(x, y, n) {
+  for (let i=0;i<n;i++){
+    const a = Math.random()*Math.PI*2;
+    const s = 60 + Math.random()*160;
+    coinFx.push({
+      x, y,
+      vx: Math.cos(a)*s, vy: Math.sin(a)*s - 80,
+      t: 0, life: 0.7 + Math.random()*0.4,
+    });
+  }
+}
+
+let floats = [];
+function floatText(x,y,text,color,big){
+  floats.push({x,y,text,color,big,t:0,life:1.1});
+}
+
+/* ---------------- Bubbles (ambient) ---------------- */
+function spawnBubble() {
+  bubbles.push({
+    x: Math.random()*W,
+    y: H + 10,
+    r: 2 + Math.random()*6,
+    spd: 20 + Math.random()*40,
+    sway: Math.random()*Math.PI*2,
+  });
+}
+for (let i=0;i<30;i++){ const b={x:Math.random()*W,y:Math.random()*H,r:2+Math.random()*6,spd:20+Math.random()*40,sway:Math.random()*Math.PI*2}; bubbles.push(b); }
+
+/* ---------------- Update ---------------- */
+function update(dt) {
+  // bubbles
+  for (const b of bubbles){
+    b.y -= b.spd*dt; b.sway += dt*2; b.x += Math.sin(b.sway)*8*dt;
+    if (b.y < -10){ b.y = H+10; b.x = Math.random()*W; }
+  }
+
+  // fish
+  for (const f of fishes){
+    f.x += f.vx*dt;
+    f.wob += dt* (f.vx>0?2:2);
+    f.y = f.baseY + Math.sin(f.wob)*f.wobAmp;
+    f.tail += dt*10;
+    if (f.hitFlash>0) f.hitFlash -= dt;
+  }
+  // remove off-screen or dead fish
+  fishes = fishes.filter(f=>{
+    if (f.dead) return false;
+    const m = f.sp.len + 60;
+    if (f.x < -m || f.x > W + m) return false;
+    return true;
+  });
+  ensurePopulation();
+
+  // bullets
+  for (const b of bullets){
+    b.x += b.vx*dt; b.y += b.vy*dt; b.life -= dt;
+    // bounce off side walls
+    if (b.x < 4){ b.x=4; b.vx*=-1; }
+    if (b.x > W-4){ b.x=W-4; b.vx*=-1; }
+    if (b.y < 4){ b.y=4; b.vy*=-1; }
+  }
+  // collision
+  for (const b of bullets){
+    if (b.dead) continue;
+    for (const f of fishes){
+      if (f.dead) continue;
+      const dx = b.x - f.x, dy = b.y - f.y;
+      const rr = (f.sp.len*0.42*f.scale) + b.size;
+      if (dx*dx + dy*dy < rr*rr){
+        state.hits++;
+        hitFish(f, b.dmg);
+        b.dead = true;
+        break;
+      }
+    }
+  }
+  bullets = bullets.filter(b=>!b.dead && b.life>0 && b.y>-20);
+
+  // nets
+  for (const n of nets){ n.t += dt; n.r += (n.max-n.r)*Math.min(1,dt*6); }
+  nets = nets.filter(n=>n.t<0.5);
+
+  // coins
+  for (const c of coinFx){
+    c.t += dt;
+    c.vy += 420*dt; // gravity
+    c.x += c.vx*dt; c.y += c.vy*dt;
+  }
+  coinFx = coinFx.filter(c=>c.t<c.life);
+
+  // floats
+  for (const f of floats){ f.t += dt; f.y -= 34*dt; }
+  floats = floats.filter(f=>f.t<f.life);
+
+  // cannon aim
+  cannon.x = W/2; cannon.y = H - 64;
+  cannon.angle = Math.atan2(aim.y - cannon.y, aim.x - cannon.x);
+  // clamp so it never points downward
+  if (cannon.angle > -0.12) cannon.angle = -0.12;
+  if (cannon.angle < -Math.PI + 0.12) cannon.angle = -Math.PI + 0.12;
+}
+
+/* ---------------- Draw ---------------- */
+function drawFish(f) {
+  const sp = f.sp;
+  const L = sp.len * f.scale;
+  ctx.save();
+  ctx.translate(f.x, f.y);
+  ctx.scale(f.dir, 1);
+  const flash = f.hitFlash > 0;
+
+  // tail
+  const tailW = Math.sin(f.tail)*0.25;
+  ctx.fillStyle = flash ? '#fff' : sp.body;
+  ctx.beginPath();
+  ctx.moveTo(-L*0.42, 0);
+  ctx.lineTo(-L*0.66, -L*0.22*(1+tailW));
+  ctx.lineTo(-L*0.58, 0);
+  ctx.lineTo(-L*0.66, L*0.22*(1-tailW));
+  ctx.closePath();
+  ctx.fill();
+
+  // body
+  const grd = ctx.createLinearGradient(0,-L*0.3,0,L*0.3);
+  grd.addColorStop(0, flash ? '#ffffff' : sp.color);
+  grd.addColorStop(1, flash ? '#ffd0d0' : sp.body);
+  ctx.fillStyle = grd;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, L*0.46, L*0.26, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // top fin
+  ctx.fillStyle = flash ? '#fff' : sp.body;
+  ctx.beginPath();
+  ctx.moveTo(L*0.05, -L*0.22);
+  ctx.quadraticCurveTo(-L*0.05, -L*0.42, -L*0.22, -L*0.2);
+  ctx.closePath();
+  ctx.fill();
+
+  // eye
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(L*0.26, -L*0.05, L*0.07, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#13202b';
+  ctx.beginPath(); ctx.arc(L*0.28, -L*0.05, L*0.035, 0, Math.PI*2); ctx.fill();
+
+  ctx.restore();
+
+  // hp bar when damaged
+  if (f.hp < f.maxhp && f.hp > 0){
+    const w = L*0.7;
+    ctx.fillStyle = 'rgba(0,0,0,.45)';
+    ctx.fillRect(f.x-w/2, f.y - L*0.4, w, 4);
+    ctx.fillStyle = '#5dff8f';
+    ctx.fillRect(f.x-w/2, f.y - L*0.4, w*(f.hp/f.maxhp), 4);
+  }
+}
+
+function drawCannon() {
+  const c = CANNONS[state.cannonLevel];
+  // base
+  ctx.save();
+  ctx.translate(cannon.x, cannon.y);
+  // platform
+  ctx.fillStyle = 'rgba(8,40,60,.9)';
+  ctx.beginPath(); ctx.ellipse(0, 28, 54, 22, 0, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = 'rgba(120,220,255,.5)'; ctx.lineWidth=2; ctx.stroke();
+
+  // barrel
+  ctx.rotate(cannon.angle);
+  const grd = ctx.createLinearGradient(0,-12,0,12);
+  grd.addColorStop(0,'#dfe9ef'); grd.addColorStop(.5,'#8fa6b3'); grd.addColorStop(1,'#4a5a66');
+  ctx.fillStyle = grd;
+  roundRect(0, -12, 50, 24, 8); ctx.fill();
+  // muzzle ring
+  ctx.fillStyle = c.color;
+  ctx.beginPath(); ctx.arc(50, 0, 10, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  // hub
+  ctx.fillStyle = '#22617f';
+  ctx.beginPath(); ctx.arc(cannon.x, cannon.y, 20, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = c.color; ctx.lineWidth=3; ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='bold 16px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(c.label, cannon.x, cannon.y);
+}
+
+function roundRect(x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function draw() {
+  ctx.clearRect(0,0,W,H);
+
+  // light rays
+  ctx.save();
+  ctx.globalAlpha = 0.06; ctx.fillStyle = '#bff';
+  for (let i=0;i<4;i++){
+    const x = (i+0.5)*W/4 + Math.sin(perf*0.0003 + i)*40;
+    ctx.beginPath();
+    ctx.moveTo(x-30,0); ctx.lineTo(x+30,0); ctx.lineTo(x+140,H); ctx.lineTo(x+80,H);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+
+  // bubbles
+  ctx.fillStyle='rgba(180,235,255,.18)';
+  for (const b of bubbles){
+    ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
+  }
+
+  // fish (sort by size so big behind)
+  fishes.slice().sort((a,b)=>b.sp.len-a.sp.len).forEach(drawFish);
+
+  // nets
+  for (const n of nets){
+    const a = 1 - n.t/0.5;
+    ctx.strokeStyle = `rgba(255,255,255,${a*0.8})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.stroke();
+    // net spokes
+    for (let k=0;k<8;k++){
+      const ang=k/8*Math.PI*2;
+      ctx.beginPath(); ctx.moveTo(n.x,n.y);
+      ctx.lineTo(n.x+Math.cos(ang)*n.r, n.y+Math.sin(ang)*n.r); ctx.stroke();
+    }
+  }
+
+  // bullets
+  for (const b of bullets){
+    ctx.save();
+    ctx.shadowColor=b.color; ctx.shadowBlur=12;
+    ctx.fillStyle=b.color;
+    ctx.beginPath(); ctx.arc(b.x,b.y,b.size,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  // coins
+  for (const c of coinFx){
+    const a = 1 - c.t/c.life;
+    ctx.save();
+    ctx.globalAlpha = Math.max(0,a);
+    ctx.translate(c.x,c.y);
+    const r = 6 + Math.sin(c.t*20)*1;
+    ctx.fillStyle='#ffd75e';
+    ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#b8860b'; ctx.font='bold 8px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('$',0,0.5);
+    ctx.restore();
+  }
+
+  // float texts
+  for (const f of floats){
+    const a = 1 - f.t/f.life;
+    ctx.save();
+    ctx.globalAlpha=Math.max(0,a);
+    ctx.fillStyle=f.color;
+    ctx.font=`bold ${f.big?26:18}px sans-serif`;
+    ctx.textAlign='center';
+    ctx.shadowColor='#000'; ctx.shadowBlur=4;
+    ctx.fillText(f.text, f.x, f.y);
+    ctx.restore();
+  }
+
+  // aim reticle
+  ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.arc(aim.x,aim.y,14,0,Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(aim.x-20,aim.y); ctx.lineTo(aim.x-6,aim.y);
+  ctx.moveTo(aim.x+6,aim.y); ctx.lineTo(aim.x+20,aim.y);
+  ctx.moveTo(aim.x,aim.y-20); ctx.lineTo(aim.x,aim.y-6);
+  ctx.moveTo(aim.x,aim.y+6); ctx.lineTo(aim.x,aim.y+20); ctx.stroke();
+
+  drawCannon();
+}
+
+/* ---------------- Loop ---------------- */
+let last = 0, perf = 0, bubbleAcc = 0;
+function loop(t) {
+  if (!last) last = t;
+  let dt = (t - last)/1000; last = t; perf = t;
+  if (dt > 0.05) dt = 0.05;
+  if (state.running) {
+    bubbleAcc += dt;
+    if (bubbleAcc > 0.4){ if (bubbles.length<60) spawnBubble(); bubbleAcc=0; }
+    update(dt);
+  }
+  draw();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ---------------- HUD ---------------- */
+const coinEl = document.getElementById('coin');
+const accEl = document.getElementById('acc');
+const caughtEl = document.getElementById('caught');
+function updateHUD(){
+  coinEl.textContent = state.coins;
+  accEl.textContent = state.shots ? Math.round(state.hits/state.shots*100)+'%' : '0%';
+  caughtEl.textContent = state.caught;
+}
+
+let toastTimer=null;
+const toastEl = document.getElementById('toast');
+function toast(msg){
+  toastEl.textContent=msg; toastEl.style.opacity=1;
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>toastEl.style.opacity=0,1200);
+}
+
+// build cannon picker
+const pickEl = document.getElementById('cannonpick');
+CANNONS.forEach((c,i)=>{
+  const b=document.createElement('button');
+  b.className='lvl'+(i===0?' active':'');
+  b.innerHTML=`${c.label}<span class="c">${c.cost}金</span>`;
+  b.onclick=()=>{
+    state.cannonLevel=i;
+    [...pickEl.children].forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    Audio.sfx.coin();
+  };
+  pickEl.appendChild(b);
+});
+
+/* ---------------- Input ---------------- */
+function setAim(x,y){ aim.x=x; aim.y=Math.min(y, H-110); }
+canvas.addEventListener('mousemove', e=>setAim(e.clientX, e.clientY));
+canvas.addEventListener('mousedown', e=>{ setAim(e.clientX,e.clientY); fire(); });
+canvas.addEventListener('touchmove', e=>{ const t=e.touches[0]; setAim(t.clientX,t.clientY); e.preventDefault(); }, {passive:false});
+canvas.addEventListener('touchstart', e=>{ const t=e.touches[0]; setAim(t.clientX,t.clientY); fire(); e.preventDefault(); }, {passive:false});
+
+// number keys switch cannon
+window.addEventListener('keydown', e=>{
+  const map={'1':0,'2':1,'3':2,'4':3};
+  if (e.key in map){ pickEl.children[map[e.key]].click(); }
+  if (e.code==='Space'){ fire(); e.preventDefault(); }
+});
+
+// audio buttons
+const musicBtn=document.getElementById('musicBtn');
+const sfxBtn=document.getElementById('sfxBtn');
+musicBtn.onclick=()=>{ const on=Audio.toggleMusic(); musicBtn.classList.toggle('off',!on); musicBtn.textContent= on?'🎵':'🎵'; musicBtn.style.opacity=on?1:.4; };
+sfxBtn.onclick=()=>{ const on=Audio.toggleSfx(); sfxBtn.textContent= on?'🔊':'🔇'; sfxBtn.style.opacity=on?1:.4; };
+
+/* ---------------- Start ---------------- */
+const overlay=document.getElementById('overlay');
+document.getElementById('startBtn').onclick=()=>{
+  Audio.init();
+  Audio.startMusic();
+  overlay.classList.add('hide');
+  document.getElementById('hud').classList.remove('hide');
+  document.getElementById('bottombar').classList.remove('hide');
+  state.running=true;
+  ensurePopulation();
+  updateHUD();
+};
+</script>
+</body>
+</html>
