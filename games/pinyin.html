@@ -149,7 +149,26 @@
   .key.next { background: var(--key-next); color: #2b1d54; transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 0 rgba(0,0,0,0.3); }
   .key.press { transform: translateY(3px) scale(.93); box-shadow: 0 0 0 rgba(0,0,0,0.35); background: #5a4a8a; }
   .key.hit { background: var(--key-done); color: #143a1f; transform: translateY(2px) scale(.97); box-shadow: 0 0 14px rgba(95,224,138,0.8); }
-  .key.f, .key.j { box-shadow: 0 3px 0 rgba(0,0,0,0.35), inset 0 -6px 0 rgba(255,255,255,0.18); }
+  .key.f, .key.j { box-shadow: 0 3px 0 rgba(0,0,0,0.35), inset 0 -7px 0 rgba(255,255,255,0.28); }
+  /* 手指分区配色（键底色条）：左手暖色、右手冷色 */
+  .key.fg-lp { box-shadow: 0 3px 0 rgba(0,0,0,.35), inset 0 -7px 0 #ff8fab; }
+  .key.fg-lr { box-shadow: 0 3px 0 rgba(0,0,0,.35), inset 0 -7px 0 #ffa94d; }
+  .key.fg-lm { box-shadow: 0 3px 0 rgba(0,0,0,.35), inset 0 -7px 0 #ffe066; }
+  .key.fg-li { box-shadow: 0 3px 0 rgba(0,0,0,.35), inset 0 -7px 0 #69db7c; }
+  .key.fg-ri { box-shadow: 0 3px 0 rgba(0,0,0,.35), inset 0 -7px 0 #3bc9db; }
+  .key.fg-rm { box-shadow: 0 3px 0 rgba(0,0,0,.35), inset 0 -7px 0 #4dabf7; }
+  .key.fg-rr { box-shadow: 0 3px 0 rgba(0,0,0,.35), inset 0 -7px 0 #9775fa; }
+  .key.fg-rp { box-shadow: 0 3px 0 rgba(0,0,0,.35), inset 0 -7px 0 #f06595; }
+  .key.next { box-shadow: 0 6px 0 rgba(0,0,0,0.3) !important; }
+
+  /* 手指提示条 */
+  .fhint {
+    width: 100%; max-width: 760px; margin: 0 auto 4px;
+    min-height: 30px; display: flex; align-items: center; justify-content: center;
+    gap: 8px; font-size: 16px; font-weight: 800; color: #2b1d54;
+    border-radius: 999px; padding: 5px 16px; opacity: 0; transition: opacity .15s;
+  }
+  .fhint.show { opacity: 1; }
 
   /* overlay */
   #overlay {
@@ -220,7 +239,8 @@
       <h1>🚀 拼音打字小火箭</h1>
       <p>汉字宝宝从天上飘下来啦！<br>看着下面的拼音，用键盘把字母打出来，就能把它送上太空 ✨<br>别让它们掉到小房子上哦！</p>
       <div class="levelsel" id="levelsel">
-        <button data-mode="easy" class="sel">😊 简单<br><small>单韵母 a o e</small></button>
+        <button data-mode="letters" class="sel">🔤 字母键位<br><small>认识 26 键 · 练指法</small></button>
+        <button data-mode="easy">😊 简单<br><small>单韵母 a o e</small></button>
         <button data-mode="normal">🙂 普通<br><small>常用字</small></button>
         <button data-mode="hard">😎 挑战<br><small>词语</small></button>
       </div>
@@ -229,6 +249,7 @@
     </div>
   </div>
 
+  <div id="fingerHint" class="fhint"></div>
   <div id="keyboard"></div>
 
 <script>
@@ -258,7 +279,23 @@
     ],
   };
 
+  // 字母键位关卡：26 个字母（大写显示、小写按键），认键位练指法
+  BANK.letters = "abcdefghijklmnopqrstuvwxyz".split("").map(c => [c.toUpperCase(), c]);
+
   const KEYS = ["qwertyuiop","asdfghjkl","zxcvbnm"];
+
+  // 标准指法分区：每个键归属哪根手指
+  const FINGER = {
+    q:'lp',a:'lp',z:'lp', w:'lr',s:'lr',x:'lr', e:'lm',d:'lm',c:'lm',
+    r:'li',f:'li',t:'li',g:'li',v:'li',b:'li',
+    y:'ri',h:'ri',u:'ri',j:'ri',n:'ri',m:'ri',
+    i:'rm',k:'rm', o:'rr',l:'rr', p:'rp'
+  };
+  const FINGER_NAME = {
+    lp:'左手 · 小指', lr:'左手 · 无名指', lm:'左手 · 中指', li:'左手 · 食指',
+    ri:'右手 · 食指', rm:'右手 · 中指', rr:'右手 · 无名指', rp:'右手 · 小指'
+  };
+  const FINGER_HAND = { lp:'🤚', lr:'🤚', lm:'🤚', li:'🤚', ri:'🖐️', rm:'🖐️', rr:'🖐️', rp:'🖐️' };
 
   // ---------- DOM ----------
   const stage = document.getElementById('stage');
@@ -277,7 +314,7 @@
     r.className = 'krow';
     [...row].forEach(c => {
       const k = document.createElement('div');
-      k.className = 'key' + (c==='f'||c==='j' ? ' '+c : '');
+      k.className = 'key fg-' + (FINGER[c]||'li') + (c==='f'||c==='j' ? ' '+c : '');
       k.textContent = c;
       r.appendChild(k);
       keyMap[c] = k;
@@ -490,7 +527,7 @@
 
   // ---------- game state ----------
   let state = {
-    mode: 'easy',
+    mode: 'letters',
     running: false,
     score: 0,
     level: 1,
@@ -572,11 +609,23 @@
     }
   }
 
+  const fingerHintEl = document.getElementById('fingerHint');
+  const FG_COLOR = { lp:'#ff8fab', lr:'#ffa94d', lm:'#ffe066', li:'#69db7c', ri:'#3bc9db', rm:'#4dabf7', rr:'#9775fa', rp:'#f06595' };
   function highlightKey() {
     Object.values(keyMap).forEach(k => k.classList.remove('next'));
+    let c = null;
     if (state.target && !state.target.dead) {
-      const c = state.target.pinyin[state.target.typed];
+      c = state.target.pinyin[state.target.typed];
       if (c && keyMap[c]) keyMap[c].classList.add('next');
+    }
+    // 手指提示：告诉小朋友这个键用哪根手指按
+    const fg = c && FINGER[c];
+    if (fg) {
+      fingerHintEl.innerHTML = `${FINGER_HAND[fg]} 用 <span style="color:#2b1d54">${FINGER_NAME[fg]}</span> 按 <b style="font-size:20px;color:#2b1d54">${c.toUpperCase()}</b>`;
+      fingerHintEl.style.background = FG_COLOR[fg];
+      fingerHintEl.classList.add('show');
+    } else {
+      fingerHintEl.classList.remove('show');
     }
   }
 
