@@ -408,10 +408,10 @@
       const h1h  = (document.querySelector('h1')       || {}).offsetHeight || 40;
       const hudh = (document.querySelector('.hud')     || {}).offsetHeight || 30;
       const ctrlh= (document.querySelector('.controls')|| {}).offsetHeight || 0;
-      const boardW = window.innerWidth > 760 ? 240 : 0;   // 侧栏排行榜占位
-      const availW = window.innerWidth - boardW - 48;
-      const availH = window.innerHeight - h1h - hudh - ctrlh - 70;
-      px = Math.min(availW, availH, big ? 900 : 720);
+      const boardW = window.innerWidth > 760 ? 240 : 0;   // 侧栏排行榜占位（窄屏隐藏）
+      const availW = window.innerWidth - boardW - 36;
+      const availH = window.innerHeight - h1h - hudh - ctrlh - 40;
+      px = Math.min(availW, availH, big ? 1280 : 1000);
     }
     px = Math.max(300, Math.round(px / GRID) * GRID);      // 取整到格，避免毛边
     canvas.width = canvas.height = px;
@@ -717,7 +717,7 @@
   (function(){
     const b = document.createElement('button');
     b.id = '__fsbtn'; b.title = '全屏'; b.setAttribute('aria-label','全屏');
-    b.style.cssText = 'position:fixed;top:12px;right:12px;z-index:99999;width:40px;height:40px;border:none;border-radius:10px;background:rgba(0,0,0,.4);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);';
+    b.style.cssText = 'position:fixed;top:12px;right:12px;z-index:99999;width:40px;height:40px;border:none;border-radius:10px;background:rgba(255,255,255,.2);border:1.6px solid rgba(255,255,255,.6);box-shadow:0 2px 8px rgba(0,0,0,.35);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);';
     const F='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4"/></svg>';
     const X='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h4V4M20 8h-4V4M4 16h4v4M20 16h-4v4"/></svg>';
     const u=()=>{ b.innerHTML = document.fullscreenElement ? X : F; };
@@ -730,7 +730,7 @@
   (function(){
     const b = document.createElement('button');
     b.id = '__musicbtn'; b.title = '背景音乐'; b.textContent = '🎵';
-    b.style.cssText = 'position:fixed;top:12px;right:60px;z-index:99999;width:40px;height:40px;border:none;border-radius:10px;background:rgba(0,0,0,.4);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);';
+    b.style.cssText = 'position:fixed;top:12px;right:60px;z-index:99999;width:40px;height:40px;border:none;border-radius:10px;background:rgba(255,255,255,.2);border:1.6px solid rgba(255,255,255,.6);box-shadow:0 2px 8px rgba(0,0,0,.35);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);';
     b.onclick = () => {
       const muted = MUSIC.toggleMute();
       b.style.opacity = muted ? '.4' : '1';
