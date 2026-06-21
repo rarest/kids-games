@@ -123,9 +123,10 @@
     display: flex; align-items: center; justify-content: center;
     width: 100vw; height: 100vh; border-radius: 0;
   }
-  .stage:fullscreen canvas, .stage:-webkit-full-screen canvas { width: 90vmin; height: 90vmin; }
-  .stage.big canvas { width: 600px; height: 600px; }
-  .play-area { display: flex; align-items: flex-start; gap: 16px; }
+  .play-area { display: flex; align-items: flex-start; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  /* 桌面（真鼠标）上隐藏触屏方向键，把空间留给画面 */
+  @media (hover: hover) and (pointer: fine) { .dpad { display: none; } }
+  @media (max-width: 760px) { .board { display: none; } }
   .board {
     background: var(--panel);
     border-radius: 14px;
@@ -394,7 +395,33 @@
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
   const GRID = 20;            // 20x20 格
-  const SIZE = canvas.width / GRID; // 每格像素
+  let SIZE = canvas.width / GRID; // 每格像素（fitBoard 里会按响应式尺寸重算）
+
+  // 响应式画布：根据可用空间放大内部分辨率（保持 20 格，格子更大更清晰）
+  function fitBoard() {
+    const fs = document.fullscreenElement;
+    let px;
+    if (fs) {
+      px = Math.min(window.innerWidth, window.innerHeight) * 0.92;
+    } else {
+      const big = document.querySelector('.stage').classList.contains('big');
+      const h1h  = (document.querySelector('h1')       || {}).offsetHeight || 40;
+      const hudh = (document.querySelector('.hud')     || {}).offsetHeight || 30;
+      const ctrlh= (document.querySelector('.controls')|| {}).offsetHeight || 0;
+      const boardW = window.innerWidth > 760 ? 240 : 0;   // 侧栏排行榜占位
+      const availW = window.innerWidth - boardW - 48;
+      const availH = window.innerHeight - h1h - hudh - ctrlh - 70;
+      px = Math.min(availW, availH, big ? 900 : 720);
+    }
+    px = Math.max(300, Math.round(px / GRID) * GRID);      // 取整到格，避免毛边
+    canvas.width = canvas.height = px;
+    canvas.style.width = canvas.style.height = px + 'px';
+    SIZE = px / GRID;
+    if (running && !paused) draw();   // 游戏中才重绘（未开局时 snake 还没初始化）
+  }
+  window.addEventListener('resize', fitBoard);
+  document.addEventListener('fullscreenchange', () => setTimeout(fitBoard, 60));
+  document.addEventListener('webkitfullscreenchange', () => setTimeout(fitBoard, 60));
   const scoreEl = document.getElementById('score');
   const overlay = document.getElementById('overlay');
   const ovTitle = document.getElementById('ovTitle');
@@ -417,6 +444,7 @@
   renderBoard();
 
   let snake, dir, nextDir, pimples, score, speed, loop, running, paused, eaten, boostMul, effectTimer;
+  fitBoard();   // 现在 running 等已声明，安全地按当前窗口定尺寸
 
   // 痘痘种类：颜色 + 效果（weight 越大越常见）
   const TYPES = [
@@ -718,7 +746,7 @@
     if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(k)) e.preventDefault();
 
     if (k === 'f' || k === 'F') { toggleFullscreen(); return; }
-    if (k === 'j' || k === 'J') { document.querySelector('.stage').classList.toggle('big'); return; }
+    if (k === 'j' || k === 'J') { document.querySelector('.stage').classList.toggle('big'); fitBoard(); return; }
     if (k === 'r' || k === 'R') { start(); return; }   // 随时重新开始
 
     // 游戏没在跑时，任意方向键/空格都直接开始
@@ -798,7 +826,7 @@
         case 'restart': start(); break;
         case 'refresh': if (running) refreshPimples(); break;
         case 'cheat':   if (running) cheat(); break;
-        case 'big':     document.querySelector('.stage').classList.toggle('big'); break;
+        case 'big':     document.querySelector('.stage').classList.toggle('big'); fitBoard(); break;
       }
     });
   });
