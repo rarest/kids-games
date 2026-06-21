@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小火箭游戏厅 🚀</title>
+<meta name="description" content="给小朋友的趣味小游戏合集：拼音打字、贪吃蛇、大鱼吃小鱼，免费在线玩。">
+<style>
+  :root{
+    --bg1:#2b1d54; --bg2:#1a1138;
+    --text:#fff7ff; --accent:#ffd54a;
+    --card:rgba(255,255,255,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{min-height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(2px 2px at 20% 30%,#fff8 50%,transparent),
+      radial-gradient(2px 2px at 70% 20%,#fff6 50%,transparent),
+      radial-gradient(1.5px 1.5px at 40% 70%,#fff7 50%,transparent),
+      radial-gradient(1.5px 1.5px at 85% 60%,#fff5 50%,transparent),
+      radial-gradient(2px 2px at 55% 45%,#fff6 50%,transparent),
+      radial-gradient(circle at 50% -10%,#6a3fb0,var(--bg1) 60%,var(--bg2));
+    background-attachment:fixed;
+    display:flex;flex-direction:column;align-items:center;
+    padding:32px 18px 48px;
+  }
+  header{text-align:center;margin:24px 0 36px;}
+  h1{font-size:clamp(30px,7vw,52px);font-weight:900;letter-spacing:1px;
+     text-shadow:0 4px 0 rgba(0,0,0,.25);}
+  .sub{margin-top:12px;font-size:clamp(14px,3.4vw,18px);opacity:.85;}
+  .grid{
+    width:100%;max-width:860px;
+    display:grid;gap:20px;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  }
+  .card{
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+    text-decoration:none;color:inherit;
+    background:var(--card);
+    border:2px solid rgba(255,255,255,0.10);
+    border-radius:22px;
+    padding:30px 22px;
+    transition:transform .12s ease,border-color .15s,background .15s,box-shadow .15s;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  .card:hover,.card:focus-visible{
+    transform:translateY(-6px) scale(1.02);
+    border-color:var(--accent);
+    background:rgba(255,213,74,0.12);
+    box-shadow:0 16px 40px rgba(0,0,0,.35);
+    outline:none;
+  }
+  .emoji{font-size:64px;line-height:1;filter:drop-shadow(0 6px 10px rgba(0,0,0,.4));}
+  .card:hover .emoji{animation:bob 1s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .name{margin-top:16px;font-size:22px;font-weight:800;}
+  .desc{margin-top:8px;font-size:14px;opacity:.8;line-height:1.5;}
+  .tag{margin-top:14px;font-size:13px;font-weight:700;color:#2b1d54;
+       background:var(--accent);padding:5px 14px;border-radius:999px;}
+  footer{margin-top:40px;font-size:13px;opacity:.6;text-align:center;line-height:1.7;}
+</style>
+</head>
+<body>
+  <header>
+    <h1>🚀 小火箭游戏厅</h1>
+    <p class="sub">给小朋友的趣味小游戏，打开就能玩 · 免费 · 无广告</p>
+  </header>
+
+  <main class="grid">
+    <a class="card" href="pinyin.html">
+      <div class="emoji">🚀</div>
+      <div class="name">拼音打字小火箭</div>
+      <div class="desc">看拼音敲字母，把汉字宝宝送上太空，练键盘指法</div>
+      <div class="tag">键盘 · 拼音</div>
+    </a>
+
+    <a class="card" href="snake.html">
+      <div class="emoji">🐍</div>
+      <div class="name">贪吃蛇吃痘痘</div>
+      <div class="desc">经典贪吃蛇，方向键控制，越吃越长别撞墙</div>
+      <div class="tag">反应 · 经典</div>
+    </a>
+
+    <a class="card" href="fish.html">
+      <div class="emoji">🐟</div>
+      <div class="name">大鱼吃小鱼</div>
+      <div class="desc">吃掉比自己小的鱼，慢慢长成海里最大的鱼</div>
+      <div class="tag">休闲 · 成长</div>
+    </a>
+  </main>
+
+  <footer>
+    用 ❤️ 做给小朋友 · 建议用电脑或平板横屏游玩<br>
+    games.596996.xyz
+  </footer>
+</body>
+</html>

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>拼音打字小火箭 🚀</title>
+<style>
+  :root {
+    --bg1: #2b1d54;
+    --bg2: #4a2a8a;
+    --panel: rgba(255,255,255,0.12);
+    --text: #fff7ff;
+    --accent: #ffd54a;
+    --good: #5fe08a;
+    --bad: #ff6b8a;
+    --key: #ffffff;
+    --key-face: #3a2a6a;
+    --key-next: #ffd54a;
+    --key-done: #5fe08a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    background: radial-gradient(circle at 50% -10%, #6a3fb0, var(--bg1) 60%, #1a1138);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+  body { display: flex; flex-direction: column; align-items: center; }
+
+  header {
+    width: 100%;
+    max-width: 760px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .title { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+  .stats { display: flex; gap: 14px; align-items: center; font-size: 18px; font-weight: 700; }
+  .stat .label { font-size: 11px; opacity: .7; font-weight: 600; display: block; }
+  .hearts { font-size: 20px; letter-spacing: 2px; }
+
+  #stage {
+    position: relative;
+    width: 100%;
+    max-width: 760px;
+    flex: 1;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 18px;
+    background:
+      radial-gradient(2px 2px at 20% 30%, #fff8 50%, transparent),
+      radial-gradient(2px 2px at 70% 20%, #fff6 50%, transparent),
+      radial-gradient(1.5px 1.5px at 40% 70%, #fff7 50%, transparent),
+      radial-gradient(1.5px 1.5px at 85% 60%, #fff5 50%, transparent),
+      radial-gradient(2px 2px at 55% 45%, #fff6 50%, transparent),
+      rgba(255,255,255,0.04);
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.3);
+  }
+
+  .word {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    transition: filter .1s;
+  }
+  .word .hanzi {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1;
+    text-shadow: 0 3px 0 rgba(0,0,0,0.25);
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+  }
+  .word .pinyin {
+    margin-top: 8px;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    background: rgba(0,0,0,0.28);
+    padding: 4px 12px;
+    border-radius: 999px;
+    display: inline-block;
+  }
+  .word .pinyin .ch { opacity: .55; }
+  .word .pinyin .ch.done { color: var(--good); opacity: 1; }
+  .word .pinyin .ch.next { color: var(--accent); opacity: 1; text-decoration: underline; }
+  .word.target .hanzi { transform: scale(1.08); }
+  .word.miss { animation: shake .3s; }
+  @keyframes shake { 0%,100%{transform:translateX(-50%)} 25%{transform:translateX(-54%)} 75%{transform:translateX(-46%)} }
+
+  .pop {
+    position: absolute;
+    transform: translate(-50%,-50%);
+    font-size: 30px;
+    font-weight: 800;
+    pointer-events: none;
+    animation: pop 0.7s ease-out forwards;
+  }
+  @keyframes pop {
+    0% { opacity: 1; transform: translate(-50%,-50%) scale(.6); }
+    100% { opacity: 0; transform: translate(-50%,-160%) scale(1.3); }
+  }
+
+  /* rocket / ground line */
+  #ground {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 56px;
+    background: linear-gradient(transparent, rgba(255,107,138,0.25));
+    border-top: 2px dashed rgba(255,107,138,0.6);
+    display: flex; align-items: flex-end; justify-content: center;
+    font-size: 34px;
+    padding-bottom: 4px;
+  }
+
+  /* keyboard */
+  #keyboard {
+    width: 100%;
+    max-width: 760px;
+    padding: 10px 8px 16px;
+  }
+  .krow { display: flex; justify-content: center; gap: 6px; margin-bottom: 6px; }
+  .key {
+    flex: 1 1 0;
+    max-width: 60px;
+    aspect-ratio: 1 / 1.05;
+    background: var(--key-face);
+    color: #fff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.35);
+    transition: transform .05s, background .1s, color .1s;
+  }
+  .key.next { background: var(--key-next); color: #2b1d54; transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 0 rgba(0,0,0,0.3); }
+  .key.press { transform: translateY(3px) scale(.93); box-shadow: 0 0 0 rgba(0,0,0,0.35); background: #5a4a8a; }
+  .key.hit { background: var(--key-done); color: #143a1f; transform: translateY(2px) scale(.97); box-shadow: 0 0 14px rgba(95,224,138,0.8); }
+  .key.f, .key.j { box-shadow: 0 3px 0 rgba(0,0,0,0.35), inset 0 -6px 0 rgba(255,255,255,0.18); }
+
+  /* overlay */
+  #overlay {
+    position: absolute; inset: 0;
+    background: rgba(20,10,45,0.82);
+    backdrop-filter: blur(4px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; gap: 18px; padding: 24px;
+    z-index: 10;
+  }
+  #overlay h1 { font-size: 34px; }
+  #overlay p { font-size: 17px; opacity: .9; max-width: 460px; line-height: 1.6; }
+  .btn {
+    background: var(--accent);
+    color: #2b1d54;
+    border: none;
+    font-size: 22px;
+    font-weight: 800;
+    padding: 14px 38px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #c79a1a;
+    transition: transform .08s;
+  }
+  .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #c79a1a; }
+  .levelsel { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .levelsel button {
+    background: var(--panel); color: #fff; border: 2px solid transparent;
+    padding: 10px 18px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer;
+  }
+  .levelsel button.sel { border-color: var(--accent); background: rgba(255,213,74,0.2); }
+  .hidden { display: none !important; }
+  .hint { font-size: 14px; opacity: .75; }
+
+  .iconbtn {
+    background: var(--panel);
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform .08s, background .15s, opacity .15s;
+  }
+  .iconbtn:active { transform: scale(.92); }
+  .iconbtn.off { opacity: .4; }
+  .iconbtn svg { display: block; width: 20px; height: 20px; }
+  body:fullscreen, body:-webkit-full-screen { background: radial-gradient(circle at 50% -10%, #6a3fb0, var(--bg1) 60%, #1a1138); }
+</style>
+</head>
+<body>
+  <header>
+    <div class="title">🚀 拼音打字小火箭</div>
+    <div class="stats">
+      <div class="stat"><span class="label">分数</span><span id="score">0</span></div>
+      <div class="stat"><span class="label">关卡</span><span id="level">1</span></div>
+      <div class="stat"><span class="label">生命</span><span class="hearts" id="hearts">❤️❤️❤️</span></div>
+      <button id="musicBtn" class="iconbtn" title="背景音乐开关">🎵</button>
+      <button id="fsBtn" class="iconbtn" title="全屏"></button>
+    </div>
+  </header>
+
+  <div id="stage">
+    <div id="ground">🏠🌳🏠</div>
+    <div id="overlay">
+      <h1>🚀 拼音打字小火箭</h1>
+      <p>汉字宝宝从天上飘下来啦！<br>看着下面的拼音，用键盘把字母打出来，就能把它送上太空 ✨<br>别让它们掉到小房子上哦！</p>
+      <div class="levelsel" id="levelsel">
+        <button data-mode="easy" class="sel">😊 简单<br><small>单韵母 a o e</small></button>
+        <button data-mode="normal">🙂 普通<br><small>常用字</small></button>
+        <button data-mode="hard">😎 挑战<br><small>词语</small></button>
+      </div>
+      <button class="btn" id="startBtn">开始游戏</button>
+      <div class="hint">提示：把手指放在键盘上有小凸点的 F 和 J 键上 🖐️</div>
+    </div>
+  </div>
+
+  <div id="keyboard"></div>
+
+<script>
+(() => {
+  // ---------- word banks ----------
+  // pinyin uses plain letters (no tone marks) so kids type with a normal keyboard
+  const BANK = {
+    easy: [
+      ["啊","a"],["哦","o"],["鹅","e"],["衣","yi"],["乌","wu"],
+      ["鱼","yu"],["爸","ba"],["妈","ma"],["大","da"],["小","xiao"],
+      ["土","tu"],["米","mi"],["你","ni"],["我","wo"],["他","ta"],
+      ["猫","mao"],["狗","gou"],["鸟","niao"],["花","hua"],["草","cao"],
+    ],
+    normal: [
+      ["太阳","tai"],["月亮","yue"],["星星","xing"],["水","shui"],["火","huo"],
+      ["山","shan"],["田","tian"],["人","ren"],["口","kou"],["手","shou"],
+      ["白","bai"],["黑","hei"],["红","hong"],["绿","lv"],["蓝","lan"],
+      ["春","chun"],["夏","xia"],["秋","qiu"],["冬","dong"],["雨","yu"],
+      ["书","shu"],["笔","bi"],["纸","zhi"],["灯","deng"],["车","che"],
+    ],
+    hard: [
+      ["苹果","pingguo"],["香蕉","xiangjiao"],["老师","laoshi"],["同学","tongxue"],
+      ["朋友","pengyou"],["妈妈","mama"],["爸爸","baba"],["学校","xuexiao"],
+      ["快乐","kuaile"],["谢谢","xiexie"],["你好","nihao"],["再见","zaijian"],
+      ["大象","daxiang"],["熊猫","xiongmao"],["蝴蝶","hudie"],["公鸡","gongji"],
+      ["飞机","feiji"],["火车","huoche"],["气球","qiqiu"],["蛋糕","dangao"],
+    ],
+  };
+
+  const KEYS = ["qwertyuiop","asdfghjkl","zxcvbnm"];
+
+  // ---------- DOM ----------
+  const stage = document.getElementById('stage');
+  const overlay = document.getElementById('overlay');
+  const startBtn = document.getElementById('startBtn');
+  const levelsel = document.getElementById('levelsel');
+  const scoreEl = document.getElementById('score');
+  const levelEl = document.getElementById('level');
+  const heartsEl = document.getElementById('hearts');
+  const kbEl = document.getElementById('keyboard');
+
+  // build keyboard
+  const keyMap = {};
+  KEYS.forEach(row => {
+    const r = document.createElement('div');
+    r.className = 'krow';
+    [...row].forEach(c => {
+      const k = document.createElement('div');
+      k.className = 'key' + (c==='f'||c==='j' ? ' '+c : '');
+      k.textContent = c;
+      r.appendChild(k);
+      keyMap[c] = k;
+    });
+    kbEl.appendChild(r);
+  });
+
+  // ---------- audio (WebAudio beeps) ----------
+  let actx = null;
+  function beep(freq, dur=0.08, type='sine', vol=0.2) {
+    try {
+      actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type; o.frequency.value = freq;
+      g.gain.value = vol;
+      o.connect(g); g.connect(actx.destination);
+      const t = actx.currentTime;
+      o.start(t);
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+      o.stop(t+dur);
+    } catch(e){}
+  }
+  function goodSound() { beep(880,0.07,'triangle'); }
+  function clearSound() { beep(660,0.09,'square',0.18); setTimeout(()=>beep(990,0.12,'square',0.18),90); setTimeout(()=>beep(1320,0.14,'square',0.18),190); }
+  function badSound() { beep(160,0.18,'sawtooth',0.18); }
+  function speak(text){
+    try {
+      if (!window.speechSynthesis) return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'zh-CN'; u.rate = 0.85;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    } catch(e){}
+  }
+
+  // ---------- background music: Pachelbel Canon (rock arrangement) ----------
+  // fully synthesized with WebAudio, no audio files. Canon in D progression:
+  // D - A - Bm - F#m - G - D - G - A  (the famous 8-bar loop)
+  const MUSIC = (() => {
+    let ctx = null, master = null, distCurve = null;
+    let timer = null, started = false, muted = false;
+    let step = 0, nextTime = 0;
+    const BPM = 116;
+    const EIGHTH = (60 / BPM) / 2;      // seconds per eighth note
+    const BARS = 8, STEPS = BARS * 8;   // 8 bars * 8 eighths
+
+    function noteFreq(name) {
+      const m = /^([A-G])(#?)(-?\d)$/.exec(name);
+      const base = { C:-9, D:-7, E:-5, F:-4, G:-2, A:0, B:2 };
+      let s = base[m[1]] + (m[2] ? 1 : 0) + (parseInt(m[3],10) - 4) * 12;
+      return 440 * Math.pow(2, s / 12);
+    }
+
+    // chord roots + arpeggio + pad triad per bar
+    const ROOT = ['D2','A2','B2','F#2','G2','D2','G2','A2'];
+    const ARP = [
+      ['D4','F#4','A4','D5','F#5','D5','A4','F#4'],
+      ['A3','C#4','E4','A4','C#5','A4','E4','C#4'],
+      ['B3','D4','F#4','B4','D5','B4','F#4','D4'],
+      ['F#3','A3','C#4','F#4','A4','F#4','C#4','A3'],
+      ['G3','B3','D4','G4','B4','G4','D4','B3'],
+      ['D4','F#4','A4','D5','F#5','D5','A4','F#4'],
+      ['G3','B3','D4','G4','B4','G4','D4','B3'],
+      ['A3','C#4','E4','A4','C#5','E5','C#5','A4'],
+    ];
+    const PAD = [
+      ['D4','F#4','A4'], ['A3','C#4','E4'], ['B3','D4','F#4'], ['F#3','A3','C#4'],
+      ['G3','B3','D4'],  ['D4','F#4','A4'], ['G3','B3','D4'],  ['A3','C#4','E4'],
+    ];
+
+    function makeDist(amount) {
+      const n = 1024, curve = new Float32Array(n), deg = Math.PI / 180;
+      for (let i = 0; i < n; i++) {
+        const x = i * 2 / n - 1;
+        curve[i] = (3 + amount) * x * 20 * deg / (Math.PI + amount * Math.abs(x));
+      }
+      return curve;
+    }
+
+    function env(node, t, peak, dur, atk = 0.005) {
+      const g = node.gain;
+      g.setValueAtTime(0.0001, t);
+      g.exponentialRampToValueAtTime(peak, t + atk);
+      g.exponentialRampToValueAtTime(0.0001, t + dur);
+    }
+
+    function tone(type, freq, t, dur, peak, dest) {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = type; o.frequency.value = freq;
+      o.connect(g); g.connect(dest || master);
+      env(g, t, peak, dur);
+      o.start(t); o.stop(t + dur + 0.02);
+    }
+
+    function guitar(freq, t, dur, peak) {
+      // sawtooth through distortion for a rock-guitar tone
+      const o = ctx.createOscillator(), g = ctx.createGain(), d = ctx.createWaveShaper();
+      o.type = 'sawtooth'; o.frequency.value = freq;
+      d.curve = distCurve; d.oversample = '2x';
+      o.connect(d); d.connect(g); g.connect(master);
+      env(g, t, peak, dur, 0.004);
+      o.start(t); o.stop(t + dur + 0.02);
+    }
+
+    // drum hits
+    function noiseBuf() {
+      const len = ctx.sampleRate * 0.3, b = ctx.createBuffer(1, len, ctx.sampleRate);
+      const d = b.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      return b;
+    }
+    let NB = null;
+    function kick(t) {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(140, t);
+      o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
+      g.gain.setValueAtTime(0.9, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+      o.connect(g); g.connect(master);
+      o.start(t); o.stop(t + 0.2);
+    }
+    function snare(t) {
+      const s = ctx.createBufferSource(), g = ctx.createGain(), hp = ctx.createBiquadFilter();
+      s.buffer = NB; hp.type = 'highpass'; hp.frequency.value = 1500;
+      g.gain.setValueAtTime(0.5, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+      s.connect(hp); hp.connect(g); g.connect(master);
+      s.start(t); s.stop(t + 0.16);
+    }
+    function hat(t, open) {
+      const s = ctx.createBufferSource(), g = ctx.createGain(), hp = ctx.createBiquadFilter();
+      s.buffer = NB; hp.type = 'highpass'; hp.frequency.value = 7000;
+      const dur = open ? 0.12 : 0.04;
+      g.gain.setValueAtTime(0.18, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      s.connect(hp); hp.connect(g); g.connect(master);
+      s.start(t); s.stop(t + dur + 0.02);
+    }
+
+    function scheduleStep(gstep, t) {
+      const bar = Math.floor(gstep / 8) % BARS;
+      const i = gstep % 8;          // eighth within bar
+      const beatHit = (i % 2 === 0); // on a quarter-note beat
+
+      // drums
+      if (i === 0 || i === 4) kick(t);
+      if (i === 2 || i === 6) snare(t);
+      hat(t, i === 7);
+
+      // bass — driving eighths, root with octave bounce
+      const root = noteFreq(ROOT[bar]);
+      tone('triangle', i % 2 ? root * 2 : root, t, EIGHTH * 0.9, 0.32);
+
+      // power chord chug on each beat (root + fifth)
+      if (beatHit) {
+        guitar(root * 2, t, EIGHTH * 1.1, 0.10);
+        guitar(root * 2 * Math.pow(2, 7/12), t, EIGHTH * 1.1, 0.09);
+      }
+
+      // pad triad sustained across the bar (start of bar only)
+      if (i === 0) {
+        PAD[bar].forEach(n => tone('sine', noteFreq(n), t, EIGHTH * 8, 0.06));
+      }
+
+      // lead — canon arpeggio, eighth notes
+      guitar(noteFreq(ARP[bar][i]), t, EIGHTH * 1.4, 0.14);
+    }
+
+    function loop() {
+      while (nextTime < ctx.currentTime + 0.12) {
+        scheduleStep(step, nextTime);
+        nextTime += EIGHTH;
+        step = (step + 1) % STEPS;
+      }
+      timer = setTimeout(loop, 25);
+    }
+
+    function ensure() {
+      if (ctx) return;
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain();
+      master.gain.value = 0.32;
+      master.connect(ctx.destination);
+      distCurve = makeDist(8);
+      NB = noiseBuf();
+    }
+
+    return {
+      start() {
+        ensure();
+        if (ctx.state === 'suspended') ctx.resume();
+        if (started || muted) return;
+        started = true;
+        step = 0; nextTime = ctx.currentTime + 0.08;
+        loop();
+      },
+      stop() {
+        started = false;
+        if (timer) { clearTimeout(timer); timer = null; }
+      },
+      toggleMute() {
+        muted = !muted;
+        if (muted) this.stop();
+        return muted;
+      },
+      isMuted() { return muted; },
+    };
+  })();
+
+  // ---------- game state ----------
+  let state = {
+    mode: 'easy',
+    running: false,
+    score: 0,
+    level: 1,
+    lives: 3,
+    words: [],     // active falling words
+    target: null,  // current word being typed
+    spawnTimer: 0,
+    cleared: 0,
+    raf: 0,
+    last: 0,
+  };
+
+  function setHearts() {
+    heartsEl.textContent = '❤️'.repeat(state.lives) + '🖤'.repeat(Math.max(0,3-state.lives));
+  }
+
+  function speedForLevel() {
+    // px per second
+    return 24 + state.level * 7 + (state.mode==='hard'?10:0) + (state.mode==='normal'?5:0);
+  }
+  function spawnIntervalMs() {
+    return Math.max(900, 2600 - state.level*180);
+  }
+
+  function pickWord() {
+    const bank = BANK[state.mode];
+    return bank[Math.floor(Math.random()*bank.length)];
+  }
+
+  function makeWord() {
+    const [hanzi, pinyin] = pickWord();
+    const el = document.createElement('div');
+    el.className = 'word';
+    const margin = 60;
+    const w = stage.clientWidth;
+    const x = margin + Math.random() * (w - margin*2);
+    el.style.left = x + 'px';
+    el.style.top = '-80px';
+    el.innerHTML = `<div class="hanzi">${hanzi}</div>` +
+      `<div class="pinyin">${[...pinyin].map(c=>`<span class="ch">${c}</span>`).join('')}</div>`;
+    stage.appendChild(el);
+    const word = { hanzi, pinyin, el, y: -80, x, typed: 0, dead: false };
+    state.words.push(word);
+  }
+
+  function chooseTarget() {
+    // target = lowest word that still has the current typed prefix (or any if none)
+    if (state.target && !state.target.dead) return;
+    // pick the lowest (closest to ground) word
+    let best = null;
+    for (const w of state.words) {
+      if (w.dead) continue;
+      if (!best || w.y > best.y) best = w;
+    }
+    setTarget(best);
+  }
+
+  function setTarget(word) {
+    if (state.target && state.target.el) state.target.el.classList.remove('target');
+    state.target = word;
+    if (word) word.el.classList.add('target');
+    refreshPinyin();
+    highlightKey();
+  }
+
+  function refreshPinyin() {
+    for (const w of state.words) {
+      if (w.dead) continue;
+      const spans = w.el.querySelectorAll('.pinyin .ch');
+      spans.forEach((s,i) => {
+        s.classList.remove('done','next');
+        if (w === state.target) {
+          if (i < w.typed) s.classList.add('done');
+          else if (i === w.typed) s.classList.add('next');
+        } else {
+          if (i < w.typed) s.classList.add('done');
+        }
+      });
+    }
+  }
+
+  function highlightKey() {
+    Object.values(keyMap).forEach(k => k.classList.remove('next'));
+    if (state.target && !state.target.dead) {
+      const c = state.target.pinyin[state.target.typed];
+      if (c && keyMap[c]) keyMap[c].classList.add('next');
+    }
+  }
+
+  function popText(x, y, txt, color) {
+    const p = document.createElement('div');
+    p.className = 'pop';
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.color = color;
+    p.textContent = txt;
+    stage.appendChild(p);
+    setTimeout(()=>p.remove(), 720);
+  }
+
+  function keyFlash(ch, cls) {
+    const k = keyMap[ch];
+    if (!k) return;
+    k.classList.add(cls);
+    setTimeout(() => k.classList.remove(cls), 130);
+  }
+
+  function handleLetter(ch) {
+    if (!state.running) return;
+
+    let t = state.target;
+    // Re-target if we have no committed word, OR we're not mid-word and this key
+    // doesn't fit the current target — lets the kid start ANY word freely (more responsive).
+    if (!t || t.dead || (t.typed === 0 && t.pinyin[0] !== ch)) {
+      const cand = state.words.filter(w => !w.dead && w.pinyin[w.typed] === ch);
+      // prefer a word already in progress, otherwise the lowest one
+      cand.sort((a, b) => (b.typed > 0) - (a.typed > 0) || b.y - a.y);
+      if (cand[0]) { setTarget(cand[0]); t = cand[0]; }
+    }
+    if (!t || t.dead) { keyFlash(ch, 'press'); badSound(); return; }
+
+    const expected = t.pinyin[t.typed];
+    if (ch === expected) {
+      t.typed++;
+      keyFlash(ch, 'hit');
+      goodSound();
+      refreshPinyin();
+      highlightKey();
+      if (t.typed >= t.pinyin.length) clearWord(t);
+    } else {
+      // wrong key: gentle feedback only — keep the kid's progress (forgiving)
+      keyFlash(ch, 'press');
+      badSound();
+      t.el.classList.add('miss');
+      setTimeout(() => t.el.classList.remove('miss'), 250);
+    }
+  }
+
+  function clearWord(t) {
+    t.dead = true;
+    clearSound();
+    speak(t.hanzi);
+    const xrel = parseFloat(t.el.style.left);
+    const yrel = t.y;
+    popText(xrel, yrel, '+'+ (10*t.pinyin.length) + ' 🚀', 'var(--good)');
+    t.el.style.transition = 'transform .4s ease-in, opacity .4s';
+    t.el.style.transform = 'translateX(-50%) translateY(-400px) scale(.4)';
+    t.el.style.opacity = '0';
+    const el = t.el;
+    setTimeout(()=>el.remove(), 420);
+    state.words = state.words.filter(w=>w!==t);
+    state.target = null;
+    state.score += 10 * t.pinyin.length;
+    state.cleared++;
+    scoreEl.textContent = state.score;
+    // level up every 6 cleared
+    if (state.cleared % 6 === 0) {
+      state.level++;
+      levelEl.textContent = state.level;
+      popText(stage.clientWidth/2, stage.clientHeight/2, '关卡 '+state.level+' 🎉', 'var(--accent)');
+    }
+    Object.values(keyMap).forEach(k => k.classList.remove('next'));
+    chooseTarget();
+  }
+
+  function loseWord(w) {
+    w.dead = true;
+    badSound();
+    const el = w.el;
+    el.style.transition = 'opacity .3s';
+    el.style.opacity = '0';
+    setTimeout(()=>el.remove(),300);
+    state.words = state.words.filter(x=>x!==w);
+    if (state.target === w) { state.target = null; }
+    state.lives--;
+    setHearts();
+    popText(w.x, stage.clientHeight-40, '💥', 'var(--bad)');
+    if (state.lives <= 0) { gameOver(); }
+    else { chooseTarget(); }
+  }
+
+  function tick(ts) {
+    if (!state.running) return;
+    if (!state.last) state.last = ts;
+    const dt = Math.min(50, ts - state.last) / 1000;
+    state.last = ts;
+
+    // spawn
+    state.spawnTimer -= dt*1000;
+    if (state.spawnTimer <= 0) {
+      makeWord();
+      state.spawnTimer = spawnIntervalMs();
+    }
+
+    const groundY = stage.clientHeight - 56;
+    const speed = speedForLevel();
+    for (const w of state.words) {
+      if (w.dead) continue;
+      w.y += speed * dt;
+      w.el.style.top = w.y + 'px';
+      if (w.y >= groundY) loseWord(w);
+    }
+
+    chooseTarget();
+    refreshPinyin();
+    highlightKey();
+
+    state.raf = requestAnimationFrame(tick);
+  }
+
+  function startGame() {
+    state.running = true;
+    state.score = 0;
+    state.level = 1;
+    state.lives = 3;
+    state.words.forEach(w=>w.el.remove());
+    state.words = [];
+    state.target = null;
+    state.cleared = 0;
+    state.spawnTimer = 400;
+    state.last = 0;
+    scoreEl.textContent = '0';
+    levelEl.textContent = '1';
+    setHearts();
+    overlay.classList.add('hidden');
+    // unlock audio + start rock canon background music
+    beep(440,0.05,'sine',0.05);
+    MUSIC.start();
+    try { window.focus(); } catch(e){}
+    state.raf = requestAnimationFrame(tick);
+  }
+
+  function gameOver() {
+    state.running = false;
+    cancelAnimationFrame(state.raf);
+    MUSIC.stop();
+    Object.values(keyMap).forEach(k => k.classList.remove('next'));
+    overlay.innerHTML = `
+      <h1>🎈 游戏结束</h1>
+      <p>你把 <b>${state.cleared}</b> 个汉字宝宝送上了太空！<br>得分 <b style="font-size:28px;color:var(--accent)">${state.score}</b> 分，到达第 <b>${state.level}</b> 关 🌟</p>
+      <button class="btn" id="againBtn">再玩一次 🚀</button>
+    `;
+    overlay.classList.remove('hidden');
+    document.getElementById('againBtn').addEventListener('click', startGame);
+  }
+
+  // ---------- input ----------
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') return;
+    const ch = e.key.toLowerCase();
+    if (/^[a-z]$/.test(ch)) {
+      e.preventDefault();
+      // resume audio context on first key
+      if (actx && actx.state === 'suspended') actx.resume();
+      handleLetter(ch);
+    }
+  });
+
+  // tap virtual keys (for touch devices)
+  Object.entries(keyMap).forEach(([c,k]) => {
+    k.addEventListener('pointerdown', (e) => { e.preventDefault(); handleLetter(c); });
+  });
+
+  // level select
+  levelsel.addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.mode = b.dataset.mode;
+    [...levelsel.children].forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');
+  });
+
+  startBtn.addEventListener('click', startGame);
+
+  // keep keyboard focus on the game (important inside iframes / after button clicks)
+  function grabFocus() { try { window.focus(); if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch(e){} }
+  document.addEventListener('pointerdown', grabFocus);
+
+  // music mute toggle
+  const musicBtn = document.getElementById('musicBtn');
+  musicBtn.addEventListener('click', () => {
+    const muted = MUSIC.toggleMute();
+    musicBtn.classList.toggle('off', muted);
+    musicBtn.textContent = muted ? '🔇' : '🎵';
+    if (!muted && state.running) MUSIC.start();
+    musicBtn.blur();
+  });
+
+  // fullscreen toggle (SVG icons so they render on every system, unlike ⛶)
+  const fsBtn = document.getElementById('fsBtn');
+  const ICON_FS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4"/></svg>';
+  const ICON_EXIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h4V4M20 8h-4V4M4 16h4v4M20 16h-4v4"/></svg>';
+  function isFs(){ return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function updateFsIcon(){ fsBtn.innerHTML = isFs() ? ICON_EXIT : ICON_FS; }
+  updateFsIcon();
+  fsBtn.addEventListener('click', () => {
+    const el = document.documentElement;
+    if (!isFs()) {
+      (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+    } else {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    }
+    fsBtn.blur();
+  });
+  document.addEventListener('fullscreenchange', updateFsIcon);
+  document.addEventListener('webkitfullscreenchange', updateFsIcon);
+})();
+</script>
+</body>
+</html>
