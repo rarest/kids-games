@@ -125,6 +125,12 @@
     padding: 10px 8px 16px;
   }
   .krow { display: flex; justify-content: center; gap: 6px; margin-bottom: 6px; }
+  /* 全屏时放大，填满大屏、减少留白 */
+  :fullscreen header, :fullscreen #stage, :fullscreen #keyboard,
+  :-webkit-full-screen header, :-webkit-full-screen #stage, :-webkit-full-screen #keyboard { max-width: min(1400px, 94vw); }
+  :fullscreen .key, :-webkit-full-screen .key { max-width: 92px; }
+  :fullscreen .word .hanzi, :-webkit-full-screen .word .hanzi { font-size: 72px; }
+  :fullscreen .word .pinyin, :-webkit-full-screen .word .pinyin { font-size: 34px; }
   .key {
     flex: 1 1 0;
     max-width: 60px;

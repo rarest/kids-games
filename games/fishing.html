@@ -16,7 +16,9 @@
   #wrap {
     position: relative;
     width: 100vw;
+    width: 100dvw;
     height: 100vh;
+    height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,11 +65,13 @@
   #bottombar {
     position: absolute;
     bottom: 0; left: 0; right: 0;
+    z-index: 5;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 14px;
     padding: 12px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
     pointer-events: none;
   }
   .cannonpick {

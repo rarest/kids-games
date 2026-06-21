@@ -187,6 +187,210 @@
 
 <script>
 (() => {
+
+  // ---------- audio (WebAudio beeps) ----------
+  let actx = null;
+  function beep(freq, dur=0.08, type='sine', vol=0.2) {
+    try {
+      actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type; o.frequency.value = freq;
+      g.gain.value = vol;
+      o.connect(g); g.connect(actx.destination);
+      const t = actx.currentTime;
+      o.start(t);
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+      o.stop(t+dur);
+    } catch(e){}
+  }
+  function goodSound() { beep(880,0.07,'triangle'); }
+  function clearSound() { beep(660,0.09,'square',0.18); setTimeout(()=>beep(990,0.12,'square',0.18),90); setTimeout(()=>beep(1320,0.14,'square',0.18),190); }
+  function badSound() { beep(160,0.18,'sawtooth',0.18); }
+  function speak(text){
+    try {
+      if (!window.speechSynthesis) return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'zh-CN'; u.rate = 0.85;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    } catch(e){}
+  }
+
+  // ---------- background music: Pachelbel Canon (rock arrangement) ----------
+  // fully synthesized with WebAudio, no audio files. Canon in D progression:
+  // D - A - Bm - F#m - G - D - G - A  (the famous 8-bar loop)
+  const MUSIC = (() => {
+    let ctx = null, master = null, distCurve = null;
+    let timer = null, started = false, muted = false;
+    let step = 0, nextTime = 0;
+    const BPM = 116;
+    const EIGHTH = (60 / BPM) / 2;      // seconds per eighth note
+    const BARS = 8, STEPS = BARS * 8;   // 8 bars * 8 eighths
+
+    function noteFreq(name) {
+      const m = /^([A-G])(#?)(-?\d)$/.exec(name);
+      const base = { C:-9, D:-7, E:-5, F:-4, G:-2, A:0, B:2 };
+      let s = base[m[1]] + (m[2] ? 1 : 0) + (parseInt(m[3],10) - 4) * 12;
+      return 440 * Math.pow(2, s / 12);
+    }
+
+    // chord roots + arpeggio + pad triad per bar
+    const ROOT = ['D2','A2','B2','F#2','G2','D2','G2','A2'];
+    const ARP = [
+      ['D4','F#4','A4','D5','F#5','D5','A4','F#4'],
+      ['A3','C#4','E4','A4','C#5','A4','E4','C#4'],
+      ['B3','D4','F#4','B4','D5','B4','F#4','D4'],
+      ['F#3','A3','C#4','F#4','A4','F#4','C#4','A3'],
+      ['G3','B3','D4','G4','B4','G4','D4','B3'],
+      ['D4','F#4','A4','D5','F#5','D5','A4','F#4'],
+      ['G3','B3','D4','G4','B4','G4','D4','B3'],
+      ['A3','C#4','E4','A4','C#5','E5','C#5','A4'],
+    ];
+    const PAD = [
+      ['D4','F#4','A4'], ['A3','C#4','E4'], ['B3','D4','F#4'], ['F#3','A3','C#4'],
+      ['G3','B3','D4'],  ['D4','F#4','A4'], ['G3','B3','D4'],  ['A3','C#4','E4'],
+    ];
+
+    function makeDist(amount) {
+      const n = 1024, curve = new Float32Array(n), deg = Math.PI / 180;
+      for (let i = 0; i < n; i++) {
+        const x = i * 2 / n - 1;
+        curve[i] = (3 + amount) * x * 20 * deg / (Math.PI + amount * Math.abs(x));
+      }
+      return curve;
+    }
+
+    function env(node, t, peak, dur, atk = 0.005) {
+      const g = node.gain;
+      g.setValueAtTime(0.0001, t);
+      g.exponentialRampToValueAtTime(peak, t + atk);
+      g.exponentialRampToValueAtTime(0.0001, t + dur);
+    }
+
+    function tone(type, freq, t, dur, peak, dest) {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = type; o.frequency.value = freq;
+      o.connect(g); g.connect(dest || master);
+      env(g, t, peak, dur);
+      o.start(t); o.stop(t + dur + 0.02);
+    }
+
+    function guitar(freq, t, dur, peak) {
+      // sawtooth through distortion for a rock-guitar tone
+      const o = ctx.createOscillator(), g = ctx.createGain(), d = ctx.createWaveShaper();
+      o.type = 'sawtooth'; o.frequency.value = freq;
+      d.curve = distCurve; d.oversample = '2x';
+      o.connect(d); d.connect(g); g.connect(master);
+      env(g, t, peak, dur, 0.004);
+      o.start(t); o.stop(t + dur + 0.02);
+    }
+
+    // drum hits
+    function noiseBuf() {
+      const len = ctx.sampleRate * 0.3, b = ctx.createBuffer(1, len, ctx.sampleRate);
+      const d = b.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      return b;
+    }
+    let NB = null;
+    function kick(t) {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(140, t);
+      o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
+      g.gain.setValueAtTime(0.9, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+      o.connect(g); g.connect(master);
+      o.start(t); o.stop(t + 0.2);
+    }
+    function snare(t) {
+      const s = ctx.createBufferSource(), g = ctx.createGain(), hp = ctx.createBiquadFilter();
+      s.buffer = NB; hp.type = 'highpass'; hp.frequency.value = 1500;
+      g.gain.setValueAtTime(0.5, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+      s.connect(hp); hp.connect(g); g.connect(master);
+      s.start(t); s.stop(t + 0.16);
+    }
+    function hat(t, open) {
+      const s = ctx.createBufferSource(), g = ctx.createGain(), hp = ctx.createBiquadFilter();
+      s.buffer = NB; hp.type = 'highpass'; hp.frequency.value = 7000;
+      const dur = open ? 0.12 : 0.04;
+      g.gain.setValueAtTime(0.18, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      s.connect(hp); hp.connect(g); g.connect(master);
+      s.start(t); s.stop(t + dur + 0.02);
+    }
+
+    function scheduleStep(gstep, t) {
+      const bar = Math.floor(gstep / 8) % BARS;
+      const i = gstep % 8;          // eighth within bar
+      const beatHit = (i % 2 === 0); // on a quarter-note beat
+
+      // drums
+      if (i === 0 || i === 4) kick(t);
+      if (i === 2 || i === 6) snare(t);
+      hat(t, i === 7);
+
+      // bass — driving eighths, root with octave bounce
+      const root = noteFreq(ROOT[bar]);
+      tone('triangle', i % 2 ? root * 2 : root, t, EIGHTH * 0.9, 0.32);
+
+      // power chord chug on each beat (root + fifth)
+      if (beatHit) {
+        guitar(root * 2, t, EIGHTH * 1.1, 0.10);
+        guitar(root * 2 * Math.pow(2, 7/12), t, EIGHTH * 1.1, 0.09);
+      }
+
+      // pad triad sustained across the bar (start of bar only)
+      if (i === 0) {
+        PAD[bar].forEach(n => tone('sine', noteFreq(n), t, EIGHTH * 8, 0.06));
+      }
+
+      // lead — canon arpeggio, eighth notes
+      guitar(noteFreq(ARP[bar][i]), t, EIGHTH * 1.4, 0.14);
+    }
+
+    function loop() {
+      while (nextTime < ctx.currentTime + 0.12) {
+        scheduleStep(step, nextTime);
+        nextTime += EIGHTH;
+        step = (step + 1) % STEPS;
+      }
+      timer = setTimeout(loop, 25);
+    }
+
+    function ensure() {
+      if (ctx) return;
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain();
+      master.gain.value = 0.32;
+      master.connect(ctx.destination);
+      distCurve = makeDist(8);
+      NB = noiseBuf();
+    }
+
+    return {
+      start() {
+        ensure();
+        if (ctx.state === 'suspended') ctx.resume();
+        if (started || muted) return;
+        started = true;
+        step = 0; nextTime = ctx.currentTime + 0.08;
+        loop();
+      },
+      stop() {
+        started = false;
+        if (timer) { clearTimeout(timer); timer = null; }
+      },
+      toggleMute() {
+        muted = !muted;
+        if (muted) this.stop();
+        return muted;
+      },
+      isMuted() { return muted; },
+    };
+  })();
+
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
   const GRID = 20;            // 20x20 格
@@ -285,6 +489,9 @@
   function applyEffect(t) {
     addScore(t.pts);
     eaten++;
+    // 吃到音效：大奖用上扬三连音，普通用清脆一声
+    if (t.fx === 'collectAll' || t.fx === 'double' || t.pts >= 200) clearSound();
+    else beep(680 + Math.min(t.pts, 60) * 6, 0.06, 'triangle');
     // 每吃 5 颗稍微加速（与分值脱钩，绿痘加 200 也只算 1 颗）
     if (eaten % 5 === 0 && speed > 100) { speed -= 8; restartLoop(); }
     if (t.fx === 'fast')   setBoost(0.5, 2000);   // 蓝：加速 2 秒
@@ -303,6 +510,8 @@
     overlay.classList.add('hidden');
     running = true;
     paused = false;
+    beep(440, 0.05, 'sine', 0.05);   // 解锁音频
+    MUSIC.start();                    // 摇滚卡农 BGM
     restartLoop();
   }
 
@@ -334,6 +543,8 @@
   function gameOver() {
     running = false;
     clearInterval(loop);
+    MUSIC.stop();
+    badSound();
     addToBoard(score);
     ovTitle.textContent = '💀 痘痘赢了！';
     ovDesc.innerHTML = `你吃掉了 <b style="color:var(--accent)">${score}</b> 分<br>再来一局把脸清空吧～`;
@@ -485,6 +696,21 @@
     b.onclick=()=>{ toggleFullscreen(); b.blur(); };
     document.addEventListener('fullscreenchange',u);
     document.body.appendChild(b); u();
+  })();
+
+  // 🎵 背景音乐开关
+  (function(){
+    const b = document.createElement('button');
+    b.id = '__musicbtn'; b.title = '背景音乐'; b.textContent = '🎵';
+    b.style.cssText = 'position:fixed;top:12px;right:60px;z-index:99999;width:40px;height:40px;border:none;border-radius:10px;background:rgba(0,0,0,.4);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);';
+    b.onclick = () => {
+      const muted = MUSIC.toggleMute();
+      b.style.opacity = muted ? '.4' : '1';
+      b.textContent = muted ? '🔇' : '🎵';
+      if (!muted && running) MUSIC.start();
+      b.blur();
+    };
+    document.body.appendChild(b);
   })();
 
   document.addEventListener('keydown', e => {

@@ -57,8 +57,9 @@
     background: linear-gradient(180deg, #0a7ab0, #045b86 60%, #023a5c);
   }
   canvas { display: block; width: 100%; height: 100%; touch-action: none; }
-  :fullscreen .stage { max-width: none; border-radius: 0; }
-  :-webkit-full-screen .stage { max-width: none; border-radius: 0; }
+  :fullscreen .stage, :-webkit-full-screen .stage { max-width: none; border-radius: 0; }
+  :fullscreen h1, :-webkit-full-screen h1 { display: none; }
+  :fullscreen .controls, :-webkit-full-screen .controls { padding: 2px; }
 
   /* Overlay panels */
   .overlay {
