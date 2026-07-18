@@ -10,9 +10,11 @@
 index.html     合集落地页（数据驱动，读取 games.js 自动列出所有游戏，含搜索）
 games.js       游戏目录清单 —— 新增游戏在这里加一行
 games/         所有游戏（每个都是独立单文件 HTML）
-  ├─ pinyin.html   🚀 拼音打字小火箭
-  ├─ snake.html    🐍 贪吃蛇吃痘痘
-  └─ fish.html     🐟 大鱼吃小鱼
+  ├─ pinyin.html    🚀 拼音打字小火箭
+  ├─ snake.html     🐍 贪吃蛇吃痘痘
+  ├─ fish.html      🐟 大鱼吃小鱼
+  ├─ fishing.html   🎣 捕鱼达人
+  └─ goldminer.html ⛏️ 黄金矿工
 deploy/        自动部署组件
 ```
 
