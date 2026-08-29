@@ -88,8 +88,17 @@ test('real mobile input launches the 700-hook miner and completes a collection c
     assert.equal(await evaluate("document.querySelector('#overlay .card>p:not(.eyebrow)').textContent.includes('700')"), true);
     await evaluate("document.getElementById('start').click()");
     assert.equal(await evaluate("document.getElementById('overlay').classList.contains('hidden')"), true);
+    const timeBeforeBackground = Number(await evaluate("document.getElementById('time').textContent"));
+    await evaluate("Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'))");
+    await sleep(1200);
+    assert.equal(Number(await evaluate("document.getElementById('time').textContent")), timeBeforeBackground, 'backgrounding pauses the countdown');
+    assert.equal(await evaluate("document.getElementById('status').textContent"), '游戏已暂停');
+    await evaluate("Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'))");
+    await sleep(1100);
+    assert.equal(Number(await evaluate("document.getElementById('time').textContent")), timeBeforeBackground - 1, 'foregrounding resumes the countdown');
+    await evaluate("delete document.hidden");
 
-    const point = await evaluate(`(()=>{const rect=document.getElementById('canvas').getBoundingClientRect();return{x:rect.left+rect.width/2,y:rect.top+rect.height*.55}})()`);
+    let point = await evaluate(`(()=>{const rect=document.getElementById('canvas').getBoundingClientRect();return{x:rect.left+rect.width/2,y:rect.top+rect.height*.55}})()`);
     await cdp.call('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...point, id: 1, radiusX: 1, radiusY: 1, force: 1 }] });
     await cdp.call('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     const launched = await evaluate(`({status:document.getElementById('status').textContent,score:Number(document.getElementById('score').textContent)})`);
@@ -98,6 +107,18 @@ test('real mobile input launches the 700-hook miner and completes a collection c
       const shot = await cdp.call('Page.captureScreenshot', { format: 'png', fromSurface: true });
       await writeFile(process.env.GOLDMINER_SCREENSHOT, Buffer.from(shot.data, 'base64'));
     }
+    const landscape = devices[1];
+    await cdp.call('Emulation.setSafeAreaInsetsOverride', { insets: landscape.insets });
+    await cdp.call('Emulation.setDeviceMetricsOverride', { width: landscape.width, height: landscape.height, deviceScaleFactor: landscape.dpr, mobile: landscape.mobile });
+    await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
+    assert.equal(await evaluate("document.getElementById('status').textContent"), '屏幕已调整，点击再次齐射', 'active rotation cancels and safely reflows the volley');
+    await cdp.call('Emulation.setSafeAreaInsetsOverride', { insets: phone.insets });
+    await cdp.call('Emulation.setDeviceMetricsOverride', { width: phone.width, height: phone.height, deviceScaleFactor: phone.dpr, mobile: phone.mobile });
+    await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
+    assert.equal(await evaluate("document.getElementById('status').textContent"), '屏幕已调整，点击再次齐射');
+    point = await evaluate(`(()=>{const rect=document.getElementById('canvas').getBoundingClientRect();return{x:rect.left+rect.width/2,y:rect.top+rect.height*.55}})()`);
+    await cdp.call('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...point, id: 2, radiusX: 1, radiusY: 1, force: 1 }] });
+    await cdp.call('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
 
     let score = 0;
     for (let index = 0; index < 160; index += 1) {

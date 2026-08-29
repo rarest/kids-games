@@ -17,5 +17,7 @@ test('gold miner page ships the responsive 700-hook module bundle', async () => 
   const game = await readFile(new URL('../goldminer/game.js', import.meta.url), 'utf8');
   assert.match(game, /createHookVolley\(\{count:700/);
   assert.match(game, /shouldRefreshMine/);
+  assert.match(game, /visibilitychange/);
+  assert.match(game, /state\.items\.length\?state\.items:undefined/);
   await access(new URL('../goldminer/game-core.js', import.meta.url));
 });

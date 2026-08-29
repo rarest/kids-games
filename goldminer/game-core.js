@@ -42,6 +42,32 @@ export function claimTreasure(items, point, padding = 9) {
   return item;
 }
 
+export function itemReachableByVolley(item, {
+  origin,
+  count = 700,
+  minAngle = -Math.PI / 3,
+  maxAngle = Math.PI / 3,
+  padding = 9,
+} = {}) {
+  if (!origin || count <= 0) return false;
+  const dx = item.x - origin.x;
+  const dy = item.y - origin.y;
+  const step = count === 1 ? 0 : (maxAngle - minAngle) / (count - 1);
+  const angle = Math.atan2(dx, dy);
+  const nearest = count === 1 ? 0 : Math.max(0, Math.min(count - 1, Math.round((angle - minAngle) / step)));
+  const radius = item.radius + padding;
+  for (let index = Math.max(0, nearest - 1); index <= Math.min(count - 1, nearest + 1); index += 1) {
+    const rayAngle = count === 1 ? (minAngle + maxAngle) / 2 : minAngle + step * index;
+    const unitX = Math.sin(rayAngle);
+    const unitY = Math.cos(rayAngle);
+    const projection = dx * unitX + dy * unitY;
+    const length = Math.max(78, projection);
+    if (projection + radius < 78) continue;
+    if (Math.hypot(dx - unitX * length, dy - unitY * length) <= radius) return true;
+  }
+  return false;
+}
+
 export function shouldRefreshMine({ itemCount, hookCount, time }) {
   return itemCount === 0 && hookCount === 0 && time > 0;
 }
@@ -58,22 +84,43 @@ function typePlan(level) {
   ];
 }
 
-export function createLevelItems({ width, height, level, top = 165, random = Math.random }) {
+export function createLevelItems({
+  width,
+  height,
+  level,
+  top = 165,
+  origin = { x: width / 2, y: top - 82 },
+  bounds = {},
+  types,
+  random = Math.random,
+}) {
   const items = [];
-  const plan = typePlan(level);
+  const plan = types || typePlan(level);
+  const safe = {
+    left: Math.max(0, Number(bounds.left) || 0),
+    right: Math.max(0, Number(bounds.right) || 0),
+    bottom: Math.max(0, Number(bounds.bottom) || 0),
+  };
   const spots = [];
   for (let y = top + 22; y <= height - 22; y += 45) {
-    for (let x = 30; x <= width - 30; x += 48) spots.push({ x, y });
+    for (let x = safe.left + 30; x <= width - safe.right - 30; x += 48) spots.push({ x, y });
   }
 
   for (const type of plan) {
     let placed = false;
     for (let attempt = 0; attempt < 90 && !placed; attempt += 1) {
       const radius = type.radius;
-      const x = 8 + radius + random() * Math.max(1, width - 16 - radius * 2);
-      const y = top + radius + random() * Math.max(1, height - top - radius - 8);
+      const minY = top + radius;
+      const maxY = height - safe.bottom - radius - 8;
+      if (maxY < minY) break;
+      const y = minY + random() * (maxY - minY);
+      const coneReach = Math.max(0, (y - origin.y) * Math.tan(Math.PI / 3));
+      const minX = Math.max(safe.left + radius + 8, origin.x - coneReach);
+      const maxX = Math.min(width - safe.right - radius - 8, origin.x + coneReach);
+      if (maxX < minX) continue;
+      const x = minX + random() * (maxX - minX);
       const candidate = { ...type, x, y, radius, caught: false };
-      if (!items.some((item) => circlesOverlap(item, candidate, 8))) {
+      if (itemReachableByVolley(candidate, { origin }) && !items.some((item) => circlesOverlap(item, candidate, 8))) {
         items.push(candidate);
         placed = true;
       }
@@ -82,7 +129,8 @@ export function createLevelItems({ width, height, level, top = 165, random = Mat
       const radius = type.radius;
       const spot = spots.find(({ x, y }) => {
         const candidate = { x, y, radius };
-        return x - radius >= 8 && x + radius <= width - 8 && y - radius >= top && y + radius <= height - 8 &&
+        return x - radius >= safe.left + 8 && x + radius <= width - safe.right - 8 && y - radius >= top && y + radius <= height - safe.bottom - 8 &&
+          itemReachableByVolley(candidate, { origin }) &&
           !items.some((item) => circlesOverlap(item, candidate, 8));
       });
       if (spot) items.push({ ...type, ...spot, radius, caught: false });
