@@ -10,6 +10,9 @@ test('game hall preserves five existing games and appends crown maze as the sixt
   for (const file of ['games/pinyin.html','games/snake.html','games/fish.html','games/fishing.html','games/goldminer.html']) {
     assert.ok(context.window.GAMES.some(game => game.file === file), file);
   }
+  const goldMiner = context.window.GAMES.find(game => game.file === 'games/goldminer.html');
+  assert.match(goldMiner.desc, /700/);
+  assert.ok(goldMiner.tags.includes('手机'));
   const maze = context.window.GAMES.find(game => game.file === 'games/maze.html');
   assert.equal(maze.name, '皇冠迷宫');
   assert.ok(maze.tags.includes('迷宫'));
