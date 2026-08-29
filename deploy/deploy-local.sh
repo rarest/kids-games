@@ -13,6 +13,7 @@ git reset --hard --quiet origin/main
 
 sudo rsync -a --delete \
   --exclude '.git' --exclude 'deploy' --exclude 'README.md' --exclude '.gitignore' \
+  --exclude '.agents' --exclude 'openspec' \
   --exclude '.user.ini' --exclude '.well-known' \
   "$REPO_DIR"/ "$DOCROOT"/
 sudo chmod -R a+rX "$DOCROOT"
