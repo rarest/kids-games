@@ -44,6 +44,7 @@ export function createAudioController({ baseUrl = './audio', enabled = true, Aud
   }
 
   async function unlock() {
+    if(unlocked){startMusic();return true}
     unlocked = true;
     for (const name of Object.keys(SOUND_DEFINITIONS)) {
       const source = sourceFor(name);

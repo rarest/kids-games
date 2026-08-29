@@ -31,5 +31,6 @@ test('mobile layout defines safe areas and generous touch targets', async () => 
   assert.match(css, /safe-area-inset-right/);
   assert.match(css, /calc\(4px \+ env\(safe-area-inset-bottom\)\)/);
   assert.match(css, /\.visually-hidden/);
+  assert.match(css, /\.accessible-directions:focus-within/);
   assert.match(css, /@media\s*\(max-height:\s*700px\)/);
 });

@@ -171,6 +171,18 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       await cdp.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...first,x:first.x-48},{...second,x:second.x+48}]});
       await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
     };
+    const realHeldDrag=async directions=>{
+      const start=await canvasCenter();
+      let point={...start,id:1,radiusX:1,radiusY:1,force:1};
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point]});
+      for(const direction of directions){
+        const [dx,dy]=DELTAS[direction];
+        point={...point,x:point.x+dx*42,y:point.y+dy*42};
+        await cdp.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[point]});
+        await sleep(110);
+      }
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    };
     const resetStage=async()=>{
       const reset=JSON.parse(await evaluate(`JSON.stringify((()=>{document.getElementById('backToMapButton').click();const node=document.querySelector('.stage-node[data-stage="${stageId}"]');if(!node)return{found:false,screen:document.body.dataset.screen};node.click();return{found:true,disabled:node.disabled,screen:document.body.dataset.screen,stage:document.body.dataset.stage}})())`));
       assert.equal(reset.found,true,'reset stage node exists');
@@ -201,8 +213,22 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       assert.equal(await evaluate("document.getElementById('stepCount').textContent"),String(plans.dynamite.path.length),'dynamite does not count a move');
       await resetStage();
     }
+    const heldDirections=solution.slice(0,2);
+    assert.equal(new Set(heldDirections).size,1,'browser fixture starts with a continuous corridor');
+    await realHeldDrag(heldDirections);
+    assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'2','one held drag can make consecutive moves');
+    await resetStage();
+    const accessiblePanel=await evaluate(`(()=>{
+      const panel=document.getElementById('accessibleDirections'),button=document.querySelector('[data-access-direction=${solution[0]}]');
+      button.focus();const rect=panel.getBoundingClientRect();
+      return{width:rect.width,height:rect.height,visibility:getComputedStyle(panel).visibility};
+    })()`);
+    assert.ok(accessiblePanel.width>200,'keyboard focus reveals accessible direction controls');
+    assert.ok(accessiblePanel.height>=44,'revealed accessible controls have a usable height');
+    assert.equal(accessiblePanel.visibility,'visible','revealed accessible controls are visible');
     await evaluate(`document.querySelector('[data-access-direction=${solution[0]}]').click()`);
     assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'1','accessible direction control moves');
+    await evaluate('document.activeElement.blur()');
     await resetStage();
     let stepIndex=0;
     for(const device of DEVICES){

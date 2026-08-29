@@ -10,11 +10,11 @@ class FakeAudio {
   static plays = 0;
   static voices = [];
   static instances = [];
-  constructor(src) { this.src = src; this.volume = 1; this.playbackRate = 1; this.preload = ''; this.loop = false; this.pauses = 0; FakeAudio.instances.push(this); }
+  constructor(src) { this.src = src; this.volume = 1; this.playbackRate = 1; this.preload = ''; this.loop = false; this.pauses = 0; this.loads = 0; this.paused = true; FakeAudio.instances.push(this); }
   cloneNode() { const voice = new FakeAudio(this.src); FakeAudio.voices.push(voice); return voice; }
-  play() { FakeAudio.plays += 1; return Promise.resolve(); }
-  pause() { this.pauses += 1; }
-  load() {}
+  play() { FakeAudio.plays += 1; this.paused = false; return Promise.resolve(); }
+  pause() { this.pauses += 1; this.paused = true; }
+  load() { this.loads += 1; this.paused = true; }
 }
 
 test('stays silent before unlock or when disabled and throttles tiny footsteps', async () => {
@@ -52,6 +52,12 @@ test('starts a quiet looping royal background track after unlock and follows lif
   assert.equal(music.loop,true);
   assert.equal(music.volume,.12);
   assert.equal(FakeAudio.plays,1);
+  assert.equal(music.loads,1);
+  assert.equal(music.paused,false);
+  await audio.unlock();
+  assert.equal(music.loads,1,'repeat unlock must not reload playing music');
+  assert.equal(FakeAudio.plays,1,'repeat unlock must not start a duplicate play');
+  assert.equal(music.paused,false,'repeat unlock keeps music playing');
   audio.suspend();assert.equal(music.pauses,1);
   audio.resume();assert.equal(FakeAudio.plays,2);
   audio.setEnabled(false);assert.equal(music.pauses,2);

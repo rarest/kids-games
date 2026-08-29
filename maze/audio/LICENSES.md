@@ -21,3 +21,5 @@
 ## 原创背景音乐
 
 `royal-garden.webm` 是为本游戏原创生成的 24 秒皇家花园氛围循环曲，不采样或改编任何第三方音乐。可复现源文件为 `scripts/generate-royal-garden-bgm.mjs`；它合成钟琴旋律、柔和弦乐铺底与低音，并由 FFmpeg 编码为 WebM/Opus。该音乐随本项目一同使用和分发。
+
+重新生成命令：`node scripts/generate-royal-garden-bgm.mjs /tmp/royal-garden.wav`，随后运行 `ffmpeg -y -i /tmp/royal-garden.wav -c:a libopus -b:a 96k -vbr on -compression_level 10 maze/audio/royal-garden.webm`。
