@@ -1,0 +1,24 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+
+test('maze page contains every screen, control, HUD and store hook', async () => {
+  const html = await readFile(new URL('../games/maze.html', import.meta.url), 'utf8');
+  const ids = [
+    'homeScreen', 'shopScreen', 'mapScreen', 'gameScreen', 'resultScreen',
+    'mazeCanvas', 'keyRack', 'dpad', 'inventoryBar', 'startButton', 'shopButton',
+    'backHomeButton', 'itemShopTab', 'skinShopTab', 'restartJourneyButton',
+    'dynamiteButton', 'hookButton', 'moveUp', 'moveDown', 'moveLeft', 'moveRight'
+  ];
+  for (const id of ids) assert.match(html, new RegExp(`id=["']${id}["']`), id);
+  assert.match(html, /viewport-fit=cover/);
+  assert.match(html, /type="module"[^>]+main\.js/);
+});
+
+test('mobile layout defines safe areas and generous touch targets', async () => {
+  const css = await readFile(new URL('../maze/game.css', import.meta.url), 'utf8');
+  assert.match(css, /--touch-size:\s*56px/);
+  assert.match(css, /env\(safe-area-inset-bottom\)/);
+  assert.match(css, /touch-action:\s*none/);
+  assert.match(css, /@media\s*\(max-height:\s*700px\)/);
+});
