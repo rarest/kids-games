@@ -1,5 +1,5 @@
-import { LEVELS } from './levels.js?v=20260829e';
-import { sanitizeSave } from './save.js?v=20260829e';
+import { LEVELS } from './levels.js?v=20260829f';
+import { sanitizeSave } from './save.js?v=20260829f';
 
 export const SKINS = [
   { id: 'red', name: '皇冠红', price: 0, color: '#f4435c' },

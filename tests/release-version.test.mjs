@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const RELEASE='20260829e';
+const RELEASE='20260829f';
 
 test('public HTML and the complete ES module graph share the new cache version',async()=>{
   const html=await readFile(new URL('../games/maze.html',import.meta.url),'utf8');

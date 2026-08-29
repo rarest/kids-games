@@ -1,10 +1,10 @@
-import { cellKey, parseGrid } from './level-tools.js?v=20260829e';
-import { SKINS } from './economy.js?v=20260829e';
-import { buildWallModel, shadowOffsetFor, traceWallPath, visualSizesFor, wallShadowLayersFor, wallSignatureFor } from './wall-geometry.js?v=20260829e';
-import { actorIsVisible, actorScreenPointFor, ambientActorsFor, ambientLayerFor, detailPassesFor, environmentMotion, sceneProfileFor, sceneRenderPlanFor, treePaletteFor, treeShadowFor, waterCycleStateFor } from './scenery.js?v=20260829e';
-import { activeTrails, createMotionState, grassSwayAt, recordStep } from './motion-effects.js?v=20260829e';
+import { cellKey, parseGrid } from './level-tools.js?v=20260829f';
+import { SKINS } from './economy.js?v=20260829f';
+import { buildWallModel, shadowOffsetFor, traceWallPath, visualSizesFor, wallShadowLayersFor, wallSignatureFor } from './wall-geometry.js?v=20260829f';
+import { actorIsVisible, actorScreenPointFor, ambientActorsFor, ambientLayerFor, detailPassesFor, environmentMotion, sceneProfileFor, sceneRenderPlanFor, treePaletteFor, treeShadowFor, waterCycleStateFor } from './scenery.js?v=20260829f';
+import { activeTrails, createMotionState, grassSwayAt, recordStep } from './motion-effects.js?v=20260829f';
 
-export { shadowOffsetFor } from './wall-geometry.js?v=20260829e';
+export { shadowOffsetFor } from './wall-geometry.js?v=20260829f';
 export { detailPassesFor, environmentMotion, sceneProfileFor };
 
 export const MAX_PARTICLES = 220;
