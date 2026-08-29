@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#160c31">
+  <title>皇冠迷宫 · 小火箭游戏厅</title>
+  <link rel="stylesheet" href="../maze/game.css?v=20260829e">
+</head>
+<body data-screen="home">
+  <div class="ambient" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="hall-link" href="../index.html" aria-label="返回小火箭游戏厅">‹ <span>游戏厅</span></a>
+      <div class="coin-pill" aria-label="金币余额"><span class="mini-coin">◆</span><strong id="coinBalance">0</strong></div>
+      <button class="round-button" id="soundButton" type="button" aria-label="开关声音">♪</button>
+    </header>
+
+    <section class="screen home-screen active" id="homeScreen" aria-labelledby="gameTitle">
+      <div class="royal-orbit" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span></div>
+      <div class="crown-mark" aria-hidden="true"><b>♛</b></div>
+      <p class="eyebrow">THE CROWN LABYRINTH</p>
+      <h1 id="gameTitle">皇冠迷宫</h1>
+      <p class="home-copy">穿越十九座幻彩宫殿<br>集齐钥匙，开启皇冠之门</p>
+      <div class="hero-maze" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="hero-dot"></span></div>
+      <div class="home-actions">
+        <button class="primary-button" id="startButton" type="button"><span>开始游戏</span><small>踏上皇家旅程</small></button>
+        <button class="secondary-button" id="shopButton" type="button"><span class="button-icon">♢</span><span>皇家商店</span></button>
+      </div>
+      <p class="save-note">进度自动保存在本机</p>
+    </section>
+
+    <section class="screen shop-screen" id="shopScreen" aria-labelledby="shopTitle">
+      <div class="screen-heading">
+        <button class="back-button" data-back="home" type="button" aria-label="返回主页">‹</button>
+        <div><p class="eyebrow">ROYAL BOUTIQUE</p><h2 id="shopTitle">皇家商店</h2></div>
+        <span class="heading-gem">◆</span>
+      </div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab active" id="itemShopTab" type="button" role="tab" aria-selected="true">冒险道具</button>
+        <button class="tab" id="skinShopTab" type="button" role="tab" aria-selected="false">华服皮肤</button>
+      </div>
+      <div class="shop-list" id="shopList"></div>
+      <div class="shop-tip"><span>✦</span><p id="shopTip">道具为消耗品，购买后可叠加数量。</p></div>
+    </section>
+
+    <section class="screen map-screen" id="mapScreen" aria-labelledby="mapTitle">
+      <div class="screen-heading map-heading">
+        <button class="back-button" id="backHomeButton" data-back="home" type="button" aria-label="返回主页">‹</button>
+        <div><p class="eyebrow">THE ROYAL ROUTE</p><h2 id="mapTitle">皇冠旅程</h2></div>
+        <button class="small-text-button" id="restartJourneyButton" type="button">重走旅程</button>
+      </div>
+      <div class="journey-summary">
+        <span><b id="normalProgress">0</b>/10 王宫</span><i></i><span><b id="coinProgress">0</b>/153 金币</span>
+      </div>
+      <div class="route-scroll" id="routeScroll">
+        <div class="route-path" id="routePath" aria-label="十九关路线图"></div>
+      </div>
+    </section>
+
+    <section class="screen game-screen" id="gameScreen" aria-labelledby="stageName">
+      <div class="game-hud">
+        <button class="back-button compact" id="backToMapButton" type="button" aria-label="返回地图">‹</button>
+        <div class="stage-title"><small id="stageKind">皇家迷宫</small><h2 id="stageName">皇家花园</h2></div>
+        <div class="step-counter"><small>步数</small><strong id="stepCount">0</strong></div>
+      </div>
+      <div class="key-panel">
+        <span>钥匙</span><div id="keyRack" class="key-rack" aria-label="钥匙收集进度"></div>
+      </div>
+      <div class="canvas-frame"><canvas id="mazeCanvas" aria-label="皇冠迷宫游戏区域"></canvas><div class="tool-direction-hint" id="toolHint">请选择使用方向</div></div>
+      <div class="controls-zone">
+        <div class="inventory-bar" id="inventoryBar">
+          <button class="item-button" id="dynamiteButton" type="button"><span class="item-art">✹</span><span>炸药</span><b id="dynamiteCount">0</b></button>
+          <button class="item-button" id="hookButton" type="button"><span class="item-art hook-art">⌁</span><span>钩子</span><b id="hookCount">0</b></button>
+        </div>
+        <div class="dpad" id="dpad" aria-label="虚拟方向键">
+          <button id="moveUp" data-direction="up" type="button" aria-label="向上">▲</button>
+          <button id="moveLeft" data-direction="left" type="button" aria-label="向左">◀</button>
+          <span class="dpad-center">◆</span>
+          <button id="moveRight" data-direction="right" type="button" aria-label="向右">▶</button>
+          <button id="moveDown" data-direction="down" type="button" aria-label="向下">▼</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen result-screen" id="resultScreen" aria-labelledby="resultTitle">
+      <div class="result-card">
+        <div class="result-crown">♛</div>
+        <p class="eyebrow">PALACE CLEARED</p>
+        <h2 id="resultTitle">宫门已开启</h2>
+        <div class="result-stars" id="resultStars" aria-label="通关星级">☆ ☆ ☆</div>
+        <div class="result-stats"><span>步数 <b id="resultSteps">0</b></span><span>用时 <b id="resultTime">0:00</b></span><span>新金币 <b id="resultCoins">0</b></span></div>
+        <button class="primary-button" id="continueButton" type="button"><span>继续旅程</span><small>前往下一座宫殿</small></button>
+        <button class="text-button" id="replayButton" type="button">重新挑战本关</button>
+      </div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="../maze/main.js?v=20260829e"></script>
+</body>
+</html>
