@@ -1,11 +1,12 @@
-import { LEVELS, getLevel } from './levels.js?v=20260829e';
-import { createRun, move, starsFor, useDynamite, useHook } from './engine.js?v=20260829e';
-import { SKINS, availableSkins, awardCoin, canEnterStage, completeStage, equipSkin, purchase, restartJourney } from './economy.js?v=20260829e';
-import { loadSave, persistSave } from './save.js?v=20260829e';
-import { createRenderer } from './render.js?v=20260829e';
-import { createAudioController } from './audio.js?v=20260829e';
-import { diagnosticsAllowed } from './diagnostics.js?v=20260829e';
-import { gameEventSounds } from './sound-events.js?v=20260829e';
+import { LEVELS, getLevel } from './levels.js?v=20260829f';
+import { createRun, move, starsFor, useDynamite, useHook } from './engine.js?v=20260829f';
+import { SKINS, availableSkins, awardCoin, canEnterStage, completeStage, equipSkin, purchase, restartJourney } from './economy.js?v=20260829f';
+import { loadSave, persistSave } from './save.js?v=20260829f';
+import { createRenderer } from './render.js?v=20260829f';
+import { createAudioController } from './audio.js?v=20260829f';
+import { diagnosticsAllowed } from './diagnostics.js?v=20260829f';
+import { gameEventSounds } from './sound-events.js?v=20260829f';
+import { createGestureTracker } from './gesture-controls.js?v=20260829f';
 
 const $ = id => document.getElementById(id);
 const screens = {
@@ -18,6 +19,7 @@ const audio = createAudioController({ baseUrl: '../maze/audio' });
 const diagnosticsEnabled = diagnosticsAllowed(location);
 let save = loadSave();
 let run = null, currentLevel = null, selectedTool = null, shopTab = 'items', soundEnabled = true, toastTimer = 0;
+const hasTouchInput=()=>matchMedia('(pointer:coarse)').matches||(navigator.maxTouchPoints||0)>0;
 
 function store(next) {
   save = persistSave(next);
@@ -36,6 +38,7 @@ function resetPageScroll(){
 }
 
 function showScreen(name) {
+  if(name!=='game')gestureTracker.cancel();
   for (const [key, screen] of Object.entries(screens)) screen.classList.toggle('active', key === name);
   document.body.dataset.screen = name;
   resetPageScroll();requestAnimationFrame(resetPageScroll);
@@ -82,7 +85,7 @@ function renderShop() {
       shopCard({ art: '✹', title: '星火炸药', copy: `库存 ${save.inventory.dynamite} · 炸开紧邻的捷径内墙`, sku: 'dynamite', price: 1 }),
       shopCard({ art: '⌁', title: '月桂钩索', copy: `库存 ${save.inventory.hook} · 飞越一至两面墙壁`, sku: 'hook', price: 3 })
     );
-    $('shopTip').textContent = '选中道具后再按方向键；没有有效目标时不会消耗。';
+    $('shopTip').textContent = hasTouchInput() ? '选中道具后，在迷宫内向目标方向滑动；无效时不会消耗。' : '选中道具后，拖动迷宫或按方向键；无效时不会消耗。';
     return;
   }
   const visible = new Set(availableSkins(save).map(skin => skin.id));
@@ -160,6 +163,7 @@ function startStage(levelId) {
 function syncToolSelection() {
   $('dynamiteButton').classList.toggle('selected', selectedTool === 'dynamite');
   $('hookButton').classList.toggle('selected', selectedTool === 'hook');
+  $('toolHint').textContent=hasTouchInput()?'滑动选择使用方向':'拖动选择使用方向';
   $('toolHint').classList.toggle('visible', Boolean(selectedTool));
 }
 
@@ -214,15 +218,30 @@ function finishStage() {
   setTimeout(() => showScreen('result'), 420);
 }
 
-function bindDirectionButton(button) {
-  let delayTimer = 0, repeatTimer = 0;
-  const stop = () => { clearTimeout(delayTimer); clearInterval(repeatTimer); delayTimer = repeatTimer = 0; };
-  button.addEventListener('pointerdown', event => {
-    event.preventDefault(); audio.unlock(); applyDirection(button.dataset.direction); stop();
-    delayTimer = setTimeout(() => { repeatTimer = setInterval(() => applyDirection(button.dataset.direction), 145); }, 310);
-    try { button.setPointerCapture(event.pointerId); } catch {}
+const gestureTracker=createGestureTracker({threshold:28,minInterval:90});
+function bindGestureSurface(element){
+  element.addEventListener('pointerdown',event=>{
+    if(document.body.dataset.screen!=='game')return;
+    const gestureStarted=gestureTracker.start({pointerId:event.pointerId,x:event.clientX,y:event.clientY,time:event.timeStamp,isPrimary:event.isPrimary,button:event.button});
+    if(!gestureStarted)return;
+    event.preventDefault();audio.unlock();
+    try{element.setPointerCapture(event.pointerId)}catch{}
   });
-  button.addEventListener('pointerup', stop); button.addEventListener('pointercancel', stop); button.addEventListener('lostpointercapture', stop);
+  element.addEventListener('pointermove',event=>{
+    const direction=gestureTracker.move({pointerId:event.pointerId,x:event.clientX,y:event.clientY,time:event.timeStamp});
+    if(!direction)return;
+    event.preventDefault();applyDirection(direction);
+  });
+  const stop=event=>gestureTracker.end(event.pointerId);
+  element.addEventListener('pointerup',stop);element.addEventListener('pointercancel',stop);element.addEventListener('lostpointercapture',stop);
+  document.addEventListener('pointerup',stop);
+  document.addEventListener('pointercancel',stop);
+}
+
+function syncGestureGuide(){
+  const touch=hasTouchInput();
+  $('gestureGuide').querySelector('b').textContent=touch?'滑动迷宫移动':'拖动迷宫或使用方向键';
+  $('gestureGuide').querySelector('small').textContent=touch?'拖动可连续行走':'鼠标、方向键和 WASD 均可';
 }
 
 $('startButton').addEventListener('click', () => { renderRoute(); showScreen('map'); });
@@ -240,13 +259,18 @@ $('restartJourneyButton').addEventListener('click', () => {
   store(restartJourney(save)); renderRoute(); toast('旅程已回到第一关');
 });
 $('soundButton').addEventListener('click', () => { soundEnabled = !soundEnabled; audio.setEnabled(soundEnabled); $('soundButton').textContent = soundEnabled ? '♪' : '×'; toast(soundEnabled ? '声音已开启' : '声音已关闭'); });
-for (const button of document.querySelectorAll('[data-direction]')) bindDirectionButton(button);
+bindGestureSurface(canvas);syncGestureGuide();
+for(const button of document.querySelectorAll('[data-access-direction]'))button.addEventListener('click',()=>{audio.unlock();applyDirection(button.dataset.accessDirection)});
 window.addEventListener('keydown', event => {
   const direction = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right' }[event.key];
   if (direction) { event.preventDefault(); audio.unlock(); applyDirection(direction); }
 });
-window.addEventListener('resize', resizeCanvas);
-document.addEventListener('visibilitychange', () => document.hidden ? audio.suspend() : audio.resume());
+const preventGameGesture=event=>{if(document.body.dataset.screen==='game')event.preventDefault()};
+for(const type of ['gesturestart','gesturechange','gestureend'])document.addEventListener(type,preventGameGesture,{passive:false});
+document.addEventListener('dblclick',preventGameGesture,{passive:false});
+window.addEventListener('resize',()=>{resizeCanvas();syncGestureGuide()});
+window.addEventListener('blur',()=>gestureTracker.cancel());
+document.addEventListener('visibilitychange', () => {if(document.hidden){gestureTracker.cancel();audio.suspend()}else audio.resume()});
 document.addEventListener('pointerdown', () => audio.unlock(), { once: true, capture: true });
 
 function frame(now) {

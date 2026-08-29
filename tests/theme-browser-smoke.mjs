@@ -102,7 +102,7 @@ test('390x844 DPR2 sweep renders all nineteen theme profiles within scene budget
       await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
       if(level.id==='normal-10'){
         const crownPath=pathTo(level,{x:Math.floor(level.rows[0].length/2),y:1});
-        await evaluate(`(async()=>{for(const direction of ${JSON.stringify(crownPath)}){const button=document.querySelector('[data-direction="'+direction+'"]');button.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:1}));button.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:1}));await new Promise(resolve=>requestAnimationFrame(resolve))}})()`);
+        await evaluate(`(async()=>{for(const direction of ${JSON.stringify(crownPath)}){const canvas=document.getElementById('mazeCanvas'),rect=canvas.getBoundingClientRect(),start={x:rect.left+rect.width/2,y:rect.top+rect.height/2},delta={up:[0,-42],down:[0,42],left:[-42,0],right:[42,0]}[direction],init={bubbles:true,cancelable:true,pointerId:1,isPrimary:true,button:0,pointerType:'touch'};canvas.dispatchEvent(new PointerEvent('pointerdown',{...init,clientX:start.x,clientY:start.y}));canvas.dispatchEvent(new PointerEvent('pointermove',{...init,clientX:start.x+delta[0],clientY:start.y+delta[1]}));canvas.dispatchEvent(new PointerEvent('pointerup',{...init,clientX:start.x+delta[0],clientY:start.y+delta[1]}));await new Promise(resolve=>requestAnimationFrame(resolve))}})()`);
         await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
         assert.equal(await evaluate("Number(document.getElementById('stepCount').textContent)"),crownPath.length,'normal-10:crown screenshot framing');
       }
@@ -116,7 +116,7 @@ test('390x844 DPR2 sweep renders all nineteen theme profiles within scene budget
         return {
           stage:document.body.dataset.stage,width:canvas.width,height:canvas.height,nonEmpty,
           noOverflow:document.documentElement.scrollWidth<=innerWidth,scrollY,
-          topControl:rectFor('backToMapButton'),bottomControl:rectFor('moveDown'),
+          topControl:rectFor('backToMapButton'),bottomControl:rectFor('gestureGuide'),
           wallBuilds:diagnostics.wallModelBuilds,trails:diagnostics.trailCount,actors:diagnostics.actorCount,
           scene:diagnostics.sceneId,paints:diagnostics.paintSignatures
         };

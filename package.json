@@ -1,4 +1,8 @@
 {
   "type": "module",
-  "scripts": { "test": "node --test tests/*.test.mjs" }
+  "scripts": {
+    "test": "npm run test:unit && npm run test:browser",
+    "test:unit": "node --test tests/*.test.mjs",
+    "test:browser": "node --test tests/browser-smoke.mjs && node --test tests/theme-browser-smoke.mjs"
+  }
 }

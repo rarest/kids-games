@@ -1,4 +1,4 @@
-import { GENERATED_LAYOUTS } from './generated-levels.js?v=20260829e';
+import { GENERATED_LAYOUTS } from './generated-levels.js?v=20260829f';
 
 const NORMAL_NAMES=['皇家花园','珊瑚宫殿','翡翠秘境','紫晶城堡','黄金神殿','冰蓝王宫','绯红剧院','星空圣殿','幻彩云宫','永恒皇冠迷城'];
 const REWARD_NAMES=['蜂蜜灯笼庭院','樱花珍珠长廊','暖阳翡翠宫','玫瑰金宴会厅','水晶糖果王国','月桂灯火圣殿','彩云宝石天宫','星辉黄金大道','皇冠极光庆典宫'];

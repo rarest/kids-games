@@ -1,4 +1,4 @@
-import { cellKey, parseGrid } from './level-tools.js?v=20260829e';
+import { cellKey, parseGrid } from './level-tools.js?v=20260829f';
 
 const DIRECTIONS = {
   up: { x: 0, y: -1 },
