@@ -108,10 +108,12 @@ test('real mobile input launches the 700-hook miner and completes a collection c
       await writeFile(process.env.GOLDMINER_SCREENSHOT, Buffer.from(shot.data, 'base64'));
     }
     const landscape = devices[1];
+    await evaluate("Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'))");
     await cdp.call('Emulation.setSafeAreaInsetsOverride', { insets: landscape.insets });
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: landscape.width, height: landscape.height, deviceScaleFactor: landscape.dpr, mobile: landscape.mobile });
     await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
-    assert.equal(await evaluate("document.getElementById('status').textContent"), '屏幕已调整，点击再次齐射', 'active rotation cancels and safely reflows the volley');
+    assert.equal(await evaluate("document.getElementById('status').textContent"), '屏幕已调整，点击再次齐射', 'background rotation cancels and safely reflows the volley');
+    await evaluate("Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));delete document.hidden");
     await cdp.call('Emulation.setSafeAreaInsetsOverride', { insets: phone.insets });
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: phone.width, height: phone.height, deviceScaleFactor: phone.dpr, mobile: phone.mobile });
     await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
