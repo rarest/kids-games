@@ -14,11 +14,22 @@ test('main controller imports every rule module and binds the complete event flo
   }
   assert.match(main, /pointerdown/);
   assert.match(main, /gesturestart/);
+  assert.match(main, /data-access-direction/);
+  assert.match(main, /document\.addEventListener\(['"]pointerup['"]/);
+  assert.match(main, /window\.addEventListener\(['"]blur['"]/);
   assert.match(main, /dataset\.screen/);
   assert.match(main, /dataset\.stage/);
 });
 
+test('the default release gate includes unit and both browser suites',async()=>{
+  const pkg=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
+  assert.match(pkg.scripts.test,/test:unit/);
+  assert.match(pkg.scripts.test,/test:browser/);
+  assert.match(pkg.scripts['test:browser'],/browser-smoke\.mjs/);
+  assert.match(pkg.scripts['test:browser'],/theme-browser-smoke\.mjs/);
+});
+
 test('all HTML-linked public assets exist', async () => {
-  const paths = ['../maze/game.css','../maze/main.js','../maze/gesture-controls.js','../maze/levels.js','../maze/engine.js','../maze/economy.js','../maze/save.js','../maze/render.js','../maze/audio.js'];
+  const paths = ['../maze/game.css','../maze/main.js','../maze/gesture-controls.js','../maze/levels.js','../maze/engine.js','../maze/economy.js','../maze/save.js','../maze/render.js','../maze/audio.js','../maze/audio/royal-garden.webm'];
   for (const path of paths) await access(new URL(path, import.meta.url));
 });

@@ -6,11 +6,12 @@ import { LEVELS, getLevel } from '../maze/levels.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const DIRECTIONS = [['up',0,-1],['down',0,1],['left',-1,0],['right',1,0]];
+const DELTAS = Object.fromEntries(DIRECTIONS.map(([name,dx,dy])=>[name,[dx,dy]]));
 const DEVICES = [
-  { name:'phone portrait',width:390,height:844,dpr:2,mobile:true,pointerType:'touch',screenshot:'/tmp/crown-gesture-phone.png' },
-  { name:'phone landscape',width:844,height:390,dpr:2,mobile:true,pointerType:'touch',screenshot:'/tmp/crown-gesture-landscape.png' },
-  { name:'tablet portrait',width:820,height:1180,dpr:2,mobile:true,pointerType:'pen',screenshot:'/tmp/crown-gesture-tablet.png' },
-  { name:'desktop',width:1440,height:900,dpr:1,mobile:false,pointerType:'mouse',screenshot:'/tmp/crown-gesture-desktop.png' }
+  { name:'phone portrait',width:390,height:844,dpr:2,mobile:true,pointerType:'touch',insets:{top:0,left:0,bottom:0,right:0},screenshot:'/tmp/crown-gesture-phone.png' },
+  { name:'phone landscape notch',width:844,height:390,dpr:2,mobile:true,pointerType:'touch',insets:{top:0,left:47,bottom:21,right:47},screenshot:'/tmp/crown-gesture-landscape.png' },
+  { name:'tablet portrait',width:820,height:1180,dpr:2,mobile:true,pointerType:'pen',insets:{top:0,left:0,bottom:0,right:0},screenshot:'/tmp/crown-gesture-tablet.png' },
+  { name:'desktop',width:1440,height:900,dpr:1,mobile:false,pointerType:'mouse',insets:{top:0,left:0,bottom:0,right:0},screenshot:'/tmp/crown-gesture-desktop.png' }
 ];
 
 function solutionFor(level) {
@@ -28,6 +29,46 @@ function solutionFor(level) {
     }
   }
   throw new Error('No browser solution');
+}
+
+function pathsFromStart(level){
+  const exit=`${level.exit.x},${level.exit.y}`,queue=[{...level.start,path:[]}],paths=new Map([[`${level.start.x},${level.start.y}`,[]]]);
+  for(let cursor=0;cursor<queue.length;cursor++){
+    const node=queue[cursor];
+    for(const [name,dx,dy] of DIRECTIONS){
+      const x=node.x+dx,y=node.y+dy,key=`${x},${y}`;
+      if(level.rows[y]?.[x]!=='.'||key===exit||paths.has(key))continue;
+      const path=[...node.path,name];paths.set(key,path);queue.push({x,y,path});
+    }
+  }
+  return paths;
+}
+
+function toolPlansFor(level){
+  const paths=pathsFromStart(level);
+  let dynamite=null,hook=null;
+  for(const wall of level.breakableWalls){
+    for(const [direction,dx,dy] of DIRECTIONS){
+      const origin={x:wall.x-dx,y:wall.y-dy},path=paths.get(`${origin.x},${origin.y}`);
+      if(path&&(!dynamite||path.length<dynamite.path.length))dynamite={path,direction};
+    }
+  }
+  for(const [key,path] of paths){
+    const [x,y]=key.split(',').map(Number);
+    for(const [direction,dx,dy] of DIRECTIONS){
+      let walls=0;
+      for(let distance=1;distance<=3;distance++){
+        const targetX=x+dx*distance,targetY=y+dy*distance,target=level.rows[targetY]?.[targetX];
+        if(target==='#'){walls++;if(walls>2)break;continue}
+        if(target==='.'&&walls>0&&`${targetX},${targetY}`!==`${level.exit.x},${level.exit.y}`)hook={path,direction};
+        break;
+      }
+      if(hook)break;
+    }
+    if(hook)break;
+  }
+  assert.ok(dynamite,'dynamite browser plan');assert.ok(hook,'hook browser plan');
+  return {dynamite,hook};
 }
 
 async function waitFor(url, attempts = 80) {
@@ -56,7 +97,7 @@ class Cdp {
   close() { this.socket.close(); }
 }
 
-test('phone, tablet and desktop gestures reach a stage and move without zoom or browser errors', { timeout: 30000 }, async () => {
+test('real phone, tablet and desktop input reaches a stage without zoom or browser errors', { timeout: 90000 }, async () => {
   const stageId = process.env.CROWN_STAGE_ID || 'normal-1', level = getLevel(stageId);
   assert.ok(level, `Unknown CROWN_STAGE_ID: ${stageId}`);
   const baseUrl = process.env.CROWN_BASE_URL || 'http://127.0.0.1:4174';
@@ -79,13 +120,11 @@ test('phone, tablet and desktop gestures reach a stage and move without zoom or 
       if (state.result.value === 'complete') break; await sleep(100);
     }
     const evaluate = async expression => (await cdp.call('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result.value;
-    if (stageId !== 'normal-1') {
-      const position = LEVELS.findIndex(candidate => candidate.id === stageId);
-      const isolatedSave = { version:1, coins:0, inventory:{dynamite:0,hook:0}, ownedSkins:['red'], equippedSkin:'red', collectedCoinIds:[], completedNormal:[], bestStars:{}, bestSteps:{}, unlockedNormal:level.type==='normal'?level.index:1, journeyPosition:position };
-      await evaluate(`localStorage.setItem('crown-maze-save-v1',${JSON.stringify(JSON.stringify(isolatedSave))});location.reload()`);
-      for (let index = 0; index < 80; index++) {
-        if (await evaluate('document.readyState') === 'complete') break; await sleep(100);
-      }
+    const position = LEVELS.findIndex(candidate => candidate.id === stageId);
+    const isolatedSave = { version:1, coins:0, inventory:{dynamite:2,hook:2}, ownedSkins:['red'], equippedSkin:'red', collectedCoinIds:[], completedNormal:[], bestStars:{}, bestSteps:{}, unlockedNormal:level.type==='normal'?level.index:1, journeyPosition:position };
+    await evaluate(`localStorage.setItem('crown-maze-save-v1',${JSON.stringify(JSON.stringify(isolatedSave))});location.reload()`);
+    for (let index = 0; index < 80; index++) {
+      if (await evaluate('document.readyState') === 'complete') break; await sleep(100);
     }
     assert.equal(await evaluate('document.body.dataset.screen'), 'home');
     assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true);
@@ -104,31 +143,84 @@ test('phone, tablet and desktop gestures reach a stage and move without zoom or 
     assert.equal(await evaluate("document.getElementById('mazeCanvas').width > 0"), true);
     assert.equal(await evaluate("document.getElementById('dpad')===null"),true);
     const solution = solutionFor(level);
+    const canvasCenter=()=>evaluate(`(()=>{const rect=document.getElementById('mazeCanvas').getBoundingClientRect();return{x:rect.left+rect.width/2,y:rect.top+rect.height/2}})()`);
+    const realSwipe=async(direction,pointerType='touch')=>{
+      const start=await canvasCenter(),[dx,dy]=DELTAS[direction],end={x:start.x+dx*42,y:start.y+dy*42};
+      if(pointerType==='touch'){
+        await Promise.all([
+          cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...start,id:1,radiusX:1,radiusY:1,force:1}]}),
+          cdp.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...end,id:1,radiusX:1,radiusY:1,force:1}]}),
+          cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]})
+        ]);
+      }else{
+        await Promise.all([
+          cdp.call('Input.dispatchMouseEvent',{type:'mousePressed',...start,button:'left',buttons:1,clickCount:1,pointerType}),
+          cdp.call('Input.dispatchMouseEvent',{type:'mouseMoved',...end,button:'none',buttons:1,pointerType}),
+          cdp.call('Input.dispatchMouseEvent',{type:'mouseReleased',...end,button:'left',buttons:0,clickCount:1,pointerType})
+        ]);
+      }
+    };
+    const realTap=async()=>{
+      const point=await canvasCenter();
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:1,radiusY:1,force:1}]});
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    };
+    const realPinch=async()=>{
+      const center=await canvasCenter(),first={x:center.x-18,y:center.y,id:1,radiusX:1,radiusY:1,force:1},second={x:center.x+18,y:center.y,id:2,radiusX:1,radiusY:1,force:1};
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[first,second]});
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...first,x:first.x-48},{...second,x:second.x+48}]});
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    };
+    const resetStage=async()=>{
+      const reset=JSON.parse(await evaluate(`JSON.stringify((()=>{document.getElementById('backToMapButton').click();const node=document.querySelector('.stage-node[data-stage="${stageId}"]');if(!node)return{found:false,screen:document.body.dataset.screen};node.click();return{found:true,disabled:node.disabled,screen:document.body.dataset.screen,stage:document.body.dataset.stage}})())`));
+      assert.equal(reset.found,true,'reset stage node exists');
+      assert.equal(reset.disabled,false,'reset stage remains available');
+      assert.equal(reset.screen,'game','reset stage re-enters the game');
+      await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
+    };
+    if(stageId==='normal-1'){
+      const plans=toolPlansFor(level);
+      await evaluate("document.getElementById('dynamiteButton').click()");
+      await realSwipe('up','touch');
+      assert.equal(await evaluate("document.getElementById('dynamiteCount').textContent"),'2','invalid dynamite is not consumed');
+      assert.equal(await evaluate("document.getElementById('dynamiteButton').classList.contains('selected')"),true,'invalid dynamite stays selected');
+      assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'0','invalid dynamite does not move');
+      await evaluate("document.getElementById('dynamiteButton').click();document.getElementById('hookButton').click()");
+      for(const direction of plans.hook.path)await realSwipe(direction,'touch');
+      await realSwipe(plans.hook.direction,'touch');
+      assert.equal(await evaluate("document.getElementById('hookCount').textContent"),'1','valid hook consumes exactly one');
+      assert.equal(await evaluate("document.getElementById('hookButton').classList.contains('selected')"),false,'valid hook clears selection');
+      assert.equal(await evaluate("document.getElementById('stepCount').textContent"),String(plans.hook.path.length+1),'hook counts one move');
+      await resetStage();
+      for(const direction of plans.dynamite.path)await realSwipe(direction,'touch');
+      assert.equal(await evaluate("document.getElementById('stepCount').textContent"),String(plans.dynamite.path.length),'dynamite setup reaches the planned wall');
+      await evaluate("document.getElementById('dynamiteButton').click()");
+      await realSwipe(plans.dynamite.direction,'touch');
+      assert.equal(await evaluate("document.getElementById('dynamiteCount').textContent"),'1','valid dynamite consumes exactly one');
+      assert.equal(await evaluate("document.getElementById('dynamiteButton').classList.contains('selected')"),false,'valid dynamite clears selection');
+      assert.equal(await evaluate("document.getElementById('stepCount').textContent"),String(plans.dynamite.path.length),'dynamite does not count a move');
+      await resetStage();
+    }
+    await evaluate(`document.querySelector('[data-access-direction=${solution[0]}]').click()`);
+    assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'1','accessible direction control moves');
+    await resetStage();
     let stepIndex=0;
-    const swipe=(direction,pointerType='touch')=>evaluate(`(()=>{
-      const canvas=document.getElementById('mazeCanvas'),rect=canvas.getBoundingClientRect();
-      const start={x:rect.left+rect.width/2,y:rect.top+rect.height/2};
-      const delta=${JSON.stringify({up:[0,-42],down:[0,42],left:[-42,0],right:[42,0]})}[${JSON.stringify(direction)}];
-      const init={bubbles:true,cancelable:true,pointerId:1,isPrimary:true,button:0,pointerType:${JSON.stringify(pointerType)}};
-      canvas.dispatchEvent(new PointerEvent('pointerdown',{...init,clientX:start.x,clientY:start.y}));
-      canvas.dispatchEvent(new PointerEvent('pointermove',{...init,clientX:start.x+delta[0],clientY:start.y+delta[1]}));
-      canvas.dispatchEvent(new PointerEvent('pointerup',{...init,clientX:start.x+delta[0],clientY:start.y+delta[1]}));
-    })()`);
     for(const device of DEVICES){
       await cdp.call('Emulation.setTouchEmulationEnabled',{enabled:device.mobile,maxTouchPoints:device.mobile?5:1});
+      await cdp.call('Emulation.setSafeAreaInsetsOverride',{insets:device.insets});
       await cdp.call('Emulation.setDeviceMetricsOverride',{width:device.width,height:device.height,deviceScaleFactor:device.dpr,mobile:device.mobile});
       await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
       const layout=await evaluate(`(()=>{
         const canvas=document.getElementById('mazeCanvas'),guide=document.getElementById('gestureGuide'),title=document.querySelector('.stage-title h2'),keys=document.querySelector('.key-panel');
         const canvasRect=canvas.getBoundingClientRect(),guideRect=guide.getBoundingClientRect(),titleRect=title.getBoundingClientRect(),keyRect=keys.getBoundingClientRect();
         const toolRects=[...document.querySelectorAll('.item-button')].map(button=>button.getBoundingClientRect());
-        const gesture=new Event('gesturestart',{bubbles:true,cancelable:true});
-        const doubleTap=new MouseEvent('dblclick',{bubbles:true,cancelable:true});
         return {width:innerWidth,height:innerHeight,scale:visualViewport?.scale||1,noOverflow:document.documentElement.scrollWidth<=innerWidth,
           canvasVisible:canvasRect.width>0&&canvasRect.height>100,guideVisible:guideRect.top>=0&&guideRect.bottom<=innerHeight,
           toolsVisible:toolRects.every(rect=>rect.top>=0&&rect.bottom<=innerHeight),titleClear:titleRect.bottom<=keyRect.top,titleBottom:titleRect.bottom,keyTop:keyRect.top,
-          hint:document.querySelector('#gestureGuide b').textContent,touchAction:getComputedStyle(canvas).touchAction,
-          gesturePrevented:!canvas.dispatchEvent(gesture),doubleTapPrevented:!canvas.dispatchEvent(doubleTap)};
+          canvasLeft:canvasRect.left,canvasRight:canvasRect.right,
+          safeHorizontal:canvasRect.left>=${device.insets.left}&&canvasRect.right<=innerWidth-${device.insets.right},
+          safeBottom:Math.max(guideRect.bottom,...toolRects.map(rect=>rect.bottom))<=innerHeight-${device.insets.bottom},
+          hint:document.querySelector('#gestureGuide b').textContent,touchAction:getComputedStyle(canvas).touchAction};
       })()`);
       assert.deepEqual({width:layout.width,height:layout.height},{width:device.width,height:device.height},device.name);
       assert.equal(layout.scale,1,`${device.name}:scale`);
@@ -137,11 +229,26 @@ test('phone, tablet and desktop gestures reach a stage and move without zoom or 
       assert.equal(layout.guideVisible,true,`${device.name}:guide`);
       assert.equal(layout.toolsVisible,true,`${device.name}:tools`);
       assert.equal(layout.titleClear,true,`${device.name}:title ${layout.titleBottom} / keys ${layout.keyTop}`);
+      assert.equal(layout.safeHorizontal,true,`${device.name}:horizontal safe area ${layout.canvasLeft}/${layout.canvasRight}`);
+      assert.equal(layout.safeBottom,true,`${device.name}:bottom safe area`);
       assert.equal(layout.hint,device.mobile?'滑动迷宫移动':'拖动迷宫或使用方向键',`${device.name}:input hint`);
       assert.equal(layout.touchAction,'none',`${device.name}:touch action`);
-      assert.equal(layout.gesturePrevented,true,`${device.name}:pinch prevention`);
-      assert.equal(layout.doubleTapPrevented,true,`${device.name}:double-tap prevention`);
-      await swipe(solution[stepIndex],device.pointerType);stepIndex+=1;
+      if(device.pointerType==='touch'){
+        const before=await evaluate("document.getElementById('stepCount').textContent");
+        await realPinch();await realTap();await realTap();await sleep(180);
+        assert.equal(await evaluate("document.getElementById('stepCount').textContent"),before,`${device.name}:pinch does not move`);
+        assert.equal(await evaluate("visualViewport.scale"),1,`${device.name}:real pinch/double-tap scale`);
+        assert.deepEqual(await evaluate("({x:scrollX,y:scrollY})"),{x:0,y:0},`${device.name}:real touch scroll`);
+      }
+      if(device.pointerType==='mouse'){
+        const before=await evaluate("document.getElementById('stepCount').textContent"),start=await canvasCenter();
+        await evaluate("document.getElementById('mazeCanvas').setPointerCapture=()=>{throw new Error('capture unavailable')}");
+        await cdp.call('Input.dispatchMouseEvent',{type:'mousePressed',...start,button:'left',buttons:1,clickCount:1,pointerType:'mouse'});
+        await cdp.call('Input.dispatchMouseEvent',{type:'mouseReleased',x:2,y:2,button:'left',buttons:0,clickCount:1,pointerType:'mouse'});
+        await evaluate("delete document.getElementById('mazeCanvas').setPointerCapture");
+        assert.equal(await evaluate("document.getElementById('stepCount').textContent"),before,`${device.name}:outside release does not move`);
+      }
+      await realSwipe(solution[stepIndex],device.pointerType);stepIndex+=1;
       assert.equal(await evaluate("Number(document.getElementById('stepCount').textContent)"),stepIndex,`${device.name}:gesture step`);
       const deviceShot=await cdp.call('Page.captureScreenshot',{format:'png',fromSurface:true});
       await writeFile(device.screenshot,Buffer.from(deviceShot.data,'base64'));
@@ -150,7 +257,7 @@ test('phone, tablet and desktop gestures reach a stage and move without zoom or 
       const shot = await cdp.call('Page.captureScreenshot', { format: 'png', fromSurface: true });
       await writeFile(process.env.CROWN_SCREENSHOT, Buffer.from(shot.data, 'base64'));
     }
-    for (const direction of solution.slice(stepIndex)) await swipe(direction,'mouse');
+    for (const direction of solution.slice(stepIndex)) await realSwipe(direction,'mouse');
     await sleep(600);
     assert.equal(await evaluate('document.body.dataset.screen'), 'result');
     assert.equal(await evaluate(`Object.hasOwn(JSON.parse(localStorage.getItem('crown-maze-save-v1')).bestStars,'${stageId}')`), true);

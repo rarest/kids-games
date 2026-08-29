@@ -38,6 +38,7 @@ function resetPageScroll(){
 }
 
 function showScreen(name) {
+  if(name!=='game')gestureTracker.cancel();
   for (const [key, screen] of Object.entries(screens)) screen.classList.toggle('active', key === name);
   document.body.dataset.screen = name;
   resetPageScroll();requestAnimationFrame(resetPageScroll);
@@ -84,7 +85,7 @@ function renderShop() {
       shopCard({ art: '✹', title: '星火炸药', copy: `库存 ${save.inventory.dynamite} · 炸开紧邻的捷径内墙`, sku: 'dynamite', price: 1 }),
       shopCard({ art: '⌁', title: '月桂钩索', copy: `库存 ${save.inventory.hook} · 飞越一至两面墙壁`, sku: 'hook', price: 3 })
     );
-    $('shopTip').textContent = '选中道具后再按方向键；没有有效目标时不会消耗。';
+    $('shopTip').textContent = hasTouchInput() ? '选中道具后，在迷宫内向目标方向滑动；无效时不会消耗。' : '选中道具后，拖动迷宫或按方向键；无效时不会消耗。';
     return;
   }
   const visible = new Set(availableSkins(save).map(skin => skin.id));
@@ -221,7 +222,8 @@ const gestureTracker=createGestureTracker({threshold:28,minInterval:90});
 function bindGestureSurface(element){
   element.addEventListener('pointerdown',event=>{
     if(document.body.dataset.screen!=='game')return;
-    if(!gestureTracker.start({pointerId:event.pointerId,x:event.clientX,y:event.clientY,time:event.timeStamp,isPrimary:event.isPrimary,button:event.button}))return;
+    const gestureStarted=gestureTracker.start({pointerId:event.pointerId,x:event.clientX,y:event.clientY,time:event.timeStamp,isPrimary:event.isPrimary,button:event.button});
+    if(!gestureStarted)return;
     event.preventDefault();audio.unlock();
     try{element.setPointerCapture(event.pointerId)}catch{}
   });
@@ -232,6 +234,8 @@ function bindGestureSurface(element){
   });
   const stop=event=>gestureTracker.end(event.pointerId);
   element.addEventListener('pointerup',stop);element.addEventListener('pointercancel',stop);element.addEventListener('lostpointercapture',stop);
+  document.addEventListener('pointerup',stop);
+  document.addEventListener('pointercancel',stop);
 }
 
 function syncGestureGuide(){
@@ -256,6 +260,7 @@ $('restartJourneyButton').addEventListener('click', () => {
 });
 $('soundButton').addEventListener('click', () => { soundEnabled = !soundEnabled; audio.setEnabled(soundEnabled); $('soundButton').textContent = soundEnabled ? '♪' : '×'; toast(soundEnabled ? '声音已开启' : '声音已关闭'); });
 bindGestureSurface(canvas);syncGestureGuide();
+for(const button of document.querySelectorAll('[data-access-direction]'))button.addEventListener('click',()=>{audio.unlock();applyDirection(button.dataset.accessDirection)});
 window.addEventListener('keydown', event => {
   const direction = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right' }[event.key];
   if (direction) { event.preventDefault(); audio.unlock(); applyDirection(direction); }
@@ -264,7 +269,8 @@ const preventGameGesture=event=>{if(document.body.dataset.screen==='game')event.
 for(const type of ['gesturestart','gesturechange','gestureend'])document.addEventListener(type,preventGameGesture,{passive:false});
 document.addEventListener('dblclick',preventGameGesture,{passive:false});
 window.addEventListener('resize',()=>{resizeCanvas();syncGestureGuide()});
-document.addEventListener('visibilitychange', () => document.hidden ? audio.suspend() : audio.resume());
+window.addEventListener('blur',()=>gestureTracker.cancel());
+document.addEventListener('visibilitychange', () => {if(document.hidden){gestureTracker.cancel();audio.suspend()}else audio.resume()});
 document.addEventListener('pointerdown', () => audio.unlock(), { once: true, capture: true });
 
 function frame(now) {

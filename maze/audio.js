@@ -9,12 +9,14 @@ export const SOUND_DEFINITIONS = {
   explosion: { file: 'explosion.webm', volume: .34 },
   hook: { file: 'hook.webm', volume: .26 }
 };
+export const MUSIC_DEFINITION={file:'royal-garden.webm',volume:.12};
 
 const clamp = value => Math.max(0, Math.min(1, value));
 
 export function createAudioController({ baseUrl = './audio', enabled = true, AudioClass = globalThis.Audio, now = () => performance.now() } = {}) {
   const sources = new Map();
   const active = new Set();
+  let music=null,musicActive=false;
   let unlocked = false, soundEnabled = enabled, lastFootstep = -Infinity;
 
   function sourceFor(name) {
@@ -27,12 +29,27 @@ export function createAudioController({ baseUrl = './audio', enabled = true, Aud
     return sources.get(name);
   }
 
+  function musicSource(){
+    if(!AudioClass)return null;
+    if(!music){music=new AudioClass(`${baseUrl}/${MUSIC_DEFINITION.file}`);music.preload='auto';music.loop=true;music.volume=MUSIC_DEFINITION.volume}
+    return music;
+  }
+
+  function startMusic(){
+    if(!unlocked||!soundEnabled||musicActive)return musicActive;
+    const source=musicSource();if(!source)return false;
+    musicActive=true;
+    try{const result=source.play();if(result?.catch)result.catch(()=>{musicActive=false})}catch{musicActive=false;return false}
+    return true;
+  }
+
   async function unlock() {
     unlocked = true;
     for (const name of Object.keys(SOUND_DEFINITIONS)) {
       const source = sourceFor(name);
       if (source?.load) source.load();
     }
+    const background=musicSource();if(background?.load)background.load();startMusic();
     return true;
   }
 
@@ -57,10 +74,10 @@ export function createAudioController({ baseUrl = './audio', enabled = true, Aud
 
   function setEnabled(value) {
     soundEnabled = Boolean(value);
-    if (!soundEnabled) suspend();
+    if (!soundEnabled) suspend();else startMusic();
     return soundEnabled;
   }
-  function suspend() { for (const voice of active) voice.pause?.(); active.clear(); }
-  function resume() { return soundEnabled && unlocked; }
+  function suspend() { for (const voice of active) voice.pause?.(); active.clear();if(musicActive){music?.pause?.();musicActive=false} }
+  function resume() { return startMusic(); }
   return { unlock, play, setEnabled, suspend, resume, get enabled() { return soundEnabled; }, get unlocked() { return unlocked; } };
 }

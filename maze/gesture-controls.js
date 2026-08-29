@@ -9,7 +9,8 @@ export function createGestureTracker({threshold=28,minInterval=90}={}){
   let active=null;
   return {
     start({pointerId,x,y,time=0,isPrimary=true,button=0}){
-      if(active||!isPrimary||button!==0)return false;
+      if(active){if(active.pointerId!==pointerId)active=null;return false}
+      if(!isPrimary||button!==0)return false;
       active={pointerId,x,y,lastTime:time-minInterval};return true;
     },
     move({pointerId,x,y,time=0}){
