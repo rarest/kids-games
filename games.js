@@ -33,8 +33,8 @@ window.GAMES = [
     file: "games/goldminer.html",
     emoji: "⛏️",
     name: "黄金矿工",
-    desc: "摆动摇摆的钩子，把金块钻石都钓上来！限时凑够金币过关",
-    tags: ["经典", "金币", "反应"],
+    desc: "一次发射 700 个不同角度的钩爪，横扫会持续刷新的金矿",
+    tags: ["经典", "金币", "反应", "手机"],
   },
   {
     file: "games/maze.html",
