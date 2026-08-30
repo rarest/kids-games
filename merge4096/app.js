@@ -57,7 +57,7 @@ $('startButton').addEventListener('click',()=>{audio.unlock();if(save.currentGam
 $('easyMode').addEventListener('click',()=>startMode('easy'));$('joyMode').addEventListener('click',()=>startMode('joy'));$('challengeMode').addEventListener('click',()=>startMode('challenge'));
 function startMode(mode){save.profile.selectedDifficulty=mode;save.currentGame=createGame(mode);$('difficultyDialog').close();renderGame()}
 $('restartButton').addEventListener('click',()=>{if(confirm('重新开始会放弃当前这一局，确定吗？')){$('difficultyDialog').showModal()}});
-$('drawButton').addEventListener('click',()=>{audio.unlock();save.currentGame=drawCard(save.currentGame);audio.playEffect('draw');renderGame();if(save.currentGame.pendingCard?.kind==='lucky')openLucky()});
+$('drawButton').addEventListener('click',()=>{audio.unlock();save.currentGame=drawCard(save.currentGame);audio.playEffect('draw');if(canFail(save.currentGame,save.profile))return finish('lost');renderGame();if(save.currentGame.pendingCard?.kind==='lucky')openLucky()});
 document.querySelectorAll('.pile-button').forEach(button=>button.addEventListener('click',()=>{
   const column=Number(button.dataset.column);
   if(toolMode==='lucky-copy'){try{save.currentGame=useLuckyCopy(save.currentGame,column);toolMode=null;return renderGame()}catch(error){return message('不能复制',error.message)}}

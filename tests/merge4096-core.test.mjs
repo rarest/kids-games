@@ -119,6 +119,12 @@ test('bomb clears a selected column and candle removes one card then collapses m
   assert.equal(candle.comboCount,1);
 });
 
+test('candle-triggered chains also award combo bonuses',()=>{
+  const candle=useCandle(state({columns:[[2,2,4,4,8,8,16,16,32],[],[],[],[]],rerolls:0}),()=>.99);
+  assert.equal(candle.comboCount,4);
+  assert.equal(candle.state.rerolls,1);
+});
+
 test('shop charges exact prices and rejects insufficient coins', () => {
   assert.deepEqual(buyItem({coins:110,bombs:0,candles:0},'bomb'),{coins:60,bombs:1,candles:0});
   assert.deepEqual(buyItem({coins:110,bombs:0,candles:0},'candle'),{coins:50,bombs:0,candles:1});

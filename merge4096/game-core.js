@@ -177,7 +177,8 @@ export function useCandle(state,random = Math.random) {
   next.columns[columnIndex] = collapsed.column;
   next.roundMax = Math.max(next.roundMax,...collapsed.column,0);
   if (next.roundMax >= 4096) next.status = 'won';
-  return {state:next,comboCount:collapsed.combos,removed:1,createdValue:collapsed.column.at(-1)??null,outcome:next.status==='won'?'won':null};
+  const rewarded=applyComboRewards(next,collapsed.combos);
+  return {state:rewarded,comboCount:collapsed.combos,removed:1,createdValue:collapsed.column.at(-1)??null,outcome:rewarded.status==='won'?'won':null};
 }
 
 export function canFail(state,profile) {
