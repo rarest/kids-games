@@ -3,6 +3,6 @@
   "scripts": {
     "test": "npm run test:unit && npm run test:browser",
     "test:unit": "node --test tests/*.test.mjs",
-    "test:browser": "node --test tests/browser-smoke.mjs && node --test tests/theme-browser-smoke.mjs"
+    "test:browser": "node --test tests/browser-smoke.mjs && node --test tests/theme-browser-smoke.mjs && node --test tests/merge4096-browser-smoke.mjs"
   }
 }
