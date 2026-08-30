@@ -102,7 +102,7 @@ export function createAudioController({
     const definition=SOUND_DEFINITIONS[name],source=mediaSourceFor(name);
     if(!definition||!source)return false;
     mediaGenerations.set(source,(mediaGenerations.get(source)||0)+1);
-    source.volume=clamp(definition.volume*volume);source.playbackRate=rate||(.97+random()*.06);
+    source.muted=false;source.volume=clamp(definition.volume*volume);source.playbackRate=rate||(.97+random()*.06);
     try{source.currentTime=0}catch{}
     activeMedia.add(source);source.onended=()=>activeMedia.delete(source);
     try{

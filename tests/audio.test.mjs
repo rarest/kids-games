@@ -116,6 +116,7 @@ test('a late priming reset cannot pause the first real fallback effect',async()=
   assert.equal(coin.paused,false);
   coin.playResolvers[0]();await Promise.resolve();
   assert.equal(coin.paused,false,'stale prime completion does not pause the newer real event');
+  assert.equal(coin.muted,false,'the first real fallback effect is audible after stale priming settles');
   coin.playResolvers[1]();await unlocking;
 });
 
