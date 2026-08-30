@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#29180f">
+  <title>合成4096｜小火箭游戏厅</title>
+  <meta name="description" content="抽数字牌放入五列，连续合成4096，伴着卡农挑战通关。">
+  <link rel="stylesheet" href="../merge4096/styles.css">
+</head>
+<body data-screen="home">
+  <main class="shell">
+    <section id="homeScreen" class="screen home-screen" aria-labelledby="homeTitle">
+      <header class="topbar"><h1 id="homeTitle">合成 4096</h1><div class="coin-pill">🪙 <span id="coinCount">500</span></div></header>
+      <div class="hero"><p>伴着卡农，把数字越叠越高</p><h2>最高合成记录</h2><div class="record-tile"><strong id="bestValue">0</strong><span>历史最佳</span></div></div>
+      <button id="startButton" class="primary-button" type="button">开始游戏</button>
+      <div class="stats"><div><span>上局结果</span><strong id="lastResult">0</strong></div><div><span>通关次数</span><strong><span id="winCount">0</span> 次</strong></div></div>
+      <section class="shop" aria-labelledby="shopTitle"><div class="section-title"><h2 id="shopTitle">道具商店</h2><small>新手礼包：500金币＋3根蜡烛</small></div><div class="shop-grid">
+        <button id="shopBomb" type="button"><span>💣</span><b>整列炸弹</b><small>50金币 · 清空一列</small></button>
+        <button id="shopCandle" type="button"><span>🕯️</span><b>幸运蜡烛</b><small>60金币 · 随机移除一张</small></button>
+      </div></section>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen" aria-labelledby="gameTitle" hidden>
+      <header class="game-topbar"><button id="exitButton" class="outline-button" type="button">退出主页</button><h2 id="gameTitle">最高 <span id="gameBest">0</span></h2><button id="musicButton" class="icon-button" type="button" aria-label="关闭音乐" aria-pressed="true">♫</button></header>
+      <div class="draw-panel"><div><span>新一局</span><strong>已抽 <span id="drawCount">0</span> / 10000 张</strong></div><button id="drawButton" class="draw-button" type="button">点击抽牌</button><div id="pendingCard" class="pending-card" aria-live="polite" hidden></div></div>
+      <div id="columns" class="board" aria-label="五个竖直牌堆">
+        <button class="pile-button" data-column="0" type="button" aria-label="第一列"><span class="pile"></span></button>
+        <button class="pile-button" data-column="1" type="button" aria-label="第二列"><span class="pile"></span></button>
+        <button class="pile-button" data-column="2" type="button" aria-label="第三列"><span class="pile"></span></button>
+        <button class="pile-button" data-column="3" type="button" aria-label="第四列"><span class="pile"></span></button>
+        <button class="pile-button" data-column="4" type="button" aria-label="第五列"><span class="pile"></span></button>
+      </div>
+      <div class="tools"><button id="bombButton" type="button">💣 炸弹 ×<span id="bombCount">0</span></button><button id="candleButton" type="button">🕯️ 蜡烛 ×<span id="candleCount">3</span></button></div>
+      <div id="comboBanner" class="combo-banner" role="status" aria-live="polite" hidden></div><div id="fireworks" class="fireworks" aria-hidden="true"></div>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen" aria-labelledby="resultTitle" hidden><div class="result-medal">🏆</div><h2 id="resultTitle">成功通关</h2><p id="resultMessage"></p><div class="result-value"><span>本局最高</span><strong id="resultValue">0</strong></div><div class="result-actions"><button id="againButton" class="primary-button" type="button">再玩一局</button><button id="resultHomeButton" class="outline-button" type="button">返回主页</button></div></section>
+  </main>
+
+  <dialog id="luckyDialog"><form method="dialog"><h2>✨ 幸运牌</h2><p>选择这次要使用的数字</p><div id="luckyChoices" class="number-choices"></div><button class="outline-button" value="cancel">稍后选择</button></form></dialog>
+  <dialog id="messageDialog"><form method="dialog"><h2 id="messageTitle">提示</h2><p id="messageText"></p><button class="primary-button" value="ok">知道了</button></form></dialog>
+  <script type="module" src="../merge4096/app.js"></script>
+</body>
+</html>
