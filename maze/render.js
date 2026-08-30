@@ -1,10 +1,10 @@
-import { cellKey, parseGrid } from './level-tools.js?v=20260829f';
-import { SKINS } from './economy.js?v=20260829f';
-import { buildWallModel, shadowOffsetFor, traceWallPath, visualSizesFor, wallShadowLayersFor, wallSignatureFor } from './wall-geometry.js?v=20260829f';
-import { actorIsVisible, actorScreenPointFor, ambientActorsFor, ambientLayerFor, detailPassesFor, environmentMotion, sceneProfileFor, sceneRenderPlanFor, treePaletteFor, treeShadowFor, waterCycleStateFor } from './scenery.js?v=20260829f';
-import { activeTrails, createMotionState, grassSwayAt, recordStep } from './motion-effects.js?v=20260829f';
+import { cellKey, parseGrid } from './level-tools.js?v=20260830a';
+import { SKINS } from './economy.js?v=20260830a';
+import { buildWallModel, shadowOffsetFor, traceWallPath, visualSizesFor, wallShadowLayersFor, wallSignatureFor } from './wall-geometry.js?v=20260830a';
+import { actorIsVisible, actorScreenPointFor, ambientActorsFor, ambientLayerFor, detailPassesFor, environmentMotion, sceneProfileFor, sceneRenderPlanFor, treePaletteFor, treeShadowFor, waterCycleStateFor } from './scenery.js?v=20260830a';
+import { activeTrails, createMotionState, grassSwayAt, recordStep } from './motion-effects.js?v=20260830a';
 
-export { shadowOffsetFor } from './wall-geometry.js?v=20260829f';
+export { shadowOffsetFor } from './wall-geometry.js?v=20260830a';
 export { detailPassesFor, environmentMotion, sceneProfileFor };
 
 export const MAX_PARTICLES = 220;
@@ -317,16 +317,24 @@ function drawForegroundAtmosphere(ctx,viewport,theme,profile,motion,now,seed,cam
   if(profile.crystals&&camera.mode==='follow'){ctx.save();ctx.globalAlpha=.24;ctx.fillStyle=theme.glow;for(let index=0;index<7;index++){const x=index%2?width-7:7,y=height*(.12+index*.13);ctx.beginPath();ctx.moveTo(x,y-tile*.22);ctx.lineTo(x+tile*.12,y);ctx.lineTo(x,y+tile*.22);ctx.lineTo(x-tile*.12,y);ctx.closePath();ctx.fill()}ctx.restore()}
 }
 
-export function createRenderer(canvas) {
+export function createRenderer(canvas,{canvasFactory=globalThis.document?.createElement?()=>globalThis.document.createElement('canvas'):null,diagnosticsEnabled=true}={}) {
   const ctx = canvas.getContext('2d', { alpha: false });
   let viewport = { width: 390, height: 400 }, dpr = 1, level = null, grid = null, wallModel = null, wallModelBuilds = 0, sceneProfile = null, sceneEffects = [], treePalette = null, sceneSeed = 0, ambientActors = [], ambientActorBuilds = 0, paintSignatures = new Set(), skin = 'red', particles = [], motionState = createMotionState(), lastPlayer = null, lastMoveAt = -Infinity;
+  let staticWallCache=null,staticWallCacheKey='',staticWallCacheBuilds=0,staticWallCacheHits=0,staticWallCacheFailures=0;
+
+  function releaseStaticWallCache({preserveKey=false}={}){
+    if(staticWallCache?.canvas){staticWallCache.canvas.width=1;staticWallCache.canvas.height=1}
+    staticWallCache=null;if(!preserveKey)staticWallCacheKey='';
+  }
 
   function resize(nextViewport, nextDpr = globalThis.devicePixelRatio || 1) {
     viewport = { width: Math.max(1, nextViewport.width), height: Math.max(1, nextViewport.height) };
     dpr = clampDpr(nextDpr); canvas.width = Math.round(viewport.width * dpr); canvas.height = Math.round(viewport.height * dpr);
     canvas.style.width = `${viewport.width}px`; canvas.style.height = `${viewport.height}px`;
+    releaseStaticWallCache();
   }
   function setLevel(nextLevel) {
+    releaseStaticWallCache();
     level=nextLevel;grid=parseGrid(nextLevel.rows);wallModel=buildWallModel(grid,new Set());wallModelBuilds=1;
     sceneProfile=sceneProfileFor(nextLevel);sceneEffects=sceneRenderPlanFor(sceneProfile);treePalette=treePaletteFor(sceneProfile,nextLevel.theme);sceneSeed=decorSeed(nextLevel);ambientActors=ambientActorsFor(sceneProfile,sceneSeed);ambientActorBuilds++;
     particles=[];motionState=createMotionState();lastPlayer=null;lastMoveAt=-Infinity;
@@ -345,8 +353,8 @@ export function createRenderer(canvas) {
 
   function draw(state, now = performance.now()) {
     if (!level || !grid) return;
-    paintSignatures=new Set();
-    const markPaint=field=>{if(field&&paintSignatures.size<32)paintSignatures.add(field)};
+    if(diagnosticsEnabled)paintSignatures=new Set();
+    const markPaint=diagnosticsEnabled?field=>{if(field&&paintSignatures.size<32)paintSignatures.add(field)}:NOOP;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const theme = level.theme, profile = sceneProfile, playerCell={x:state.player.x,y:state.player.y};
     if(lastPlayer&&(lastPlayer.x!==playerCell.x||lastPlayer.y!==playerCell.y)&&Math.abs(lastPlayer.x-playerCell.x)+Math.abs(lastPlayer.y-playerCell.y)===1){recordStep(motionState,{from:lastPlayer,to:playerCell,skinId:skin,now});lastMoveAt=now}
@@ -373,26 +381,54 @@ export function createRenderer(canvas) {
     }
     drawMotionTrails(ctx,activeTrails(motionState,now),px,py,tile,now);
     const removedWalls=state.removedWalls||new Set(),removedSignature=wallSignatureFor(removedWalls);
-    if(!wallModel||wallModel.signature!==removedSignature){wallModel=buildWallModel(grid,removedWalls);wallModelBuilds++}
+    if(!wallModel||wallModel.signature!==removedSignature){wallModel=buildWallModel(grid,removedWalls);wallModelBuilds++;releaseStaticWallCache()}
     const visibleContours=wallModel.contours.filter(contour=>contour.y>=sy-1&&contour.y<=ey+1&&contour.x>=sx-1&&contour.x<=ex+1);
     const traceWallSurface=(offsetX=0,offsetY=0)=>traceWallPath(ctx,visibleContours,{tile,originX:camera.x,originY:camera.y,offsetX,offsetY});
-    for(const shadow of wallShadowLayersFor(profile,tile)){
-      ctx.save();ctx.filter=`blur(${shadow.blur}px)`;traceWallSurface(shadow.x,shadow.y);ctx.fillStyle=`rgba(8,5,15,${shadow.alpha})`;ctx.fill();ctx.restore();
-    }
-    traceWallSurface();
-    const wallGradient=ctx.createLinearGradient(px(0),py(0),px(grid.width),py(grid.height));
-    wallGradient.addColorStop(0,theme.wallEdge);wallGradient.addColorStop(.28,theme.wall);wallGradient.addColorStop(.72,theme.wall);wallGradient.addColorStop(1,theme.wallShadow);ctx.fillStyle=wallGradient;ctx.fill();
-    ctx.save();traceWallSurface();ctx.clip();
-    const smoothSheen=ctx.createLinearGradient(0,0,viewport.width,viewport.height);smoothSheen.addColorStop(0,'rgba(255,255,255,.12)');smoothSheen.addColorStop(.28,'rgba(255,255,255,.025)');smoothSheen.addColorStop(.62,'rgba(0,0,0,.035)');smoothSheen.addColorStop(1,'rgba(0,0,0,.14)');ctx.fillStyle=smoothSheen;ctx.fillRect(0,0,viewport.width,viewport.height);
-    if(profile.goldGleam){const sweep=((now*.035+seed*17)%(viewport.width+180))-90,gleam=ctx.createLinearGradient(sweep-75,0,sweep+75,0);gleam.addColorStop(0,'rgba(255,234,128,0)');gleam.addColorStop(.5,'rgba(255,245,183,.34)');gleam.addColorStop(1,'rgba(255,234,128,0)');ctx.fillStyle=gleam;ctx.fillRect(sweep-75,0,150,viewport.height);markPaint('goldGleam')}
-    ctx.restore();
-    const drawOutline=(edges,color)=>{
-      ctx.save();traceWallSurface();ctx.clip();ctx.strokeStyle=color;ctx.lineWidth=Math.max(1,sizes.cornerRadius*2);ctx.lineJoin='round';ctx.lineCap='round';ctx.beginPath();
-      for(const edge of edges){ctx.moveTo(px(edge.x1),py(edge.y1));ctx.lineTo(px(edge.x2),py(edge.y2))}
-      ctx.stroke();ctx.restore();
+    const paintWalls=(target,contours,lightEdges,darkEdges,originX,originY,paintWidth,paintHeight)=>{
+      const trace=(offsetX=0,offsetY=0)=>traceWallPath(target,contours,{tile,originX,originY,offsetX,offsetY});
+      for(const shadow of wallShadowLayersFor(profile,tile)){
+        target.save();target.filter=`blur(${shadow.blur}px)`;trace(shadow.x,shadow.y);target.fillStyle=`rgba(8,5,15,${shadow.alpha})`;target.fill();target.restore();
+      }
+      trace();
+      const wallGradient=target.createLinearGradient(originX,originY,originX+grid.width*tile,originY+grid.height*tile);
+      wallGradient.addColorStop(0,theme.wallEdge);wallGradient.addColorStop(.28,theme.wall);wallGradient.addColorStop(.72,theme.wall);wallGradient.addColorStop(1,theme.wallShadow);target.fillStyle=wallGradient;target.fill();
+      target.save();trace();target.clip();
+      const smoothSheen=target.createLinearGradient(0,0,paintWidth,paintHeight);smoothSheen.addColorStop(0,'rgba(255,255,255,.12)');smoothSheen.addColorStop(.28,'rgba(255,255,255,.025)');smoothSheen.addColorStop(.62,'rgba(0,0,0,.035)');smoothSheen.addColorStop(1,'rgba(0,0,0,.14)');target.fillStyle=smoothSheen;target.fillRect(0,0,paintWidth,paintHeight);target.restore();
+      const drawOutline=(edges,color)=>{
+        target.save();trace();target.clip();target.strokeStyle=color;target.lineWidth=Math.max(1,sizes.cornerRadius*2);target.lineJoin='round';target.lineCap='round';target.beginPath();
+        for(const edge of edges){target.moveTo(originX+edge.x1*tile,originY+edge.y1*tile);target.lineTo(originX+edge.x2*tile,originY+edge.y2*tile)}
+        target.stroke();target.restore();
+      };
+      drawOutline(lightEdges,rgba(theme.wallEdge,profile.lights?.72:.56));drawOutline(darkEdges,rgba(theme.wallShadow,.76));
     };
-    drawOutline(wallModel.lightEdges,rgba(theme.wallEdge,profile.lights?.72:.56));
-    drawOutline(wallModel.darkEdges,rgba(theme.wallShadow,.76));
+    const cacheKey=`${level.id}|${removedSignature}|${tile.toFixed(4)}|${dpr}|${viewport.width}x${viewport.height}`;
+    if(canvasFactory&&staticWallCacheKey!==cacheKey){
+      releaseStaticWallCache();
+      try{
+        const padding=Math.ceil(tile*2),logicalWidth=Math.ceil(grid.width*tile+padding*2),logicalHeight=Math.ceil(grid.height*tile+padding*2),cacheCanvas=canvasFactory();
+        if(!cacheCanvas||logicalWidth*dpr>4096||logicalHeight*dpr>4096)throw new Error('static wall cache unavailable');
+        cacheCanvas.width=Math.ceil(logicalWidth*dpr);cacheCanvas.height=Math.ceil(logicalHeight*dpr);
+        const cacheContext=cacheCanvas.getContext('2d');if(!cacheContext)throw new Error('static wall context unavailable');
+        cacheContext.setTransform(dpr,0,0,dpr,0,0);cacheContext.clearRect(0,0,logicalWidth,logicalHeight);
+        paintWalls(cacheContext,wallModel.contours,wallModel.lightEdges,wallModel.darkEdges,padding,padding,logicalWidth,logicalHeight);
+        staticWallCache={canvas:cacheCanvas,padding,logicalWidth,logicalHeight};staticWallCacheKey=cacheKey;staticWallCacheBuilds++;
+      }catch{staticWallCacheFailures++;staticWallCacheKey=cacheKey;releaseStaticWallCache({preserveKey:true})}
+    }else if(staticWallCache&&staticWallCacheKey===cacheKey)staticWallCacheHits++;
+    let usedStaticCache=false;
+    if(staticWallCache&&staticWallCacheKey===cacheKey){
+      const screenX=camera.x-staticWallCache.padding,screenY=camera.y-staticWallCache.padding;
+      const sourceX=Math.max(0,-screenX),sourceY=Math.max(0,-screenY),destX=Math.max(0,screenX),destY=Math.max(0,screenY);
+      const drawWidth=Math.min(staticWallCache.logicalWidth-sourceX,viewport.width-destX),drawHeight=Math.min(staticWallCache.logicalHeight-sourceY,viewport.height-destY);
+      try{
+        if(drawWidth>0&&drawHeight>0)ctx.drawImage(staticWallCache.canvas,sourceX*dpr,sourceY*dpr,drawWidth*dpr,drawHeight*dpr,destX,destY,drawWidth,drawHeight);
+        usedStaticCache=true;
+      }catch{staticWallCacheFailures++;staticWallCacheKey=cacheKey;releaseStaticWallCache({preserveKey:true})}
+    }
+    if(!usedStaticCache)paintWalls(ctx,visibleContours,wallModel.lightEdges,wallModel.darkEdges,camera.x,camera.y,viewport.width,viewport.height);
+    if(profile.goldGleam){
+      ctx.save();traceWallSurface();ctx.clip();
+      const sweep=((now*.035+seed*17)%(viewport.width+180))-90,gleam=ctx.createLinearGradient(sweep-75,0,sweep+75,0);gleam.addColorStop(0,'rgba(255,234,128,0)');gleam.addColorStop(.5,'rgba(255,245,183,.34)');gleam.addColorStop(1,'rgba(255,234,128,0)');ctx.fillStyle=gleam;ctx.fillRect(sweep-75,0,150,viewport.height);ctx.restore();markPaint('goldGleam');
+    }
     const pulse = (Math.sin(now / 280) + 1) / 2, center = point => ({ x: px(point.x + .5), y: py(point.y + .5) });
     const doorPoint=center(level.exit),visibleKeys=level.keys.filter(key=>!state.collectedKeys.has(cellKey(key))),visibleCoins=level.coins.filter(coin=>!state.collectedCoinIds.has(coin.id)&&!state.newCoinIds.has(coin.id)),playerPoint=center(state.player);
     ctx.save();ctx.beginPath();ctx.rect(0,0,viewport.width,viewport.height);
@@ -419,6 +455,10 @@ export function createRenderer(canvas) {
     get motionState(){return motionState},
     get wallModelBuilds(){return wallModelBuilds},
     get ambientActorBuilds(){return ambientActorBuilds},
-    get diagnostics(){return{wallModelBuilds,trailCount:motionState.trails.length,actorCount:ambientActors.length,sceneId:sceneProfile?.id??null,paintSignatures:[...paintSignatures].sort()}}
+    get diagnostics(){return{
+      wallModelBuilds,staticWallCacheBuilds,staticWallCacheHits,staticWallCacheFailures,staticWallCacheCount:staticWallCache?1:0,
+      particleCount:particles.length,trailCount:motionState.trails.length,actorCount:ambientActors.length,
+      sceneId:sceneProfile?.id??null,paintSignatures:[...paintSignatures].sort()
+    }}
   };
 }

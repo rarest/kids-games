@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#160c31">
   <title>皇冠迷宫 · 小火箭游戏厅</title>
-  <link rel="stylesheet" href="../maze/game.css?v=20260829f">
+  <link rel="stylesheet" href="../maze/game.css?v=20260830a">
 </head>
 <body data-screen="home">
   <div class="ambient" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -67,7 +67,7 @@
       <div class="key-panel">
         <span>钥匙</span><div id="keyRack" class="key-rack" aria-label="钥匙收集进度"></div>
       </div>
-      <div class="canvas-frame"><canvas id="mazeCanvas" aria-label="皇冠迷宫游戏区域，可滑动或拖动移动"></canvas><div class="tool-direction-hint" id="toolHint">滑动选择使用方向</div></div>
+      <div class="canvas-frame"><canvas id="mazeCanvas" draggable="false" aria-label="皇冠迷宫游戏画面"></canvas><div class="tool-direction-hint" id="toolHint">推动摇杆选择使用方向</div></div>
       <div class="visually-hidden accessible-directions" id="accessibleDirections" role="group" aria-label="无障碍方向控制">
         <button type="button" data-access-direction="up">向上移动</button>
         <button type="button" data-access-direction="left">向左移动</button>
@@ -79,8 +79,11 @@
           <button class="item-button" id="dynamiteButton" type="button"><span class="item-art">✹</span><span>炸药</span><b id="dynamiteCount">0</b></button>
           <button class="item-button" id="hookButton" type="button"><span class="item-art hook-art">⌁</span><span>钩子</span><b id="hookCount">0</b></button>
         </div>
-        <div class="gesture-guide" id="gestureGuide" aria-live="polite">
-          <span aria-hidden="true">↔</span><div><b>在迷宫内滑动移动</b><small>拖动可连续行走</small></div>
+        <div class="joystick-panel">
+          <div class="joystick-copy"><b>虚拟摇杆</b><small>按住可连续行走</small></div>
+          <div class="joystick-base" id="joystick" role="group" aria-label="四向移动摇杆">
+            <i aria-hidden="true">◆</i><span class="joystick-knob" id="joystickKnob" aria-hidden="true"></span>
+          </div>
         </div>
       </div>
     </section>
@@ -98,6 +101,6 @@
     </section>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="../maze/main.js?v=20260829f"></script>
+  <script type="module" src="../maze/main.js?v=20260830a"></script>
 </body>
 </html>

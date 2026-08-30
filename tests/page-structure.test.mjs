@@ -6,12 +6,13 @@ test('maze page contains every screen, control, HUD and store hook', async () =>
   const html = await readFile(new URL('../games/maze.html', import.meta.url), 'utf8');
   const ids = [
     'homeScreen', 'shopScreen', 'mapScreen', 'gameScreen', 'resultScreen',
-    'mazeCanvas', 'keyRack', 'gestureGuide', 'inventoryBar', 'startButton', 'shopButton',
+    'mazeCanvas', 'keyRack', 'joystick', 'joystickKnob', 'inventoryBar', 'startButton', 'shopButton',
     'backHomeButton', 'itemShopTab', 'skinShopTab', 'restartJourneyButton',
     'dynamiteButton', 'hookButton', 'accessibleDirections'
   ];
   for (const id of ids) assert.match(html, new RegExp(`id=["']${id}["']`), id);
   assert.doesNotMatch(html,/class=["']dpad["']/);
+  assert.doesNotMatch(html,/id=["']gestureGuide["']/);
   assert.doesNotMatch(html,/data-direction=/);
   for(const direction of ['up','down','left','right'])assert.match(html,new RegExp(`data-access-direction=["']${direction}["']`));
   assert.match(html, /viewport-fit=cover/);
@@ -25,8 +26,12 @@ test('mobile layout defines safe areas and generous touch targets', async () => 
   assert.match(css, /--touch-size:\s*56px/);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.match(css, /touch-action:\s*none/);
+  assert.match(css, /-webkit-user-select:\s*none/);
+  assert.match(css, /user-select:\s*none/);
+  assert.match(css, /-webkit-touch-callout:\s*none/);
   assert.match(css, /overscroll-behavior:\s*none/);
-  assert.match(css, /\.gesture-guide/);
+  assert.match(css, /\.joystick-base/);
+  assert.match(css, /\.joystick-knob/);
   assert.match(css, /safe-area-inset-left/);
   assert.match(css, /safe-area-inset-right/);
   assert.match(css, /calc\(4px \+ env\(safe-area-inset-bottom\)\)/);
