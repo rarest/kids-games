@@ -114,7 +114,7 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
     await cdp.call('Runtime.enable'); await cdp.call('Page.enable'); await cdp.call('Network.enable'); await cdp.call('Network.setCacheDisabled', { cacheDisabled: true });
     await cdp.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:5});
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 2, mobile: true });
-    await cdp.call('Page.navigate', { url: `${baseUrl}/games/maze.html?v=202608291449` });
+    await cdp.call('Page.navigate', { url: `${baseUrl}/games/maze.html?v=202608291449&diagnostics=1` });
     for (let index = 0; index < 80; index++) {
       const state = await cdp.call('Runtime.evaluate', { expression: 'document.readyState', returnByValue: true });
       if (state.result.value === 'complete') break; await sleep(100);
