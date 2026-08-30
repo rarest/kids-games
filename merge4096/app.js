@@ -46,6 +46,9 @@ function afterTransition(transition){
 function openLucky(){
   const host=$('luckyChoices');host.replaceChildren(...VALUES.map(value=>{const button=document.createElement('button');button.type='button';button.textContent=value;button.addEventListener('click',()=>{save.currentGame=chooseLuckyValue(save.currentGame,value);$('luckyDialog').close();renderGame()});return button}));$('luckyDialog').showModal();
 }
+function placeInColumn(column){
+  try{afterTransition(placePendingCard(save.currentGame,column))}catch(error){message('不能放这里',error.message)}
+}
 
 $('startButton').addEventListener('click',()=>{audio.unlock();if(!save.currentGame||save.currentGame.status!=='playing')save.currentGame=createGame();renderGame()});
 $('drawButton').addEventListener('click',()=>{audio.unlock();save.currentGame=drawCard(save.currentGame);audio.playEffect('draw');renderGame();if(save.currentGame.pendingCard?.kind==='lucky')openLucky()});
@@ -56,8 +59,25 @@ document.querySelectorAll('.pile-button').forEach(button=>button.addEventListene
     if(!save.currentGame.columns[column].length)return message('这一列是空的','请选择有数字牌的一列。');
     save.profile.bombs--;toolMode=null;const transition=useBomb(save.currentGame,column);audio.playEffect('bomb');return afterTransition(transition);
   }
-  try{afterTransition(placePendingCard(save.currentGame,column))}catch(error){message('不能放这里',error.message)}
+  placeInColumn(column);
 }));
+let drag=null;
+const pendingNode=$('pendingCard');
+const clearDrag=()=>{drag=null;pendingNode.classList.remove('dragging');pendingNode.style.removeProperty('transform');document.querySelectorAll('.pile-button').forEach(node=>node.classList.remove('drag-over'))};
+pendingNode.addEventListener('pointerdown',event=>{
+  if(save.currentGame?.pendingCard?.kind!=='number')return;
+  drag={pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,moved:false};pendingNode.setPointerCapture(event.pointerId);pendingNode.classList.add('dragging');event.preventDefault();
+});
+pendingNode.addEventListener('pointermove',event=>{
+  if(!drag||drag.pointerId!==event.pointerId)return;
+  const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;drag.moved ||= Math.hypot(dx,dy)>8;pendingNode.style.transform=`translate(${dx}px,${dy}px) scale(1.08)`;
+  const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.pile-button');document.querySelectorAll('.pile-button').forEach(node=>node.classList.toggle('drag-over',node===target&&!node.disabled));event.preventDefault();
+});
+pendingNode.addEventListener('pointerup',event=>{
+  if(!drag||drag.pointerId!==event.pointerId)return;
+  const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.pile-button');const moved=drag.moved;clearDrag();if(moved&&target&&!target.disabled)placeInColumn(Number(target.dataset.column));event.preventDefault();
+});
+pendingNode.addEventListener('pointercancel',clearDrag);
 $('bombButton').addEventListener('click',()=>{if(!save.profile.bombs)return message('没有炸弹','返回主页可用50金币购买炸弹。');toolMode=toolMode==='bomb'?null:'bomb';renderGame()});
 $('candleButton').addEventListener('click',()=>{if(!save.profile.candles)return message('没有蜡烛','返回主页可用60金币购买蜡烛。');try{save.profile.candles--;const transition=useCandle(save.currentGame);audio.playEffect('candle');afterTransition(transition)}catch(error){save.profile.candles++;message('暂时不能使用',error.message)}});
 $('shopBomb').addEventListener('click',()=>{try{save.profile=buyItem(save.profile,'bomb');audio.playEffect('place');renderHome()}catch(error){message('购买失败',error.message)}});

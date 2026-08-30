@@ -17,7 +17,7 @@ test('fresh player can draw, place, exit and continue on a real phone viewport',
   try{
     await waitFor('http://127.0.0.1:4189/games/merge4096.html');
     const tabs=await (await waitFor('http://127.0.0.1:9249/json')).json();cdp=new Cdp(tabs.find(tab=>tab.type==='page').webSocketDebuggerUrl);
-    await cdp.call('Runtime.enable');await cdp.call('Page.enable');await cdp.call('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:2,mobile:true});
+    await cdp.call('Runtime.enable');await cdp.call('Page.enable');await cdp.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:5});await cdp.call('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:2,mobile:true});
     await cdp.call('Page.navigate',{url:'http://127.0.0.1:4189/games/merge4096.html'});
     const evaluate=async expression=>(await cdp.call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true})).result.value;
     for(let i=0;i<100&&await evaluate('document.readyState')!=='complete';i++)await sleep(50);
@@ -31,7 +31,11 @@ test('fresh player can draw, place, exit and continue on a real phone viewport',
     await evaluate('drawButton.click()');await sleep(50);
     assert.equal(await evaluate('drawCount.textContent'),'1');
     assert.equal(await evaluate('pendingCard.hidden'),false);
-    await evaluate("document.querySelector('.pile-button').click()");
+    const drag=JSON.parse(await evaluate(`JSON.stringify((()=>{const from=pendingCard.getBoundingClientRect(),to=document.querySelector('.pile-button').getBoundingClientRect();return{from:{x:from.left+from.width/2,y:from.top+from.height/2},to:{x:to.left+to.width/2,y:to.top+40}}})())`));
+    await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...drag.from,id:1,radiusX:2,radiusY:2,force:1}]});
+    await cdp.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...drag.to,id:1,radiusX:2,radiusY:2,force:1}]});
+    await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await sleep(80);
     assert.equal(await evaluate("document.querySelectorAll('.pile-button')[0].querySelectorAll('.tile').length"),1);
     await evaluate('exitButton.click()');
     assert.equal(await evaluate('document.body.dataset.screen'),'home');
