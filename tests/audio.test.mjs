@@ -10,9 +10,9 @@ class FakeAudio {
   static plays = 0;
   static voices = [];
   static instances = [];
-  constructor(src) { this.src = src; this.volume = 1; this.playbackRate = 1; this.preload = ''; this.loop = false; this.pauses = 0; this.loads = 0; this.paused = true; FakeAudio.instances.push(this); }
+  constructor(src) { this.src = src; this.volume = 1; this.playbackRate = 1; this.preload = ''; this.loop = false; this.muted = false; this.pauses = 0; this.loads = 0; this.playCalls = 0; this.paused = true; FakeAudio.instances.push(this); }
   cloneNode() { const voice = new FakeAudio(this.src); FakeAudio.voices.push(voice); return voice; }
-  play() { FakeAudio.plays += 1; this.paused = false; return Promise.resolve(); }
+  play() { FakeAudio.plays += 1; this.playCalls += 1; this.paused = false; return Promise.resolve(); }
   pause() { this.pauses += 1; this.paused = true; }
   load() { this.loads += 1; this.paused = true; }
 }
@@ -69,23 +69,66 @@ test('plays a clearly audible footstep and audible explosion', async () => {
 test('starts a quiet looping royal background track after unlock and follows lifecycle controls',async()=>{
   FakeAudio.instances=[];FakeAudio.plays=0;
   const audio=audioModule.createAudioController({baseUrl:'/audio',AudioClass:FakeAudio});
-  assert.equal(FakeAudio.instances.some(item=>item.src?.endsWith('/royal-garden.m4a')),false);
+  assert.equal(FakeAudio.instances.some(item=>item.src?.includes('/royal-garden.m4a?')),false);
   await audio.unlock();
-  const music=FakeAudio.instances.find(item=>item.src?.endsWith('/royal-garden.m4a'));
+  const music=FakeAudio.instances.find(item=>item.src?.includes('/royal-garden.m4a?'));
   assert.ok(music,'background source');
   assert.equal(music.loop,true);
   assert.equal(music.volume,.12);
-  assert.equal(FakeAudio.plays,1);
+  assert.equal(music.playCalls,1);
   assert.equal(music.loads,1);
   assert.equal(music.paused,false);
   await audio.unlock();
   assert.equal(music.loads,1,'repeat unlock must not reload playing music');
-  assert.equal(FakeAudio.plays,1,'repeat unlock must not start a duplicate play');
+  assert.equal(music.playCalls,1,'repeat unlock must not start a duplicate play');
   assert.equal(music.paused,false,'repeat unlock keeps music playing');
   audio.suspend();assert.equal(music.pauses,1);
-  audio.resume();assert.equal(FakeAudio.plays,2);
+  audio.resume();assert.equal(music.playCalls,2);
   audio.setEnabled(false);assert.equal(music.pauses,2);
-  audio.setEnabled(true);assert.equal(FakeAudio.plays,3);
+  audio.setEnabled(true);assert.equal(music.playCalls,3);
+});
+
+test('primes persistent effect fallbacks during the trusted gesture',async()=>{
+  FakeAudio.instances=[];
+  const audio=audioModule.createAudioController({baseUrl:'/audio',AudioClass:FakeAudio,AudioContextClass:null,now:()=>100});
+  await audio.unlock();await new Promise(resolve=>setTimeout(resolve,0));
+  const coin=FakeAudio.instances.find(item=>item.src?.includes('/coin.mp3?'));
+  assert.ok(coin,'persistent compatible fallback exists');
+  assert.equal(coin.playCalls,1,'fallback was play-unlocked by the gesture');
+  assert.equal(coin.paused,true);
+  audio.play('coin');
+  assert.equal(coin.playCalls,2,'the same unlocked media element plays the event');
+});
+
+test('falls back when AudioContext construction or resume fails and drains queued input',async()=>{
+  class ConstructorFailure{constructor(){throw new Error('unsupported')}}
+  class ResumeFailure extends FakeAudioContext{async resume(){this.resumeCalls+=1;throw new Error('blocked')}}
+  for(const AudioContextClass of [ConstructorFailure,ResumeFailure]){
+    FakeAudio.instances=[];
+    const audio=audioModule.createAudioController({baseUrl:'/audio',AudioClass:FakeAudio,AudioContextClass,fetchFn:fakeFetch,now:()=>100});
+    const unlocking=audio.unlock();audio.play('key');await unlocking;await new Promise(resolve=>setTimeout(resolve,0));
+    const key=FakeAudio.instances.find(item=>item.src?.includes('/key.mp3?'));
+    assert.ok(key.playCalls>=2,'priming plus the real queued/follow-up effect use media fallback');
+    assert.equal(audio.diagnostics.usingWebAudio,false);
+    assert.equal(audio.diagnostics.pendingEffects,0);
+  }
+});
+
+test('decode failure drains the event through its persistent fallback',async()=>{
+  class DecodeFailure extends FakeAudioContext{async decodeAudioData(){this.decodeCalls+=1;throw new Error('bad codec')}}
+  FakeAudio.instances=[];
+  const audio=audioModule.createAudioController({baseUrl:'/audio',AudioClass:FakeAudio,AudioContextClass:DecodeFailure,fetchFn:fakeFetch,now:()=>100});
+  await audio.unlock();audio.play('door-open');await new Promise(resolve=>setTimeout(resolve,0));
+  const source=FakeAudio.instances.find(item=>item.src?.includes('/door-open.mp3?'));
+  assert.ok(source.playCalls>=2,'priming plus decoded-buffer fallback playback');
+  assert.equal(audio.diagnostics.pendingEffects,0);
+});
+
+test('versions every runtime audio URL with the release token',()=>{
+  const release=audioModule.AUDIO_RELEASE;
+  assert.equal(release,'20260830a');
+  for(const definition of Object.values(audioModule.SOUND_DEFINITIONS))for(const file of definition.files)assert.equal(audioModule.audioAssetUrl('/audio',file),`/audio/${file}?v=${release}`);
+  for(const candidate of audioModule.MUSIC_DEFINITION.files)assert.equal(audioModule.audioAssetUrl('/audio',candidate.file),`/audio/${candidate.file}?v=${release}`);
 });
 
 test('unlocks one shared audio graph and plays effects without cloning media elements', async () => {

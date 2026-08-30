@@ -18,6 +18,8 @@ export const MUSIC_DEFINITION={
 };
 export const MAX_ACTIVE_EFFECTS=12;
 export const PENDING_EFFECT_TTL=400;
+export const AUDIO_RELEASE='20260830a';
+export const audioAssetUrl=(baseUrl,file)=>`${baseUrl}/${file}?v=${AUDIO_RELEASE}`;
 
 const clamp = value => Math.max(0, Math.min(1, value));
 const resolvedFetch=fetchFn=>typeof fetchFn==='function'?fetchFn:null;
@@ -31,7 +33,7 @@ export function createAudioController({
   const load=resolvedFetch(fetchFn),prefetched=new Map();
   let music=null,musicActive=false,context=null,masterGain=null,unlocked=false,soundEnabled=Boolean(enabled),lastFootstep=-Infinity,decodeStarted=false,webAudioFailed=false;
 
-  const effectUrl=(name,file)=>`${baseUrl}/${file||SOUND_DEFINITIONS[name]?.files?.[0]}`;
+  const effectUrl=(name,file)=>audioAssetUrl(baseUrl,file||SOUND_DEFINITIONS[name]?.files?.[0]);
 
   function prefetch(name){
     if(prefetched.has(name))return prefetched.get(name);
@@ -66,7 +68,7 @@ export function createAudioController({
 
   function musicSource(){
     if(!AudioClass)return null;
-    if(!music){music=new AudioClass(`${baseUrl}/${chosenMusicFile()}`);music.preload='auto';music.loop=true;music.volume=MUSIC_DEFINITION.volume}
+    if(!music){music=new AudioClass(audioAssetUrl(baseUrl,chosenMusicFile()));music.preload='auto';music.loop=true;music.volume=MUSIC_DEFINITION.volume}
     return music;
   }
 
@@ -82,7 +84,7 @@ export function createAudioController({
 
   function startBuffer(name,{volume=1,rate}={}){
     const definition=SOUND_DEFINITIONS[name],buffer=effectBuffers.get(name);
-    if(!definition||!buffer||!context||!masterGain||context.state==='closed')return false;
+    if(!definition||!buffer||!context||!masterGain||webAudioFailed||context.state!=='running')return false;
     while(activeSources.size>=MAX_ACTIVE_EFFECTS){
       const oldest=activeSources.values().next().value;activeSources.delete(oldest);
       try{oldest.stop()}catch{}
@@ -109,14 +111,31 @@ export function createAudioController({
     }catch{activeMedia.delete(source);return false}
   }
 
+  function primeMediaSource(source){
+    if(!source)return;
+    const reset=()=>{try{source.pause?.();source.currentTime=0}catch{}source.muted=false};
+    source.muted=true;source.volume=0;
+    try{
+      const result=source.play();
+      if(result?.then)result.then(reset,reset);else reset();
+    }catch{reset()}
+  }
+
+  function primeFallbacks(){for(const name of Object.keys(SOUND_DEFINITIONS))primeMediaSource(mediaSourceFor(name))}
+
   function drainPending(name){
     for(let index=pendingEffects.length-1;index>=0;index--){
       const event=pendingEffects[index];
       if(event.name!==name)continue;
       pendingEffects.splice(index,1);
       if(!soundEnabled||now()-event.at>PENDING_EFFECT_TTL)continue;
-      if(!startBuffer(name,event.options))playMedia(name,event.options);
+      if(webAudioFailed||context?.state!=='running'||!startBuffer(name,event.options))playMedia(name,event.options);
     }
+  }
+
+  function failWebAudio(){
+    webAudioFailed=true;
+    for(const name of Object.keys(SOUND_DEFINITIONS))drainPending(name);
   }
 
   function decodeEffect(name){
@@ -145,13 +164,15 @@ export function createAudioController({
     if(unlocked){resume();return true}
     unlocked=true;
     for(const name of Object.keys(SOUND_DEFINITIONS)){const source=mediaSourceFor(name);source?.load?.()}
+    primeFallbacks();
     const background=musicSource();background?.load?.();
     if(AudioContextClass){
       try{
         context=new AudioContextClass();masterGain=context.createGain();masterGain.gain.value=soundEnabled?1:0;masterGain.connect(context.destination);
-        const resumed=context.resume?.();startDecoding();startMusic();if(resumed?.catch)await resumed.catch(()=>{webAudioFailed=true});
-      }catch{context=null;masterGain=null;webAudioFailed=true;startMusic()}
-    }else{webAudioFailed=true;startMusic()}
+        const resumed=context.resume?.();startMusic();if(resumed?.then)await resumed;
+        if(context.state==='running')startDecoding();else failWebAudio();
+      }catch{failWebAudio();startMusic()}
+    }else{failWebAudio();startMusic()}
     return true;
   }
 
@@ -161,7 +182,7 @@ export function createAudioController({
     if(name==='footstep'&&timestamp-lastFootstep<90)return false;
     if(name==='footstep')lastFootstep=timestamp;
     if(context&&!webAudioFailed){
-      if(effectBuffers.has(name))return startBuffer(name,options);
+      if(effectBuffers.has(name)){if(startBuffer(name,options))return true;return playMedia(name,options)}
       if(!decodeSettled.has(name)){
         if(pendingEffects.length>=MAX_ACTIVE_EFFECTS)pendingEffects.shift();
         pendingEffects.push({name,options,at:timestamp});return true;
@@ -181,7 +202,9 @@ export function createAudioController({
 
   function resume(){
     if(!unlocked||!soundEnabled)return false;
-    if(context&&context.state!=='running'){const result=context.resume?.();result?.catch?.(()=>{webAudioFailed=true})}
+    if(context&&!webAudioFailed&&context.state!=='running'){
+      try{const result=context.resume?.();result?.then?.(()=>startDecoding(),failWebAudio)}catch{failWebAudio()}
+    }
     if(masterGain)masterGain.gain.value=1;
     return startMusic();
   }

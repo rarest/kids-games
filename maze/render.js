@@ -322,9 +322,9 @@ export function createRenderer(canvas,{canvasFactory=globalThis.document?.create
   let viewport = { width: 390, height: 400 }, dpr = 1, level = null, grid = null, wallModel = null, wallModelBuilds = 0, sceneProfile = null, sceneEffects = [], treePalette = null, sceneSeed = 0, ambientActors = [], ambientActorBuilds = 0, paintSignatures = new Set(), skin = 'red', particles = [], motionState = createMotionState(), lastPlayer = null, lastMoveAt = -Infinity;
   let staticWallCache=null,staticWallCacheKey='',staticWallCacheBuilds=0,staticWallCacheHits=0,staticWallCacheFailures=0;
 
-  function releaseStaticWallCache(){
+  function releaseStaticWallCache({preserveKey=false}={}){
     if(staticWallCache?.canvas){staticWallCache.canvas.width=1;staticWallCache.canvas.height=1}
-    staticWallCache=null;staticWallCacheKey='';
+    staticWallCache=null;if(!preserveKey)staticWallCacheKey='';
   }
 
   function resize(nextViewport, nextDpr = globalThis.devicePixelRatio || 1) {
@@ -412,7 +412,7 @@ export function createRenderer(canvas,{canvasFactory=globalThis.document?.create
         cacheContext.setTransform(dpr,0,0,dpr,0,0);cacheContext.clearRect(0,0,logicalWidth,logicalHeight);
         paintWalls(cacheContext,wallModel.contours,wallModel.lightEdges,wallModel.darkEdges,padding,padding,logicalWidth,logicalHeight);
         staticWallCache={canvas:cacheCanvas,padding,logicalWidth,logicalHeight};staticWallCacheKey=cacheKey;staticWallCacheBuilds++;
-      }catch{staticWallCacheFailures++;releaseStaticWallCache()}
+      }catch{staticWallCacheFailures++;staticWallCacheKey=cacheKey;releaseStaticWallCache({preserveKey:true})}
     }else if(staticWallCache&&staticWallCacheKey===cacheKey)staticWallCacheHits++;
     let usedStaticCache=false;
     if(staticWallCache&&staticWallCacheKey===cacheKey){
@@ -422,7 +422,7 @@ export function createRenderer(canvas,{canvasFactory=globalThis.document?.create
       try{
         if(drawWidth>0&&drawHeight>0)ctx.drawImage(staticWallCache.canvas,sourceX*dpr,sourceY*dpr,drawWidth*dpr,drawHeight*dpr,destX,destY,drawWidth,drawHeight);
         usedStaticCache=true;
-      }catch{staticWallCacheFailures++;releaseStaticWallCache()}
+      }catch{staticWallCacheFailures++;staticWallCacheKey=cacheKey;releaseStaticWallCache({preserveKey:true})}
     }
     if(!usedStaticCache)paintWalls(ctx,visibleContours,wallModel.lightEdges,wallModel.darkEdges,camera.x,camera.y,viewport.width,viewport.height);
     if(profile.goldGleam){

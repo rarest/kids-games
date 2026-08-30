@@ -106,6 +106,21 @@ test('renderer reuses one raster wall layer until static inputs change',()=>{
   assert.equal(renderer.diagnostics.staticWallCacheBuilds,3,'viewport mutation invalidates raster');
 });
 
+test('renderer remembers a degraded raster key instead of retrying every frame',()=>{
+  assert.ok(render);
+  const gradient={addColorStop(){}},context=new Proxy({}, {
+    get(target,key){if(key==='createLinearGradient'||key==='createRadialGradient')return()=>gradient;return target[key]??(()=>{})},
+    set(target,key,value){target[key]=value;return true}
+  });
+  const renderer=render.createRenderer({style:{},getContext:()=>context},{canvasFactory:()=>{throw new Error('allocation rejected')},diagnosticsEnabled:true});
+  const level=getLevel('normal-1'),state=createRun(level);
+  renderer.resize({width:390,height:400},2);renderer.setLevel(level);
+  for(let frame=0;frame<8;frame++)renderer.draw(state,frame*40);
+  assert.equal(renderer.diagnostics.staticWallCacheFailures,1,'one unsupported key is attempted once');
+  renderer.resize({width:400,height:390},2);renderer.draw(state,400);
+  assert.equal(renderer.diagnostics.staticWallCacheFailures,2,'viewport change permits one fresh attempt');
+});
+
 test('wall fill, shadow, and foreground sheen clip share one rounded contour',()=>{
   const recording=recordingCanvas(),renderer=render.createRenderer(recording.canvas),level=getLevel('normal-1');
   renderer.resize({width:390,height:400},1);renderer.setLevel(level);renderer.draw(createRun(level),0);
