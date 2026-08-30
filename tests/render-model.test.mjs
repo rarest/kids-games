@@ -83,6 +83,29 @@ test('renderer reuses cached wall geometry until a removed-wall signature change
   assert.equal(renderer.wallModelBuilds,2);
 });
 
+test('renderer reuses one raster wall layer until static inputs change',()=>{
+  assert.ok(render);
+  const gradient={addColorStop(){}};
+  const context=new Proxy({}, {
+    get(target,key){if(key==='createLinearGradient'||key==='createRadialGradient')return()=>gradient;return target[key]??(()=>{})},
+    set(target,key,value){target[key]=value;return true}
+  });
+  const canvasFactory=()=>({style:{},getContext:()=>context,width:0,height:0});
+  const renderer=render.createRenderer({style:{},getContext:()=>context},{canvasFactory,diagnosticsEnabled:true});
+  const level=getLevel('normal-10'),state=createRun(level);
+  renderer.resize({width:390,height:400},2);renderer.setLevel(level);
+  renderer.draw(state,0);renderer.draw(state,40);
+  assert.equal(renderer.diagnostics.staticWallCacheBuilds,1);
+  assert.ok(renderer.diagnostics.staticWallCacheHits>=1);
+  assert.equal(renderer.diagnostics.staticWallCacheCount,1);
+  state.player={x:state.player.x,y:state.player.y+1};renderer.draw(state,80);
+  assert.equal(renderer.diagnostics.staticWallCacheBuilds,1,'camera motion reuses world raster');
+  state.removedWalls.add(cellKey(level.breakableWalls[0]));renderer.draw(state,120);
+  assert.equal(renderer.diagnostics.staticWallCacheBuilds,2,'wall mutation invalidates raster');
+  renderer.resize({width:400,height:390},2);renderer.draw(state,160);
+  assert.equal(renderer.diagnostics.staticWallCacheBuilds,3,'viewport mutation invalidates raster');
+});
+
 test('wall fill, shadow, and foreground sheen clip share one rounded contour',()=>{
   const recording=recordingCanvas(),renderer=render.createRenderer(recording.canvas),level=getLevel('normal-1');
   renderer.resize({width:390,height:400},1);renderer.setLevel(level);renderer.draw(createRun(level),0);
@@ -147,6 +170,11 @@ test('renderer diagnostics expose bounded paint facts from the actual frame with
   const diagnostics=renderer.diagnostics;
   assert.deepEqual({...diagnostics,paintSignatures:[...diagnostics.paintSignatures].sort()},{
     wallModelBuilds:1,
+    staticWallCacheBuilds:0,
+    staticWallCacheHits:0,
+    staticWallCacheFailures:0,
+    staticWallCacheCount:0,
+    particleCount:0,
     trailCount:0,
     actorCount:34,
     sceneId:'royal-garden',
@@ -363,4 +391,33 @@ test('createRenderer draws paired water drops before impact and only linked ripp
   assert.equal(visibleDrops(impact).length,0);
   const expectedRings=drops.reduce((sum,actor)=>sum+scenery.waterCycleStateFor(actor,impactTime).rings,0);
   assert.equal(visibleRipples(impact).length,expectedRings);assert.ok(expectedRings>=4&&expectedRings<=6);
+});
+
+test('ten-minute equivalent draw load keeps dynamic resources and the wall cache bounded',{timeout:60000},()=>{
+  const gradient={addColorStop(){}},context=new Proxy({}, {
+    get(target,key){if(key==='createLinearGradient'||key==='createRadialGradient')return()=>gradient;return target[key]??(()=>{})},
+    set(target,key,value){target[key]=value;return true}
+  });
+  const canvasFactory=()=>({style:{},width:0,height:0,getContext:()=>context});
+  const level=getLevel('normal-10'),state=createRun(level),renderer=render.createRenderer({style:{},getContext:()=>context},{canvasFactory,diagnosticsEnabled:false});
+  const neighbor=[{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}].map(delta=>({x:state.player.x+delta.x,y:state.player.y+delta.y})).find(point=>level.rows[point.y]?.[point.x]==='.');
+  assert.ok(neighbor,'long-run fixture has an adjacent floor');
+  renderer.resize({width:390,height:400},2);renderer.setLevel(level);
+  const base=performance.now();let firstBatch=0,lastBatch=0,batchStarted=performance.now();
+  for(let frame=0;frame<18_000;frame++){
+    if(frame%9===0)state.player=frame%18===0?neighbor:{...level.start};
+    if(frame%300===0)renderer.emit({type:'coin',at:state.player});
+    renderer.draw(state,base+frame*(1000/30));
+    if(frame===299)firstBatch=performance.now()-batchStarted;
+    if(frame===17_699)batchStarted=performance.now();
+    if(frame===17_999)lastBatch=performance.now()-batchStarted;
+  }
+  const diagnostics=renderer.diagnostics;
+  assert.ok(diagnostics.particleCount<=render.MAX_PARTICLES);
+  assert.ok(diagnostics.trailCount<=72);
+  assert.ok(diagnostics.actorCount<=96);
+  assert.equal(diagnostics.staticWallCacheCount,1);
+  assert.equal(diagnostics.staticWallCacheBuilds,1);
+  assert.ok(diagnostics.staticWallCacheHits>=17_999);
+  assert.ok(lastBatch<=firstBatch*2+50,`first=${firstBatch.toFixed(1)}ms last=${lastBatch.toFixed(1)}ms`);
 });

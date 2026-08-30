@@ -217,6 +217,11 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
     assert.equal(new Set(heldDirections).size,1,'browser fixture starts with a continuous corridor');
     await realHeldDrag(heldDirections);
     assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'2','one held drag can make consecutive moves');
+    const runtimeDiagnostics=await evaluate('globalThis.__crownMazeDiagnostics');
+    assert.equal(runtimeDiagnostics.audio.unlocked,true,'trusted gesture unlocks the shared audio controller');
+    assert.equal(runtimeDiagnostics.audio.musicActive,true,'background music remains active beside effects');
+    assert.ok(runtimeDiagnostics.audio.decodedEffects>=1,'at least one recorded effect is decoded');
+    assert.equal(runtimeDiagnostics.frames.targetFps,30,'phone rendering is capped at 30 fps');
     await resetStage();
     const accessiblePanel=await evaluate(`(()=>{
       const panel=document.getElementById('accessibleDirections'),button=document.querySelector('[data-access-direction=${solution[0]}]');
@@ -259,6 +264,8 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       assert.equal(layout.safeBottom,true,`${device.name}:bottom safe area`);
       assert.equal(layout.hint,device.mobile?'滑动迷宫移动':'拖动迷宫或使用方向键',`${device.name}:input hint`);
       assert.equal(layout.touchAction,'none',`${device.name}:touch action`);
+      assert.equal(await evaluate("getComputedStyle(document.body).userSelect"),'none',`${device.name}:body selection disabled`);
+      assert.equal(await evaluate("getComputedStyle(document.getElementById('mazeCanvas')).userSelect"),'none',`${device.name}:canvas selection disabled`);
       if(device.pointerType==='touch'){
         const before=await evaluate("document.getElementById('stepCount').textContent");
         await realPinch();await realTap();await realTap();await sleep(180);
@@ -273,9 +280,14 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
         await cdp.call('Input.dispatchMouseEvent',{type:'mouseReleased',x:2,y:2,button:'left',buttons:0,clickCount:1,pointerType:'mouse'});
         await evaluate("delete document.getElementById('mazeCanvas').setPointerCapture");
         assert.equal(await evaluate("document.getElementById('stepCount').textContent"),before,`${device.name}:outside release does not move`);
+        const textDrag=await evaluate(`(()=>{const rect=document.querySelector('.key-panel').getBoundingClientRect();return{start:{x:rect.left+8,y:rect.top+rect.height/2},end:{x:rect.right-8,y:rect.top+rect.height/2}}})()`);
+        await cdp.call('Input.dispatchMouseEvent',{type:'mousePressed',...textDrag.start,button:'left',buttons:1,clickCount:1,pointerType:'mouse'});
+        await cdp.call('Input.dispatchMouseEvent',{type:'mouseMoved',...textDrag.end,button:'none',buttons:1,pointerType:'mouse'});
+        await cdp.call('Input.dispatchMouseEvent',{type:'mouseReleased',...textDrag.end,button:'left',buttons:0,clickCount:1,pointerType:'mouse'});
       }
       await realSwipe(solution[stepIndex],device.pointerType);stepIndex+=1;
       assert.equal(await evaluate("Number(document.getElementById('stepCount').textContent)"),stepIndex,`${device.name}:gesture step`);
+      assert.equal(await evaluate("getSelection().toString()"),'',`${device.name}:gesture leaves no browser selection`);
       const deviceShot=await cdp.call('Page.captureScreenshot',{format:'png',fromSurface:true});
       await writeFile(device.screenshot,Buffer.from(deviceShot.data,'base64'));
     }

@@ -1,12 +1,13 @@
-import { LEVELS, getLevel } from './levels.js?v=20260829f';
-import { createRun, move, starsFor, useDynamite, useHook } from './engine.js?v=20260829f';
-import { SKINS, availableSkins, awardCoin, canEnterStage, completeStage, equipSkin, purchase, restartJourney } from './economy.js?v=20260829f';
-import { loadSave, persistSave } from './save.js?v=20260829f';
-import { createRenderer } from './render.js?v=20260829f';
-import { createAudioController } from './audio.js?v=20260829f';
-import { diagnosticsAllowed } from './diagnostics.js?v=20260829f';
-import { gameEventSounds } from './sound-events.js?v=20260829f';
-import { createGestureTracker } from './gesture-controls.js?v=20260829f';
+import { LEVELS, getLevel } from './levels.js?v=20260830a';
+import { createRun, move, starsFor, useDynamite, useHook } from './engine.js?v=20260830a';
+import { SKINS, availableSkins, awardCoin, canEnterStage, completeStage, equipSkin, purchase, restartJourney } from './economy.js?v=20260830a';
+import { loadSave, persistSave } from './save.js?v=20260830a';
+import { createRenderer } from './render.js?v=20260830a';
+import { createAudioController } from './audio.js?v=20260830a';
+import { diagnosticsAllowed } from './diagnostics.js?v=20260830a';
+import { gameEventSounds } from './sound-events.js?v=20260830a';
+import { createGestureTracker } from './gesture-controls.js?v=20260830a';
+import { createFrameScheduler } from './frame-scheduler.js?v=20260830a';
 
 const $ = id => document.getElementById(id);
 const screens = {
@@ -14,12 +15,17 @@ const screens = {
   game: $('gameScreen'), result: $('resultScreen')
 };
 const canvas = $('mazeCanvas');
-const renderer = createRenderer(canvas);
-const audio = createAudioController({ baseUrl: '../maze/audio' });
 const diagnosticsEnabled = diagnosticsAllowed(location);
+const renderer = createRenderer(canvas,{diagnosticsEnabled});
+const audio = createAudioController({ baseUrl: '../maze/audio' });
 let save = loadSave();
 let run = null, currentLevel = null, selectedTool = null, shopTab = 'items', soundEnabled = true, toastTimer = 0;
 const hasTouchInput=()=>matchMedia('(pointer:coarse)').matches||(navigator.maxTouchPoints||0)>0;
+let frameScheduler=null;
+frameScheduler=createFrameScheduler({mobile:hasTouchInput(),draw:now=>{
+  if(run&&document.body.dataset.screen==='game')renderer.draw(run,now);
+  if(diagnosticsEnabled)globalThis.__crownMazeDiagnostics={...renderer.diagnostics,audio:audio.diagnostics,frames:frameScheduler.diagnostics};
+}});
 
 function store(next) {
   save = persistSave(next);
@@ -41,6 +47,7 @@ function showScreen(name) {
   if(name!=='game')gestureTracker.cancel();
   for (const [key, screen] of Object.entries(screens)) screen.classList.toggle('active', key === name);
   document.body.dataset.screen = name;
+  frameScheduler.setActive(name==='game'&&!document.hidden);
   resetPageScroll();requestAnimationFrame(resetPageScroll);
   if (name === 'map') requestAnimationFrame(() => { $('routeScroll').scrollTop = $('routeScroll').scrollHeight; });
   if (name === 'game') requestAnimationFrame(resizeCanvas);
@@ -146,6 +153,7 @@ function resizeCanvas() {
   if (!run) return;
   const frame = canvas.parentElement.getBoundingClientRect();
   renderer.resize({ width: Math.round(frame.width || 370), height: Math.round(frame.height || 400) }, devicePixelRatio);
+  frameScheduler.invalidate();
 }
 
 function startStage(levelId) {
@@ -184,6 +192,7 @@ function applyDirection(direction) {
   } else result = move(run, direction);
   handleGameEvent(result.event);
   syncKeys();
+  frameScheduler.invalidate();
 }
 
 function handleGameEvent(event) {
@@ -268,15 +277,13 @@ window.addEventListener('keydown', event => {
 const preventGameGesture=event=>{if(document.body.dataset.screen==='game')event.preventDefault()};
 for(const type of ['gesturestart','gesturechange','gestureend'])document.addEventListener(type,preventGameGesture,{passive:false});
 document.addEventListener('dblclick',preventGameGesture,{passive:false});
+document.addEventListener('dragstart',preventGameGesture,{passive:false});
 window.addEventListener('resize',()=>{resizeCanvas();syncGestureGuide()});
 window.addEventListener('blur',()=>gestureTracker.cancel());
-document.addEventListener('visibilitychange', () => {if(document.hidden){gestureTracker.cancel();audio.suspend()}else audio.resume()});
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden){gestureTracker.cancel();audio.suspend();frameScheduler.setActive(false)}
+  else{audio.resume();frameScheduler.setActive(document.body.dataset.screen==='game')}
+});
 document.addEventListener('pointerdown', () => audio.unlock(), { once: true, capture: true });
 
-function frame(now) {
-  if (run && document.body.dataset.screen === 'game') renderer.draw(run, now);
-  if (diagnosticsEnabled) globalThis.__crownMazeDiagnostics = renderer.diagnostics;
-  requestAnimationFrame(frame);
-}
-
-syncBank(); renderer.setSkin(save.equippedSkin); showScreen('home'); requestAnimationFrame(frame);
+syncBank();renderer.setSkin(save.equippedSkin);showScreen('home');frameScheduler.start();

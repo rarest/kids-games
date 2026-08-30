@@ -15,7 +15,13 @@
   background: var(--violet-0);
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+*,*::before,*::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
 html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; overscroll-behavior: none; }
 body {
   min-height: 100dvh;

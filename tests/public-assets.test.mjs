@@ -30,6 +30,7 @@ test('the default release gate includes unit and both browser suites',async()=>{
 });
 
 test('all HTML-linked public assets exist', async () => {
-  const paths = ['../maze/game.css','../maze/main.js','../maze/gesture-controls.js','../maze/levels.js','../maze/engine.js','../maze/economy.js','../maze/save.js','../maze/render.js','../maze/audio.js','../maze/audio/royal-garden.webm'];
+  const paths = ['../maze/game.css','../maze/main.js','../maze/gesture-controls.js','../maze/frame-scheduler.js','../maze/levels.js','../maze/engine.js','../maze/economy.js','../maze/save.js','../maze/render.js','../maze/audio.js','../maze/audio/royal-garden.webm','../maze/audio/royal-garden.m4a'];
   for (const path of paths) await access(new URL(path, import.meta.url));
+  for(const definition of Object.values(SOUND_DEFINITIONS))for(const file of definition.files)await access(new URL(`../maze/audio/${file}`,import.meta.url));
 });

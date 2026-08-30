@@ -25,6 +25,9 @@ test('mobile layout defines safe areas and generous touch targets', async () => 
   assert.match(css, /--touch-size:\s*56px/);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.match(css, /touch-action:\s*none/);
+  assert.match(css, /-webkit-user-select:\s*none/);
+  assert.match(css, /user-select:\s*none/);
+  assert.match(css, /-webkit-touch-callout:\s*none/);
   assert.match(css, /overscroll-behavior:\s*none/);
   assert.match(css, /\.gesture-guide/);
   assert.match(css, /safe-area-inset-left/);
