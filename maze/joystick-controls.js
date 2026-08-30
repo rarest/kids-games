@@ -29,9 +29,9 @@ const intentKey=intent=>intent?`${intent.primary}|${intent.secondary||''}`:'';
 export function createPathAwareNavigator({canMove,onDirection,turnBufferMs=400,now=()=>Date.now()}={}){
   if(typeof canMove!=='function')throw new TypeError('canMove callback is required');
   if(typeof onDirection!=='function')throw new TypeError('onDirection callback is required');
-  let heading=null,bufferedTurn=null,activePair=null,consumedPair=null;
+  let heading=null,bufferedTurn=null,activePair=null;
 
-  const reset=()=>{heading=null;bufferedTurn=null;activePair=null;consumedPair=null};
+  const reset=()=>{heading=null;bufferedTurn=null;activePair=null};
   const perform=direction=>{
     const outcome=onDirection(direction),moved=typeof outcome==='object'?outcome?.moved!==false:outcome!==false;
     if(moved)heading=direction;
@@ -43,10 +43,10 @@ export function createPathAwareNavigator({canMove,onDirection,turnBufferMs=400,n
   function step(intent){
     if(!intent?.primary){reset();return null}
     const primary=intent.primary,secondary=intent.secondary||null;
-    if(!secondary){bufferedTurn=null;activePair=null;consumedPair=null;return dispatch(primary)}
+    if(!secondary){bufferedTurn=null;activePair=null;return dispatch(primary)}
 
     const pair=pairKey(intent),timestamp=now(),pairChanged=pair!==activePair;
-    if(pairChanged){activePair=pair;consumedPair=null;bufferedTurn=null}
+    if(pairChanged){activePair=pair;bufferedTurn=null}
     const directions=[primary,secondary],headingBefore=heading;
     if(bufferedTurn&&bufferedTurn.expiresAt<timestamp)bufferedTurn=null;
 
@@ -66,7 +66,7 @@ export function createPathAwareNavigator({canMove,onDirection,turnBufferMs=400,n
     if(bufferedTurn&&canMove(bufferedTurn.direction)){
       const direction=bufferedTurn.direction;
       const outcome=perform(direction);
-      if(outcome.moved){bufferedTurn=null;consumedPair=pair}
+      if(outcome.moved)bufferedTurn=null;
       return outcome.direction;
     }
     if(directions.includes(headingBefore)&&canMove(headingBefore))return dispatch(headingBefore);

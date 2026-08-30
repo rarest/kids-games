@@ -199,6 +199,14 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       await sleep(180);
       await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
     };
+    const realBlurCancel=async()=>{
+      const point=await evaluate(`(()=>{const rect=document.getElementById('joystick').getBoundingClientRect();return{x:rect.left+rect.width*.68,y:rect.top+rect.height*.85}})()`);
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:1,radiusY:1,force:1}]});
+      await sleep(40);
+      await evaluate("window.dispatchEvent(new Event('blur'))");
+      await sleep(180);
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    };
     const resetStage=async()=>{
       const reset=JSON.parse(await evaluate(`JSON.stringify((()=>{document.getElementById('backToMapButton').click();const node=document.querySelector('.stage-node[data-stage="${stageId}"]');if(!node)return{found:false,screen:document.body.dataset.screen};node.click();return{found:true,disabled:node.disabled,screen:document.body.dataset.screen,stage:document.body.dataset.stage}})())`));
       assert.equal(reset.found,true,'reset stage node exists');
@@ -252,6 +260,13 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
     await resetStage();
     await realSecondPointerCancel(heldDirections[0]);
     assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'1','a second pointer outside the joystick cancels hold-repeat');
+    await resetStage();
+    await realBlurCancel();
+    assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'1','window blur cancels a diagonal gesture after its immediate step');
+    await realJoystick('right','touch');
+    assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'1','the next gesture does not inherit the cancelled turn buffer');
+    await realJoystick('down','touch');
+    assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'2','a clean gesture can continue after blur cancellation');
     await resetStage();
     const accessiblePanel=await evaluate(`(()=>{
       const panel=document.getElementById('accessibleDirections'),button=document.querySelector('[data-access-direction=${solution[0]}]');
