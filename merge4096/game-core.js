@@ -67,23 +67,40 @@ function collapseAll(column) {
   return {column:values,combos};
 }
 
+export function resolvePlacement(columns,columnIndex,value){
+  const next=columns.map(column=>[...column]);
+  next[columnIndex].push(value);
+  let combos=0,changed=true;
+  while(changed){
+    changed=false;
+    const collapsed=collapseAll(next[columnIndex]);
+    if(collapsed.combos){next[columnIndex]=collapsed.column;combos+=collapsed.combos;changed=true;continue}
+    const active=next[columnIndex].at(-1);
+    for(const neighbour of [columnIndex-1,columnIndex+1]){
+      if(neighbour>=0&&neighbour<next.length&&next[neighbour].at(-1)===active){
+        next[neighbour].pop();next[columnIndex].pop();next[columnIndex].push(active*2);combos++;changed=true;break;
+      }
+    }
+  }
+  return {columns:next,comboCount:combos,createdValue:next[columnIndex].at(-1)};
+}
+
 export function placePendingCard(state,columnIndex) {
   if (!state.pendingCard || state.pendingCard.kind !== 'number') throw new Error('请先抽取数字牌');
   if (!Number.isInteger(columnIndex) || columnIndex < 0 || columnIndex >= COLUMN_COUNT) throw new Error('无效牌列');
   if (state.columns[columnIndex].length >= COLUMN_CAPACITY) throw new Error('这一列已满');
   const next = cloneState(state);
   const placedValue = next.pendingCard.value;
-  next.columns[columnIndex].push(placedValue);
-  const collapsed = collapseAll(next.columns[columnIndex]);
-  next.columns[columnIndex] = collapsed.column;
+  const resolved=resolvePlacement(next.columns,columnIndex,placedValue);
+  next.columns=resolved.columns;
   next.pendingCard = null;
-  next.lastCombo = collapsed.combos;
-  const createdValue = collapsed.combos ? collapsed.column.at(-1) : placedValue;
-  next.roundMax = Math.max(next.roundMax,...collapsed.column);
+  next.lastCombo = resolved.comboCount;
+  const createdValue = resolved.createdValue;
+  next.roundMax = Math.max(next.roundMax,...next.columns.flat());
   let outcome = null;
   if (next.roundMax >= 4096) { next.status = 'won'; outcome = 'won'; }
   else if (next.drawIndex >= next.deck.length && !next.pendingCard) { next.status = 'lost'; outcome = 'lost'; }
-  return {state:next,comboCount:collapsed.combos,removed:collapsed.combos,createdValue,outcome};
+  return {state:next,comboCount:resolved.comboCount,removed:resolved.comboCount,createdValue,outcome};
 }
 
 export function buyItem(profile,item) {

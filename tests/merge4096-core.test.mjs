@@ -62,6 +62,18 @@ test('placed card chains upward through equal neighbours', () => {
   assert.equal(transition.createdValue,128);
 });
 
+test('a vertical merge pulls an equal left bottom card into the active column',()=>{
+  const transition=placePendingCard(state({pendingCard:{kind:'number',value:32},columns:[[64],[32],[],[],[]]}),1);
+  assert.deepEqual(transition.state.columns,[[],[128],[],[],[]]);
+  assert.equal(transition.comboCount,2);
+});
+
+test('cross-column resolution checks left before right and keeps cascading',()=>{
+  const transition=placePendingCard(state({pendingCard:{kind:'number',value:64},columns:[[128],[64],[256],[],[]]}),1);
+  assert.deepEqual(transition.state.columns,[[],[512],[],[],[]]);
+  assert.equal(transition.comboCount,3);
+});
+
 test('full columns reject placement and 4096 wins immediately', () => {
   const full = Array(12).fill(2);
   assert.throws(() => placePendingCard(state({pendingCard:{kind:'number',value:4},columns:[full,[],[],[],[]]}),0),/已满/);
