@@ -22,12 +22,15 @@ test('fresh player can draw, place, exit and continue on a real phone viewport',
     await cdp.call('Page.navigate',{url:`${baseUrl}/`});
     const evaluate=async expression=>(await cdp.call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true})).result.value;
     for(let i=0;i<100&&await evaluate('document.readyState')!=='complete';i++)await sleep(50);
-    await evaluate("localStorage.removeItem('merge4096-save-v1')");
+    await evaluate("localStorage.removeItem('merge4096-save-v1');localStorage.removeItem('merge4096-save-v2')");
     await cdp.call('Page.navigate',{url:`${baseUrl}/games/merge4096.html?test=${Date.now()}`});
     await sleep(150);
     for(let i=0;i<100&&await evaluate('document.readyState')!=='complete';i++)await sleep(50);
     assert.deepEqual(JSON.parse(await evaluate(`JSON.stringify({screen:document.body.dataset.screen,best:bestValue.textContent,last:lastResult.textContent,wins:winCount.textContent,coins:coinCount.textContent})`)),{screen:'home',best:'0',last:'0',wins:'0',coins:'500'});
-    await evaluate('startButton.click()');await sleep(100);
+    assert.equal(await evaluate("hallButton.getAttribute('href')"),'../index.html');
+    await evaluate('startButton.click()');await sleep(50);
+    assert.equal(await evaluate('difficultyDialog.open'),true);
+    await evaluate('joyMode.click()');await sleep(100);
     assert.equal(await evaluate('document.body.dataset.screen'),'game');
     assert.equal(await evaluate("document.querySelectorAll('.tile').length"),0);
     assert.equal(await evaluate('drawCount.textContent'),'0');
@@ -46,6 +49,9 @@ test('fresh player can draw, place, exit and continue on a real phone viewport',
     await evaluate('location.reload()');for(let i=0;i<100&&await evaluate('document.readyState')!=='complete';i++)await sleep(50);
     await evaluate('startButton.click()');await sleep(100);
     assert.equal(await evaluate("document.querySelectorAll('.pile-button')[0].querySelectorAll('.tile').length"),1);
+    await evaluate('drawButton.click()');await sleep(50);
+    await evaluate("document.querySelectorAll('.pile-button')[1].click()");await sleep(50);
+    assert.equal(await evaluate("document.querySelectorAll('.pile-button')[1].querySelectorAll('.tile').length"),1);
     assert.equal(await evaluate('document.documentElement.scrollWidth<=innerWidth'),true);
   }finally{cdp?.close();chrome.kill('SIGTERM');server?.kill('SIGTERM')}
 });

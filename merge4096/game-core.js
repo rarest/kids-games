@@ -203,4 +203,4 @@ export function isValidGameState(state) {
   return Boolean(state && Array.isArray(state.deck) && Number.isInteger(state.drawIndex) && state.drawIndex >= 0 && state.drawIndex <= state.deck.length &&
     Array.isArray(state.columns) && state.columns.length === COLUMN_COUNT && state.columns.every(column=>Array.isArray(column)&&column.length<=COLUMN_CAPACITY&&column.every(validValue)));
 }
-import {getDifficulty,ordinaryValueCap} from './difficulty.js';
+import {getDifficulty,ordinaryValueCap} from './difficulty.js?v=20260830g';
