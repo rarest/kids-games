@@ -1,4 +1,4 @@
-import { cellKey, parseGrid } from './level-tools.js?v=20260830a';
+import { cellKey, parseGrid } from './level-tools.js?v=20260830b';
 
 const DIRECTIONS = {
   up: { x: 0, y: -1 },
@@ -21,6 +21,11 @@ function directionFor(name) {
 function isFloor(run, point) {
   const key = cellKey(point);
   return run.grid.floors.has(key) || run.removedWalls.has(key);
+}
+
+export function canMove(run, directionName) {
+  if (!run || run.complete) return false;
+  return isFloor(run, pointAt(run.player, directionFor(directionName)));
 }
 
 function collectAt(run, point) {

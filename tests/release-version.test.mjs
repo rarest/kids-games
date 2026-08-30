@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { AUDIO_RELEASE, MUSIC_DEFINITION, SOUND_DEFINITIONS, audioAssetUrl } from '../maze/audio.js';
 
-const RELEASE='20260830a';
+const RELEASE='20260830b';
 
 test('public HTML and the complete ES module graph share the new cache version',async()=>{
   assert.equal(AUDIO_RELEASE,RELEASE);
