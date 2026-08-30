@@ -13,21 +13,40 @@ export function allowedValuesAt(index) {
   return [2,2,4,4,8,8,16,16,32,32,64,64,128,256,512];
 }
 
-export function createGame(random = Math.random) {
+export function createGame(difficultyId='joy',random=Math.random) {
+  if(typeof difficultyId==='function'){random=difficultyId;difficultyId='joy'}
+  const difficulty=getDifficulty(difficultyId);
   const deck = Array.from({length:DECK_SIZE},(_,index)=>{
-    if ((index + 1) % 20 === 0) return {kind:'lucky'};
-    const choices = allowedValuesAt(index);
-    const choice = Math.min(choices.length - 1,Math.floor(random() * choices.length));
-    return {kind:'number',value:choices[choice]};
+    if ((index + 1) % difficulty.luckyEvery === 0) return {kind:'lucky'};
+    return {kind:'ordinary'};
   });
-  return {deck,drawIndex:0,pendingCard:null,columns:Array.from({length:COLUMN_COUNT},()=>[]),roundMax:0,status:'playing',rewardClaimed:false,lastCombo:0};
+  return {deck,drawIndex:0,pendingCard:null,columns:Array.from({length:COLUMN_COUNT},()=>[]),roundMax:0,status:'playing',rewardClaimed:false,lastCombo:0,difficulty:difficulty.id,missStreak:0,rerolls:0,temporaryBombs:0,comboCoins:0};
 }
 
-export function drawCard(state) {
+function generatedValue(state,random){
+  const bottoms=state.columns.flatMap(column=>column.length?[column.at(-1)]:[]);
+  if(state.missStreak>=5&&bottoms.length)return bottoms[Math.min(bottoms.length-1,Math.floor(random()*bottoms.length))];
+  const cap=ordinaryValueCap(state.roundMax);
+  const values=[2,2,2,4,4,8,16,32,64,128,256,512].filter(value=>value<=cap);
+  const difficulty=getDifficulty(state.difficulty);
+  if(bottoms.length&&random()<difficulty.pairBias)return bottoms[Math.min(bottoms.length-1,Math.floor(random()*bottoms.length))];
+  return values[Math.min(values.length-1,Math.floor(random()*values.length))];
+}
+
+export function drawGeneratedCard(state,random=Math.random){
+  if(state.status!=='playing')throw new Error('本局已经结束');
+  if(state.pendingCard)throw new Error('请先放置当前牌');
+  const value=generatedValue(state,random),bottoms=state.columns.flatMap(column=>column.length?[column.at(-1)]:[]);
+  return {...state,pendingCard:{kind:'number',value},drawIndex:state.drawIndex+1,missStreak:bottoms.includes(value)?0:(state.missStreak??0)+1};
+}
+
+export function drawCard(state,random=Math.random) {
   if (state.status !== 'playing') throw new Error('本局已经结束');
   if (state.pendingCard) throw new Error('请先放置当前牌');
   if (state.drawIndex >= state.deck.length) return {...state,status:'lost'};
-  return {...state,pendingCard:{...state.deck[state.drawIndex]},drawIndex:state.drawIndex+1};
+  const card=state.deck[state.drawIndex];
+  if(card.kind==='ordinary')return drawGeneratedCard(state,random);
+  return {...state,pendingCard:{...card},drawIndex:state.drawIndex+1};
 }
 
 export function chooseLuckyValue(state,value) {
@@ -118,3 +137,4 @@ export function isValidGameState(state) {
   return Boolean(state && Array.isArray(state.deck) && Number.isInteger(state.drawIndex) && state.drawIndex >= 0 && state.drawIndex <= state.deck.length &&
     Array.isArray(state.columns) && state.columns.length === COLUMN_COUNT && state.columns.every(column=>Array.isArray(column)&&column.length<=COLUMN_CAPACITY&&column.every(validValue)));
 }
+import {getDifficulty,ordinaryValueCap} from './difficulty.js';

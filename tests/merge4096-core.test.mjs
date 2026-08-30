@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  createGame, drawCard, chooseLuckyValue, placePendingCard,
+  createGame, drawCard, drawGeneratedCard, chooseLuckyValue, placePendingCard,
   buyItem, useBomb, useCandle, canFail, settleGame
 } from '../merge4096/game-core.js';
 
@@ -20,12 +20,20 @@ test('new game has 10000 cards and five empty columns', () => {
   assert.equal(game.pendingCard, null);
 });
 
-test('every twentieth entry is lucky and opening numbers stay small', () => {
-  const game = createGame(() => 0.99);
-  assert.equal(game.deck[19].kind, 'lucky');
-  assert.equal(game.deck[39].kind, 'lucky');
-  assert.equal(game.deck[18].kind, 'number');
-  assert.ok([2,4,8].includes(game.deck[18].value));
+test('each mode uses its own lucky interval and opening numbers stay small', () => {
+  const easy = createGame('easy',() => 0.99);
+  const joy = createGame('joy',() => 0.99);
+  assert.equal(easy.deck[14].kind,'lucky');
+  assert.equal(joy.deck[24].kind,'lucky');
+  assert.equal(joy.deck[23].kind,'ordinary');
+  assert.equal(joy.difficulty,'joy');
+});
+
+test('sixth miss is guaranteed to match a visible bottom card',()=>{
+  const game=state({difficulty:'joy',missStreak:5,columns:[[32],[8],[],[],[]]});
+  const drawn=drawGeneratedCard(game,()=>0);
+  assert.ok([32,8].includes(drawn.pendingCard.value));
+  assert.equal(drawn.missStreak,0);
 });
 
 test('a pending card must be placed before another draw', () => {
