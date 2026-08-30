@@ -4,6 +4,8 @@ import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 
 test('game hall preserves existing games and appends merge 4096 as the seventh', async () => {
+  const index = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(index,/<script src="games\.js\?v=20260830f"><\/script>/);
   const source = await readFile(new URL('../games.js', import.meta.url), 'utf8');
   const context = { window: {} }; vm.runInNewContext(source, context);
   assert.equal(context.window.GAMES.length, 7);
