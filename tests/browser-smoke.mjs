@@ -169,6 +169,15 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       await cdp.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...first,x:first.x-48},{...second,x:second.x+48}]});
       await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
     };
+    const realSecondPointerCancel=async direction=>{
+      const joystick=await joystickPoint(direction),outside=await canvasCenter();
+      const first={...joystick,id:1,radiusX:1,radiusY:1,force:1},second={...outside,id:2,radiusX:1,radiusY:1,force:1};
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[first]});
+      await sleep(40);
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[first,second]});
+      await sleep(180);
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    };
     const resetStage=async()=>{
       const reset=JSON.parse(await evaluate(`JSON.stringify((()=>{document.getElementById('backToMapButton').click();const node=document.querySelector('.stage-node[data-stage="${stageId}"]');if(!node)return{found:false,screen:document.body.dataset.screen};node.click();return{found:true,disabled:node.disabled,screen:document.body.dataset.screen,stage:document.body.dataset.stage}})())`));
       assert.equal(reset.found,true,'reset stage node exists');
@@ -208,6 +217,9 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
     assert.equal(runtimeDiagnostics.audio.musicActive,true,'background music remains active beside effects');
     assert.ok(runtimeDiagnostics.audio.decodedEffects>=1,'at least one recorded effect is decoded');
     assert.equal(runtimeDiagnostics.frames.targetFps,30,'phone rendering is capped at 30 fps');
+    await resetStage();
+    await realSecondPointerCancel(heldDirections[0]);
+    assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'1','a second pointer outside the joystick cancels hold-repeat');
     await resetStage();
     const accessiblePanel=await evaluate(`(()=>{
       const panel=document.getElementById('accessibleDirections'),button=document.querySelector('[data-access-direction=${solution[0]}]');

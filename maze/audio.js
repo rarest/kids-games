@@ -29,7 +29,7 @@ export function createAudioController({
   AudioContextClass=globalThis.AudioContext||globalThis.webkitAudioContext,
   fetchFn=globalThis.fetch?.bind(globalThis),now=()=>performance.now(),random=Math.random
 }={}){
-  const mediaSources=new Map(),activeMedia=new Set(),effectBuffers=new Map(),decodeSettled=new Set(),decodeTasks=new Map(),activeSources=new Set(),pendingEffects=[];
+  const mediaSources=new Map(),mediaGenerations=new WeakMap(),activeMedia=new Set(),effectBuffers=new Map(),decodeSettled=new Set(),decodeTasks=new Map(),activeSources=new Set(),pendingEffects=[];
   const load=resolvedFetch(fetchFn),prefetched=new Map();
   let music=null,musicActive=false,context=null,masterGain=null,unlocked=false,soundEnabled=Boolean(enabled),lastFootstep=-Infinity,decodeStarted=false,webAudioFailed=false;
 
@@ -101,6 +101,7 @@ export function createAudioController({
   function playMedia(name,{volume=1,rate}={}){
     const definition=SOUND_DEFINITIONS[name],source=mediaSourceFor(name);
     if(!definition||!source)return false;
+    mediaGenerations.set(source,(mediaGenerations.get(source)||0)+1);
     source.volume=clamp(definition.volume*volume);source.playbackRate=rate||(.97+random()*.06);
     try{source.currentTime=0}catch{}
     activeMedia.add(source);source.onended=()=>activeMedia.delete(source);
@@ -113,7 +114,8 @@ export function createAudioController({
 
   function primeMediaSource(source){
     if(!source)return;
-    const reset=()=>{try{source.pause?.();source.currentTime=0}catch{}source.muted=false};
+    const generation=(mediaGenerations.get(source)||0)+1;mediaGenerations.set(source,generation);
+    const reset=()=>{if(mediaGenerations.get(source)!==generation)return;try{source.pause?.();source.currentTime=0}catch{}source.muted=false};
     source.muted=true;source.volume=0;
     try{
       const result=source.play();

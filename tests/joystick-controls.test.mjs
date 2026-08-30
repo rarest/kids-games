@@ -5,12 +5,12 @@ let joystickModule;
 try{joystickModule=await import('../maze/joystick-controls.js')}catch{}
 
 function fakeTimers(){
-  const timers=new Map();let id=0;
+  const timers=new Map(),delays=[];let id=0;
   return{
-    set(callback){const token=++id;timers.set(token,callback);return token},
+    set(callback,delay){const token=++id;timers.set(token,callback);delays.push(delay);return token},
     clear(token){timers.delete(token)},
     fire(){for(const [token,callback] of [...timers]){timers.delete(token);callback()}},
-    get count(){return timers.size}
+    get count(){return timers.size},get delays(){return[...delays]}
   };
 }
 
@@ -27,10 +27,11 @@ test('joystick dead zone ignores the center and dominant axis chooses four direc
 test('joystick emits immediately, repeats while held and stops on release',()=>{
   assert.ok(joystickModule);
   const timers=fakeTimers(),directions=[];
-  const joystick=joystickModule.createJoystickController({onDirection:value=>directions.push(value),repeatMs:100,setTimer:callback=>timers.set(callback),clearTimer:token=>timers.clear(token)});
+  const joystick=joystickModule.createJoystickController({onDirection:value=>directions.push(value),repeatMs:100,setTimer:(callback,delay)=>timers.set(callback,delay),clearTimer:token=>timers.clear(token)});
   assert.equal(joystick.start({pointerId:1,dx:30,dy:2,isPrimary:true,button:0}),true);
   assert.deepEqual(directions,['right']);
   assert.equal(timers.count,1);
+  assert.deepEqual(timers.delays,[100]);
   timers.fire();timers.fire();
   assert.deepEqual(directions,['right','right','right']);
   joystick.end(1);timers.fire();
@@ -41,7 +42,7 @@ test('joystick emits immediately, repeats while held and stops on release',()=>{
 test('center, cancellation, second pointer and one-shot tools never leave repeat movement',()=>{
   assert.ok(joystickModule);
   const timers=fakeTimers(),directions=[];
-  const joystick=joystickModule.createJoystickController({onDirection:value=>directions.push(value),setTimer:callback=>timers.set(callback),clearTimer:token=>timers.clear(token)});
+  const joystick=joystickModule.createJoystickController({onDirection:value=>directions.push(value),setTimer:(callback,delay)=>timers.set(callback,delay),clearTimer:token=>timers.clear(token)});
   assert.equal(joystick.start({pointerId:1,dx:0,dy:0,isPrimary:true,button:0}),true);
   joystick.move({pointerId:1,dx:0,dy:-30,repeat:false});
   assert.deepEqual(directions,['up']);assert.equal(timers.count,0,'tool direction is one-shot');

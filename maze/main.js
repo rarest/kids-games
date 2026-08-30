@@ -21,7 +21,7 @@ const audio = createAudioController({ baseUrl: '../maze/audio' });
 let save = loadSave();
 let run = null, currentLevel = null, selectedTool = null, shopTab = 'items', soundEnabled = true, toastTimer = 0;
 const hasTouchInput=()=>matchMedia('(pointer:coarse)').matches||(navigator.maxTouchPoints||0)>0;
-let frameScheduler=null,joystickController=null;
+let frameScheduler=null,joystickController=null,activeJoystickPointerId=null;
 frameScheduler=createFrameScheduler({mobile:hasTouchInput(),draw:now=>{
   if(run&&document.body.dataset.screen==='game')renderer.draw(run,now);
   if(diagnosticsEnabled)globalThis.__crownMazeDiagnostics={...renderer.diagnostics,audio:audio.diagnostics,frames:frameScheduler.diagnostics};
@@ -44,7 +44,7 @@ function resetPageScroll(){
 }
 
 function showScreen(name) {
-  if(name!=='game'){joystickController?.cancel();syncJoystickVisual()}
+  if(name!=='game')cancelJoystick();
   for (const [key, screen] of Object.entries(screens)) screen.classList.toggle('active', key === name);
   document.body.dataset.screen = name;
   frameScheduler.setActive(name==='game'&&!document.hidden);
@@ -240,18 +240,23 @@ function syncJoystickVisual(){
   joystickElement.classList.toggle('active',state.active);
 }
 joystickController=createJoystickController({onDirection:direction=>applyDirection(direction),repeatMs:100});
+function cancelJoystick(){activeJoystickPointerId=null;joystickController?.cancel();syncJoystickVisual()}
+document.addEventListener('pointerdown',event=>{
+  if(activeJoystickPointerId!==null&&event.pointerId!==activeJoystickPointerId)cancelJoystick();
+},{capture:true});
 joystickElement.addEventListener('pointerdown',event=>{
   if(document.body.dataset.screen!=='game')return;
   const vector=joystickVector(event),started=joystickController.start({pointerId:event.pointerId,...vector,isPrimary:event.isPrimary,button:event.button,repeat:!selectedTool});
   event.preventDefault();syncJoystickVisual();
   if(!started)return;
+  activeJoystickPointerId=event.pointerId;
   audio.unlock();try{joystickElement.setPointerCapture(event.pointerId)}catch{}
 });
 joystickElement.addEventListener('pointermove',event=>{
   if(!joystickController.state.active)return;
   joystickController.move({pointerId:event.pointerId,...joystickVector(event)});event.preventDefault();syncJoystickVisual();
 });
-const stopJoystick=event=>{joystickController.end(event.pointerId);syncJoystickVisual()};
+const stopJoystick=event=>{joystickController.end(event.pointerId);if(activeJoystickPointerId===event.pointerId)activeJoystickPointerId=null;syncJoystickVisual()};
 joystickElement.addEventListener('pointerup',stopJoystick);joystickElement.addEventListener('pointercancel',stopJoystick);joystickElement.addEventListener('lostpointercapture',stopJoystick);
 document.addEventListener('pointerup',stopJoystick);document.addEventListener('pointercancel',stopJoystick);
 
@@ -280,9 +285,9 @@ for(const type of ['gesturestart','gesturechange','gestureend'])document.addEven
 document.addEventListener('dblclick',preventGameGesture,{passive:false});
 document.addEventListener('dragstart',preventGameGesture,{passive:false});
 window.addEventListener('resize',()=>{resizeCanvas();syncJoystickVisual()});
-window.addEventListener('blur',()=>{joystickController.cancel();syncJoystickVisual()});
+window.addEventListener('blur',cancelJoystick);
 document.addEventListener('visibilitychange', () => {
-  if(document.hidden){joystickController.cancel();syncJoystickVisual();audio.suspend();frameScheduler.setActive(false)}
+  if(document.hidden){cancelJoystick();audio.suspend();frameScheduler.setActive(false)}
   else{audio.resume();frameScheduler.setActive(document.body.dataset.screen==='game')}
 });
 document.addEventListener('pointerdown', () => audio.unlock(), { once: true, capture: true });

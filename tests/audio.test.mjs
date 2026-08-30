@@ -100,6 +100,25 @@ test('primes persistent effect fallbacks during the trusted gesture',async()=>{
   assert.equal(coin.playCalls,2,'the same unlocked media element plays the event');
 });
 
+test('a late priming reset cannot pause the first real fallback effect',async()=>{
+  class DeferredAudio extends FakeAudio{
+    play(){
+      FakeAudio.plays+=1;this.playCalls+=1;this.paused=false;
+      let resolve;const promise=new Promise(done=>{resolve=done});
+      (this.playResolvers??=[]).push(resolve);return promise;
+    }
+  }
+  FakeAudio.instances=[];
+  const audio=audioModule.createAudioController({baseUrl:'/audio',AudioClass:DeferredAudio,AudioContextClass:null,now:()=>100});
+  const unlocking=audio.unlock();
+  const coin=FakeAudio.instances.find(item=>item.src?.includes('/coin.mp3?'));
+  assert.equal(audio.play('coin'),true,'first event starts before the priming promise settles');
+  assert.equal(coin.paused,false);
+  coin.playResolvers[0]();await Promise.resolve();
+  assert.equal(coin.paused,false,'stale prime completion does not pause the newer real event');
+  coin.playResolvers[1]();await unlocking;
+});
+
 test('falls back when AudioContext construction or resume fails and drains queued input',async()=>{
   class ConstructorFailure{constructor(){throw new Error('unsupported')}}
   class ResumeFailure extends FakeAudioContext{async resume(){this.resumeCalls+=1;throw new Error('blocked')}}
