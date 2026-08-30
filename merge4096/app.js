@@ -1,7 +1,7 @@
 import {VALUES,createGame,drawCard,chooseLuckyValue,placePendingCard,buyItem,useBomb,useCandle,canFail,settleGame} from './game-core.js';
 import {loadSave,saveGame} from './save.js';
 import {createAudioController} from './audio.js';
-import {columnIndexAtPoint,columnIndexForDrop} from './drag.js';
+import {columnIndexAtPoint,columnIndexForDrop} from './drag.js?v=20260830e';
 
 const $=id=>document.getElementById(id);
 const screens={home:$('homeScreen'),game:$('gameScreen'),result:$('resultScreen')};
