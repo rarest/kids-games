@@ -1,3 +1,5 @@
+import {getDifficulty,ordinaryValueCap} from './difficulty.js?v=20260830g';
+
 export const VALUES = [2,4,8,16,32,64,128,256,512];
 export const DECK_SIZE = 10000;
 export const COLUMN_COUNT = 5;
@@ -184,7 +186,7 @@ export function useCandle(state,random = Math.random) {
 export function canFail(state,profile) {
   const full = state.columns.every(column=>column.length >= COLUMN_CAPACITY);
   const exhausted = state.drawIndex >= state.deck.length && !state.pendingCard;
-  return (full || exhausted) && (state.temporaryBombs??0)<1 && profile.bombs < 1 && profile.coins < 50;
+  return exhausted||(full&&(state.temporaryBombs??0)<1&&profile.bombs<1&&profile.coins<50);
 }
 
 export function settleGame(state,profile,outcome) {
@@ -204,4 +206,3 @@ export function isValidGameState(state) {
   return Boolean(state && Array.isArray(state.deck) && Number.isInteger(state.drawIndex) && state.drawIndex >= 0 && state.drawIndex <= state.deck.length &&
     Array.isArray(state.columns) && state.columns.length === COLUMN_COUNT && state.columns.every(column=>Array.isArray(column)&&column.length<=COLUMN_CAPACITY&&column.every(validValue)));
 }
-import {getDifficulty,ordinaryValueCap} from './difficulty.js?v=20260830g';

@@ -132,10 +132,15 @@ test('shop charges exact prices and rejects insufficient coins', () => {
 });
 
 test('all full without a bomb purchase path can fail', () => {
-  const fullState = state({columns:Array.from({length:5},()=>Array(12).fill(2))});
+  const fullState = state({deck:[{kind:'ordinary'}],columns:Array.from({length:5},()=>Array(12).fill(2))});
   assert.equal(canFail(fullState,{coins:49,bombs:0}),true);
   assert.equal(canFail(fullState,{coins:50,bombs:0}),false);
   assert.equal(canFail(fullState,{coins:0,bombs:1}),false);
+});
+
+test('an exhausted deck ends even when a bomb is available',()=>{
+  const exhausted=state({deck:[{kind:'ordinary'}],drawIndex:1,pendingCard:null});
+  assert.equal(canFail(exhausted,{coins:500,bombs:3}),true);
 });
 
 test('settlement pays only once and updates records', () => {
