@@ -1,13 +1,13 @@
-import { LEVELS, getLevel } from './levels.js?v=20260830a';
-import { createRun, move, starsFor, useDynamite, useHook } from './engine.js?v=20260830a';
-import { SKINS, availableSkins, awardCoin, canEnterStage, completeStage, equipSkin, purchase, restartJourney } from './economy.js?v=20260830a';
-import { loadSave, persistSave } from './save.js?v=20260830a';
-import { createRenderer } from './render.js?v=20260830a';
-import { createAudioController } from './audio.js?v=20260830a';
-import { diagnosticsAllowed } from './diagnostics.js?v=20260830a';
-import { gameEventSounds } from './sound-events.js?v=20260830a';
-import { createJoystickController } from './joystick-controls.js?v=20260830a';
-import { createFrameScheduler } from './frame-scheduler.js?v=20260830a';
+import { LEVELS, getLevel } from './levels.js?v=20260830b';
+import { canMove, createRun, move, starsFor, useDynamite, useHook } from './engine.js?v=20260830b';
+import { SKINS, availableSkins, awardCoin, canEnterStage, completeStage, equipSkin, purchase, restartJourney } from './economy.js?v=20260830b';
+import { loadSave, persistSave } from './save.js?v=20260830b';
+import { createRenderer } from './render.js?v=20260830b';
+import { createAudioController } from './audio.js?v=20260830b';
+import { diagnosticsAllowed } from './diagnostics.js?v=20260830b';
+import { gameEventSounds } from './sound-events.js?v=20260830b';
+import { createJoystickController, createPathAwareNavigator } from './joystick-controls.js?v=20260830b';
+import { createFrameScheduler } from './frame-scheduler.js?v=20260830b';
 
 const $ = id => document.getElementById(id);
 const screens = {
@@ -21,7 +21,7 @@ const audio = createAudioController({ baseUrl: '../maze/audio' });
 let save = loadSave();
 let run = null, currentLevel = null, selectedTool = null, shopTab = 'items', soundEnabled = true, toastTimer = 0;
 const hasTouchInput=()=>matchMedia('(pointer:coarse)').matches||(navigator.maxTouchPoints||0)>0;
-let frameScheduler=null,joystickController=null,activeJoystickPointerId=null;
+let frameScheduler=null,joystickController=null,pathNavigator=null,activeJoystickPointerId=null;
 frameScheduler=createFrameScheduler({mobile:hasTouchInput(),draw:now=>{
   if(run&&document.body.dataset.screen==='game')renderer.draw(run,now);
   if(diagnosticsEnabled)globalThis.__crownMazeDiagnostics={...renderer.diagnostics,audio:audio.diagnostics,frames:frameScheduler.diagnostics};
@@ -161,6 +161,13 @@ function startStage(levelId) {
   if (!canEnterStage(save, level)) { toast('这座宫殿还锁着'); return; }
   currentLevel = level;
   run = createRun(level, new Set(save.collectedCoinIds));
+  pathNavigator=createPathAwareNavigator({
+    canMove:direction=>canMove(run,direction),
+    onDirection:direction=>{
+      const before={...run.player},result=applyDirection(direction);
+      return{moved:before.x!==run.player.x||before.y!==run.player.y,result};
+    }
+  });
   renderer.setLevel(level); renderer.setSkin(save.equippedSkin);
   document.body.dataset.stage = level.id;
   $('stageKind').textContent = level.type === 'reward' ? '温馨闪耀 · 奖励迷宫' : `皇家迷宫 · 第 ${level.index} 关`;
@@ -182,17 +189,18 @@ function chooseTool(tool) {
 }
 
 function applyDirection(direction) {
-  if (!run || run.complete || document.body.dataset.screen !== 'game') return;
+  if (!run || run.complete || document.body.dataset.screen !== 'game') return null;
   let result;
   if (selectedTool) {
     const tool = selectedTool;
     result = tool === 'dynamite' ? useDynamite(run, direction) : useHook(run, direction);
-    if (!result.consumed) { audio.play('bump', { volume: .7 }); toast('这个方向不能使用'); return; }
+    if (!result.consumed) { audio.play('bump', { volume: .7 }); toast('这个方向不能使用'); return result; }
     save.inventory[tool] -= 1; store(save); selectedTool = null; syncToolSelection();
   } else result = move(run, direction);
   handleGameEvent(result.event);
   syncKeys();
   frameScheduler.invalidate();
+  return result;
 }
 
 function handleGameEvent(event) {
@@ -230,7 +238,7 @@ function finishStage() {
 const joystickElement=$('joystick'),joystickKnob=$('joystickKnob');
 function joystickVector(event){
   const rect=joystickElement.getBoundingClientRect();
-  return{dx:event.clientX-(rect.left+rect.width/2),dy:event.clientY-(rect.top+rect.height/2)};
+  return{dx:event.clientX-(rect.left+rect.width/2),dy:event.clientY-(rect.top+rect.height/2),radius:Math.min(rect.width,rect.height)/2};
 }
 function syncJoystickVisual(){
   if(!joystickController||!joystickKnob)return;
@@ -239,8 +247,8 @@ function syncJoystickVisual(){
   joystickKnob.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
   joystickElement.classList.toggle('active',state.active);
 }
-joystickController=createJoystickController({onDirection:direction=>applyDirection(direction),repeatMs:100});
-function cancelJoystick(){activeJoystickPointerId=null;joystickController?.cancel();syncJoystickVisual()}
+joystickController=createJoystickController({onDirection:(direction,intent)=>selectedTool?applyDirection(direction):pathNavigator?.step(intent),repeatMs:100});
+function cancelJoystick(){activeJoystickPointerId=null;joystickController?.cancel();pathNavigator?.reset();syncJoystickVisual()}
 document.addEventListener('pointerdown',event=>{
   if(activeJoystickPointerId!==null&&event.pointerId!==activeJoystickPointerId)cancelJoystick();
 },{capture:true});
@@ -254,9 +262,11 @@ joystickElement.addEventListener('pointerdown',event=>{
 });
 joystickElement.addEventListener('pointermove',event=>{
   if(!joystickController.state.active)return;
-  joystickController.move({pointerId:event.pointerId,...joystickVector(event)});event.preventDefault();syncJoystickVisual();
+  joystickController.move({pointerId:event.pointerId,...joystickVector(event)});
+  if(!joystickController.state.direction)pathNavigator?.reset();
+  event.preventDefault();syncJoystickVisual();
 });
-const stopJoystick=event=>{joystickController.end(event.pointerId);if(activeJoystickPointerId===event.pointerId)activeJoystickPointerId=null;syncJoystickVisual()};
+const stopJoystick=event=>{joystickController.end(event.pointerId);if(activeJoystickPointerId===event.pointerId){activeJoystickPointerId=null;pathNavigator?.reset()}syncJoystickVisual()};
 joystickElement.addEventListener('pointerup',stopJoystick);joystickElement.addEventListener('pointercancel',stopJoystick);joystickElement.addEventListener('lostpointercapture',stopJoystick);
 document.addEventListener('pointerup',stopJoystick);document.addEventListener('pointercancel',stopJoystick);
 

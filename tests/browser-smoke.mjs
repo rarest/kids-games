@@ -158,6 +158,18 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
         await cdp.call('Input.dispatchMouseEvent',{type:'mouseReleased',...point,button:'left',buttons:0,clickCount:1,pointerType});
       }
     };
+    const realJoystickVector=async(dxRatio,dyRatio,pointerType='touch',holdMs=0)=>{
+      const point=await evaluate(`(()=>{const rect=document.getElementById('joystick').getBoundingClientRect();return{x:rect.left+rect.width*(.5+${dxRatio}),y:rect.top+rect.height*(.5+${dyRatio})}})()`);
+      if(pointerType==='touch'){
+        await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:1,radiusY:1,force:1}]});
+        if(holdMs)await sleep(holdMs);
+        await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      }else{
+        await cdp.call('Input.dispatchMouseEvent',{type:'mousePressed',...point,button:'left',buttons:1,clickCount:1,pointerType});
+        if(holdMs)await sleep(holdMs);
+        await cdp.call('Input.dispatchMouseEvent',{type:'mouseReleased',...point,button:'left',buttons:0,clickCount:1,pointerType});
+      }
+    };
     const realTap=async()=>{
       const point=await canvasCenter();
       await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:1,radiusY:1,force:1}]});
@@ -208,6 +220,13 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       assert.equal(await evaluate("document.getElementById('stepCount').textContent"),String(plans.dynamite.path.length),'dynamite does not count a move');
       await resetStage();
     }
+    for(let index=0;index<5;index++)await realJoystick('down','touch');
+    await realJoystickVector(.18,.35,'touch',260);
+    const junctionSteps=Number(await evaluate("document.getElementById('stepCount').textContent"));
+    assert.ok(junctionSteps>=7,'a held diagonal pre-turns right at the first opening after six downward cells');
+    await sleep(180);
+    assert.equal(Number(await evaluate("document.getElementById('stepCount').textContent")),junctionSteps,'release clears the queued turn and repeat timer');
+    await resetStage();
     const heldDirections=solution.slice(0,2);
     assert.equal(new Set(heldDirections).size,1,'browser fixture starts with a continuous corridor');
     await realJoystick(heldDirections[0],'touch',130);
@@ -283,6 +302,17 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
         await cdp.call('Input.dispatchMouseEvent',{type:'mousePressed',...textDrag.start,button:'left',buttons:1,clickCount:1,pointerType:'mouse'});
         await cdp.call('Input.dispatchMouseEvent',{type:'mouseMoved',...textDrag.end,button:'none',buttons:1,pointerType:'mouse'});
         await cdp.call('Input.dispatchMouseEvent',{type:'mouseReleased',...textDrag.end,button:'left',buttons:0,clickCount:1,pointerType:'mouse'});
+      }
+      if(device.name==='phone portrait'||device.name==='tablet portrait'){
+        await resetStage();
+        for(let index=0;index<5;index++)await realJoystick('down',device.pointerType);
+        await realJoystickVector(.18,.35,device.pointerType,260);
+        const deviceJunctionSteps=Number(await evaluate("document.getElementById('stepCount').textContent"));
+        assert.ok(deviceJunctionSteps>=7,`${device.name}:normalized diagonal pre-turns at the same junction`);
+        await sleep(180);
+        assert.equal(Number(await evaluate("document.getElementById('stepCount').textContent")),deviceJunctionSteps,`${device.name}:release stops buffered movement`);
+        await resetStage();
+        stepIndex=0;
       }
       await realJoystick(solution[stepIndex],device.pointerType);stepIndex+=1;
       assert.equal(await evaluate("Number(document.getElementById('stepCount').textContent)"),stepIndex,`${device.name}:joystick step`);
