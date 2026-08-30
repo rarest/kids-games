@@ -1,7 +1,7 @@
 import {VALUES,createGame,drawCard,chooseLuckyValue,placePendingCard,buyItem,useBomb,useCandle,canFail,settleGame} from './game-core.js';
 import {loadSave,saveGame} from './save.js';
 import {createAudioController} from './audio.js';
-import {columnIndexAtPoint} from './drag.js';
+import {columnIndexAtPoint,columnIndexForDrop} from './drag.js';
 
 const $=id=>document.getElementById(id);
 const screens={home:$('homeScreen'),game:$('gameScreen'),result:$('resultScreen')};
@@ -69,6 +69,10 @@ const dragColumnAt=(x,y)=>{
   const buttons=[...document.querySelectorAll('.pile-button')],index=columnIndexAtPoint(buttons.map(button=>button.getBoundingClientRect()),x,y);
   return index>=0&&!buttons[index].disabled?index:-1;
 };
+const dragColumnForDrop=(event)=>{
+  const buttons=[...document.querySelectorAll('.pile-button')],index=columnIndexForDrop(buttons.map(button=>button.getBoundingClientRect()),{x:event.clientX,y:event.clientY},{x:drag.lastX,y:drag.lastY});
+  return index>=0&&!buttons[index].disabled?index:-1;
+};
 pendingNode.addEventListener('pointerdown',event=>{
   if(save.currentGame?.pendingCard?.kind!=='number')return;
   drag={pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,lastX:event.clientX,lastY:event.clientY,moved:false};pendingNode.setPointerCapture(event.pointerId);pendingNode.classList.add('dragging');event.preventDefault();
@@ -80,7 +84,7 @@ pendingNode.addEventListener('pointermove',event=>{
 });
 const finishDrag=event=>{
   if(!drag||drag.pointerId!==event.pointerId)return;
-  const targetIndex=dragColumnAt(drag.lastX,drag.lastY),moved=drag.moved;clearDrag();if(moved&&targetIndex>=0)placeInColumn(targetIndex);event.preventDefault();
+  const targetIndex=dragColumnForDrop(event),moved=drag.moved;clearDrag();if(moved&&targetIndex>=0)placeInColumn(targetIndex);event.preventDefault();
 };
 addEventListener('pointerup',finishDrag);
 addEventListener('pointercancel',event=>{if(drag?.pointerId===event.pointerId)clearDrag()});

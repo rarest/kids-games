@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {columnIndexAtPoint} from '../merge4096/drag.js';
+import {columnIndexAtPoint,columnIndexForDrop} from '../merge4096/drag.js';
 
 const rects=[
   {left:10,right:60,top:200,bottom:600},
@@ -16,4 +16,12 @@ test('last known drag point selects the containing column',()=>{
 test('a point outside all columns returns minus one',()=>{
   assert.equal(columnIndexAtPoint(rects,88,100),-1);
   assert.equal(columnIndexAtPoint(rects,400,350),-1);
+});
+
+test('release coordinates win when the final move event lagged behind the finger',()=>{
+  assert.equal(columnIndexForDrop(rects,{x:140,y:220},{x:88,y:100}),2);
+});
+
+test('last move coordinates remain a fallback for empty mobile release coordinates',()=>{
+  assert.equal(columnIndexForDrop(rects,{x:0,y:0},{x:88,y:350}),1);
 });
