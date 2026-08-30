@@ -1,8 +1,8 @@
-import {createGame,drawCard,placePendingCard,buyItem,useBomb,useCandle,canFail,settleGame,useLuckyCopy,useLuckyRemove,useLuckyUpgrade,consumeReroll} from './game-core.js?v=20260830h';
-import {loadSave,saveGame} from './save.js?v=20260830h';
-import {createAudioController} from './audio.js?v=20260830h';
-import {columnIndexAtPoint,columnIndexForDrop} from './drag.js?v=20260830h';
-import {getDifficulty} from './difficulty.js?v=20260830h';
+import {createGame,drawCard,placePendingCard,buyItem,useBomb,useCandle,canFail,settleGame,useLuckyCopy,useLuckyRemove,useLuckyUpgrade,consumeReroll} from './game-core.js?v=20260830i';
+import {loadSave,saveGame} from './save.js?v=20260830i';
+import {createAudioController} from './audio.js?v=20260830i';
+import {columnIndexAtPoint,columnIndexForDrop} from './drag.js?v=20260830i';
+import {getDifficulty} from './difficulty.js?v=20260830i';
 
 const $=id=>document.getElementById(id);
 const screens={home:$('homeScreen'),game:$('gameScreen'),result:$('resultScreen')};
@@ -40,9 +40,9 @@ function drawNext(){
   cancelAutoDraw();const game=save.currentGame;if(!game||game.status!=='playing'||game.pendingCard||document.body.dataset.screen!=='game')return;
   save.currentGame=drawCard(game);audio.playEffect('draw');if(canFail(save.currentGame,save.profile))return finish('lost');renderGame();if(save.currentGame.pendingCard?.kind==='lucky')openLucky();
 }
-function scheduleAutoDraw(delay=500){
+function scheduleAutoDraw(){
   cancelAutoDraw();const game=save.currentGame;if(autoPaused||!game||game.status!=='playing'||game.pendingCard||document.body.dataset.screen!=='game')return;
-  autoDrawTimer=setTimeout(drawNext,delay);
+  autoDrawTimer=setTimeout(drawNext,0);
 }
 function comboEffect(count){
   if(count<3)return;const names=['零','一','二','三','四','五','六','七','八','九','十'],reward=count>=6?' +20金币':'';$('comboBanner').textContent=`${names[count]??count}连合成！${reward}`;$('comboBanner').hidden=false;$('fireworks').classList.add('active');clearTimeout(comboTimer);comboTimer=setTimeout(()=>{$('comboBanner').hidden=true;$('fireworks').classList.remove('active')},1000);
@@ -57,16 +57,16 @@ function afterTransition(transition){
   if(transition.comboCount>=3)audio.playEffect('combo');
   if(transition.outcome==='won')return finish('won');
   if(canFail(save.currentGame,save.profile))return finish('lost');
-  renderGame();scheduleAutoDraw(transition.comboCount>=3?1100:500);
+  renderGame();scheduleAutoDraw();
 }
 function openLucky(){const hasCards=save.currentGame.columns.some(column=>column.length);$('luckyCopy').disabled=!hasCards;$('luckyRemove').disabled=!hasCards;$('luckyDialog').showModal()}
 function placeInColumn(column){
   try{afterTransition(placePendingCard(save.currentGame,column))}catch(error){message('不能放这里',error.message)}
 }
 
-$('startButton').addEventListener('click',()=>{audio.unlock();if(save.currentGame?.status==='playing'){renderGame();scheduleAutoDraw(350)}else $('difficultyDialog').showModal()});
+$('startButton').addEventListener('click',()=>{audio.unlock();if(save.currentGame?.status==='playing'){renderGame();scheduleAutoDraw()}else $('difficultyDialog').showModal()});
 $('easyMode').addEventListener('click',()=>startMode('easy'));$('joyMode').addEventListener('click',()=>startMode('joy'));$('challengeMode').addEventListener('click',()=>startMode('challenge'));
-function startMode(mode){save.profile.selectedDifficulty=mode;save.currentGame=createGame(mode);autoPaused=false;$('difficultyDialog').close();renderGame();scheduleAutoDraw(350)}
+function startMode(mode){save.profile.selectedDifficulty=mode;save.currentGame=createGame(mode);autoPaused=false;$('difficultyDialog').close();renderGame();scheduleAutoDraw()}
 $('restartButton').addEventListener('click',()=>{if(confirm('重新开始会放弃当前这一局，确定吗？')){$('difficultyDialog').showModal()}});
 $('drawButton').addEventListener('click',()=>{audio.unlock();drawNext()});
 document.querySelectorAll('.pile-button').forEach(button=>button.addEventListener('click',()=>{
@@ -110,7 +110,7 @@ addEventListener('pointercancel',event=>{if(drag?.pointerId===event.pointerId)cl
 $('luckyCopy').addEventListener('click',()=>{$('luckyDialog').close();toolMode='lucky-copy';renderGame()});
 $('luckyRemove').addEventListener('click',()=>{$('luckyDialog').close();toolMode='lucky-remove';renderGame()});
 $('luckyUpgrade').addEventListener('click',()=>{save.currentGame=useLuckyUpgrade(save.currentGame);$('luckyDialog').close();renderGame()});
-$('autoPauseButton').addEventListener('click',()=>{autoPaused=!autoPaused;if(autoPaused)cancelAutoDraw();renderGame();if(!autoPaused)scheduleAutoDraw(250)});
+$('autoPauseButton').addEventListener('click',()=>{autoPaused=!autoPaused;if(autoPaused)cancelAutoDraw();renderGame();if(!autoPaused)scheduleAutoDraw()});
 $('rerollButton').addEventListener('click',()=>{try{save.currentGame=consumeReroll(save.currentGame);audio.playEffect('draw');renderGame()}catch(error){message('不能重抽',error.message)}});
 $('bombButton').addEventListener('click',()=>{if(!save.profile.bombs&&!save.currentGame.temporaryBombs)return message('没有炸弹','返回主页可用50金币购买炸弹。');toolMode=toolMode==='bomb'?null:'bomb';renderGame()});
 $('candleButton').addEventListener('click',()=>{if(!save.profile.candles)return message('没有蜡烛','返回主页可用60金币购买蜡烛。');try{save.profile.candles--;const transition=useCandle(save.currentGame);audio.playEffect('candle');afterTransition(transition)}catch(error){save.profile.candles++;message('暂时不能使用',error.message)}});

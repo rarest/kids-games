@@ -1,4 +1,4 @@
-import {isValidGameState} from './game-core.js?v=20260830h';
+import {isValidGameState} from './game-core.js?v=20260830i';
 
 export const STORAGE_KEY='merge4096-save-v2';
 export const LEGACY_STORAGE_KEY='merge4096-save-v1';

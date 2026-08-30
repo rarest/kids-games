@@ -33,7 +33,6 @@ test('fresh player can draw, place, exit and continue on a real phone viewport',
     await evaluate('joyMode.click()');await sleep(100);
     assert.equal(await evaluate('document.body.dataset.screen'),'game');
     assert.equal(await evaluate("document.querySelectorAll('.tile').length"),0);
-    await sleep(500);
     assert.equal(await evaluate('drawCount.textContent'),'1');
     assert.equal(await evaluate('pendingCard.hidden'),false);
     await evaluate('autoPauseButton.click()');
@@ -45,17 +44,20 @@ test('fresh player can draw, place, exit and continue on a real phone viewport',
     await sleep(700);
     assert.equal(await evaluate("document.querySelectorAll('.pile-button')[0].querySelectorAll('.tile').length"),1);
     assert.equal(await evaluate('drawCount.textContent'),'1');
-    await evaluate('autoPauseButton.click()');await sleep(500);
+    await evaluate('autoPauseButton.click()');await sleep(100);
     assert.equal(await evaluate('drawCount.textContent'),'2');
+    await evaluate("document.querySelectorAll('.pile-button')[1].click()");await sleep(100);
+    assert.equal(await evaluate('drawCount.textContent'),'3');
     await evaluate('exitButton.click()');
     assert.equal(await evaluate('document.body.dataset.screen'),'home');
     assert.notEqual(await evaluate('lastResult.textContent'),'0');
     await evaluate('location.reload()');for(let i=0;i<100&&await evaluate('document.readyState')!=='complete';i++)await sleep(50);
     await evaluate('startButton.click()');await sleep(100);
-    assert.equal(await evaluate("document.querySelectorAll('.pile-button')[0].querySelectorAll('.tile').length"),1);
-    await evaluate('drawButton.click()');await sleep(50);
-    await evaluate("document.querySelectorAll('.pile-button')[1].click()");await sleep(50);
-    assert.equal(await evaluate("document.querySelectorAll('.pile-button')[1].querySelectorAll('.tile').length"),1);
+    assert.equal(await evaluate("document.querySelectorAll('.tile').length>=1"),true);
+    assert.equal(await evaluate('drawCount.textContent'),'3');
+    await evaluate("document.querySelectorAll('.pile-button')[2].click()");await sleep(100);
+    assert.equal(await evaluate('drawCount.textContent'),'4');
+    assert.equal(await evaluate('pendingCard.hidden'),false);
     assert.equal(await evaluate('document.documentElement.scrollWidth<=innerWidth'),true);
   }finally{cdp?.close();chrome.kill('SIGTERM');server?.kill('SIGTERM')}
 });

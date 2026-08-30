@@ -1,4 +1,4 @@
-import {getDifficulty,ordinaryValueCap} from './difficulty.js?v=20260830h';
+import {getDifficulty,ordinaryValueCap} from './difficulty.js?v=20260830i';
 
 export const VALUES = [2,4,8,16,32,64,128,256,512];
 export const DECK_SIZE = 10000;
