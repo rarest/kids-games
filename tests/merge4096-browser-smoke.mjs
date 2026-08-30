@@ -18,10 +18,12 @@ test('fresh player can draw, place, exit and continue on a real phone viewport',
     await waitFor('http://127.0.0.1:4189/games/merge4096.html');
     const tabs=await (await waitFor('http://127.0.0.1:9249/json')).json();cdp=new Cdp(tabs.find(tab=>tab.type==='page').webSocketDebuggerUrl);
     await cdp.call('Runtime.enable');await cdp.call('Page.enable');await cdp.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:5});await cdp.call('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:2,mobile:true});
-    await cdp.call('Page.navigate',{url:'http://127.0.0.1:4189/games/merge4096.html'});
+    await cdp.call('Page.navigate',{url:'http://127.0.0.1:4189/'});
     const evaluate=async expression=>(await cdp.call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true})).result.value;
     for(let i=0;i<100&&await evaluate('document.readyState')!=='complete';i++)await sleep(50);
-    await evaluate("localStorage.removeItem('merge4096-save-v1');location.reload()");
+    await evaluate("localStorage.removeItem('merge4096-save-v1')");
+    await cdp.call('Page.navigate',{url:`http://127.0.0.1:4189/games/merge4096.html?test=${Date.now()}`});
+    await sleep(150);
     for(let i=0;i<100&&await evaluate('document.readyState')!=='complete';i++)await sleep(50);
     assert.deepEqual(JSON.parse(await evaluate(`JSON.stringify({screen:document.body.dataset.screen,best:bestValue.textContent,last:lastResult.textContent,wins:winCount.textContent,coins:coinCount.textContent})`)),{screen:'home',best:'0',last:'0',wins:'0',coins:'500'});
     await evaluate('startButton.click()');await sleep(100);

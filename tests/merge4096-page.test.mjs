@@ -12,8 +12,8 @@ test('page has the complete screens, controls and five empty columns', async () 
   assert.doesNotMatch(html,/再抽.*幸运牌|距离.*幸运牌/);
   assert.match(html,/50金币/);
   assert.match(html,/60金币/);
-  assert.match(html,/type="module" src="\.\.\/merge4096\/app\.js\?v=20260830b"/);
-  assert.match(html,/href="\.\.\/merge4096\/styles\.css\?v=20260830b"/);
+  assert.match(html,/type="module" src="\.\.\/merge4096\/app\.js\?v=20260830c"/);
+  assert.match(html,/href="\.\.\/merge4096\/styles\.css\?v=20260830c"/);
 });
 
 test('styles preserve top-down piles and reduced-motion support', async () => {

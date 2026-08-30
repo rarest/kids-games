@@ -1,6 +1,7 @@
 import {VALUES,createGame,drawCard,chooseLuckyValue,placePendingCard,buyItem,useBomb,useCandle,canFail,settleGame} from './game-core.js';
 import {loadSave,saveGame} from './save.js';
 import {createAudioController} from './audio.js';
+import {columnIndexAtPoint} from './drag.js';
 
 const $=id=>document.getElementById(id);
 const screens={home:$('homeScreen'),game:$('gameScreen'),result:$('resultScreen')};
@@ -64,20 +65,25 @@ document.querySelectorAll('.pile-button').forEach(button=>button.addEventListene
 let drag=null;
 const pendingNode=$('pendingCard');
 const clearDrag=()=>{drag=null;pendingNode.classList.remove('dragging');pendingNode.style.removeProperty('transform');document.querySelectorAll('.pile-button').forEach(node=>node.classList.remove('drag-over'))};
+const dragColumnAt=(x,y)=>{
+  const buttons=[...document.querySelectorAll('.pile-button')],index=columnIndexAtPoint(buttons.map(button=>button.getBoundingClientRect()),x,y);
+  return index>=0&&!buttons[index].disabled?index:-1;
+};
 pendingNode.addEventListener('pointerdown',event=>{
   if(save.currentGame?.pendingCard?.kind!=='number')return;
-  drag={pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,moved:false};pendingNode.setPointerCapture(event.pointerId);pendingNode.classList.add('dragging');event.preventDefault();
+  drag={pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,lastX:event.clientX,lastY:event.clientY,moved:false};pendingNode.setPointerCapture(event.pointerId);pendingNode.classList.add('dragging');event.preventDefault();
 });
 pendingNode.addEventListener('pointermove',event=>{
   if(!drag||drag.pointerId!==event.pointerId)return;
-  const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;drag.moved ||= Math.hypot(dx,dy)>8;pendingNode.style.transform=`translate(${dx}px,${dy}px) scale(1.08)`;
-  const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.pile-button');document.querySelectorAll('.pile-button').forEach(node=>node.classList.toggle('drag-over',node===target&&!node.disabled));event.preventDefault();
+  drag.lastX=event.clientX;drag.lastY=event.clientY;const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;drag.moved ||= Math.hypot(dx,dy)>8;pendingNode.style.transform=`translate(${dx}px,${dy}px) scale(1.08)`;
+  const targetIndex=dragColumnAt(drag.lastX,drag.lastY);document.querySelectorAll('.pile-button').forEach((node,index)=>node.classList.toggle('drag-over',index===targetIndex));event.preventDefault();
 });
-pendingNode.addEventListener('pointerup',event=>{
+const finishDrag=event=>{
   if(!drag||drag.pointerId!==event.pointerId)return;
-  const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.pile-button');const moved=drag.moved;clearDrag();if(moved&&target&&!target.disabled)placeInColumn(Number(target.dataset.column));event.preventDefault();
-});
-pendingNode.addEventListener('pointercancel',clearDrag);
+  const targetIndex=dragColumnAt(drag.lastX,drag.lastY),moved=drag.moved;clearDrag();if(moved&&targetIndex>=0)placeInColumn(targetIndex);event.preventDefault();
+};
+addEventListener('pointerup',finishDrag);
+addEventListener('pointercancel',event=>{if(drag?.pointerId===event.pointerId)clearDrag()});
 $('bombButton').addEventListener('click',()=>{if(!save.profile.bombs)return message('没有炸弹','返回主页可用50金币购买炸弹。');toolMode=toolMode==='bomb'?null:'bomb';renderGame()});
 $('candleButton').addEventListener('click',()=>{if(!save.profile.candles)return message('没有蜡烛','返回主页可用60金币购买蜡烛。');try{save.profile.candles--;const transition=useCandle(save.currentGame);audio.playEffect('candle');afterTransition(transition)}catch(error){save.profile.candles++;message('暂时不能使用',error.message)}});
 $('shopBomb').addEventListener('click',()=>{try{save.profile=buyItem(save.profile,'bomb');audio.playEffect('place');renderHome()}catch(error){message('购买失败',error.message)}});
