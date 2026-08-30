@@ -8,6 +8,8 @@ test('page has the complete screens, controls and five empty columns', async () 
   const html = await readFile(pageUrl,'utf8');
   for (const id of ['homeScreen','gameScreen','resultScreen','startButton','drawButton','drawCount','pendingCard','columns','bombButton','candleButton','musicButton','exitButton','shopBomb','shopCandle','bestValue','lastResult','winCount','coinCount','comboBanner','fireworks']) assert.match(html,new RegExp(`id="${id}"`));
   for(const id of ['hallButton','difficultyDialog','easyMode','joyMode','challengeMode','restartButton','luckyCopy','luckyRemove','luckyUpgrade','rerollButton','temporaryBombCount','resultHallButton'])assert.match(html,new RegExp(`id="${id}"`));
+  assert.match(html,/id="autoPauseButton"/);
+  assert.match(html,/暂停自动抽牌/);
   assert.match(html,/欢乐（推荐）/);
   assert.match(html,/id="hallButton"[^>]*href="\.\.\/index\.html"/);
   assert.equal((html.match(/class="pile-button"/g)||[]).length,5);
@@ -15,10 +17,10 @@ test('page has the complete screens, controls and five empty columns', async () 
   assert.doesNotMatch(html,/再抽.*幸运牌|距离.*幸运牌/);
   assert.match(html,/50金币/);
   assert.match(html,/60金币/);
-  assert.match(html,/type="module" src="\.\.\/merge4096\/app\.js\?v=20260830g"/);
-  assert.match(html,/href="\.\.\/merge4096\/styles\.css\?v=20260830g"/);
+  assert.match(html,/type="module" src="\.\.\/merge4096\/app\.js\?v=20260830h"/);
+  assert.match(html,/href="\.\.\/merge4096\/styles\.css\?v=20260830h"/);
   const app=await readFile(new URL('../merge4096/app.js',import.meta.url),'utf8');
-  for(const module of ['game-core','save','audio','drag','difficulty'])assert.match(app,new RegExp(`from '\\.\\/${module}\\.js\\?v=20260830g'`));
+  for(const module of ['game-core','save','audio','drag','difficulty'])assert.match(app,new RegExp(`from '\\.\\/${module}\\.js\\?v=20260830h'`));
   assert.match(app,/\+20金币/);
   assert.ok((app.match(/canFail\(save\.currentGame,save\.profile\)/g)||[]).length>=2);
 });

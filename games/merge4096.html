@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#29180f">
   <title>合成4096｜小火箭游戏厅</title>
   <meta name="description" content="抽数字牌放入五列，连续合成4096，伴着卡农挑战通关。">
-  <link rel="stylesheet" href="../merge4096/styles.css?v=20260830g">
+  <link rel="stylesheet" href="../merge4096/styles.css?v=20260830h">
 </head>
 <body data-screen="home">
   <main class="shell">
@@ -25,7 +25,7 @@
 
     <section id="gameScreen" class="screen game-screen" aria-labelledby="gameTitle" hidden>
       <header class="game-topbar"><button id="exitButton" class="outline-button" type="button">退出主页</button><h2 id="gameTitle">最高 <span id="gameBest">0</span></h2><button id="musicButton" class="icon-button" type="button" aria-label="关闭音乐" aria-pressed="true">♫</button></header>
-      <div class="draw-panel"><div><span>新一局</span><strong>已抽 <span id="drawCount">0</span> / 10000 张</strong></div><button id="drawButton" class="draw-button" type="button">点击抽牌</button><div id="pendingCard" class="pending-card" aria-live="polite" hidden></div></div>
+      <div class="draw-panel"><div><span>自动出牌</span><strong>已抽 <span id="drawCount">0</span> / 10000 张</strong></div><button id="drawButton" class="draw-button" type="button">立即抽牌</button><div id="pendingCard" class="pending-card" aria-live="polite" hidden></div></div>
       <div id="columns" class="board" aria-label="五个竖直牌堆">
         <button class="pile-button" data-column="0" type="button" aria-label="第一列"><span class="pile"></span></button>
         <button class="pile-button" data-column="1" type="button" aria-label="第二列"><span class="pile"></span></button>
@@ -33,7 +33,7 @@
         <button class="pile-button" data-column="3" type="button" aria-label="第四列"><span class="pile"></span></button>
         <button class="pile-button" data-column="4" type="button" aria-label="第五列"><span class="pile"></span></button>
       </div>
-      <div class="bonus-strip"><button id="rerollButton" type="button">🔄 重抽 ×<span id="rerollCount">0</span></button><span>🎁 临时炸弹 ×<b id="temporaryBombCount">0</b></span></div>
+      <div class="bonus-strip"><button id="autoPauseButton" type="button" aria-pressed="false">⏸ 暂停自动抽牌</button><button id="rerollButton" type="button">🔄 重抽 ×<span id="rerollCount">0</span></button><span>🎁 临时炸弹 ×<b id="temporaryBombCount">0</b></span></div>
       <div class="tools"><button id="bombButton" type="button">💣 炸弹 ×<span id="bombCount">0</span></button><button id="candleButton" type="button">🕯️ 蜡烛 ×<span id="candleCount">3</span></button></div>
       <div id="comboBanner" class="combo-banner" role="status" aria-live="polite" hidden></div><div id="fireworks" class="fireworks" aria-hidden="true"></div>
     </section>
@@ -44,6 +44,6 @@
   <dialog id="difficultyDialog"><form method="dialog"><h2>选择难度</h2><p>三个模式都要合成4096</p><div class="difficulty-choices"><button id="easyMode" type="button"><b>🌱 轻松</b><small>3～5分钟 · 通关200金币</small></button><button id="joyMode" class="recommended" type="button"><b>🎉 欢乐（推荐）</b><small>8～10分钟 · 通关300金币</small></button><button id="challengeMode" type="button"><b>🔥 挑战</b><small>约15分钟 · 通关450金币</small></button></div><button class="outline-button" value="cancel">取消</button></form></dialog>
   <dialog id="luckyDialog"><form method="dialog"><h2>✨ 幸运牌</h2><p>选择一种好运</p><div class="lucky-actions"><button id="luckyCopy" type="button"><b>复制底牌</b><small>复制任意非空列最下面的数字</small></button><button id="luckyRemove" type="button"><b>轻松移除</b><small>移除任意列最下面一张牌</small></button><button id="luckyUpgrade" type="button"><b>幸运升级</b><small>获得一张提升一级的小牌</small></button></div><button class="outline-button" value="cancel">稍后选择</button></form></dialog>
   <dialog id="messageDialog"><form method="dialog"><h2 id="messageTitle">提示</h2><p id="messageText"></p><button class="primary-button" value="ok">知道了</button></form></dialog>
-  <script type="module" src="../merge4096/app.js?v=20260830g"></script>
+  <script type="module" src="../merge4096/app.js?v=20260830h"></script>
 </body>
 </html>

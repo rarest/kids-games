@@ -1,16 +1,17 @@
-import {createGame,drawCard,placePendingCard,buyItem,useBomb,useCandle,canFail,settleGame,useLuckyCopy,useLuckyRemove,useLuckyUpgrade,consumeReroll} from './game-core.js?v=20260830g';
-import {loadSave,saveGame} from './save.js?v=20260830g';
-import {createAudioController} from './audio.js?v=20260830g';
-import {columnIndexAtPoint,columnIndexForDrop} from './drag.js?v=20260830g';
-import {getDifficulty} from './difficulty.js?v=20260830g';
+import {createGame,drawCard,placePendingCard,buyItem,useBomb,useCandle,canFail,settleGame,useLuckyCopy,useLuckyRemove,useLuckyUpgrade,consumeReroll} from './game-core.js?v=20260830h';
+import {loadSave,saveGame} from './save.js?v=20260830h';
+import {createAudioController} from './audio.js?v=20260830h';
+import {columnIndexAtPoint,columnIndexForDrop} from './drag.js?v=20260830h';
+import {getDifficulty} from './difficulty.js?v=20260830h';
 
 const $=id=>document.getElementById(id);
 const screens={home:$('homeScreen'),game:$('gameScreen'),result:$('resultScreen')};
 const audio=createAudioController();
-let save=loadSave(),toolMode=null,comboTimer=null;
+let save=loadSave(),toolMode=null,comboTimer=null,autoDrawTimer=null,autoPaused=false;
 
 function persist(){saveGame(globalThis.localStorage,save)}
 function show(screen){for(const [name,node] of Object.entries(screens))node.hidden=name!==screen;document.body.dataset.screen=screen}
+function cancelAutoDraw(){clearTimeout(autoDrawTimer);autoDrawTimer=null}
 function message(title,text){$('messageTitle').textContent=title;$('messageText').textContent=text;$('messageDialog').showModal()}
 function tileLevel(value){return Math.log2(value)}
 function profileFromRound(){const game=save.currentGame;if(!game)return;const id=game.difficulty??'joy',record=save.profile.records[id];record.best=Math.max(record.best,game.roundMax);save.profile.best=Math.max(save.profile.best,game.roundMax);save.profile.lastResult=game.roundMax}
@@ -32,12 +33,22 @@ function renderGame(){
   });
   document.querySelectorAll('.pile-button').forEach((button,index)=>{const value=game.columns[index].at(-1),left=game.columns[index-1]?.at(-1),right=game.columns[index+1]?.at(-1);button.classList.toggle('merge-ready',Boolean(value&&(value===left||value===right)))})
   $('bombButton').classList.toggle('selected',toolMode==='bomb');$('musicButton').setAttribute('aria-pressed',String(save.profile.musicOn));$('musicButton').textContent=save.profile.musicOn?'♫':'♩';
+  $('autoPauseButton').textContent=autoPaused?'▶ 继续自动抽牌':'⏸ 暂停自动抽牌';$('autoPauseButton').setAttribute('aria-pressed',String(autoPaused));
   show('game');persist();
+}
+function drawNext(){
+  cancelAutoDraw();const game=save.currentGame;if(!game||game.status!=='playing'||game.pendingCard||document.body.dataset.screen!=='game')return;
+  save.currentGame=drawCard(game);audio.playEffect('draw');if(canFail(save.currentGame,save.profile))return finish('lost');renderGame();if(save.currentGame.pendingCard?.kind==='lucky')openLucky();
+}
+function scheduleAutoDraw(delay=500){
+  cancelAutoDraw();const game=save.currentGame;if(autoPaused||!game||game.status!=='playing'||game.pendingCard||document.body.dataset.screen!=='game')return;
+  autoDrawTimer=setTimeout(drawNext,delay);
 }
 function comboEffect(count){
   if(count<3)return;const names=['零','一','二','三','四','五','六','七','八','九','十'],reward=count>=6?' +20金币':'';$('comboBanner').textContent=`${names[count]??count}连合成！${reward}`;$('comboBanner').hidden=false;$('fireworks').classList.add('active');clearTimeout(comboTimer);comboTimer=setTimeout(()=>{$('comboBanner').hidden=true;$('fireworks').classList.remove('active')},1000);
 }
 function finish(outcome){
+  cancelAutoDraw();
   const settled=settleGame(save.currentGame,save.profile,outcome);save.currentGame=settled.state;save.profile=settled.profile;persist();
   const won=outcome==='won',difficulty=getDifficulty(settled.state.difficulty);$('resultTitle').textContent=won?'成功通关！':'本局结束';$('resultMessage').textContent=won?`合成4096，奖励${difficulty.winReward}金币`:`牌堆已满，奖励${difficulty.lossReward}金币`;$('resultValue').textContent=settled.state.roundMax;audio.playEffect(won?'win':'lose');show('result');
 }
@@ -46,18 +57,18 @@ function afterTransition(transition){
   if(transition.comboCount>=3)audio.playEffect('combo');
   if(transition.outcome==='won')return finish('won');
   if(canFail(save.currentGame,save.profile))return finish('lost');
-  renderGame();
+  renderGame();scheduleAutoDraw(transition.comboCount>=3?1100:500);
 }
 function openLucky(){const hasCards=save.currentGame.columns.some(column=>column.length);$('luckyCopy').disabled=!hasCards;$('luckyRemove').disabled=!hasCards;$('luckyDialog').showModal()}
 function placeInColumn(column){
   try{afterTransition(placePendingCard(save.currentGame,column))}catch(error){message('不能放这里',error.message)}
 }
 
-$('startButton').addEventListener('click',()=>{audio.unlock();if(save.currentGame?.status==='playing')renderGame();else $('difficultyDialog').showModal()});
+$('startButton').addEventListener('click',()=>{audio.unlock();if(save.currentGame?.status==='playing'){renderGame();scheduleAutoDraw(350)}else $('difficultyDialog').showModal()});
 $('easyMode').addEventListener('click',()=>startMode('easy'));$('joyMode').addEventListener('click',()=>startMode('joy'));$('challengeMode').addEventListener('click',()=>startMode('challenge'));
-function startMode(mode){save.profile.selectedDifficulty=mode;save.currentGame=createGame(mode);$('difficultyDialog').close();renderGame()}
+function startMode(mode){save.profile.selectedDifficulty=mode;save.currentGame=createGame(mode);autoPaused=false;$('difficultyDialog').close();renderGame();scheduleAutoDraw(350)}
 $('restartButton').addEventListener('click',()=>{if(confirm('重新开始会放弃当前这一局，确定吗？')){$('difficultyDialog').showModal()}});
-$('drawButton').addEventListener('click',()=>{audio.unlock();save.currentGame=drawCard(save.currentGame);audio.playEffect('draw');if(canFail(save.currentGame,save.profile))return finish('lost');renderGame();if(save.currentGame.pendingCard?.kind==='lucky')openLucky()});
+$('drawButton').addEventListener('click',()=>{audio.unlock();drawNext()});
 document.querySelectorAll('.pile-button').forEach(button=>button.addEventListener('click',()=>{
   const column=Number(button.dataset.column);
   if(toolMode==='lucky-copy'){try{save.currentGame=useLuckyCopy(save.currentGame,column);toolMode=null;return renderGame()}catch(error){return message('不能复制',error.message)}}
@@ -84,6 +95,7 @@ pendingNode.addEventListener('pointerdown',event=>{
   if(save.currentGame?.pendingCard?.kind!=='number')return;
   drag={pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,lastX:event.clientX,lastY:event.clientY,moved:false};pendingNode.setPointerCapture(event.pointerId);pendingNode.classList.add('dragging');event.preventDefault();
 });
+pendingNode.addEventListener('click',()=>{if(save.currentGame?.pendingCard?.kind==='lucky'&&!$('luckyDialog').open)openLucky()});
 pendingNode.addEventListener('pointermove',event=>{
   if(!drag||drag.pointerId!==event.pointerId)return;
   drag.lastX=event.clientX;drag.lastY=event.clientY;const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;drag.moved ||= Math.hypot(dx,dy)>8;pendingNode.style.transform=`translate(${dx}px,${dy}px) scale(1.08)`;
@@ -98,15 +110,16 @@ addEventListener('pointercancel',event=>{if(drag?.pointerId===event.pointerId)cl
 $('luckyCopy').addEventListener('click',()=>{$('luckyDialog').close();toolMode='lucky-copy';renderGame()});
 $('luckyRemove').addEventListener('click',()=>{$('luckyDialog').close();toolMode='lucky-remove';renderGame()});
 $('luckyUpgrade').addEventListener('click',()=>{save.currentGame=useLuckyUpgrade(save.currentGame);$('luckyDialog').close();renderGame()});
+$('autoPauseButton').addEventListener('click',()=>{autoPaused=!autoPaused;if(autoPaused)cancelAutoDraw();renderGame();if(!autoPaused)scheduleAutoDraw(250)});
 $('rerollButton').addEventListener('click',()=>{try{save.currentGame=consumeReroll(save.currentGame);audio.playEffect('draw');renderGame()}catch(error){message('不能重抽',error.message)}});
 $('bombButton').addEventListener('click',()=>{if(!save.profile.bombs&&!save.currentGame.temporaryBombs)return message('没有炸弹','返回主页可用50金币购买炸弹。');toolMode=toolMode==='bomb'?null:'bomb';renderGame()});
 $('candleButton').addEventListener('click',()=>{if(!save.profile.candles)return message('没有蜡烛','返回主页可用60金币购买蜡烛。');try{save.profile.candles--;const transition=useCandle(save.currentGame);audio.playEffect('candle');afterTransition(transition)}catch(error){save.profile.candles++;message('暂时不能使用',error.message)}});
 $('shopBomb').addEventListener('click',()=>{try{save.profile=buyItem(save.profile,'bomb');audio.playEffect('place');renderHome()}catch(error){message('购买失败',error.message)}});
 $('shopCandle').addEventListener('click',()=>{try{save.profile=buyItem(save.profile,'candle');audio.playEffect('place');renderHome()}catch(error){message('购买失败',error.message)}});
-$('exitButton').addEventListener('click',()=>{profileFromRound();toolMode=null;renderHome()});
+$('exitButton').addEventListener('click',()=>{cancelAutoDraw();profileFromRound();toolMode=null;renderHome()});
 $('musicButton').addEventListener('click',async()=>{save.profile.musicOn=!save.profile.musicOn;if(save.profile.musicOn)await audio.unlock();audio.setEnabled(save.profile.musicOn);renderGame()});
 $('againButton').addEventListener('click',()=>{$('difficultyDialog').showModal()});
-$('resultHomeButton').addEventListener('click',()=>{save.currentGame=null;renderHome()});
-addEventListener('pagehide',persist);
+$('resultHomeButton').addEventListener('click',()=>{cancelAutoDraw();save.currentGame=null;renderHome()});
+addEventListener('pagehide',()=>{cancelAutoDraw();persist()});
 audio.setEnabled(save.profile.musicOn);
 renderHome();
