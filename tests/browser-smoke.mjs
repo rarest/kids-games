@@ -190,6 +190,27 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       await cdp.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...first,x:first.x-48},{...second,x:second.x+48}]});
       await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
     };
+    const realSurfaceCapture=async()=>{
+      const points=await evaluate(`(()=>{const surface=document.getElementById('joystickSurface').getBoundingClientRect(),joystick=document.getElementById('joystick').getBoundingClientRect();return{start:{x:surface.left+4,y:surface.top+surface.height/2},outside:{x:surface.left-20,y:joystick.top+4}}})()`);
+      await evaluate("globalThis.__joystickTestPointerId=null;document.getElementById('joystickSurface').addEventListener('pointerdown',event=>{globalThis.__joystickTestPointerId=event.pointerId},{capture:true,once:true})");
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...points.start,id:1,radiusX:1,radiusY:1,force:1}]});
+      await sleep(30);
+      const started=await evaluate("document.getElementById('joystick').classList.contains('active')"),captured=await evaluate("document.getElementById('joystickSurface').hasPointerCapture(globalThis.__joystickTestPointerId)");
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...points.outside,id:1,radiusX:1,radiusY:1,force:1}]});
+      await sleep(30);
+      const remainedActive=await evaluate("document.getElementById('joystick').classList.contains('active')");
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      return{started,captured,remainedActive,ended:!(await evaluate("document.getElementById('joystick').classList.contains('active')"))};
+    };
+    const realMixedPointerCancel=async direction=>{
+      const point=await joystickPoint(direction);
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:1,radiusY:1,force:1}]});
+      await sleep(30);
+      await cdp.call('Input.dispatchMouseEvent',{type:'mousePressed',...point,button:'left',buttons:1,clickCount:1,pointerType:'pen'});
+      await sleep(30);
+      await cdp.call('Input.dispatchMouseEvent',{type:'mouseReleased',...point,button:'left',buttons:0,clickCount:1,pointerType:'pen'});
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    };
     const realSecondPointerCancel=async direction=>{
       const joystick=await joystickPoint(direction),outside=await canvasCenter();
       const first={...joystick,id:1,radiusX:1,radiusY:1,force:1},second={...outside,id:2,radiusX:1,radiusY:1,force:1};
@@ -240,7 +261,7 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       await resetStage();
     }
     for(let index=0;index<5;index++)await realJoystick('down','touch');
-    await realJoystickVector(.18,.35,'touch',260);
+    await realJoystickVector(.18,.35,'touch',360);
     const junctionSteps=Number(await evaluate("document.getElementById('stepCount').textContent"));
     assert.ok(junctionSteps>=7,'a held diagonal pre-turns right at the first opening after six downward cells');
     await evaluate('new Promise(resolve=>requestAnimationFrame(resolve))');
@@ -248,10 +269,13 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
     await sleep(180);
     assert.equal(Number(await evaluate("document.getElementById('stepCount').textContent")),junctionSteps,'release clears the queued turn and repeat timer');
     await resetStage();
-    const heldDirections=solution.slice(0,2);
+    const heldDirections=solution.slice(0,3);
     assert.equal(new Set(heldDirections).size,1,'browser fixture starts with a continuous corridor');
-    await realJoystick(heldDirections[0],'touch',130);
-    assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'2','one held joystick direction makes consecutive moves');
+    await realJoystick(heldDirections[0],'touch',160);
+    assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'1','a short hold remains one precise step');
+    await resetStage();
+    await realJoystick(heldDirections[0],'touch',450);
+    assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'3','a longer hold begins delayed continuous movement');
     const runtimeDiagnostics=await evaluate('globalThis.__crownMazeDiagnostics');
     assert.equal(runtimeDiagnostics.audio.unlocked,true,'trusted gesture unlocks the shared audio controller');
     assert.equal(runtimeDiagnostics.audio.musicActive,true,'background music remains active beside effects');
@@ -260,6 +284,9 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
     await resetStage();
     await realSecondPointerCancel(heldDirections[0]);
     assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'1','a second pointer outside the joystick cancels hold-repeat');
+    await resetStage();
+    await realMixedPointerCancel(heldDirections[0]);
+    assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'1','a second primary pointer on the joystick cancels without restarting the gesture');
     await resetStage();
     await realBlurCancel();
     assert.equal(await evaluate("document.getElementById('stepCount').textContent"),'1','window blur cancels a diagonal gesture after its immediate step');
@@ -286,23 +313,28 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       await cdp.call('Emulation.setSafeAreaInsetsOverride',{insets:device.insets});
       await cdp.call('Emulation.setDeviceMetricsOverride',{width:device.width,height:device.height,deviceScaleFactor:device.dpr,mobile:device.mobile});
       await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
+      assert.equal(await evaluate("document.getElementById('joystickSurface')!==null"),true,`${device.name}:the full control card is the joystick touch surface`);
       const layout=await evaluate(`(()=>{
-        const canvas=document.getElementById('mazeCanvas'),joystick=document.getElementById('joystick'),title=document.querySelector('.stage-title h2'),keys=document.querySelector('.key-panel');
-        const canvasRect=canvas.getBoundingClientRect(),joystickRect=joystick.getBoundingClientRect(),titleRect=title.getBoundingClientRect(),keyRect=keys.getBoundingClientRect();
+        const canvas=document.getElementById('mazeCanvas'),joystick=document.getElementById('joystick'),surface=document.getElementById('joystickSurface'),title=document.querySelector('.stage-title h2'),keys=document.querySelector('.key-panel');
+        const canvasRect=canvas.getBoundingClientRect(),joystickRect=joystick.getBoundingClientRect(),surfaceRect=surface.getBoundingClientRect(),titleRect=title.getBoundingClientRect(),keyRect=keys.getBoundingClientRect();
         const toolRects=[...document.querySelectorAll('.item-button')].map(button=>button.getBoundingClientRect());
         return {width:innerWidth,height:innerHeight,scale:visualViewport?.scale||1,noOverflow:document.documentElement.scrollWidth<=innerWidth,
           canvasVisible:canvasRect.width>0&&canvasRect.height>100,joystickVisible:joystickRect.top>=canvasRect.bottom&&joystickRect.bottom<=innerHeight,
+          joystickDiameter:Math.min(joystickRect.width,joystickRect.height),surfaceContains:surfaceRect.left<=joystickRect.left&&surfaceRect.right>=joystickRect.right&&surfaceRect.top<=joystickRect.top&&surfaceRect.bottom>=joystickRect.bottom,
           toolsVisible:toolRects.every(rect=>rect.top>=0&&rect.bottom<=innerHeight),titleClear:titleRect.bottom<=keyRect.top,titleBottom:titleRect.bottom,keyTop:keyRect.top,
           canvasLeft:canvasRect.left,canvasRight:canvasRect.right,
           safeHorizontal:canvasRect.left>=${device.insets.left}&&canvasRect.right<=innerWidth-${device.insets.right},
           safeBottom:Math.max(joystickRect.bottom,...toolRects.map(rect=>rect.bottom))<=innerHeight-${device.insets.bottom},
-          label:document.querySelector('.joystick-copy b').textContent,canvasTouchAction:getComputedStyle(canvas).touchAction,joystickTouchAction:getComputedStyle(joystick).touchAction};
+          label:document.querySelector('.joystick-copy b').textContent,canvasTouchAction:getComputedStyle(canvas).touchAction,joystickTouchAction:getComputedStyle(joystick).touchAction,surfaceTouchAction:getComputedStyle(surface).touchAction};
       })()`);
       assert.deepEqual({width:layout.width,height:layout.height},{width:device.width,height:device.height},device.name);
       assert.equal(layout.scale,1,`${device.name}:scale`);
       assert.equal(layout.noOverflow,true,`${device.name}:overflow`);
       assert.equal(layout.canvasVisible,true,`${device.name}:canvas`);
       assert.equal(layout.joystickVisible,true,`${device.name}:joystick remains below the canvas`);
+      const minimumJoystickDiameter=device.name==='phone landscape notch'?68:device.name==='phone portrait'?84:90;
+      assert.ok(layout.joystickDiameter>=minimumJoystickDiameter,`${device.name}:joystick diameter ${layout.joystickDiameter} >= ${minimumJoystickDiameter}`);
+      assert.equal(layout.surfaceContains,true,`${device.name}:touch surface contains the visual joystick`);
       assert.equal(layout.toolsVisible,true,`${device.name}:tools`);
       assert.equal(layout.titleClear,true,`${device.name}:title ${layout.titleBottom} / keys ${layout.keyTop}`);
       assert.equal(layout.safeHorizontal,true,`${device.name}:horizontal safe area ${layout.canvasLeft}/${layout.canvasRight}`);
@@ -310,6 +342,7 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       assert.equal(layout.label,'虚拟摇杆',`${device.name}:input label`);
       assert.equal(layout.canvasTouchAction,'none',`${device.name}:canvas touch action`);
       assert.equal(layout.joystickTouchAction,'none',`${device.name}:joystick touch action`);
+      assert.equal(layout.surfaceTouchAction,'none',`${device.name}:joystick surface touch action`);
       assert.equal(await evaluate("getComputedStyle(document.body).userSelect"),'none',`${device.name}:body selection disabled`);
       assert.equal(await evaluate("getComputedStyle(document.getElementById('mazeCanvas')).userSelect"),'none',`${device.name}:canvas selection disabled`);
       if(device.pointerType==='touch'){
@@ -318,13 +351,17 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
         assert.equal(await evaluate("document.getElementById('stepCount').textContent"),before,`${device.name}:pinch does not move`);
         assert.equal(await evaluate("visualViewport.scale"),1,`${device.name}:real pinch/double-tap scale`);
         assert.deepEqual(await evaluate("({x:scrollX,y:scrollY})"),{x:0,y:0},`${device.name}:real touch scroll`);
+        if(device.name==='phone portrait'){
+          const surfaceCapture=await realSurfaceCapture();
+          assert.deepEqual(surfaceCapture,{started:true,captured:true,remainedActive:true,ended:true},`${device.name}:the whole card starts input and pointer capture survives a slight slide outside`);
+        }
       }
       if(device.pointerType==='mouse'){
         const before=await evaluate("document.getElementById('stepCount').textContent"),start=await evaluate(`(()=>{const rect=document.getElementById('joystick').getBoundingClientRect();return{x:rect.left+rect.width/2,y:rect.top+rect.height/2}})()`);
-        await evaluate("document.getElementById('joystick').setPointerCapture=()=>{throw new Error('capture unavailable')}");
+        await evaluate("document.getElementById('joystickSurface').setPointerCapture=()=>{throw new Error('capture unavailable')}");
         await cdp.call('Input.dispatchMouseEvent',{type:'mousePressed',...start,button:'left',buttons:1,clickCount:1,pointerType:'mouse'});
         await cdp.call('Input.dispatchMouseEvent',{type:'mouseReleased',x:2,y:2,button:'left',buttons:0,clickCount:1,pointerType:'mouse'});
-        await evaluate("delete document.getElementById('joystick').setPointerCapture");
+        await evaluate("delete document.getElementById('joystickSurface').setPointerCapture");
         assert.equal(await evaluate("document.getElementById('stepCount').textContent"),before,`${device.name}:outside release does not move`);
         const textDrag=await evaluate(`(()=>{const rect=document.querySelector('.key-panel').getBoundingClientRect();return{start:{x:rect.left+8,y:rect.top+rect.height/2},end:{x:rect.right-8,y:rect.top+rect.height/2}}})()`);
         await cdp.call('Input.dispatchMouseEvent',{type:'mousePressed',...textDrag.start,button:'left',buttons:1,clickCount:1,pointerType:'mouse'});
@@ -334,7 +371,7 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       if(device.name==='phone portrait'||device.name==='tablet portrait'){
         await resetStage();
         for(let index=0;index<5;index++)await realJoystick('down',device.pointerType);
-        await realJoystickVector(.18,.35,device.pointerType,260);
+        await realJoystickVector(.18,.35,device.pointerType,360);
         const deviceJunctionSteps=Number(await evaluate("document.getElementById('stepCount').textContent"));
         assert.ok(deviceJunctionSteps>=7,`${device.name}:normalized diagonal pre-turns at the same junction`);
         await evaluate('new Promise(resolve=>requestAnimationFrame(resolve))');

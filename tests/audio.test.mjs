@@ -146,7 +146,7 @@ test('decode failure drains the event through its persistent fallback',async()=>
 
 test('versions every runtime audio URL with the release token',()=>{
   const release=audioModule.AUDIO_RELEASE;
-  assert.equal(release,'20260830b');
+  assert.equal(release,'20260831a');
   for(const definition of Object.values(audioModule.SOUND_DEFINITIONS))for(const file of definition.files)assert.equal(audioModule.audioAssetUrl('/audio',file),`/audio/${file}?v=${release}`);
   for(const candidate of audioModule.MUSIC_DEFINITION.files)assert.equal(audioModule.audioAssetUrl('/audio',candidate.file),`/audio/${candidate.file}?v=${release}`);
 });
