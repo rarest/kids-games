@@ -5,11 +5,21 @@ let joystickModule;
 try{joystickModule=await import('../maze/joystick-controls.js')}catch{}
 
 function fakeTimers(){
-  const timers=new Map(),delays=[];let id=0;
+  const timers=new Map(),delays=[];let id=0,time=0;
   return{
-    set(callback,delay){const token=++id;timers.set(token,callback);delays.push(delay);return token},
+    set(callback,delay){const token=++id;timers.set(token,{callback,due:time+delay});delays.push(delay);return token},
     clear(token){timers.delete(token)},
-    fire(){for(const [token,callback] of [...timers]){timers.delete(token);callback()}},
+    fire(){for(const [token,timer] of [...timers]){timers.delete(token);time=timer.due;timer.callback()}},
+    advance(ms){
+      const target=time+ms;
+      while(true){
+        const next=[...timers].sort((a,b)=>a[1].due-b[1].due)[0];
+        if(!next||next[1].due>target)break;
+        const[token,timer]=next;timers.delete(token);time=timer.due;timer.callback();
+      }
+      time=target;
+    },
+    now(){return time},
     get count(){return timers.size},get delays(){return[...delays]}
   };
 }
@@ -51,19 +61,38 @@ test('adding a secondary turn updates the next tick without injecting an extra f
   joystick.end(1);
 });
 
-test('joystick emits immediately, repeats while held and stops on release',()=>{
+test('joystick emits one precise step before delayed continuous movement and stops on release',()=>{
   assert.ok(joystickModule);
   const timers=fakeTimers(),directions=[];
-  const joystick=joystickModule.createJoystickController({onDirection:value=>directions.push(value),repeatMs:100,setTimer:(callback,delay)=>timers.set(callback,delay),clearTimer:token=>timers.clear(token)});
+  const joystick=joystickModule.createJoystickController({onDirection:value=>directions.push(value),initialRepeatDelayMs:240,repeatMs:165,acceleratedRepeatMs:125,accelerationAfterMs:1000,now:()=>timers.now(),setTimer:(callback,delay)=>timers.set(callback,delay),clearTimer:token=>timers.clear(token)});
   assert.equal(joystick.start({pointerId:1,dx:30,dy:2,isPrimary:true,button:0}),true);
   assert.deepEqual(directions,['right']);
   assert.equal(timers.count,1);
-  assert.deepEqual(timers.delays,[100]);
-  timers.fire();timers.fire();
-  assert.deepEqual(directions,['right','right','right']);
-  joystick.end(1);timers.fire();
-  assert.deepEqual(directions,['right','right','right']);
+  assert.deepEqual(timers.delays,[240]);
+  timers.advance(239);
+  assert.deepEqual(directions,['right'],'a quick touch remains exactly one step');
+  timers.advance(1);
+  assert.deepEqual(directions,['right','right']);
+  assert.equal(timers.delays.at(-1),165,'continuous movement begins at the precise pace');
+  joystick.end(1);timers.advance(500);
+  assert.deepEqual(directions,['right','right']);
   assert.deepEqual(joystick.state,{active:false,direction:null,dx:0,dy:0});
+});
+
+test('a long hold accelerates once while a changed direction restarts the precise phase',()=>{
+  assert.ok(joystickModule);
+  const timers=fakeTimers(),directions=[];
+  const joystick=joystickModule.createJoystickController({onDirection:value=>directions.push(value),initialRepeatDelayMs:240,repeatMs:165,acceleratedRepeatMs:125,accelerationAfterMs:1000,now:()=>timers.now(),setTimer:(callback,delay)=>timers.set(callback,delay),clearTimer:token=>timers.clear(token)});
+  joystick.start({pointerId:1,dx:30,dy:0,radius:50,isPrimary:true,button:0});
+  timers.advance(1100);
+  assert.equal(timers.delays.at(-1),125,'the repeat interval accelerates after one second');
+  const beforeTurn=directions.length;
+  joystick.move({pointerId:1,dx:0,dy:-30,radius:50});
+  assert.equal(directions.length,beforeTurn+1,'a deliberate direction change responds immediately');
+  assert.equal(directions.at(-1),'up');
+  assert.equal(timers.delays.at(-1),240,'the new direction restores the single-step release window');
+  timers.advance(239);
+  assert.equal(directions.length,beforeTurn+1,'the changed direction cannot overshoot during its release window');
 });
 
 test('center, cancellation, second pointer and one-shot tools never leave repeat movement',()=>{

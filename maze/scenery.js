@@ -1,4 +1,4 @@
-import { shadowOffsetFor } from './wall-geometry.js?v=20260830b';
+import { shadowOffsetFor } from './wall-geometry.js?v=20260831a';
 
 const BASE_PROFILE = {
   trees: true,

@@ -18,7 +18,7 @@ export const MUSIC_DEFINITION={
 };
 export const MAX_ACTIVE_EFFECTS=12;
 export const PENDING_EFFECT_TTL=400;
-export const AUDIO_RELEASE='20260830b';
+export const AUDIO_RELEASE='20260831a';
 export const audioAssetUrl=(baseUrl,file)=>`${baseUrl}/${file}?v=${AUDIO_RELEASE}`;
 
 const clamp = value => Math.max(0, Math.min(1, value));

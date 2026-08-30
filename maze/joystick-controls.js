@@ -79,12 +79,13 @@ export function createPathAwareNavigator({canMove,onDirection,turnBufferMs=400,n
 }
 
 export function createJoystickController({
-  onDirection,deadZone=null,repeatMs=100,
+  onDirection,deadZone=null,initialRepeatDelayMs=240,repeatMs=165,
+  acceleratedRepeatMs=125,accelerationAfterMs=1000,now=()=>Date.now(),
   setTimer=(callback,delay)=>setTimeout(callback,delay),
   clearTimer=token=>clearTimeout(token)
 }={}){
   if(typeof onDirection!=='function')throw new TypeError('onDirection callback is required');
-  let active=null,direction=null,intent=null,dx=0,dy=0,radius=50,timer=0,repeatEnabled=true,oneShotSubmitted=false;
+  let active=null,direction=null,intent=null,dx=0,dy=0,radius=50,timer=0,repeatEnabled=true,oneShotSubmitted=false,heldSince=null;
 
   function clearRepeat(){if(timer)clearTimer(timer);timer=0}
   function emit(){
@@ -92,10 +93,11 @@ export function createJoystickController({
     if(!repeatEnabled)oneShotSubmitted=true;
     onDirection(direction,{...intent});
   }
-  function scheduleRepeat(){
+  function scheduleRepeat(delay=null){
     clearRepeat();
     if(!active||!direction||!repeatEnabled)return;
-    timer=setTimer(()=>{timer=0;if(!active||!direction||!repeatEnabled)return;emit();scheduleRepeat()},repeatMs);
+    const nextDelay=delay??(now()-heldSince>=accelerationAfterMs?acceleratedRepeatMs:repeatMs);
+    timer=setTimer(()=>{timer=0;if(!active||!direction||!repeatEnabled)return;emit();scheduleRepeat()},nextDelay);
   }
   function update(nextDx,nextDy,nextRadius,repeat=true){
     dx=Number.isFinite(nextDx)?nextDx:0;dy=Number.isFinite(nextDy)?nextDy:0;
@@ -105,15 +107,15 @@ export function createJoystickController({
       const previousDirection=direction;
       intent=nextIntent;direction=intent?.primary||null;
       if(direction!==previousDirection){
-        clearRepeat();
-        if(direction){emit();scheduleRepeat()}
+        clearRepeat();heldSince=direction?now():null;
+        if(direction){emit();scheduleRepeat(initialRepeatDelayMs)}
       }else if(!repeatEnabled)clearRepeat();
       else if(direction&&!timer)scheduleRepeat();
     }else if(!repeatEnabled)clearRepeat();
     else if(direction&&!timer)scheduleRepeat();
     return direction;
   }
-  function reset(){clearRepeat();active=null;direction=null;intent=null;dx=0;dy=0;radius=50;repeatEnabled=true;oneShotSubmitted=false}
+  function reset(){clearRepeat();active=null;direction=null;intent=null;dx=0;dy=0;radius=50;repeatEnabled=true;oneShotSubmitted=false;heldSince=null}
 
   return{
     start({pointerId,dx:nextDx=0,dy:nextDy=0,radius:nextRadius=50,isPrimary=true,button=0,repeat=true}={}){
