@@ -54,6 +54,37 @@ export function chooseLuckyValue(state,value) {
   return {...state,pendingCard:{kind:'number',value}};
 }
 
+const validColumn=(state,columnIndex)=>Number.isInteger(columnIndex)&&columnIndex>=0&&columnIndex<COLUMN_COUNT;
+
+export function useLuckyCopy(state,columnIndex){
+  if(state.pendingCard?.kind!=='lucky')throw new Error('当前不是幸运牌');
+  if(!validColumn(state,columnIndex))throw new Error('无效牌列');
+  const value=state.columns[columnIndex].at(-1);
+  if(!value)throw new Error('不能复制空列');
+  return {...state,pendingCard:{kind:'number',value}};
+}
+
+export function useLuckyUpgrade(state,random=Math.random){
+  if(state.pendingCard?.kind!=='lucky')throw new Error('当前不是幸运牌');
+  const value=Math.min(256,generatedValue({...state,pendingCard:null},random));
+  return {...state,pendingCard:{kind:'number',value:value*2}};
+}
+
+export function applyComboRewards(state,comboCount){
+  return {...state,
+    rerolls:(state.rerolls??0)+(comboCount>=4?1:0),
+    temporaryBombs:(state.temporaryBombs??0)+(comboCount>=5?1:0),
+    comboCoins:Math.min(60,(state.comboCoins??0)+(comboCount>=6?20:0))
+  };
+}
+
+export function consumeReroll(state,random=Math.random){
+  if((state.rerolls??0)<1)throw new Error('没有重抽机会');
+  if(state.pendingCard?.kind!=='number')throw new Error('当前数字牌才能重抽');
+  const value=generatedValue({...state,pendingCard:null},random);
+  return {...state,rerolls:state.rerolls-1,pendingCard:{kind:'number',value}};
+}
+
 function collapseAll(column) {
   const values = [...column];
   let combos = 0;
@@ -100,7 +131,21 @@ export function placePendingCard(state,columnIndex) {
   let outcome = null;
   if (next.roundMax >= 4096) { next.status = 'won'; outcome = 'won'; }
   else if (next.drawIndex >= next.deck.length && !next.pendingCard) { next.status = 'lost'; outcome = 'lost'; }
-  return {state:next,comboCount:resolved.comboCount,removed:resolved.comboCount,createdValue,outcome};
+  const rewarded=applyComboRewards(next,resolved.comboCount);
+  return {state:rewarded,comboCount:resolved.comboCount,removed:resolved.comboCount,createdValue,outcome};
+}
+
+export function useLuckyRemove(state,columnIndex){
+  if(state.pendingCard?.kind!=='lucky')throw new Error('当前不是幸运牌');
+  if(!validColumn(state,columnIndex))throw new Error('无效牌列');
+  if(!state.columns[columnIndex].length)throw new Error('不能移除空列');
+  const next=cloneState(state);next.pendingCard=null;next.columns[columnIndex].pop();
+  let comboCount=0,createdValue=next.columns[columnIndex].at(-1)??null;
+  if(createdValue){next.columns[columnIndex].pop();const resolved=resolvePlacement(next.columns,columnIndex,createdValue);next.columns=resolved.columns;comboCount=resolved.comboCount;createdValue=resolved.createdValue}
+  next.lastCombo=comboCount;next.roundMax=Math.max(next.roundMax,...next.columns.flat(),0);
+  const rewarded=applyComboRewards(next,comboCount);
+  if(rewarded.roundMax>=4096)rewarded.status='won';
+  return {state:rewarded,comboCount,removed:1,createdValue,outcome:rewarded.status==='won'?'won':null};
 }
 
 export function buyItem(profile,item) {
@@ -115,6 +160,7 @@ export function useBomb(state,columnIndex) {
   const next = cloneState(state);
   const removed = next.columns[columnIndex].length;
   next.columns[columnIndex] = [];
+  if((next.temporaryBombs??0)>0)next.temporaryBombs--;
   return {state:next,comboCount:0,removed,createdValue:null,outcome:null};
 }
 
@@ -137,16 +183,17 @@ export function useCandle(state,random = Math.random) {
 export function canFail(state,profile) {
   const full = state.columns.every(column=>column.length >= COLUMN_CAPACITY);
   const exhausted = state.drawIndex >= state.deck.length && !state.pendingCard;
-  return (full || exhausted) && profile.bombs < 1 && profile.coins < 50;
+  return (full || exhausted) && (state.temporaryBombs??0)<1 && profile.bombs < 1 && profile.coins < 50;
 }
 
 export function settleGame(state,profile,outcome) {
   if (state.rewardClaimed) return {state,profile};
-  const reward = outcome === 'won' ? 300 : outcome === 'lost' ? 250 : 0;
+  const difficulty=getDifficulty(state.difficulty);
+  const reward = outcome === 'won' ? difficulty.winReward : outcome === 'lost' ? difficulty.lossReward : 0;
   if (!reward) throw new Error('无效结算结果');
   return {
     state:{...state,status:outcome,rewardClaimed:true},
-    profile:{...profile,coins:profile.coins+reward,best:Math.max(profile.best,state.roundMax),lastResult:state.roundMax,wins:profile.wins+(outcome==='won'?1:0)}
+    profile:{...profile,coins:profile.coins+reward+(state.comboCoins??0),best:Math.max(profile.best,state.roundMax),lastResult:state.roundMax,wins:profile.wins+(outcome==='won'?1:0)}
   };
 }
 

@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   createGame, drawCard, drawGeneratedCard, chooseLuckyValue, placePendingCard,
-  buyItem, useBomb, useCandle, canFail, settleGame
+  buyItem, useBomb, useCandle, canFail, settleGame,
+  useLuckyCopy,useLuckyRemove,useLuckyUpgrade,applyComboRewards,consumeReroll
 } from '../merge4096/game-core.js';
 
 const state = overrides => ({
@@ -47,6 +48,34 @@ test('lucky card requires a valid chosen value', () => {
   assert.equal(lucky.pendingCard.kind, 'lucky');
   assert.throws(() => chooseLuckyValue(lucky,1024), /幸运牌/);
   assert.equal(chooseLuckyValue(lucky,512).pendingCard.value,512);
+});
+
+test('lucky copy only copies a non-empty bottom card',()=>{
+  const lucky=state({pendingCard:{kind:'lucky'},columns:[[16],[],[],[],[]]});
+  assert.equal(useLuckyCopy(lucky,0).pendingCard.value,16);
+  assert.throws(()=>useLuckyCopy(lucky,1),/空列/);
+});
+
+test('lucky remove clears a chosen bottom and upgrade never creates above 512',()=>{
+  const lucky=state({pendingCard:{kind:'lucky'},columns:[[8,16],[],[],[],[]],roundMax:4096,difficulty:'joy'});
+  assert.deepEqual(useLuckyRemove(lucky,0).state.columns[0],[8]);
+  assert.equal(useLuckyUpgrade(lucky,()=>.999).pendingCard.value,512);
+});
+
+test('combo rewards grant reroll bomb and capped coins',()=>{
+  assert.equal(applyComboRewards(state(),4).rerolls,1);
+  assert.equal(applyComboRewards(state(),5).temporaryBombs,1);
+  let game=applyComboRewards(state({comboCoins:40}),6);
+  game=applyComboRewards(game,7);
+  assert.equal(game.comboCoins,60);
+});
+
+test('reroll replaces a number without consuming another deck card',()=>{
+  const game=state({difficulty:'joy',rerolls:1,drawIndex:7,pendingCard:{kind:'number',value:2}});
+  const rerolled=consumeReroll(game,()=>.99);
+  assert.equal(rerolled.rerolls,0);
+  assert.equal(rerolled.drawIndex,7);
+  assert.equal(rerolled.pendingCard.kind,'number');
 });
 
 test('cards append downward and different values do not merge', () => {
@@ -112,6 +141,6 @@ test('settlement pays only once and updates records', () => {
   const duplicate = settleGame(won.state,won.profile,'won');
   assert.equal(duplicate.profile.coins,800);
   const lost = settleGame(state({status:'lost',roundMax:512}),profile,'lost');
-  assert.equal(lost.profile.coins,750);
+  assert.equal(lost.profile.coins,600);
   assert.equal(lost.profile.lastResult,512);
 });
