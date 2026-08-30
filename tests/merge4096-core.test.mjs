@@ -133,11 +133,12 @@ test('all full without a bomb purchase path can fail', () => {
 });
 
 test('settlement pays only once and updates records', () => {
-  const profile = {coins:500,bombs:0,candles:3,best:0,lastResult:0,wins:0,musicOn:true};
-  const won = settleGame(state({status:'won',roundMax:4096}),profile,'won');
+  const profile = {coins:500,bombs:0,candles:3,best:0,lastResult:0,wins:0,musicOn:true,records:{easy:{best:0,wins:0},joy:{best:0,wins:0},challenge:{best:0,wins:0}}};
+  const won = settleGame(state({status:'won',roundMax:4096,difficulty:'joy'}),profile,'won');
   assert.equal(won.profile.coins,800);
   assert.equal(won.profile.wins,1);
   assert.equal(won.profile.best,4096);
+  assert.deepEqual(won.profile.records.joy,{best:4096,wins:1});
   const duplicate = settleGame(won.state,won.profile,'won');
   assert.equal(duplicate.profile.coins,800);
   const lost = settleGame(state({status:'lost',roundMax:512}),profile,'lost');

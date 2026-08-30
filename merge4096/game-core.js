@@ -191,9 +191,11 @@ export function settleGame(state,profile,outcome) {
   const difficulty=getDifficulty(state.difficulty);
   const reward = outcome === 'won' ? difficulty.winReward : outcome === 'lost' ? difficulty.lossReward : 0;
   if (!reward) throw new Error('无效结算结果');
+  const previousRecord=profile.records?.[difficulty.id]??{best:0,wins:0};
+  const records=profile.records?{...profile.records,[difficulty.id]:{best:Math.max(previousRecord.best,state.roundMax),wins:previousRecord.wins+(outcome==='won'?1:0)}}:profile.records;
   return {
     state:{...state,status:outcome,rewardClaimed:true},
-    profile:{...profile,coins:profile.coins+reward+(state.comboCoins??0),best:Math.max(profile.best,state.roundMax),lastResult:state.roundMax,wins:profile.wins+(outcome==='won'?1:0)}
+    profile:{...profile,coins:profile.coins+reward+(state.comboCoins??0),best:Math.max(profile.best,state.roundMax),lastResult:state.roundMax,wins:profile.wins+(outcome==='won'?1:0),records}
   };
 }
 
