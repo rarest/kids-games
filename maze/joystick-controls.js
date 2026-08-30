@@ -32,34 +32,42 @@ export function createPathAwareNavigator({canMove,onDirection,turnBufferMs=400,n
   let heading=null,bufferedTurn=null,activePair=null,consumedPair=null;
 
   const reset=()=>{heading=null;bufferedTurn=null;activePair=null;consumedPair=null};
-  const dispatch=direction=>{
+  const perform=direction=>{
     const outcome=onDirection(direction),moved=typeof outcome==='object'?outcome?.moved!==false:outcome!==false;
     if(moved)heading=direction;
-    return direction;
+    return{direction,moved};
   };
-  const pairKey=intent=>[intent.primary,intent.secondary].sort().join('|');
+  const dispatch=direction=>perform(direction).direction;
+  const pairKey=intent=>`${intent.primary}|${intent.secondary}`;
 
   function step(intent){
     if(!intent?.primary){reset();return null}
     const primary=intent.primary,secondary=intent.secondary||null;
     if(!secondary){bufferedTurn=null;activePair=null;consumedPair=null;return dispatch(primary)}
 
-    const pair=pairKey(intent),timestamp=now();
-    if(pair!==activePair){activePair=pair;consumedPair=null;bufferedTurn=null}
+    const pair=pairKey(intent),timestamp=now(),pairChanged=pair!==activePair;
+    if(pairChanged){activePair=pair;consumedPair=null;bufferedTurn=null}
     const directions=[primary,secondary],headingBefore=heading;
-    const turn=headingBefore&&directions.includes(headingBefore)?directions.find(direction=>direction!==headingBefore):secondary;
-    if(!consumedPair&&turn&&turn!==headingBefore)bufferedTurn={direction:turn,expiresAt:timestamp+turnBufferMs};
     if(bufferedTurn&&bufferedTurn.expiresAt<timestamp)bufferedTurn=null;
 
     if(!headingBefore){
-      if(canMove(primary))return dispatch(primary);
-      if(canMove(secondary))return dispatch(secondary);
-      return dispatch(primary);
+      const direction=canMove(primary)?primary:canMove(secondary)?secondary:primary;
+      const result=dispatch(direction);
+      if(pairChanged&&heading){
+        const turn=directions.find(candidate=>candidate!==heading);
+        if(turn)bufferedTurn={direction:turn,expiresAt:timestamp+turnBufferMs};
+      }
+      return result;
+    }
+    if(pairChanged){
+      const turn=directions.includes(headingBefore)?directions.find(direction=>direction!==headingBefore):secondary;
+      if(turn&&turn!==headingBefore)bufferedTurn={direction:turn,expiresAt:timestamp+turnBufferMs};
     }
     if(bufferedTurn&&canMove(bufferedTurn.direction)){
       const direction=bufferedTurn.direction;
-      bufferedTurn=null;consumedPair=pair;
-      return dispatch(direction);
+      const outcome=perform(direction);
+      if(outcome.moved){bufferedTurn=null;consumedPair=pair}
+      return outcome.direction;
     }
     if(directions.includes(headingBefore)&&canMove(headingBefore))return dispatch(headingBefore);
     if(canMove(primary))return dispatch(primary);
@@ -76,10 +84,14 @@ export function createJoystickController({
   clearTimer=token=>clearTimeout(token)
 }={}){
   if(typeof onDirection!=='function')throw new TypeError('onDirection callback is required');
-  let active=null,direction=null,intent=null,dx=0,dy=0,radius=50,timer=0,repeatEnabled=true;
+  let active=null,direction=null,intent=null,dx=0,dy=0,radius=50,timer=0,repeatEnabled=true,oneShotSubmitted=false;
 
   function clearRepeat(){if(timer)clearTimer(timer);timer=0}
-  function emit(){if(direction&&intent)onDirection(direction,{...intent})}
+  function emit(){
+    if(!direction||!intent||(!repeatEnabled&&oneShotSubmitted))return;
+    if(!repeatEnabled)oneShotSubmitted=true;
+    onDirection(direction,{...intent});
+  }
   function scheduleRepeat(){
     clearRepeat();
     if(!active||!direction||!repeatEnabled)return;
@@ -101,7 +113,7 @@ export function createJoystickController({
     else if(direction&&!timer)scheduleRepeat();
     return direction;
   }
-  function reset(){clearRepeat();active=null;direction=null;intent=null;dx=0;dy=0;radius=50;repeatEnabled=true}
+  function reset(){clearRepeat();active=null;direction=null;intent=null;dx=0;dy=0;radius=50;repeatEnabled=true;oneShotSubmitted=false}
 
   return{
     start({pointerId,dx:nextDx=0,dy:nextDy=0,radius:nextRadius=50,isPrimary=true,button=0,repeat=true}={}){

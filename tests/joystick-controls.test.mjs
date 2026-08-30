@@ -73,6 +73,8 @@ test('center, cancellation, second pointer and one-shot tools never leave repeat
   assert.equal(joystick.start({pointerId:1,dx:0,dy:0,isPrimary:true,button:0}),true);
   joystick.move({pointerId:1,dx:0,dy:-30,repeat:false});
   assert.deepEqual(directions,['up']);assert.equal(timers.count,0,'tool direction is one-shot');
+  joystick.move({pointerId:1,dx:30,dy:0});
+  assert.deepEqual(directions,['up'],'rotating the same tool gesture cannot submit a second direction or become movement');
   assert.equal(joystick.start({pointerId:2,dx:30,dy:0,isPrimary:false,button:0}),false);
   assert.equal(joystick.state.active,false,'second pointer cancels the first interaction');
   assert.equal(joystick.start({pointerId:3,dx:30,dy:0,isPrimary:true,button:0}),true);

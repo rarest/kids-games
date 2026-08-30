@@ -7,6 +7,7 @@ import { LEVELS, getLevel } from '../maze/levels.js';
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const DIRECTIONS = [['up',0,-1],['down',0,1],['left',-1,0],['right',1,0]];
 const DELTAS = Object.fromEntries(DIRECTIONS.map(([name,dx,dy])=>[name,[dx,dy]]));
+const OPPOSITE={up:'down',down:'up',left:'right',right:'left'};
 const DEVICES = [
   { name:'phone portrait',width:390,height:844,dpr:2,mobile:true,pointerType:'touch',insets:{top:0,left:0,bottom:0,right:0},screenshot:'/tmp/crown-gesture-phone.png' },
   { name:'phone landscape notch',width:844,height:390,dpr:2,mobile:true,pointerType:'touch',insets:{top:0,left:47,bottom:21,right:47},screenshot:'/tmp/crown-gesture-landscape.png' },
@@ -170,6 +171,14 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
         await cdp.call('Input.dispatchMouseEvent',{type:'mouseReleased',...point,button:'left',buttons:0,clickCount:1,pointerType});
       }
     };
+    const realJoystickRotate=async(firstDirection,secondDirection)=>{
+      const first=await joystickPoint(firstDirection),second=await joystickPoint(secondDirection);
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...first,id:1,radiusX:1,radiusY:1,force:1}]});
+      await sleep(50);
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...second,id:1,radiusX:1,radiusY:1,force:1}]});
+      await sleep(180);
+      await cdp.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    };
     const realTap=async()=>{
       const point=await canvasCenter();
       await cdp.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:1,radiusY:1,force:1}]});
@@ -214,7 +223,9 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
       for(const direction of plans.dynamite.path)await realJoystick(direction,'touch');
       assert.equal(await evaluate("document.getElementById('stepCount').textContent"),String(plans.dynamite.path.length),'dynamite setup reaches the planned wall');
       await evaluate("document.getElementById('dynamiteButton').click()");
-      await realJoystick(plans.dynamite.direction,'touch',240);
+      const returnDirection=OPPOSITE[plans.dynamite.path.at(-1)];
+      assert.ok(returnDirection,'dynamite fixture has a traversable return direction');
+      await realJoystickRotate(plans.dynamite.direction,returnDirection);
       assert.equal(await evaluate("document.getElementById('dynamiteCount').textContent"),'1','valid dynamite consumes exactly one');
       assert.equal(await evaluate("document.getElementById('dynamiteButton').classList.contains('selected')"),false,'valid dynamite clears selection');
       assert.equal(await evaluate("document.getElementById('stepCount').textContent"),String(plans.dynamite.path.length),'dynamite does not count a move');
@@ -224,6 +235,8 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
     await realJoystickVector(.18,.35,'touch',260);
     const junctionSteps=Number(await evaluate("document.getElementById('stepCount').textContent"));
     assert.ok(junctionSteps>=7,'a held diagonal pre-turns right at the first opening after six downward cells');
+    await evaluate('new Promise(resolve=>requestAnimationFrame(resolve))');
+    assert.deepEqual(await evaluate('globalThis.__crownMazeDiagnostics.player'),{x:1+junctionSteps-6,y:7},'the browser fixture follows the exact right branch');
     await sleep(180);
     assert.equal(Number(await evaluate("document.getElementById('stepCount').textContent")),junctionSteps,'release clears the queued turn and repeat timer');
     await resetStage();
@@ -309,6 +322,8 @@ test('real phone, tablet and desktop input reaches a stage without zoom or brows
         await realJoystickVector(.18,.35,device.pointerType,260);
         const deviceJunctionSteps=Number(await evaluate("document.getElementById('stepCount').textContent"));
         assert.ok(deviceJunctionSteps>=7,`${device.name}:normalized diagonal pre-turns at the same junction`);
+        await evaluate('new Promise(resolve=>requestAnimationFrame(resolve))');
+        assert.deepEqual(await evaluate('globalThis.__crownMazeDiagnostics.player'),{x:1+deviceJunctionSteps-6,y:7},`${device.name}:exact right-branch coordinate`);
         await sleep(180);
         assert.equal(Number(await evaluate("document.getElementById('stepCount').textContent")),deviceJunctionSteps,`${device.name}:release stops buffered movement`);
         await resetStage();

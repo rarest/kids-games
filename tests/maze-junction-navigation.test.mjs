@@ -118,3 +118,59 @@ test('a winding S route preserves heading between turns and follows the newly ex
   navigator.step({primary:'right',secondary:'up'});
   assert.deepEqual(run.player,{x:2,y:3},'the next diagonal pair arms the next bend instead of returning to the old branch');
 });
+
+test('swapping primary and secondary re-arms a deliberate second turn at an open junction',()=>{
+  const run=runFor([
+    '#######',
+    '#...###',
+    '#.....#',
+    '###.###',
+    '###.###',
+    '#######'
+  ],{x:3,y:4}),navigator=navigatorFor(run);
+  navigator.step({primary:'up',secondary:null});
+  navigator.step({primary:'left',secondary:'up'});
+  navigator.step({primary:'left',secondary:'up'});
+  assert.deepEqual(run.player,{x:2,y:2},'first turn enters the left branch');
+  navigator.step({primary:'up',secondary:'left'});
+  assert.deepEqual(run.player,{x:2,y:1},'ordered intent change selects up instead of continuing left');
+});
+
+test('a buffered turn expires and cannot execute at a later junction without fresh input',()=>{
+  const clock={now:0},run=runFor([
+    '#######',
+    '#...###',
+    '#...###',
+    '###.###',
+    '###.###',
+    '#######'
+  ],{x:3,y:4}),navigator=navigatorFor(run,clock);
+  navigator.step(upLeft);
+  clock.now=1000;
+  navigator.step(upLeft);
+  navigator.step(upLeft);
+  assert.deepEqual(run.player,{x:3,y:1},'expired left intent continues the still-expressed primary direction');
+  assert.equal(navigator.state.bufferedTurn,null);
+});
+
+test('a locked exit does not consume a buffered turn or let the player continue past it',()=>{
+  const level={
+    id:'locked-junction',type:'normal',index:1,name:'locked',
+    rows:['#######','#...###','#...###','###.###','#######'],
+    start:{x:3,y:3},exit:{x:2,y:2},keys:[{x:1,y:1}],coins:[],breakableWalls:[],parSteps:10
+  };
+  const run=createRun(level),events=[];
+  const navigator=createPathAwareNavigator({
+    canMove:direction=>canMove(run,direction),
+    onDirection:direction=>{
+      const before={...run.player},result=move(run,direction);events.push(result.event.type);
+      return{moved:before.x!==run.player.x||before.y!==run.player.y,result};
+    }
+  });
+  navigator.step({primary:'up',secondary:null});
+  navigator.step(upLeft);
+  navigator.step(upLeft);
+  assert.deepEqual(run.player,{x:3,y:2});
+  assert.deepEqual(events,['step','door-locked','door-locked']);
+  assert.equal(navigator.state.bufferedTurn,'left');
+});

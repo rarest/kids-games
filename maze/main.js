@@ -24,7 +24,7 @@ const hasTouchInput=()=>matchMedia('(pointer:coarse)').matches||(navigator.maxTo
 let frameScheduler=null,joystickController=null,pathNavigator=null,activeJoystickPointerId=null;
 frameScheduler=createFrameScheduler({mobile:hasTouchInput(),draw:now=>{
   if(run&&document.body.dataset.screen==='game')renderer.draw(run,now);
-  if(diagnosticsEnabled)globalThis.__crownMazeDiagnostics={...renderer.diagnostics,audio:audio.diagnostics,frames:frameScheduler.diagnostics};
+  if(diagnosticsEnabled)globalThis.__crownMazeDiagnostics={...renderer.diagnostics,audio:audio.diagnostics,frames:frameScheduler.diagnostics,player:run?{...run.player}:null};
 }});
 
 function store(next) {
