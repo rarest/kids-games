@@ -36,7 +36,12 @@ export function createHookVolley({ count = 700, minAngle = -Math.PI / 3, maxAngl
 }
 
 export function claimTreasure(items, point, padding = 9) {
-  const item = items.find((candidate) => !candidate.caught && Math.hypot(point.x - candidate.x, point.y - candidate.y) <= candidate.radius + padding);
+  const item = items.find((candidate) => {
+    if (candidate.caught) return false;
+    const radius = candidate.radius + padding;
+    const dx = point.x - candidate.x, dy = point.y - candidate.y;
+    return Math.abs(dx) <= radius && Math.abs(dy) <= radius && dx * dx + dy * dy <= radius * radius;
+  });
   if (!item) return null;
   item.caught = true;
   return item;
@@ -137,4 +142,14 @@ export function createLevelItems({
     }
   }
   return items;
+}
+
+// Preserve elapsed time at low FPS without jumping over small treasures.
+export function advanceSimulation(elapsed, update) {
+  if (!(elapsed > 0) || !Number.isFinite(elapsed)) return;
+  // Treat very long main-thread suspensions as a pause, not thousands of updates.
+  elapsed = Math.min(elapsed, 1);
+  const steps = Math.ceil(elapsed / (1 / 60));
+  const dt = elapsed / steps;
+  for (let i = 0; i < steps; i++) update(dt);
 }
