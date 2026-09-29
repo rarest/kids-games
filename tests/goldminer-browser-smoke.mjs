@@ -82,6 +82,7 @@ test('Sites edition aims one hook per mineral, advances levels and persists best
    assert.equal(await evaluate('document.documentElement.scrollWidth<=innerWidth'),true);
   }
   if(process.env.GOLDMINER_SCREENSHOT){const shot=await cdp.call('Page.captureScreenshot',{format:'png'});await writeFile(process.env.GOLDMINER_SCREENSHOT,Buffer.from(shot.data,'base64'));}
+  await click('商店');
   const saved=await evaluate('localStorage.getItem("goldMinerBest")');await cdp.call('Page.reload',{ignoreCache:true});
   for(let i=0;i<80&&await evaluate('document.getElementById("best")?.textContent.replaceAll(",","")')!==saved;i++)await sleep(100);
   assert.equal(await evaluate('document.getElementById("best").textContent.replaceAll(",","")'),saved);
