@@ -10,7 +10,7 @@ test('gold miner page ships the responsive 700-hook module bundle', async () => 
   assert.match(html, /一次发射 700 个钩爪/);
   assert.deepEqual(refs, [
     '../goldminer/game.css?v=700-20260829',
-    '../goldminer/game.js?v=perf-20260929'
+    '../goldminer/game.js?v=smooth-20260929'
   ]);
   for (const ref of refs) await access(new URL(ref, pageUrl));
 
