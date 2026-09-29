@@ -1,0 +1,9 @@
+# 黄金矿工：Sites 版多钩移植
+
+界面和矿石画法来自用户自有 Sites 项目“黄金矿工”，原始源提交 58684786bdf9879149a6d61efc14c9303da483bd。保留西部风格、商店、矿物重量及音效，将单钩改成每块矿物一个独立定向钩。
+
+入口为 games/goldminer.html；原 Sites 项目未修改。全部运行资源随本站发布，无外部脚本和登录依赖。
+
+构建：`npm ci && npm run build:goldminer`。提交 App.tsx、volley.js、style.css 及生成的 bundle.js / bundle.js.LEGAL.txt；线上静态部署使用生成文件。
+
+每次发射只生成当前矿物数的钩，矿物 ID 唯一对应，无重复认领；重量决定回收速度。回收完成且金币达标直接进入补给/下一关。最高分沿用浏览器 goldMinerBest，入账立即保存；刷新保留。背景无原先的大太阳圆圈。
