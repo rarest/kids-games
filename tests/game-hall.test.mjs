@@ -5,7 +5,7 @@ import vm from 'node:vm';
 
 test('game hall preserves existing games and appends merge 4096 as the seventh', async () => {
   const index = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-  assert.match(index,/<script src="games\.js\?v=20260830f"><\/script>/);
+  assert.match(index,/<script src="games\.js\?v=20260929sites"><\/script>/);
   const source = await readFile(new URL('../games.js', import.meta.url), 'utf8');
   const context = { window: {} }; vm.runInNewContext(source, context);
   assert.equal(context.window.GAMES.length, 7);
@@ -13,7 +13,7 @@ test('game hall preserves existing games and appends merge 4096 as the seventh',
     assert.ok(context.window.GAMES.some(game => game.file === file), file);
   }
   const goldMiner = context.window.GAMES.find(game => game.file === 'games/goldminer.html');
-  assert.match(goldMiner.desc, /700/);
+  assert.match(goldMiner.desc, /几块矿物就发几钩/);
   assert.ok(goldMiner.tags.includes('手机'));
   const maze = context.window.GAMES.find(game => game.file === 'games/maze.html');
   assert.equal(maze.name, '皇冠迷宫');
