@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   ITEM_TYPES,
+  createHookVolley,
   pullSpeedFor,
   levelTarget,
   createLevelItems,
@@ -93,4 +94,17 @@ test('an empty mine refreshes only after every hook returns while time remains',
   assert.equal(core.shouldRefreshMine?.({ itemCount: 0, hookCount: 4, time: 18 }) ?? false, false);
   assert.equal(core.shouldRefreshMine?.({ itemCount: 0, hookCount: 0, time: 0 }) ?? false, false);
   assert.equal(core.shouldRefreshMine?.({ itemCount: 1, hookCount: 0, time: 18 }) ?? false, false);
+});
+
+test('700 hooks keep stable, bounded empty-rope detail without dropping hooks', () => {
+  const hooks=createHookVolley({count:700});
+  assert.equal(hooks.length,700);
+  const visible=hooks.filter(h=>h.ropeVisible);
+  assert.ok(visible.length>1&&visible.length<=96);
+  assert.equal(hooks[0].ropeVisible,true);
+  assert.equal(hooks.at(-1).ropeVisible,true);
+  const survivor=hooks[8];
+  const before=survivor.ropeVisible;
+  hooks.splice(0,3);
+  assert.equal(survivor.ropeVisible,before);
 });

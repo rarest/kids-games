@@ -25,12 +25,15 @@ export function circlesOverlap(a, b, padding = 0) {
 
 export function createHookVolley({ count = 700, minAngle = -Math.PI / 3, maxAngle = Math.PI / 3 } = {}) {
   if (count <= 0) return [];
-  if (count === 1) return [{ angle: (minAngle + maxAngle) / 2, length: 78, mode: 'extend', caught: null }];
+  if (count === 1) return [{ angle: (minAngle + maxAngle) / 2, length: 78, mode: 'extend', caught: null, ropeVisible: true }];
   const step = (maxAngle - minAngle) / (count - 1);
+  // Stable visual sampling: physics and all hook heads still use the full volley.
+  const ropeStride = Math.max(1, Math.ceil((count - 1) / 95));
   return Array.from({ length: count }, (_, index) => ({
     angle: index === count - 1 ? maxAngle : minAngle + step * index,
     length: 78,
     mode: 'extend',
+    ropeVisible: index % ropeStride === 0 || index === count - 1,
     caught: null,
   }));
 }
