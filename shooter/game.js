@@ -1,7 +1,11 @@
-import {createGame,startWave,stepGame,resizeGame,chooseUpgrade,pulse} from './core.js';
+import {createGame,startWave,stepGame,resizeGame,drawUpgrade,continueWave,pulse,laser,TIERS,stageNumber,substageNumber,checkpoint,restoreCheckpoint} from './core.js?v=20261002b';
 const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d'),arena=$('arena');
 const input={x:0,y:0},keys=new Set();
-let g=createGame(390,600),last=0,stars=[],background,drag=null,best=0,previousMode='';
+let g=createGame(390,600),last=0,stars=[],background,drag=null,best=0,previousMode='',savedRun=null;
+try{savedRun=JSON.parse(localStorage.getItem('starPatrolRun'));if(!restoreCheckpoint(390,600,savedRun))savedRun=null}catch{}
+$('continueRun').hidden=!savedRun;
+if(savedRun)$('continueRun').textContent=`继续第 ${Math.ceil(savedRun.wave/100)} 大关 · 第 ${(savedRun.wave-1)%100+1} 小关`;
+function saveCheckpoint(){savedRun=checkpoint(g);try{localStorage.setItem('starPatrolRun',JSON.stringify(savedRun))}catch{}}
 try{best=Math.max(0,Number(localStorage.getItem('starPatrolBest'))||0)}catch{}
 function resize(){
   const width=arena.clientWidth,height=arena.clientHeight;if(!width||!height)return;
@@ -12,34 +16,53 @@ function resize(){
   stars=Array.from({length:90},(_,i)=>({x:(i*137.31)%width,y:(i*83.77)%height,r:i%3===0?1.5:.7}));
   drag=null;render();
 }
+function text(id,value){const element=$(id),next=String(value);if(element.textContent!==next)element.textContent=next}
 function sync(){
-  $('score').textContent=g.score;$('wave').textContent=Math.max(1,g.wave);$('shield').textContent='◆'.repeat(Math.max(0,g.shield));$('pulseCount').textContent=g.pulses;
+  text('score',g.score);text('wave',`${stageNumber(g)} · ${substageNumber(g)}`);text('health',g.hp);text('shield',g.shield);text('pulseCount',g.pulses);
+  text('remainingBoss',g.plan.slice(g.spawnIndex).filter(k=>k!=='drone').length+g.enemies.filter(e=>e.kind!=='drone').length);
+  text('laserCount',g.lasers);text('spreadCount',g.spread);text('powerCount',g.power);
+  $('laser').disabled=g.mode!=='playing'||g.lasers===0||g.beam?.ttl>0;
   if(g.score>best){best=g.score;try{localStorage.setItem('starPatrolBest',String(best))}catch{}}
-  $('best').textContent=best;$('pause').disabled=g.mode!=='playing';$('pulse').disabled=g.mode!=='playing'||g.pulses===0;
+  text('best',best);$('pause').disabled=g.mode!=='playing';$('pulse').disabled=g.mode!=='playing'||g.pulses===0;
   arena.dataset.playerX=g.player.x.toFixed(1);arena.dataset.playerY=g.player.y.toFixed(1);
   if(previousMode!==g.mode){
     previousMode=g.mode;document.body.dataset.mode=g.mode;
-    for(const mode of ['home','paused','upgrade','over'])$(mode).hidden=g.mode!==mode;
-    $('result').textContent=`到达第 ${g.wave} 关 · 积分 ${g.score} · 历史纪录 ${best}`;
-    $('waveLabel').textContent=g.wave%3===0?'大型机器人正在接近':'击退机器人，保护星际航线';
-    document.querySelector('[data-upgrade="spread"] small').textContent=g.spread>=3?'已达三道光束，选择其他升级':'增加一道光束，最多三道';
-    document.querySelector('[data-upgrade="spread"]').disabled=g.spread>=3;
+    for(const mode of ['home','paused','upgrade','over'])$(mode).hidden=g.mode!==mode&&!(mode==='over'&&g.mode==='won');
+    $('resultTitle').textContent=g.mode==='won'?'全部200大关通关！':'本次巡航结束';
+    $('restart').textContent=g.mode==='won'?'重新开始':'重试本小关';
+    $('result').textContent=`第 ${stageNumber(g)} 大关 · 第 ${substageNumber(g)} 小关 · 积分 ${g.score} · 纪录 ${best}`;
+    $('waveLabel').textContent=g.wave===101?'10只随机大Boss分批来袭 · 激光可穿透多个目标':'随机大Boss · 躲开紫色巨兽的绿色子弹';
+    if(g.mode==='upgrade'){
+      $('clearedLabel').textContent=`第 ${stageNumber(g)} 大关 · 第 ${substageNumber(g)} 小关完成`;
+      $('cardResult').textContent='';$('nextWave').hidden=true;
+      document.querySelectorAll('[data-draw]').forEach(b=>{b.disabled=false;b.classList.remove('revealed');b.querySelector('strong').textContent='✦'});
+    }
+    if(g.mode==='won'){savedRun=null;try{localStorage.removeItem('starPatrolRun')}catch{}}
     keys.clear();drag=null;
   }
 }
-function start(){g=createGame(arena.clientWidth,arena.clientHeight);startWave(g);last=0;previousMode='';sync()}
+function start(){g=createGame(arena.clientWidth,arena.clientHeight);startWave(g);saveCheckpoint();last=0;previousMode='';sync()}
+function continueRun(){const restored=restoreCheckpoint(arena.clientWidth,arena.clientHeight,savedRun);if(!restored){start();return}g=restored;last=0;previousMode='';sync()}
 function pauseGame(){if(g.mode==='playing'){g.mode='paused';sync()}}
 function resume(){if(g.mode==='paused'){g.mode='playing';last=0;sync()}}
-$('start').addEventListener('click',start);$('restart').addEventListener('click',start);
+$('start').addEventListener('click',start);$('restart').addEventListener('click',()=>g.mode==='won'?start():continueRun());$('continueRun').addEventListener('click',continueRun);
 $('pause').addEventListener('click',pauseGame);$('resume').addEventListener('click',resume);
 $('pulse').addEventListener('click',()=>{pulse(g);sync()});
-document.querySelectorAll('[data-upgrade]').forEach(b=>b.addEventListener('click',()=>{chooseUpgrade(g,b.dataset.upgrade);last=0;sync()}));
-const controls=new Set(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyW','KeyA','KeyS','KeyD','Space','KeyP','Escape']);
+$('laser').addEventListener('click',()=>{laser(g);sync()});
+$('nextWave').addEventListener('click',()=>{if(continueWave(g)){saveCheckpoint();last=0;sync()}});
+document.querySelectorAll('[data-draw]').forEach(b=>b.addEventListener('click',()=>{
+  const card=drawUpgrade(g);if(!card)return;
+  document.querySelectorAll('[data-draw]').forEach(c=>c.disabled=true);
+  b.classList.add('revealed');b.querySelector('strong').textContent=card.icon;
+  $('cardResult').textContent=`${card.title}：${card.description}`;$('nextWave').hidden=false;sync();
+}));
+const controls=new Set(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyW','KeyA','KeyS','KeyD','Space','KeyL','KeyP','Escape']);
 addEventListener('keydown',e=>{
   if(!controls.has(e.code))return;
   if(e.target.closest('button,a')&&e.code==='Space')return;
-  e.preventDefault();if(e.repeat&&['Space','KeyP','Escape'].includes(e.code))return;
+  e.preventDefault();if(e.repeat&&['Space','KeyL','KeyP','Escape'].includes(e.code))return;
   if(e.code==='Space'){pulse(g);sync()}
+  else if(e.code==='KeyL'){laser(g);sync()}
   else if(['KeyP','Escape'].includes(e.code)){g.mode==='paused'?resume():pauseGame()}
   else keys.add(e.code);
 });
@@ -60,13 +83,16 @@ function render(){
   ctx.fillStyle='#b9e0f4';for(const s of stars){ctx.globalAlpha=s.r===1.5?.6:.28;ctx.fillRect(s.x,(s.y+g.time*12)%g.height,s.r,s.r)}ctx.globalAlpha=1;
   // Short grid lines provide motion depth without high-cost blur or shadows.
   ctx.strokeStyle='#173348';ctx.lineWidth=1;for(let i=1;i<7;i++){ctx.beginPath();ctx.moveTo(g.width/2,0);ctx.lineTo(i*g.width/6,g.height);ctx.stroke()}
-  for(const b of g.bullets){ctx.fillStyle='#72efd9';ctx.fillRect(b.x-2,b.y-10,4,16)}
-  for(const b of g.enemyBullets){ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fillStyle='#ff9a7d';ctx.fill()}
+  ctx.fillStyle='#72efd9';for(const b of g.bullets)ctx.fillRect(b.x-1.5,b.y-8,3,12);
+  if(g.beam?.ttl>0){ctx.globalAlpha=g.beam.ttl/.22;ctx.fillStyle='#8ae8ff';ctx.fillRect(g.beam.x-22,0,44,g.beam.y);ctx.fillStyle='#f0ffff';ctx.fillRect(g.beam.x-5,0,10,g.beam.y);ctx.globalAlpha=1;}
+  for(const b of g.enemyBullets){ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fillStyle=b.color||'#ff9a7d';ctx.fill()}
   for(const e of g.enemies){
-    ctx.save();ctx.translate(e.x,e.y);ctx.fillStyle=e.kind==='boss'?'#e8a569':'#678ec4';ctx.strokeStyle='#b9d5f6';ctx.lineWidth=2;
+    ctx.save();ctx.translate(e.x,e.y);ctx.fillStyle=(TIERS[e.kind]||TIERS.drone).color;ctx.strokeStyle='#b9d5f6';ctx.lineWidth=2;
     ctx.beginPath();ctx.roundRect(-e.r,-e.r*.65,e.r*2,e.r*1.3,6);ctx.fill();ctx.stroke();
     ctx.fillStyle='#142c45';ctx.fillRect(-e.r*.6,-4,e.r*1.2,8);ctx.fillStyle='#ff9a7d';ctx.fillRect(-e.r*.4,-2,5,4);ctx.fillRect(e.r*.4-5,-2,5,4);
-    ctx.strokeStyle='#93b9db';ctx.beginPath();ctx.moveTo(-e.r,0);ctx.lineTo(-e.r-8,8);ctx.moveTo(e.r,0);ctx.lineTo(e.r+8,8);ctx.stroke();ctx.restore();
+    ctx.strokeStyle='#93b9db';ctx.beginPath();ctx.moveTo(-e.r,0);ctx.lineTo(-e.r-8,8);ctx.moveTo(e.r,0);ctx.lineTo(e.r+8,8);ctx.stroke();
+    if(e.kind!=='drone'){ctx.fillStyle='#15283b';ctx.fillRect(-e.r,-e.r-12,e.r*2,4);ctx.fillStyle='#7df28b';ctx.fillRect(-e.r,-e.r-12,e.r*2*Math.max(0,e.hp/e.maxHp),4);}
+    ctx.restore();
   }
   for(const e of g.effects){ctx.globalAlpha=e.ttl/.4;ctx.strokeStyle='#72efd9';ctx.lineWidth=3;ctx.beginPath();ctx.arc(e.x,e.y,e.r+(1-e.ttl/.4)*30,0,Math.PI*2);ctx.stroke()}ctx.globalAlpha=1;
   const p=g.player;ctx.save();ctx.translate(p.x,p.y);
