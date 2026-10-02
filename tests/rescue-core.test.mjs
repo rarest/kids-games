@@ -95,6 +95,30 @@ test('flower conversion, stars extra life and Zipper protection use actual picku
  run(s,{},.05);assert.equal(s.flowers,50);assert.equal(s.stars,10);assert.equal(s.players[0].lives,4);assert.ok(s.players[0].zipper>0);
  s.hazards.push({id:'h',kind:'electric',x:1,y:1,w:3,h:1});run(s,{},.2);assert.equal(s.players[0].hearts,3);
 });
+for(const kind of ['star','flower'])for(const injured of [false,true])test(`${kind} extra-life reward revives a fallen teammate and preserves ${injured?'injured':'healthy'} living player`,()=>{
+ const s=createGame(fixture({width:20,height:8,spawn:{x:3,y:1},platforms:[{id:'safe-floor',x:0,y:1,w:8,h:1}],checkpoints:[{x:4,y:1}],exit:{x:100,y:100},
+  // One initial electric contact injures P1 naturally, then stays off throughout.
+  hazards:injured?[{id:'initial-shock',kind:'electric',x:3,y:1,w:.3,h:.8,period:100,activeFor:.01}]:[],
+  pickups:Array.from({length:kind==='star'?10:500},(_,i)=>({id:`reward-${i}`,kind,x:injured?.75:1.5,y:1}))
+ }),{players:2});
+ const [p1,p2]=s.players;
+ for(let f=0;f<900&&p2.lives>0;f++)stepGame(s,[{},{move:1}],1/60);
+ assert.equal(s.status,'playing');assert.equal(p2.lives,0);assert.equal(p2.hearts,0);assert.ok(p2.y< -4);
+ assert.equal(s.events.filter(e=>e.type==='lifeLost'&&e.player==='p2').length,3);
+ assert.deepEqual(s.checkpoint,{x:4,y:1});assert.equal(s.stars,0);assert.equal(s.flowers,0);
+ assert.equal(p1.hearts,injured?2:3);assert.equal(p1.lives,3);
+ for(let f=0;f<180&&s.stars<10;f++)stepGame(s,[{move:-1},{}],1/60);
+ assert.equal(s.stars,10);assert.equal(s.flowers,kind==='flower'?500:0);
+ assert.equal(p2.lives,1);assert.equal(p2.hearts,3);assert.equal(p2.x,4);assert.equal(p2.y,1);
+ assert.equal(p2.vx,0);assert.equal(p2.vy,0);assert.equal(p2.carrying,null);assert.equal(p2.heldBy,null);
+ assert.equal(p2.hidden,false);assert.equal(p2.stun,0);assert.equal(p2.dropTimer,0);assert.equal(p2.throwTimer,0);assert.ok(p2.invulnerable>1&&p2.invulnerable<=2);
+ assert.equal(p1.lives,4);assert.equal(p1.hearts,injured?2:3);assert.ok(p1.x<2.2);assert.equal(p1.vx,-7.2);
+ run(s,[{},{}],.3);assert.equal(p2.lives,1);assert.equal(p2.hearts,3);assert.equal(p2.y,1);
+ const positions=s.players.map(p=>p.x);
+ stepGame(s,[{move:1},{move:1,jump:true}],1/60);run(s,[{move:1},{move:1}],.25);
+ assert.ok(p1.x>positions[0]);assert.ok(p2.x>positions[1]);assert.ok(p2.y>1);assert.equal(p2.lives,1);
+ run(s,[{},{}],.8);assert.equal(p2.lives,1);assert.equal(p2.hearts,3);assert.equal(p2.y,1);assert.equal(p2.grounded,true);assert.equal(p1.hearts,injured?2:3);
+});
 test('pause stops physics; snapshots are independent copies; dt is capped',()=>{
  const s=createGame(fixture());setPaused(s,true);run(s,{move:1});assert.equal(s.time,0);setPaused(s,false);stepGame(s,[{move:1}],10);assert.ok(s.time<=1/30+.0001);
  const copy=snapshot(s);copy.players[0].hearts=0;assert.equal(s.players[0].hearts,3);

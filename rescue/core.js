@@ -77,10 +77,19 @@ function damage(s,p,source,fall=false){
   if(s.players.every(p=>p.lives<=0))s.status='gameover';
  }
 }
+function awardStar(s,converted=false){
+ s.stars++;if(converted)event(s,'star',{converted:true});
+ if(s.stars%10!==0)return;
+ for(const q of s.players){
+  const wasDead=q.lives<=0;q.lives++;
+  if(wasDead)Object.assign(q,player(q.id,q.character,s.checkpoint),{lives:q.lives,invulnerable:2});
+ }
+ event(s,'extraLife');
+}
 function collect(s,p,item){
  item.collected=true;const kind=item.kind;
- if(kind==='flower'){s.flowers++;s.score+=100;if(s.flowers%50===0){s.stars++;event(s,'star',{converted:true});if(s.stars%10===0){for(const q of s.players)q.lives++;event(s,'extraLife');}}}
- else if(kind==='star'){s.stars++;s.score+=500;if(s.stars%10===0){for(const q of s.players)q.lives++;event(s,'extraLife');}}
+ if(kind==='flower'){s.flowers++;s.score+=100;if(s.flowers%50===0)awardStar(s,true);}
+ else if(kind==='star'){s.score+=500;awardStar(s);}
  else if(kind==='acorn')p.hearts=Math.min(3,p.hearts+1);
  else if(kind==='zipper')for(const q of s.players)q.zipper=10;
  if(s.bonus)s.bonus.collected++;event(s,'collect',{kind,player:p.id});
