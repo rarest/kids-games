@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { createVolley, advanceVolley } from "./volley.js";
+import {createEconomy,bankMinerals,purchase,winchPrice,mineTheme,applyMineTheme,selectBlastTarget,DYNAMITE_PRICE} from "./progression.js";
 
 type Phase = "ready" | "playing" | "store" | "gameover";
 type HookMode = "swing" | "extend" | "retract" | "done";
@@ -33,7 +34,6 @@ const ANCHOR_X = 450;
 const ANCHOR_Y = 72;
 const MIN_LENGTH = 54;
 const MAX_LENGTH = 610;
-const DYNAMITE_PRICE = 150;
 
 const palette = {
   gold: "#f8bd24",
@@ -56,7 +56,7 @@ function makeMinerals(level: number): Mineral[] {
     "gold", "rock", "gold", "bone", "gold",
   ];
 
-  return positions.slice(0, Math.min(positions.length, 11 + level)).map(([x, y], index) => {
+  return applyMineTheme(positions.slice(0, Math.min(positions.length, 11 + level)).map(([x, y], index) => {
     const kind = pattern[(index + level - 1) % pattern.length];
     const sizeSeed = (index * 7 + level * 3) % 3;
     const data = {
@@ -92,7 +92,7 @@ function makeMinerals(level: number): Mineral[] {
       weight: data.weight,
       rotation: ((index * 31) % 90) * (Math.PI / 180),
     };
-  });
+  }),level);
 }
 
 function roundRect(
@@ -325,6 +325,9 @@ export default function Home() {
   const phaseRef = useRef<Phase>("ready");
   const dynamiteRef = useRef(0);
   const scoreRef = useRef(0);
+  const economyRef=useRef(createEconomy());
+  const [wallet,setWallet]=useState(5000);
+  const [winch,setWinch]=useState(0);
   const timeRef = useRef(45);
   const flashRef = useRef(0);
   const lastTimeRef = useRef(0);
@@ -389,7 +392,7 @@ export default function Home() {
   }, [ping]);
 
   const useDynamite = useCallback(() => {
-    const hook = volleyRef.current.find(h=>h.mode==="retract"&&h.grabbedId!==null);
+    const hook = selectBlastTarget(volleyRef.current,mineralsRef.current);
     if (!hook)return;
     if (
       phaseRef.current !== "playing" ||
@@ -425,7 +428,7 @@ export default function Home() {
     timeRef.current = Math.max(32, 45 - (nextLevel - 1) * 2);
     shownTimeRef.current=Math.ceil(timeRef.current);
     setTimeLeft(shownTimeRef.current);
-    setToast(`第 ${nextLevel} 关，淘金开始！`);
+    setToast(`第 ${nextLevel} 关 · ${mineTheme(nextLevel).name}：${mineTheme(nextLevel).hint}`);
     setCarrying(false);
     setClearedLevel(false);
     updatePhase("playing");
@@ -433,6 +436,7 @@ export default function Home() {
 
   const startGame = useCallback(() => {
     scoreRef.current = 0;
+    economyRef.current=createEconomy();setWallet(economyRef.current.wallet);setWinch(0);
     dynamiteRef.current = 0;
     setScore(0);
     setDynamite(0);
@@ -449,18 +453,23 @@ export default function Home() {
 
   const buyDynamite = useCallback(() => {
     if(dynamiteRef.current>=9)return;
-    if (scoreRef.current < DYNAMITE_PRICE) {
+    if (!purchase(economyRef.current,"dynamite")) {
       setToast("金币不够，再挖点好货！");
       ping(120);
       return;
     }
-    scoreRef.current -= DYNAMITE_PRICE;
+    setWallet(economyRef.current.wallet);
     dynamiteRef.current += 1;
-    setScore(scoreRef.current);
     setDynamite(dynamiteRef.current);
     setToast("炸药包已装进背包");
     ping(620, 0.12);
   }, [ping]);
+
+  const buyWinch=useCallback(()=>{
+    if(!purchase(economyRef.current,"winch"))return;
+    setWallet(economyRef.current.wallet);setWinch(economyRef.current.winch);
+    setToast("绞盘升级！回收速度增加25%");ping(740,.12);
+  },[ping]);
 
   const openStore = useCallback(() => {
     if (phaseRef.current !== "playing") return;
@@ -504,8 +513,8 @@ export default function Home() {
           hook.angle+=hook.direction*dt*1.28;
           if(Math.abs(hook.angle)>1.12){hook.angle=Math.sign(hook.angle)*1.12;hook.direction*=-1;}
         }else{
-          const result=advanceVolley(volleyRef.current,mineralsRef.current,dt);
-          if(result.value){scoreRef.current+=result.value;setScore(scoreRef.current);saveBest(scoreRef.current);setToast(`入账 ${result.value} 金币！`);ping(560,.08);}
+          const result=advanceVolley(volleyRef.current,mineralsRef.current,dt,1+economyRef.current.winch*.25);
+          if(result.value){bankMinerals(economyRef.current,result.value);setWallet(economyRef.current.wallet);scoreRef.current=economyRef.current.earned;setScore(scoreRef.current);saveBest(scoreRef.current);setToast(`入账 ${result.value} 金币！`);ping(560,.08);}
           const carrying=volleyRef.current.some(h=>h.mode==="retract"&&h.grabbedId!==null);
           if(carrying!==carryingRef.current){carryingRef.current=carrying;setCarrying(carrying);}
           if(volleyRef.current.every(h=>h.mode==="done")){
@@ -565,7 +574,7 @@ export default function Home() {
 
       <section className="status-grid" aria-label="游戏状态">
         <article className="stat-card">
-          <span>当前金币</span>
+          <span>累计收获</span>
           <strong id="score">{score.toLocaleString()}</strong>
           <small className="best-score">历史最高 <b id="best">{best.toLocaleString()}</b></small>
         </article>
@@ -606,7 +615,7 @@ export default function Home() {
                 <span className="poster-icon" aria-hidden="true">⛏</span>
                 <p className="eyebrow">THE GOLD RUSH BEGINS</p>
                 <h2>矿脉就在脚下</h2>
-                <p>有几块矿物，就发几个钩爪。每钩对应一块，凑够金币后前往下一关。</p>
+                <p>有几块矿物，就发几个钩爪。每钩对应一块。开局补给金5000，可买炸药和升级绞盘；累计收获决定过关。</p>
                 <button className="primary-button" onClick={startGame}>开始淘金</button>
                 <span className="key-hint">空格 / 点击 · 按矿物数量齐射</span>
               </div>
@@ -638,15 +647,20 @@ export default function Home() {
                   <div className="shop-copy">
                     <span>紧急脱钩利器</span>
                     <h3>炸药包</h3>
-                    <p>抓到沉重石块时按 D，立即炸掉并收回抓钩。</p>
+                    <p>按 D 优先炸掉最重的载货，腾出抓钩。</p>
                   </div>
-                  <button className="buy-button" onClick={buyDynamite} disabled={score < DYNAMITE_PRICE || dynamite >= 9}>
+                  <button className="buy-button" onClick={buyDynamite} disabled={wallet < DYNAMITE_PRICE || dynamite >= 9}>
                     <span>购买</span>
                     <strong>{DYNAMITE_PRICE} 金币</strong>
                   </button>
                 </article>
+                <article className="shop-item winch-shop">
+                  <div className="winch-art" aria-hidden="true">⚙</div>
+                  <div className="shop-copy"><span>持续装备升级</span><h3>强化绞盘</h3><p>每级回收速度增加25%，最多三级。本局持续生效。</p></div>
+                  <button className="buy-button" onClick={buyWinch} disabled={winch>=3 || wallet<winchPrice(economyRef.current)}><span>{winch>=3?"已满级":"升级绞盘"}</span><strong>{winch>=3?"回收速度 +75%":`${winchPrice(economyRef.current)} 金币`}</strong></button>
+                </article>
                 <div className="shop-footer">
-                  <span>背包已有 <strong>{dynamite}</strong> 个</span>
+                  <span>余额 <strong id="wallet">{wallet.toLocaleString()}</strong> · 炸药 {dynamite} 个</span>
                   {clearedLevel ? (
                     <button className="primary-button compact" onClick={nextLevel}>前往第 {level + 1} 关</button>
                   ) : (
@@ -660,6 +674,8 @@ export default function Home() {
 
         <aside className="side-panel">
           <div className="bag-card">
+            <p className="mine-theme"><strong>{mineTheme(level).name}</strong><small>{mineTheme(level).hint}</small></p>
+            <p className="wallet-status">补给金币 <b id="walletBalance">{wallet.toLocaleString()}</b> · 绞盘 <b id="winchLevel">{winch}/3</b></p>
             <div className="panel-heading">
               <span>背包</span>
               <strong>{dynamite}/9</strong>

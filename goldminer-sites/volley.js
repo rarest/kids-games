@@ -7,7 +7,7 @@ export function createVolley(minerals){
   return {angle:Math.atan2(dx,dy),direction:1,length:MIN_LENGTH,mode:'extend',grabbedId:item.id,distance:Math.max(MIN_LENGTH,distance),sin:dx/distance,cos:dy/distance};
  });
 }
-export function advanceVolley(hooks,minerals,dt){
+export function advanceVolley(hooks,minerals,dt,speedMultiplier=1){
  const byId=new Map(minerals.map(item=>[item.id,item]));
  const collected=[];
  for(const hook of hooks){
@@ -20,7 +20,7 @@ export function advanceVolley(hooks,minerals,dt){
    if(remaining<travel){hook.length+=remaining*450;continue;}
    hook.length=hook.distance;remaining-=travel;hook.mode='retract';
   }
-  const speed=item?340/item.weight:560;
+  const speed=(item?340/item.weight:560)*speedMultiplier;
   hook.length=Math.max(MIN_LENGTH,hook.length-remaining*speed);
   if(hook.length<=MIN_LENGTH){
    hook.mode='done';
