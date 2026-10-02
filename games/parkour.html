@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#d6e6de" />
+    <title>微光跑酷 · 一步一片风景</title>
+    <link rel="stylesheet" href="../parkour/style.css?v=20261002parkour1" />
+  </head>
+  <body>
+    <canvas
+      id="view"
+      aria-label="微光跑酷3D场景，可单击跳跃或拖动镜头"
+      tabindex="0"
+    ></canvas>
+    <header class="topbar">
+      <a class="brand" href="../index.html" aria-label="返回游戏厅"
+        ><span class="brand-symbol">✧</span
+        ><span>微光跑酷<small>GLOW PARKOUR</small></span></a
+      >
+      <div class="top-actions">
+        <span class="coin-pill">◈ <span id="coins">0</span></span
+        ><button id="mute" aria-label="静音" aria-pressed="false">♫</button
+        ><button id="help" aria-label="操作帮助">?</button>
+      </div>
+    </header>
+    <main>
+      <section id="home-panel" class="home-panel">
+        <span class="eyebrow">A SMALL LEAP, A LOVELY WORLD</span>
+        <h1>一步，<br />一片风景。</h1>
+        <p>在樱花与晨光之间，<br />跳向属于你的下一站。</p>
+        <div class="home-actions">
+          <button id="start" class="primary">开始旅程 <span>→</span></button>
+          <div class="secondary-actions">
+            <button id="shop">外观商店</button
+            ><button id="editor">自创路线</button>
+          </div>
+        </div>
+        <div class="home-meta">
+          4 片风景 <span>·</span> 12 段旅程 <span>·</span> 自由探索
+        </div>
+      </section>
+      <div id="home-tip" class="home-tip">
+        点一下，让小家伙跳起来 <span>↗</span>
+      </div>
+      <section id="hud" hidden>
+        <div class="level-pill">
+          <span id="level-name"></span><small id="run-info"></small>
+        </div>
+        <div class="play-actions">
+          <button id="reset-camera" aria-label="复位镜头">↺ 镜头</button
+          ><button id="pause" aria-label="暂停游戏">Ⅱ</button>
+        </div>
+        <p id="practice-note"></p>
+      </section>
+      <aside id="tutorial" hidden>
+        <span id="tutorial-text"></span
+        ><button id="skip-tutorial" aria-label="跳过当前教程提示">跳过</button>
+      </aside>
+      <div id="touch-controls" hidden>
+        <div id="joystick" role="group" aria-label="移动摇杆">
+          <span></span><i>移动</i>
+        </div>
+        <button id="jump" aria-label="跳跃">↑<small>跳跃</small></button>
+      </div>
+      <nav class="time-selector" aria-label="光照时段">
+        <span>此刻的光</span
+        ><button data-time="night" aria-label="夜晚">☾ <span>夜晚</span></button
+        ><button data-time="dawn" aria-label="黎明">◒ <span>黎明</span></button
+        ><button data-time="morning" aria-label="早晨">
+          ☀ <span>早晨</span>
+        </button>
+      </nav>
+      <div id="level-overlay" class="overlay" hidden>
+        <section
+          class="panel level-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="level-heading"
+        >
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">CHOOSE YOUR NEXT STEP</span>
+              <h2 id="level-heading">今天去哪儿？</h2>
+            </div>
+            <button id="home-return" aria-label="回到主页">✕</button>
+          </div>
+          <p>每一次出发，都有新的微光。沿途金币可在外观商店使用。</p>
+          <div id="levels" class="level-grid"></div>
+        </section>
+      </div>
+      <div id="shop-overlay" class="overlay" hidden>
+        <section
+          class="panel shop-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="shop-heading"
+        >
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">A LITTLE PERSONALITY</span>
+              <h2 id="shop-heading">穿上你的好心情</h2>
+            </div>
+            <button id="shop-close" aria-label="关闭商店">✕</button>
+          </div>
+          <div class="shop-tabs">
+            <button data-shop-tab="skins" aria-pressed="true">13 款皮肤</button
+            ><button data-shop-tab="outfits" aria-pressed="false">
+              20 套衣服
+            </button>
+          </div>
+          <p>
+            红色皮肤免费，其余皮肤与每套完整衣服均为 2
+            金币。已拥有的外观可免费换装。
+          </p>
+          <div id="skins" class="skin-grid"></div>
+          <div id="outfits" class="outfit-grid" hidden></div>
+          <button id="outfit-remove" class="subtle" hidden>
+            卸下衣服，保留皮肤
+          </button>
+        </section>
+      </div>
+      <div id="editor-overlay" class="overlay" hidden>
+        <section
+          id="editor-panel"
+          class="panel"
+          role="dialog"
+          aria-modal="true"
+          aria-label="自创关卡编辑器"
+          hidden
+        ></section>
+      </div>
+      <div id="pause-overlay" class="overlay" hidden>
+        <section
+          class="panel pause-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="pause-heading"
+        >
+          <span class="eyebrow" id="pause-caption">TAKE A BREATH</span>
+          <h2 id="pause-heading">风景在这里等你</h2>
+          <p id="pause-details">休息一下，随时继续。</p>
+          <button id="resume" class="primary">继续旅程 →</button
+          ><button id="next-level" hidden>下一关 →</button
+          ><button id="restart">重新出发</button
+          ><button id="quit">返回关卡选择</button
+          ><button id="pause-home" class="subtle">返回主页</button>
+        </section>
+      </div>
+      <div id="help-overlay" class="overlay" hidden>
+        <section
+          class="panel help-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="help-heading"
+        >
+          <div class="panel-heading">
+            <h2 id="help-heading">你的旅途指南</h2>
+            <button id="help-close" aria-label="关闭帮助">✕</button>
+          </div>
+          <ol>
+            <li><b>移动</b>：WASD 或方向键；触屏用左下摇杆。方向跟随镜头。</li>
+            <li><b>镜头</b>：拖动场景转视角，↺ 镜头恢复朝向首个落点。</li>
+            <li>
+              <b>跳跃</b>：空格、单击场景，或右下跳跃按钮。松开后可再次起跳。
+            </li>
+            <li>
+              <b>金币</b>：预设每枚每局领取一次，掉落不重领；重新出发可再领取。
+            </li>
+            <li><b>存档点</b>：踩上薄荷色旗帜圆台，掉落后回到这里。</li>
+            <li><b>终点</b>：走到发光门中，记录通关时间。</li>
+          </ol>
+          <p>自创金币只用于练习。余额、外观和最快记录保存在当前浏览器。</p>
+        </section>
+      </div>
+    </main>
+    <p id="status" role="status" aria-live="polite"></p>
+    <p id="storage-note" role="status" aria-live="polite"></p>
+    <div id="loading" role="status">正在把微光装进口袋…</div>
+    <script
+      type="module"
+      src="../parkour/bundle.js?v=20261002parkour1"
+    ></script>
+  </body>
+</html>
