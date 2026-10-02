@@ -1,6 +1,11 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { CARS, SKINS, roadAt, wrap } from "./core.js";
+import { makeLighting, lightingState } from "./lighting.js";
+import { buildFlora } from "./flora.js";
+import { makeTrails } from "./trails.js";
+import { makeHazards } from "./hazards.js";
+import { buildFantasy, buildHazardModels, checkpoint } from "./worlds.js";
 const TAU = Math.PI * 2;
 function rng(seed = 731) {
   return () => {
@@ -66,51 +71,6 @@ function concrete() {
       c.stroke();
     }
   });
-}
-function skyline() {
-  return texture(
-    (c, w, h) => {
-      const g = c.createLinearGradient(0, 0, 0, h);
-      g.addColorStop(0, "#254e76");
-      g.addColorStop(0.42, "#7caacb");
-      g.addColorStop(0.55, "#d5dace");
-      g.addColorStop(0.62, "#8c9b86");
-      g.addColorStop(1, "#435b3d");
-      c.fillStyle = g;
-      c.fillRect(0, 0, w, h);
-      const sun = c.createRadialGradient(
-        w * 0.68,
-        h * 0.32,
-        0,
-        w * 0.68,
-        h * 0.32,
-        58,
-      );
-      sun.addColorStop(0, "rgba(255,247,207,1)");
-      sun.addColorStop(0.07, "rgba(255,247,207,1)");
-      sun.addColorStop(0.15, "rgba(255,241,204,.25)");
-      sun.addColorStop(1, "rgba(255,241,204,0)");
-      c.fillStyle = sun;
-      c.fillRect(0, 0, w, h);
-      const r = rng();
-      for (let i = 0; i < 20; i++) {
-        c.fillStyle = "rgba(255,255,255,.08)";
-        c.beginPath();
-        c.ellipse(
-          r() * w,
-          h * (0.2 + r() * 0.22),
-          25 + r() * 60,
-          3 + r() * 7,
-          0,
-          0,
-          TAU,
-        );
-        c.fill();
-      }
-    },
-    1024,
-    512,
-  );
 }
 const boxGeo = new THREE.BoxGeometry(1, 1, 1);
 function box(g, mat, x, y, z, w, h, d, rot = 0) {
@@ -225,17 +185,19 @@ export function makeCar(model, skin, traffic = false) {
     hood = hyper ? 0.8 : rally ? 1.06 : 0.96;
   const body = new THREE.Mesh(
     loft([
-      [rear, 0.85, 0.45, hood - 0.12],
+      [rear, wide * 0.78, 0.42, hood - 0.16],
       [rear + 0.35, wide, 0.38, hood],
-      [-0.9, wide, 0.4, hood + 0.09],
-      [0.65, wide, 0.4, hood],
+      [-1.35, wide * 1.03, 0.36, hood + 0.12],
+      [-0.65, wide * 0.95, 0.34, hood + 0.04],
+      [0.65, wide * 0.94, 0.35, hood - 0.015],
+      [1.35, wide * 1.025, 0.36, hood - 0.035],
       [front - 0.4, wide * 0.96, 0.42, hood - 0.06],
-      [front, wide * 0.8, 0.49, hood - 0.2],
+      [front, wide * 0.68, 0.37, hood - 0.25],
     ]),
     paint,
   );
   parts.add(body);
-  const roof = hyper ? 1.26 : rally ? 1.65 : muscle ? 1.48 : 1.39;
+  const roof = hyper ? 1.22 : rally ? 1.59 : muscle ? 1.4 : 1.3;
   parts.add(
     new THREE.Mesh(
       loft([
@@ -278,10 +240,66 @@ export function makeCar(model, skin, traffic = false) {
       );
       foil.rotation.x = mark % 2 ? 0.32 : -0.32;
     }
-  box(parts, black, 0, 0.49, front - 0.025, wide * 1.38, 0.2, 0.08);
+  box(parts, black, 0, 0.48, front - 0.025, wide * 0.83, 0.19, 0.08);
+  for (const side of [-1, 1]) {
+    const intake = box(
+      parts,
+      black,
+      side * wide * 0.76,
+      0.51,
+      front - 0.13,
+      0.42,
+      0.24,
+      0.19,
+    );
+    intake.rotation.z = side * 0.19;
+    const led = box(
+      parts,
+      head,
+      side * wide * 0.72,
+      hood - 0.13,
+      front - 0.16,
+      0.54,
+      0.045,
+      0.06,
+    );
+    led.rotation.z = side * 0.17;
+    box(
+      parts,
+      head,
+      side * wide * 0.96,
+      hood - 0.2,
+      front - 0.22,
+      0.035,
+      0.18,
+      0.065,
+    );
+    const skirt = box(parts, black, side * wide, 0.31, 0.05, 0.14, 0.1, 3.0);
+    skirt.rotation.z = side * 0.15;
+    box(parts, pattern, side * (wide + 0.018), 0.365, 0.05, 0.03, 0.04, 2.1);
+    for (const z of [rear + 0.65, front - 0.73]) {
+      const arch = new THREE.Mesh(
+        new THREE.TorusGeometry(0.48, 0.065, 7, 22, Math.PI),
+        paint,
+      );
+      arch.rotation.y = Math.PI / 2;
+      arch.position.set(side * (wide + 0.025), 0.44, z);
+      parts.add(arch);
+    }
+    for (let fin = 0; fin < 3; fin++)
+      box(
+        parts,
+        black,
+        side * (0.3 + fin * 0.21),
+        0.3,
+        rear - 0.09,
+        0.055,
+        0.23,
+        0.55,
+      );
+  }
   box(parts, chrome, 0, 0.37, front - 0.08, wide * 1.9, 0.055, 0.24);
   for (const x of [-0.78, 0.78]) {
-    box(parts, head, x, hood - 0.17, front - 0.04, 0.43, 0.09, 0.08);
     box(parts, tail, x, hood - 0.13, rear - 0.012, 0.43, 0.12, 0.06);
     box(parts, black, x, hood + 0.02, 1.21, 0.18, 0.04, 0.52);
     box(parts, paint, x * 1.5, hood + 0.27, -0.07, 0.28, 0.16, 0.2);
@@ -297,7 +315,18 @@ export function makeCar(model, skin, traffic = false) {
   }
   box(parts, black, 0, 0.38, rear + 0.07, wide * 1.9, 0.14, 0.37);
   if (!traffic) {
-    box(parts, black, 0, roof - 0.04, rear + 0.35, wide * 2.06, 0.085, 0.37);
+    box(parts, black, 0, roof + 0.035, rear + 0.35, wide * 2.13, 0.065, 0.4);
+    for (const side of [-1, 1])
+      box(
+        parts,
+        pattern,
+        side * wide * 1.05,
+        roof + 0.085,
+        rear + 0.35,
+        0.045,
+        0.24,
+        0.42,
+      );
     for (const x of [-0.7, 0.7])
       box(parts, chrome, x, hood + 0.19, rear + 0.35, 0.05, 0.43, 0.12);
   }
@@ -453,14 +482,24 @@ export class RaceScene {
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2(0xb4c7c9, 0.00165);
     this.camera = new THREE.PerspectiveCamera(58, 1, 0.2, 2000);
-    const sky = skyline();
-    sky.mapping = THREE.EquirectangularReflectionMapping;
-    this.envTarget = new THREE.PMREMGenerator(
-      this.renderer,
-    ).fromEquirectangular(sky);
-    this.scene.environment = this.envTarget.texture;
-    this.scene.background = sky;
-    this.scene.add(new THREE.HemisphereLight(0xc4e1ff, 0x6c6743, 2.25));
+    this.hemi = new THREE.HemisphereLight(0xc4e1ff, 0x6c6743, 2.25);
+    this.scene.add(this.hemi);
+    this.neonLights = [
+      new THREE.PointLight(0x21eeff, 0, 32, 2),
+      new THREE.PointLight(0xf842ff, 0, 32, 2),
+    ];
+    this.scene.add(...this.neonLights);
+    this.burst = new THREE.Mesh(
+      new THREE.SphereGeometry(1, 16, 10),
+      new THREE.MeshBasicMaterial({
+        color: 0xff951d,
+        transparent: true,
+        opacity: 0.8,
+        depthWrite: false,
+      }),
+    );
+    this.burst.visible = false;
+    this.scene.add(this.burst);
     this.sun = new THREE.DirectionalLight(0xffe5b1, 3.4);
     this.sun.castShadow = true;
     this.sun.shadow.mapSize.set(
@@ -478,6 +517,18 @@ export class RaceScene {
     this.sun.shadow.bias = -0.0003;
     this.sun.shadow.normalBias = 0.09;
     this.scene.add(this.sun, this.sun.target);
+    this.lighting = makeLighting(
+      this.scene,
+      this.renderer,
+      this.sun,
+      this.hemi,
+    );
+    this.lightMode = "auto";
+    this.headlights = [-1, 1].map(() => {
+      const light = new THREE.SpotLight(0xd1e8ff, 0, 44, 0.34, 0.65, 2);
+      this.scene.add(light, light.target);
+      return light;
+    });
     this.world = new THREE.Group();
     this.scene.add(this.world);
     this.fleet = new THREE.Group();
@@ -522,10 +573,21 @@ export class RaceScene {
     this.quality = value;
     this.renderer.setPixelRatio(
       value === "low"
-        ? 0.75
+        ? this.software
+          ? 0.5
+          : 0.75
         : this.software
           ? 0.65
-          : Math.min(devicePixelRatio || 1, this.mobile ? 1.25 : 1.6),
+          : Math.min(
+              devicePixelRatio || 1,
+              value === "high"
+                ? this.mobile
+                  ? 1.7
+                  : 2
+                : this.mobile
+                  ? 1.25
+                  : 1.6,
+            ),
     );
     this.sun.shadow.mapSize.set(
       value === "low" ? 512 : this.mobile ? 1024 : 2048,
@@ -557,8 +619,8 @@ export class RaceScene {
     const geos = new Set(),
       mats = new Set();
     group.traverse((o) => {
-      if (o.isMesh) {
-        geos.add(o.geometry);
+      if (o.isMesh || o.isSprite) {
+        if (o.isMesh) geos.add(o.geometry);
         for (const m of Array.isArray(o.material) ? o.material : [o.material])
           mats.add(m);
         o.dispose?.();
@@ -566,7 +628,8 @@ export class RaceScene {
     });
     for (const g of geos) if (g !== boxGeo) g.dispose();
     for (const m of mats) {
-      if (m.map && !this.sharedTextures.has(m.map)) m.map.dispose();
+      for (const key of ["map", "alphaMap", "emissiveMap"])
+        if (m[key] && !this.sharedTextures.has(m[key])) m[key].dispose();
       m.dispose();
     }
     group.clear();
@@ -574,313 +637,360 @@ export class RaceScene {
   build(track) {
     this.clear(this.world);
     this.track = track;
-    const asphaltMat = new THREE.MeshStandardMaterial({
-      map: this.roadTexture,
-      roughness: 0.96,
-      side: THREE.DoubleSide,
-    });
-    const grassMat = new THREE.MeshStandardMaterial({
-      map: this.grassTexture,
-      color: 0xa3b78c,
-      roughness: 1,
-      side: THREE.DoubleSide,
-    });
-    this.world.add(
-      ribbon(track, -9, 9, true, asphaltMat, 1, 0.03),
-      ribbon(track, 9, 30, true, grassMat, 1),
-      ribbon(track, 9, 30, true, grassMat, -1),
-      terrain(track, grassMat),
-    );
-    const gray = new THREE.MeshStandardMaterial({
-        color: 0x848b8b,
-        roughness: 0.88,
-        map: this.wallTexture,
-      }),
-      rust = new THREE.MeshStandardMaterial({
-        color: 0x704534,
-        roughness: 0.9,
-      }),
-      windows = new THREE.MeshStandardMaterial({
-        color: 0x607f8b,
-        metalness: 0.5,
-        roughness: 0.27,
-      }),
-      dark = new THREE.MeshStandardMaterial({
-        color: 0x2a3439,
-        roughness: 0.65,
+    this.fantasy = null;
+    if (!track.spec.theme) {
+      const asphaltMat = new THREE.MeshStandardMaterial({
+        map: this.roadTexture,
+        roughness: 0.96,
+        side: THREE.DoubleSide,
       });
-    const boxes = [],
-      rustBoxes = [],
-      glassBoxes = [],
-      cracks = [],
-      rails = [],
-      white = [],
-      red = [],
-      treeTrunks = [],
-      treeCrowns = [],
-      broadCrowns = [],
-      lamps = [],
-      lampHeads = [],
-      blades = [],
-      hills = [];
-    const r = rng(45 + track.spec.phase),
-      length = track.length;
-    const at = (s, offset, y = 0) => {
-      const p = roadAt(track, s);
-      return {
-        x: p.x + p.nx * offset,
-        y: p.y + y - Math.max(0, Math.abs(offset) - 9) * 0.075,
-        z: p.z + p.nz * offset,
-        rot: p.theta,
-      };
-    };
-    for (let s = 0; s < length; s += 9) {
-      const p = roadAt(track, s);
-      for (const side of [-1, 1]) {
-        if (p.biome === 1 || p.biome === 4) {
-          const a = at(s, side * 10, 1.1);
-          rails.push({ ...a, w: 0.17, h: 0.4, d: 9.2 });
-          rails.push({ ...at(s, side * 10, 0.48), w: 0.16, h: 1.05, d: 0.15 });
-        }
-        (Math.floor(s / 9) % 2 ? red : white).push({
-          ...at(s, side * 9.15, 0.12),
-          w: 0.45,
-          h: 0.17,
-          d: 9.1,
+      const grassMat = new THREE.MeshStandardMaterial({
+        map: this.grassTexture,
+        color: 0xa3b78c,
+        roughness: 1,
+        side: THREE.DoubleSide,
+      });
+      this.world.add(
+        ribbon(track, -9, 9, true, asphaltMat, 1, 0.03),
+        ribbon(track, 9, 30, true, grassMat, 1),
+        ribbon(track, 9, 30, true, grassMat, -1),
+        terrain(track, grassMat),
+      );
+      const gray = new THREE.MeshStandardMaterial({
+          color: 0x848b8b,
+          roughness: 0.88,
+          map: this.wallTexture,
+        }),
+        rust = new THREE.MeshStandardMaterial({
+          color: 0x704534,
+          roughness: 0.9,
+        }),
+        windows = new THREE.MeshStandardMaterial({
+          color: 0x607f8b,
+          metalness: 0.5,
+          roughness: 0.27,
+        }),
+        dark = new THREE.MeshStandardMaterial({
+          color: 0x2a3439,
+          roughness: 0.65,
         });
-        if (Math.floor(s / 9) % 3 === 0) {
-          const a = at(s, side * (15 + r() * 14));
-          treeTrunks.push({ ...a, y: a.y + 2, w: 0.35, h: 4, d: 0.35 });
-          if (p.biome === 1 || p.biome === 3)
-            treeCrowns.push({
-              ...a,
-              y: a.y + 5,
-              w: 2.3 + r() * 1.5,
-              h: 6 + r() * 2,
-              d: 2.3 + r() * 1.5,
+      const boxes = [],
+        rustBoxes = [],
+        glassBoxes = [],
+        cracks = [],
+        rails = [],
+        white = [],
+        red = [],
+        treeTrunks = [],
+        treeCrowns = [],
+        broadCrowns = [],
+        lamps = [],
+        lampHeads = [],
+        blades = [],
+        hills = [];
+      const r = rng(45 + track.spec.phase),
+        length = track.length;
+      const at = (s, offset, y = 0) => {
+        const p = roadAt(track, s);
+        return {
+          x: p.x + p.nx * offset,
+          y: p.y + y - Math.max(0, Math.abs(offset) - 9) * 0.075,
+          z: p.z + p.nz * offset,
+          rot: p.theta,
+        };
+      };
+      for (let s = 0; s < length; s += 9) {
+        const p = roadAt(track, s);
+        for (const side of [-1, 1]) {
+          if (p.biome === 1 || p.biome === 4) {
+            const a = at(s, side * 10, 1.1);
+            rails.push({ ...a, w: 0.17, h: 0.4, d: 9.2 });
+            rails.push({
+              ...at(s, side * 10, 0.48),
+              w: 0.16,
+              h: 1.05,
+              d: 0.15,
             });
-          else
-            for (let leaf = 0; leaf < 3; leaf++)
-              broadCrowns.push({
+          }
+          (Math.floor(s / 9) % 2 ? red : white).push({
+            ...at(s, side * 9.15, 0.12),
+            w: 0.45,
+            h: 0.17,
+            d: 9.1,
+          });
+          if (Math.floor(s / 9) % 3 === 0) {
+            const a = at(s, side * (15 + r() * 14));
+            treeTrunks.push({ ...a, y: a.y + 2, w: 0.35, h: 4, d: 0.35 });
+            if (p.biome === 1 || p.biome === 3)
+              treeCrowns.push({
                 ...a,
-                x: a.x + (r() - 0.5) * 2.3,
-                z: a.z + (r() - 0.5) * 2.3,
-                y: a.y + 4.7 + r() * 1.1,
-                w: 2 + r(),
-                h: 1.7 + r(),
-                d: 2 + r(),
+                y: a.y + 5,
+                w: 2.3 + r() * 1.5,
+                h: 6 + r() * 2,
+                d: 2.3 + r() * 1.5,
               });
+            else
+              for (let leaf = 0; leaf < 3; leaf++)
+                broadCrowns.push({
+                  ...a,
+                  x: a.x + (r() - 0.5) * 2.3,
+                  z: a.z + (r() - 0.5) * 2.3,
+                  y: a.y + 4.7 + r() * 1.1,
+                  w: 2 + r(),
+                  h: 1.7 + r(),
+                  d: 2 + r(),
+                });
+          }
         }
       }
-    }
-    for (let s = 0; s < length; s += 27) {
-      const p = roadAt(track, s),
-        side = r() > 0.5 ? 1 : -1;
-      if (p.biome === 2) {
-        const a = at(s, side * (27 + r() * 22)),
-          h = 7 + r() * 13,
-          w = 12 + r() * 12,
-          d = 10 + r() * 15;
-        boxes.push({ ...a, y: a.y + h / 2, w, h, d });
-        rustBoxes.push({ ...a, y: a.y + h + 0.4, w: w + 1, h: 0.8, d: d + 1 });
-        boxes.push({ ...a, y: a.y + h + 1.3, w: 3.8, h: 1.6, d: 2.3 });
-        for (let pipe = 0; pipe < 3; pipe++)
+      for (let s = 0; s < length; s += 27) {
+        const p = roadAt(track, s),
+          side = r() > 0.5 ? 1 : -1;
+        if (p.biome === 2) {
+          const a = at(s, side * (27 + r() * 22)),
+            h = 7 + r() * 13,
+            w = 12 + r() * 12,
+            d = 10 + r() * 15;
+          boxes.push({ ...a, y: a.y + h / 2, w, h, d });
           rustBoxes.push({
             ...a,
-            y: a.y + 1.7 + pipe * 0.8,
-            w: w + 1.3,
-            h: 0.18,
-            d: 0.23,
+            y: a.y + h + 0.4,
+            w: w + 1,
+            h: 0.8,
+            d: d + 1,
           });
-        for (let row = 0; row < 3; row++)
+          boxes.push({ ...a, y: a.y + h + 1.3, w: 3.8, h: 1.6, d: 2.3 });
+          for (let pipe = 0; pipe < 3; pipe++)
+            rustBoxes.push({
+              ...a,
+              y: a.y + 1.7 + pipe * 0.8,
+              w: w + 1.3,
+              h: 0.18,
+              d: 0.23,
+            });
+          for (let row = 0; row < 3; row++)
+            glassBoxes.push({
+              ...a,
+              y: a.y + 2 + row * 2.1,
+              x: a.x + Math.cos(a.rot) * (w / 2 + 0.03),
+              z: a.z - Math.sin(a.rot) * (w / 2 + 0.03),
+              w: 0.06,
+              h: 1.2,
+              d: d * 0.68,
+            });
+          const chimney = at(s + 8, side * 44);
+          rustBoxes.push({
+            ...chimney,
+            y: chimney.y + 17,
+            w: 3.5,
+            h: 34,
+            d: 3.5,
+          });
+        }
+        if (p.biome === 3) {
+          for (let i = 0; i < 6; i++) {
+            const a = at(s + i * 2, (r() - 0.5) * 14, 0.065);
+            cracks.push({
+              ...a,
+              w: 0.045,
+              h: 0.016,
+              d: 1.5 + r() * 2,
+              rot: a.rot + (r() - 0.5) * 1.7,
+            });
+          }
+          const a = at(s, side * (22 + r() * 10));
+          boxes.push({ ...a, y: a.y + 1.5, w: 9, h: 3, d: 2.2 });
+          rustBoxes.push({
+            ...at(s + 9, side * 12, 1.6),
+            w: 0.15,
+            h: 3.4,
+            d: 0.15,
+          });
+        }
+        if (p.biome === 4) {
+          const a = at(s, side * (39 + r() * 35)),
+            h = 18 + r() * 40,
+            w = 10 + r() * 15,
+            d = 10 + r() * 12;
+          boxes.push({ ...a, y: a.y + h / 2, w, h, d });
           glassBoxes.push({
             ...a,
-            y: a.y + 2 + row * 2.1,
-            x: a.x + Math.cos(a.rot) * (w / 2 + 0.03),
-            z: a.z - Math.sin(a.rot) * (w / 2 + 0.03),
-            w: 0.06,
-            h: 1.2,
-            d: d * 0.68,
+            y: a.y + h * 0.55,
+            w: w + 0.04,
+            h: h * 0.76,
+            d: d + 0.04,
           });
-        const chimney = at(s + 8, side * 44);
-        rustBoxes.push({
-          ...chimney,
-          y: chimney.y + 17,
-          w: 3.5,
-          h: 34,
-          d: 3.5,
-        });
-      }
-      if (p.biome === 3) {
-        for (let i = 0; i < 6; i++) {
-          const a = at(s + i * 2, (r() - 0.5) * 14, 0.065);
-          cracks.push({
-            ...a,
-            w: 0.045,
-            h: 0.016,
-            d: 1.5 + r() * 2,
-            rot: a.rot + (r() - 0.5) * 1.7,
-          });
+          for (let row = 0; row < 5; row++)
+            boxes.push({
+              ...a,
+              y: a.y + (row * h) / 5,
+              w: w + 0.15,
+              h: 0.3,
+              d: d + 0.15,
+            });
+          for (const sign of [-1, 1]) {
+            const l = at(s, sign * 12);
+            lamps.push({ ...l, y: l.y + 5, w: 0.13, h: 10, d: 0.13 });
+            lamps.push({
+              ...l,
+              y: l.y + 9.8,
+              x: l.x - p.nx * sign * 1.4,
+              z: l.z - p.nz * sign * 1.4,
+              w: 3,
+              h: 0.12,
+              d: 0.12,
+            });
+            lampHeads.push({
+              ...l,
+              y: l.y + 9.72,
+              x: l.x - p.nx * sign * 2.5,
+              z: l.z - p.nz * sign * 2.5,
+              w: 1.4,
+              h: 0.11,
+              d: 0.4,
+            });
+          }
         }
-        const a = at(s, side * (22 + r() * 10));
-        boxes.push({ ...a, y: a.y + 1.5, w: 9, h: 3, d: 2.2 });
-        rustBoxes.push({
-          ...at(s + 9, side * 12, 1.6),
-          w: 0.15,
-          h: 3.4,
-          d: 0.15,
-        });
+        if (p.biome === 0 || p.biome === 1) {
+          const w = 50 + r() * 65,
+            h = 65 + r() * 100,
+            d = 50 + r() * 60,
+            a = at(s, side * (Math.max(w, d) + 70 + r() * 50));
+          hills.push({ ...a, y: a.y - h * 0.7, w, h, d });
+        }
       }
-      if (p.biome === 4) {
-        const a = at(s, side * (39 + r() * 35)),
-          h = 18 + r() * 40,
-          w = 10 + r() * 15,
-          d = 10 + r() * 12;
-        boxes.push({ ...a, y: a.y + h / 2, w, h, d });
-        glassBoxes.push({
+      // Thousands of small grass tufts share a single instanced draw, kept outside the tarmac.
+      for (let i = 0; i < (this.mobile ? 1700 : 3200); i++) {
+        const s = r() * length,
+          offset = (r() > 0.5 ? 1 : -1) * (10 + r() * 34),
+          a = at(s, offset);
+        blades.push({
           ...a,
-          y: a.y + h * 0.55,
-          w: w + 0.04,
-          h: h * 0.76,
-          d: d + 0.04,
+          y: a.y + 0.23,
+          w: 0.3 + r() * 0.6,
+          h: 0.4 + r() * 0.5,
+          d: 0.4,
+          rot: r() * TAU,
         });
-        for (let row = 0; row < 5; row++)
-          boxes.push({
-            ...a,
-            y: a.y + (row * h) / 5,
-            w: w + 0.15,
-            h: 0.3,
-            d: d + 0.15,
-          });
-        for (const sign of [-1, 1]) {
-          const l = at(s, sign * 12);
-          lamps.push({ ...l, y: l.y + 5, w: 0.13, h: 10, d: 0.13 });
-          lamps.push({
-            ...l,
-            y: l.y + 9.8,
-            x: l.x - p.nx * sign * 1.4,
-            z: l.z - p.nz * sign * 1.4,
-            w: 3,
-            h: 0.12,
-            d: 0.12,
-          });
-          lampHeads.push({
-            ...l,
-            y: l.y + 9.72,
-            x: l.x - p.nx * sign * 2.5,
-            z: l.z - p.nz * sign * 2.5,
-            w: 1.4,
-            h: 0.11,
-            d: 0.4,
-          });
-        }
       }
-      if (p.biome === 0 || p.biome === 1) {
-        const w = 50 + r() * 65,
-          h = 65 + r() * 100,
-          d = 50 + r() * 60,
-          a = at(s, side * (Math.max(w, d) + 70 + r() * 50));
-        hills.push({ ...a, y: a.y - h * 0.7, w, h, d });
+      makeBatch(
+        this.world,
+        boxGeo,
+        new THREE.MeshStandardMaterial({ color: 0x171d1b, roughness: 1 }),
+        cracks,
+        false,
+      );
+      makeBatch(this.world, boxGeo, gray, boxes);
+      makeBatch(this.world, boxGeo, rust, rustBoxes);
+      makeBatch(this.world, boxGeo, windows, glassBoxes);
+      makeBatch(
+        this.world,
+        boxGeo,
+        new THREE.MeshStandardMaterial({
+          color: 0xc4cbcb,
+          metalness: 0.72,
+          roughness: 0.4,
+        }),
+        rails,
+      );
+      makeBatch(
+        this.world,
+        boxGeo,
+        new THREE.MeshStandardMaterial({ color: 0xcfcdbd, roughness: 0.9 }),
+        white,
+        false,
+      );
+      makeBatch(
+        this.world,
+        boxGeo,
+        new THREE.MeshStandardMaterial({ color: 0x7f3029, roughness: 0.9 }),
+        red,
+        false,
+      );
+      makeBatch(
+        this.world,
+        boxGeo,
+        new THREE.MeshStandardMaterial({ color: 0x615039, roughness: 1 }),
+        treeTrunks,
+      );
+      makeBatch(
+        this.world,
+        new THREE.ConeGeometry(1, 1, 9),
+        new THREE.MeshStandardMaterial({ color: 0x3e6249, roughness: 1 }),
+        treeCrowns,
+      );
+      makeBatch(
+        this.world,
+        new THREE.SphereGeometry(1, 10, 7),
+        new THREE.MeshStandardMaterial({ color: 0x486d46, roughness: 1 }),
+        broadCrowns,
+      );
+      makeBatch(this.world, boxGeo, dark, lamps);
+      makeBatch(
+        this.world,
+        boxGeo,
+        new THREE.MeshStandardMaterial({
+          color: 0xe2d5a9,
+          emissive: 0x62553c,
+          roughness: 0.5,
+        }),
+        lampHeads,
+        false,
+      );
+      makeBatch(
+        this.world,
+        new THREE.ConeGeometry(0.25, 1, 3),
+        new THREE.MeshStandardMaterial({ color: 0x82935b, roughness: 1 }),
+        blades,
+        false,
+      );
+      const hillGeo = new THREE.SphereGeometry(1, 18, 10),
+        pos = hillGeo.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const mult = 0.9 + r() * 0.2;
+        pos.setXYZ(
+          i,
+          pos.getX(i) * mult,
+          pos.getY(i) * mult,
+          pos.getZ(i) * mult,
+        );
       }
-    }
-    // Thousands of small grass tufts share a single instanced draw, kept outside the tarmac.
-    for (let i = 0; i < (this.mobile ? 1700 : 3200); i++) {
-      const s = r() * length,
-        offset = (r() > 0.5 ? 1 : -1) * (10 + r() * 34),
-        a = at(s, offset);
-      blades.push({
-        ...a,
-        y: a.y + 0.23,
-        w: 0.3 + r() * 0.6,
-        h: 0.4 + r() * 0.5,
-        d: 0.4,
-        rot: r() * TAU,
-      });
-    }
-    makeBatch(
-      this.world,
-      boxGeo,
-      new THREE.MeshStandardMaterial({ color: 0x171d1b, roughness: 1 }),
-      cracks,
-      false,
-    );
-    makeBatch(this.world, boxGeo, gray, boxes);
-    makeBatch(this.world, boxGeo, rust, rustBoxes);
-    makeBatch(this.world, boxGeo, windows, glassBoxes);
-    makeBatch(
-      this.world,
-      boxGeo,
-      new THREE.MeshStandardMaterial({
-        color: 0xc4cbcb,
-        metalness: 0.72,
-        roughness: 0.4,
-      }),
-      rails,
-    );
-    makeBatch(
-      this.world,
-      boxGeo,
-      new THREE.MeshStandardMaterial({ color: 0xcfcdbd, roughness: 0.9 }),
-      white,
-      false,
-    );
-    makeBatch(
-      this.world,
-      boxGeo,
-      new THREE.MeshStandardMaterial({ color: 0x7f3029, roughness: 0.9 }),
-      red,
-      false,
-    );
-    makeBatch(
-      this.world,
-      boxGeo,
-      new THREE.MeshStandardMaterial({ color: 0x615039, roughness: 1 }),
-      treeTrunks,
-    );
-    makeBatch(
-      this.world,
-      new THREE.ConeGeometry(1, 1, 9),
-      new THREE.MeshStandardMaterial({ color: 0x3e6249, roughness: 1 }),
-      treeCrowns,
-    );
-    makeBatch(
-      this.world,
-      new THREE.SphereGeometry(1, 10, 7),
-      new THREE.MeshStandardMaterial({ color: 0x486d46, roughness: 1 }),
-      broadCrowns,
-    );
-    makeBatch(this.world, boxGeo, dark, lamps);
-    makeBatch(
-      this.world,
-      boxGeo,
-      new THREE.MeshStandardMaterial({
-        color: 0xe2d5a9,
-        emissive: 0x62553c,
-        roughness: 0.5,
-      }),
-      lampHeads,
-      false,
-    );
-    makeBatch(
-      this.world,
-      new THREE.ConeGeometry(0.25, 1, 3),
-      new THREE.MeshStandardMaterial({ color: 0x82935b, roughness: 1 }),
-      blades,
-      false,
-    );
-    const hillGeo = new THREE.SphereGeometry(1, 18, 10),
-      pos = hillGeo.attributes.position;
-    for (let i = 0; i < pos.count; i++) {
-      const mult = 0.9 + r() * 0.2;
-      pos.setXYZ(i, pos.getX(i) * mult, pos.getY(i) * mult, pos.getZ(i) * mult);
-    }
-    hillGeo.computeVertexNormals();
-    makeBatch(
-      this.world,
-      hillGeo,
-      new THREE.MeshStandardMaterial({ color: 0x798576, roughness: 1 }),
-      hills,
-    );
+      hillGeo.computeVertexNormals();
+      makeBatch(
+        this.world,
+        hillGeo,
+        new THREE.MeshStandardMaterial({ color: 0x798576, roughness: 1 }),
+        hills,
+      );
+    } else this.fantasy = buildFantasy(this.world, track);
+    const dark = new THREE.MeshStandardMaterial({
+      color: 0x2a3439,
+      roughness: 0.65,
+    });
+    const hazards = makeHazards(track);
+    checkpoint(this.world, track);
+    this.hazardUpdate = buildHazardModels(this.world, track, hazards);
+    Object.assign(this.canvas.dataset, {
+      theme: track.spec.theme || "nature",
+      checkpoint: "T",
+      hazards: String(hazards.length),
+      deck: this.fantasy?.deck || "",
+      neonRings: String(this.fantasy?.ringCount || 0),
+      pavilions: String(this.fantasy?.pavilions || 0),
+    });
+    const flora = buildFlora(this.world, track);
+    Object.assign(this.canvas.dataset, {
+      trees: String(flora.trees),
+      pines: String(flora.pines),
+      shrubs: String(flora.shrubs),
+      flowers: String(flora.flowers),
+      containers: String(this.fantasy?.meta?.containers || 0),
+      ships: String(this.fantasy?.meta?.ships || 0),
+      bridgeTowers: String(this.fantasy?.meta?.bridgeTowers || 0),
+      river: String(this.fantasy?.meta?.river || 0),
+    });
+    this.night = ["cyber", "tunnel"].includes(track.spec.theme);
+    this.burst.visible = false;
     // Starting gantry and checker-painted grid.
     const g = new THREE.Group(),
       p = roadAt(track, 0);
@@ -938,9 +1048,6 @@ export class RaceScene {
     this.renderer.shadowMap.needsUpdate = true;
     this.canvas.dataset.track = track.spec.id;
     this.dirty = true;
-    this.sun.color.set(track.spec.id === "factory" ? 0xffbd83 : 0xffe5b1);
-    this.renderer.toneMappingExposure =
-      track.spec.id === "factory" ? 1.0 : 1.15;
   }
   setCars(race, skin) {
     this.clear(this.fleet);
@@ -955,6 +1062,12 @@ export class RaceScene {
       this.fleet.add(car);
       return car;
     });
+    this.trailUpdate = makeTrails(
+      this.fleet,
+      this.track,
+      race.cars,
+      race.cars.map((c, i) => (i === 0 ? skin : SKINS[i % SKINS.length])),
+    );
     this.firstCamera = true;
   }
   preview(model, skin) {
@@ -982,11 +1095,14 @@ export class RaceScene {
       p = r.cars[0];
     r.cars.forEach((c, i) => {
       this.place(this.carMeshes[i], c.s, c.offset, c.speed);
+      this.carMeshes[i].visible =
+        !c.finished &&
+        (!(c.respawn > 0) || Math.floor(c.respawn * 5) % 2 === 0);
       this.carMeshes[i].rotation.y += (c.steer || 0) * 0.13;
     });
     r.traffic.forEach((t, i) => {
       const mesh = this.trafficMeshes[i];
-      mesh.visible = roadAt(this.track, t.s).biome === 4;
+      mesh.visible = [4, 6].includes(roadAt(this.track, t.s).biome);
       if (mesh.visible) this.place(mesh, t.s, t.offset, t.speed);
     });
     const road = roadAt(this.track, p.s),
@@ -996,11 +1112,12 @@ export class RaceScene {
     const w = this.canvas.clientWidth,
       h = this.canvas.clientHeight;
     if (garage) {
+      const portrait = h > w;
       this.camera.setViewOffset(
         w,
         h,
-        w < 600 ? 0 : w * 0.17,
-        w < 600 ? h * 0.2 : 0,
+        portrait ? 0 : w * 0.17,
+        portrait ? h * 0.2 : 0,
         w,
         h,
       );
@@ -1015,13 +1132,13 @@ export class RaceScene {
       look.set(car.x, car.y + 0.8, car.z);
     } else {
       const narrow = this.camera.aspect < 0.85,
-        distance = narrow ? 12 : 10;
+        distance = narrow ? 15 : 13;
       target.set(
         car.x - road.tx * distance,
-        car.y + (narrow ? 5.1 : 4),
+        car.y + (narrow ? 5.8 : 5.3),
         car.z - road.tz * distance,
       );
-      const ahead = roadAt(this.track, p.s + 20);
+      const ahead = roadAt(this.track, p.s + 12);
       look.set(
         ahead.x + ahead.nx * p.offset * 0.6,
         ahead.y + 1.3,
@@ -1033,8 +1150,60 @@ export class RaceScene {
       this.firstCamera = false;
     } else this.camera.position.lerp(target, 1 - Math.exp(-dt * 7));
     this.camera.lookAt(look);
-    this.sun.position.set(car.x + 65, car.y + 120, car.z + 40);
-    this.sun.target.position.copy(car);
+    const worldTime = garage ? this.frame / 30 : r.time;
+    this.canvas.dataset.trailVertices = String(this.trailUpdate(r, worldTime));
+    this.canvas.dataset.finishedVisible = String(
+      r.cars.filter((c, i) => c.finished && this.carMeshes[i].visible).length,
+    );
+    this.fantasy?.update(worldTime);
+    this.hazardUpdate(worldTime);
+    this.neonLights.forEach((light, i) =>
+      light.position.set(
+        car.x + road.nx * (i ? 4 : -4),
+        car.y + 2.5,
+        car.z + road.nz * (i ? 4 : -4),
+      ),
+    );
+    this.burst.visible = !!(p.respawn > 4);
+    if (this.burst.visible) {
+      const q = roadAt(this.track, p.crashS),
+        size = (5 - p.respawn) * 5 + 0.3;
+      this.burst.position.set(
+        q.x + q.nx * p.crashOffset,
+        q.y + 1,
+        q.z + q.nz * p.crashOffset,
+      );
+      this.burst.scale.setScalar(size);
+      this.burst.material.opacity = Math.max(0, p.respawn - 4) * 0.85;
+    }
+    const lightState = lightingState(
+      this.lightMode,
+      garage ? 0 : r.time,
+      this.night,
+    );
+    this.lighting.update(lightState, this.camera.position);
+    this.canvas.dataset.lightMode = this.lightMode;
+    this.canvas.dataset.lightPeriod = lightState.label;
+    this.neonLights.forEach(
+      (light) =>
+        (light.intensity = this.night
+          ? lightState.neonIntensity
+          : 0),
+    );
+    this.headlights.forEach((light, i) => {
+      const side = i ? 1 : -1;
+      light.position.set(
+        car.x + road.nx * side * 0.75 + road.tx * 2,
+        car.y + 0.7,
+        car.z + road.nz * side * 0.75 + road.tz * 2,
+      );
+      light.target.position.set(
+        car.x + road.tx * 23,
+        car.y - 0.2,
+        car.z + road.tz * 23,
+      );
+      light.intensity = Math.max(0, 1 - lightState.sunIntensity / 4.5) * 950;
+    });
     if (this.frame % (this.mobile || this.quality === "low" ? 3 : 2) === 0)
       this.renderer.shadowMap.needsUpdate = true;
     this.renderer.render(this.scene, this.camera);

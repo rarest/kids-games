@@ -8,7 +8,7 @@
     />
     <meta name="theme-color" content="#12252b" />
     <title>峰谷竞速 · 3D赛车</title>
-    <link rel="stylesheet" href="../racing/style.css?v=20261002race1" />
+    <link rel="stylesheet" href="../racing/style.css?v=20261002race2" />
   </head>
   <body>
     <canvas id="view" aria-label="三维赛车画面"></canvas>
@@ -17,12 +17,24 @@
       <a href="../index.html">← 游戏厅</a>
       <div class="brand">SUMMIT <span>峰谷竞速</span></div>
       <div class="header-actions">
-        <button id="sound" aria-pressed="false">声音 关</button
-        ><select id="quality" aria-label="画质">
-          <option value="auto">自动画质</option>
-          <option value="high">精细画质</option>
-          <option value="low">流畅画质</option></select
-        ><span class="wallet">◈ <b id="coins">0</b></span>
+        <button id="sound" aria-pressed="false">声音 关</button>
+        <details id="visual-settings">
+          <summary>画面</summary>
+          <div class="visual-options">
+            <label
+              >画质
+              <select id="quality" aria-label="画质">
+                <option value="auto">自动画质</option>
+                <option value="high">精细光影</option>
+                <option value="low">流畅画质</option>
+              </select></label
+            ><label
+              >光影时段
+              <select id="light-time" aria-label="光影时段"></select
+            ></label>
+          </div>
+        </details>
+        <span class="wallet">◈ <b id="coins">0</b></span>
       </div>
     </header>
     <main id="garage" hidden>
@@ -39,10 +51,10 @@
         </div>
         <div class="menu-scroll">
           <section id="routes">
-            <div class="section-label">六条路线 / 每场两圈</div>
+            <div class="section-label">十四条路线 / 每场两圈</div>
             <div id="tracks" class="choices"></div>
             <p class="hint">
-              🏆 冠军 3000 · 亚军 1500 · 季军 700 金币<br />其他名次不发奖金。金币用于解锁车库物品。
+              🏆 冠军 3000 · 亚军 1500 · 季军 700 金币<br />其他名次不发奖金。金币用于解锁车库物品。<br />危险碰撞罚时5秒，回本圈T字点继续争取名次。<br />空中桥玻璃与网格均可驾驶；驶出桥边会坠落。
             </p>
           </section>
           <section id="models" hidden>
@@ -86,6 +98,8 @@
         aria-label="赛道小地图"
       ></canvas>
       <div id="leaderboard"></div>
+      <div id="hazard-warning" role="status" hidden></div>
+      <div id="penalty" role="status" hidden></div>
       <div id="countdown" aria-live="polite"></div>
       <div class="speedometer">
         <strong id="speed">0</strong><span>KM/H</span>
@@ -125,6 +139,6 @@
       </section>
     </div>
     <div id="toast" role="status"></div>
-    <script type="module" src="../racing/bundle.js?v=20261002race1"></script>
+    <script type="module" src="../racing/bundle.js?v=20261002race2"></script>
   </body>
 </html>

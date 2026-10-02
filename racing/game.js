@@ -15,6 +15,8 @@ import {
   settleRace,
   clamp,
 } from "./core.js";
+import { LIGHT_TIMES } from "./lighting.js";
+import { hazardWarning, HAZARD_NAMES } from "./hazards.js";
 import { RaceScene } from "./scene.js";
 const $ = (id) => document.getElementById(id),
   storageKey = "summit-racing-v1";
@@ -170,7 +172,9 @@ function hud() {
   $("nitro").style.width = `${p.nitro}%`;
   $("surface").textContent =
     Math.abs(p.offset) > 8.3
-      ? "驶入草地 · 返回赛道"
+      ? ["sky", "container", "ocean", "ship"].includes(race.track.spec.theme)
+        ? "注意桥边 · 请返回桥面"
+        : "驶离道路 · 返回赛道"
       : BIOMES[roadAt(race.track, p.s).biome];
   $("leaderboard").textContent = ranking
     .slice(0, 4)
@@ -183,8 +187,21 @@ function hud() {
       : race.time < 0.8
         ? "GO"
         : "";
+  const warning = hazardWarning(race.track, race.hazards, p, race.time);
+  $("hazard-warning").hidden = !warning;
+  $("hazard-warning").textContent = warning
+    ? `${HAZARD_NAMES[warning.type]} · 前方 ${Math.ceil(warning.distance)} 米 · 提前避让`
+    : "";
+  $("penalty").hidden = !(p.respawn > 0);
+  $("penalty").textContent =
+    p.respawn > 0
+      ? `撞毁罚时5秒 · ${Math.ceil(p.respawn)}秒后在本圈T点复活`
+      : "";
+  $("view").dataset.crashes = String(p.crashes);
+  $("view").dataset.respawn = String(p.respawn);
   $("view").dataset.distance = p.s.toFixed(2);
   $("view").dataset.offset = p.offset.toFixed(2);
+  $("view").dataset.steer = String(p.steer || 0);
   renderMap();
 }
 function renderMap() {
@@ -208,6 +225,16 @@ function renderMap() {
     i ? c.lineTo(x, y) : c.moveTo(x, y);
   });
   c.stroke();
+  const start = roadAt(track, 0);
+  c.fillStyle = "#ddf79e";
+  c.font = "bold 11px sans-serif";
+  c.fillText("T", 14 + (start.x - minX) * scale, 14 + (start.z - minZ) * scale);
+  if (race)
+    for (const hazard of race.hazards) {
+      const q = roadAt(track, hazard.s);
+      c.fillStyle = "#ff9e58";
+      c.fillRect(12 + (q.x - minX) * scale, 12 + (q.z - minZ) * scale, 4, 4);
+    }
   if (race)
     for (const car of [...race.cars].reverse()) {
       const p = roadAt(track, car.s);
@@ -275,8 +302,8 @@ function loop(now) {
       keys.has("ArrowUp") ||
       keys.has("KeyW");
     const steer =
-      Number(held.has("right") || keys.has("ArrowRight") || keys.has("KeyD")) -
-      Number(held.has("left") || keys.has("ArrowLeft") || keys.has("KeyA"));
+      Number(held.has("left") || keys.has("ArrowLeft") || keys.has("KeyA")) -
+      Number(held.has("right") || keys.has("ArrowRight") || keys.has("KeyD"));
     const input = {
       throttle,
       steer,
@@ -352,6 +379,13 @@ $("resume").onclick = () => pause(false);
 $("quit").onclick = garage;
 $("back").onclick = garage;
 $("again").onclick = start;
+$("light-time").innerHTML = Object.entries(LIGHT_TIMES)
+  .map(([key, label]) => `<option value="${key}">${label}</option>`)
+  .join("");
+$("light-time").onchange = () => {
+  scene.lightMode = $("light-time").value;
+  scene.dirty = true;
+};
 $("quality").onchange = () => scene.qualityMode($("quality").value);
 $("sound").onclick = () => {
   soundEnabled = !soundEnabled;
@@ -376,6 +410,7 @@ document.querySelectorAll("[data-control]").forEach((b) => {
   b.onlostpointercapture = release;
 });
 window.addEventListener("keydown", (e) => {
+  if (e.code !== "Escape" && e.target.matches?.("select,input,summary")) return;
   if (e.code === "Escape" && mode === "racing") {
     e.preventDefault();
     if (!e.repeat) pause(!race.paused);

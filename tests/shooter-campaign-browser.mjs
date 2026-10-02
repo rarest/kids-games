@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {openBrowser,sleep} from './game-browser-harness.mjs';
 
-test('campaign resumes, lasers consume charges, one random card advances one substage and stage 2 begins with twenty bosses',{timeout:45000},async()=>{
+test('campaign resumes, lasers consume charges, cards advance substages and every later stage has twenty bosses',{timeout:45000},async()=>{
  const b=await openBrowser();
  try{
   await b.size(390,844,true);await b.navigate('games/shooter.html');
@@ -26,6 +26,13 @@ test('campaign resumes, lasers consume charges, one random card advances one sub
   await b.navigate('games/shooter.html');await b.evaluate('continueRun.click()');
   assert.equal(await b.evaluate('wave.textContent'),'2 · 1');assert.match(await b.evaluate('waveLabel.textContent'),/20只随机大Boss/);
   assert.equal(await b.evaluate('remainingBoss.textContent'),'20');
+  for(const laterWave of [52,101,10000]){
+   await b.evaluate(`localStorage.setItem('starPatrolRun',JSON.stringify({...${JSON.stringify(saved)},wave:${laterWave}}))`);
+   await b.navigate('games/shooter.html');await b.evaluate('continueRun.click()');
+   assert.equal(await b.evaluate('wave.textContent'),`${Math.ceil(laterWave/50)} · ${(laterWave-1)%50+1}`);
+   assert.match(await b.evaluate('waveLabel.textContent'),/20只随机大Boss/);
+   assert.equal(await b.evaluate('remainingBoss.textContent'),'20');
+  }
   await b.size(568,320,true);
   const controls=await b.evaluate('Array.from(document.querySelectorAll(".weapon-buttons button")).map(b=>{const r=b.getBoundingClientRect();return {bottom:r.bottom,width:r.width,top:r.top}})');
   assert.ok(controls.every(r=>r.bottom<=320&&r.width>=44&&r.top>=0));assert.deepEqual(b.errors,[]);
