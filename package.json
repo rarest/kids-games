@@ -8,8 +8,7 @@
     "build:goldminer": "esbuild goldminer-sites/main.tsx --bundle --minify --jsx=automatic --outfile=goldminer-sites/bundle.js",
     "build:racing": "esbuild racing/game.js --bundle --format=esm --minify --legal-comments=none --outfile=racing/bundle.js",
     "build:parkour": "esbuild parkour/game.js --bundle --format=esm --minify --legal-comments=none --outfile=parkour/bundle.js",
-    "build:rescue": "esbuild rescue/game.js --bundle --format=esm --minify --legal-comments=none --outfile=rescue/bundle.js",
-    "postbuild:rescue": "node --input-type=module -e \"import {readFileSync,writeFileSync} from 'node:fs';const file='rescue/bundle.js';writeFileSync(file,readFileSync(file,'utf8').replace(/^[ \\t]+/gm,s=>s.replace(/\\t/g,'  ')).replace(/[ \\t]+$/gm,''))\""
+    "build:rescue": "esbuild rescue/game.js --bundle --format=esm --minify --legal-comments=none --outfile=rescue/bundle.js"
   },
   "devDependencies": {
     "esbuild": "^0.25.12",
