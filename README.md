@@ -10,6 +10,7 @@
 index.html     合集落地页（数据驱动，读取 games.js 自动列出所有游戏，含搜索）
 games.js       游戏目录清单 —— 新增游戏在这里加一行
 games/         所有游戏的 HTML 入口
+  ├─ parkour.html   🌸 微光跑酷（自由移动3D跑酷）
   ├─ racing.html    🏎️ 峰谷竞速（3D赛车）
   ├─ pinyin.html    🚀 拼音打字小火箭
   ├─ snake.html     🐍 贪吃蛇吃痘痘
@@ -52,6 +53,18 @@ deploy/        自动部署组件
 - 多边形库固定版本，本地打包，无外部CDN。更新依赖后执行 `npm run build:territory-geometry`，许可在 `territory/vendor/LICENSES.md`。
 - 必需检查：`npm run test:unit`、`npm run test:browser`。发布验证可用 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/territory-browser-smoke.mjs tests/territory-galaxy-browser-smoke.mjs tests/territory-vector-browser-smoke.mjs tests/responsive-browser-smoke.mjs`。
 - 页面入口及完整ES模块依赖链必须统一资源版本；合并前以远程最新 `main` 为基线，部署后核对站点资源哈希和实际浏览器操作。变更记录在 `openspec/changes/continuous-vector-territory/`。
+
+## 微光跑酷（自由移动3D跑酷）
+
+入口 `games/parkour.html`。四种风景（樱花林、百花林、城市天桥、林间木屋）共12关，自由移动，第一关提供逐步教程；主页人物可单击跳跃。游戏厅目录及跑酷资源版本为 `20261002parkour1`。
+
+- WASD / 方向键按镜头方向移动，空格或单击场景跳跃；拖动鼠标调整镜头，拖动释放不会跳跃，↺ 镜头朝向下一落点。手机用左下摇杆和右下跳跃按钮，可同时移动和跳跃。暂停、切到后台或失去焦点会停止移动，恢复后不会沿用按住的输入。
+- 每枚预设金币每局只领取一次，掉落后保留已领取记录；重新出发可再领。踩到旗帜存档点后，掉落从该点重试；走进终点记录最快时间。余额、记录和外观保存在当前浏览器。
+- 外观商店有13款皮肤：红色免费，其余12款（包括彩虹）各2金币；另有20套完整上衣、裤子和鞋，每套2金币。已拥有的皮肤和衣服免费切换，可卸下衣服保留皮肤，购买与装备重载后保留。
+- 从主页选择夜晚、黎明、早晨三时段，光影约2秒平滑过渡，所选时段保存到当前浏览器。
+- 自创路线编辑器支持添加、选择、移动、调整高度和尺寸、删除平台，设置起点、终点、金币和存档点，最多80个平台。起点和终点须有支撑平台；保存后可加载、试玩并返回继续编辑。自创金币是练习币，不增加商店余额。
+- 逻辑、存档和关卡在 `parkour/core.js`、`profile.js`、`levels.js`、`editor.js`；画面与交互在 `scene.js`、`game.js` 等模块。使用本地打包的 Three.js 0.186.1，无外部CDN；许可证见 `parkour/THIRD-PARTY-NOTICES.txt`。修改跑酷源码后执行 `npm run build:parkour` 并提交 `parkour/bundle.js`。
+- 发布门禁为 `npm run test:unit` 和 `npm run test:browser`。跑酷聚焦检查：`node --test tests/parkour-browser.mjs tests/parkour-integration-browser.mjs`；公网验收分别使用 `GAMES_TEST_ORIGIN=https://games.nblord.com` 或 `GAMES_TEST_ORIGIN=https://games.596996.xyz` 前缀执行这两个浏览器文件，核对游戏厅入口、真实输入与金币保存。
 
 ## 峰谷竞速（3D赛车）
 

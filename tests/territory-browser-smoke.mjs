@@ -162,7 +162,7 @@ test('paper territory touch, keyboard and hover steering stop accurately and set
     assert.equal(saved.settled.length,1);assert.equal(saved.coins,Number(await b.evaluate('document.querySelector("#result-coins").textContent.slice(1)')));
     await click(b,'#return-home');await b.navigate('games/territory.html');
     assert.deepEqual(await b.evaluate('JSON.parse(localStorage.getItem("paper-territory.profile.v1"))'),saved,'refresh does not pay twice');
-    await b.navigate('index.html');assert.equal(await b.evaluate('document.querySelectorAll(".card").length'),10);assert.equal(await b.evaluate(`document.querySelectorAll('a[href="games/territory.html"]').length`),1);
+    await b.navigate('index.html');assert.equal(await b.evaluate('document.querySelectorAll(".card").length'),11);assert.equal(await b.evaluate(`document.querySelectorAll('a[href="games/territory.html"]').length`),1);
     assert.deepEqual(b.errors,[]);
   }finally{b.close()}
 });
