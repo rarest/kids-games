@@ -132,7 +132,27 @@ function cutTrail(g,p){
   event(g,'cut',p.id);
 }
 function touchTrail(g,p,i){
-  for(const other of g.players)if(other.id!==p.id&&other.alive&&other.trail.some(v=>cell(g,v.x,v.y)===i))cutTrail(g,other);
+  // Legacy handcrafted states without a precise stroke retain cell detection.
+  for(const other of g.players)if(other.id!==p.id&&other.alive&&!(other.stroke?.length>1)&&other.trail.some(v=>cell(g,v.x,v.y)===i))cutTrail(g,other);
+}
+function pointSegmentDistance(p,a,b){
+  const dx=b.x-a.x,dy=b.y-a.y,length=dx*dx+dy*dy,t=length?clamp(((p.x-a.x)*dx+(p.y-a.y)*dy)/length,0,1):0;
+  return (p.x-a.x-t*dx)**2+(p.y-a.y-t*dy)**2;
+}
+function segmentDistance(a,b,c,d){
+  const dx=b.x-a.x,dy=b.y-a.y,ux=d.x-c.x,uy=d.y-c.y,den=dx*uy-dy*ux;
+  if(Math.abs(den)>1e-12){const vx=c.x-a.x,vy=c.y-a.y,t=(vx*uy-vy*ux)/den,u=(vx*dy-vy*dx)/den;if(t>=0&&t<=1&&u>=0&&u<=1)return 0;}
+  return Math.min(pointSegmentDistance(a,c,d),pointSegmentDistance(b,c,d),pointSegmentDistance(c,a,b),pointSegmentDistance(d,a,b));
+}
+function touchStroke(g,p,x,y){
+  const a={x:p.x,y:p.y},b={x,y},radius=.25;
+  for(const other of g.players){
+    if(other.id===p.id||!other.alive||!other.trail.length||!(other.stroke?.length>1))continue;
+    for(let n=1;n<other.stroke.length;n++){const c=other.stroke[n-1],d=other.stroke[n];
+      if(Math.max(a.x,b.x)+radius<Math.min(c.x,d.x)||Math.min(a.x,b.x)-radius>Math.max(c.x,d.x)||Math.max(a.y,b.y)+radius<Math.min(c.y,d.y)||Math.min(a.y,b.y)-radius>Math.max(c.y,d.y))continue;
+      if(segmentDistance(a,b,c,d)<=radius*radius){cutTrail(g,other);break;}
+    }
+  }
 }
 function enter(g,p,i,previous){
   touchTrail(g,p,i);
@@ -157,13 +177,14 @@ export function movePlayer(g,id,x,y){
     if(i%g.cols!==previous%g.cols&&Math.floor(i/g.cols)!==Math.floor(previous/g.cols)){
       const a=cell(g,xx,p.y),b=cell(g,p.x,yy);
       if(!g.mask[a]||!g.mask[b])return false;
+      touchStroke(g,p,xx,yy);
       // Both cells touched at a corner can hold an enemy trail, regardless of
       // movement direction. Only one is used for the orthogonal polygon path.
       touchTrail(g,p,b);
       // Visit the intermediate cell too: diagonal movement must not skip a trail.
       if(!enter(g,p,a,previous))return false;
       if(!enter(g,p,i,a))return false;
-    }else if(i!==previous&&!enter(g,p,i,previous))return false;
+    }else{touchStroke(g,p,xx,yy);if(i!==previous&&!enter(g,p,i,previous))return false;}
     p.x=xx;p.y=yy;if(p.trail.length)tracePosition(p,xx,yy);
   }
   return true;

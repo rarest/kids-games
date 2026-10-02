@@ -41,6 +41,18 @@ test('continuous trail storage remains bounded during repeated loops and clears 
   g.players[1].x=8.5;g.players[1].y=2.5;movePlayer(g,1,8.5,8.5);
   assert.equal(p.stroke.length,0);assert.equal(p.trail.length,0);
 });
+test('entering an occupied trail cell far from its visible ribbon does not cut',()=>{
+  const g=board(11,11,1),p=g.players[0],r=g.players[1];g.owners.fill(-1);
+  p.x=4.99;p.y=3.99;g.owners[3*11+4]=0;r.x=3.01;r.y=2.01;g.owners[2*11+3]=1;
+  movePlayer(g,1,3.01,3.01);assert.ok(r.trail.length);movePlayer(g,0,3.99,3.99);
+  assert.ok(r.trail.length);assert.ok(!g.events.some(e=>e.type==='cut'&&e.id===1));
+});
+test('crossing the actual ribbon within one cell still cuts it',()=>{
+  const g=board(11,11,1),p=g.players[0],r=g.players[1];g.owners.fill(-1);
+  p.x=3.99;p.y=3.99;g.owners[3*11+3]=0;r.x=3.5;r.y=2.5;g.owners[2*11+3]=1;
+  movePlayer(g,1,3.5,3.9);assert.ok(r.trail.length);movePlayer(g,0,3.1,3.1);
+  assert.equal(r.trail.length,0);assert.ok(g.events.some(e=>e.type==='cut'&&e.id===1));
+});
 
 test('a closed square captures its 3x3 center and never captures the outside',()=>{
   const g=board();walk(g,0,[[6,2],[6,6],[2,6]]);
@@ -173,7 +185,7 @@ test('ten thousand repeated two-cell detours keep trajectory state bounded by th
 });
 for(const reverse of [false,true])test(`diagonal corner collision detects both touched cells (${reverse?'reverse':'forward'})`,()=>{
   const g=board(11,11,1),p=g.players[1];
-  g.owners[4*11+2]=1;p.x=2.5;p.y=4.5;walk(g,1,[[2,3]]);
+  g.owners[2*11+3]=1;p.x=3;p.y=2.5;movePlayer(g,1,3,4.5);
   if(reverse){g.owners[4*11+4]=0;g.players[0].x=4.5;g.players[0].y=4.5;}
   movePlayer(g,0,reverse?2.5:4.5,reverse?2.5:4.5);
   assert.ok(g.events.some(e=>e.type==='cut'&&e.id===1));assert.equal(p.trail.length,0);

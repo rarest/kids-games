@@ -22,7 +22,7 @@ test('large island camera and mosaic overview follow a real circular joystick ro
     await touch(b,'touchEnd');await sleep(180);
     assert.ok(maxPoints>10,'actual curved trail is recorded');assert.ok(movedCamera,'camera follows rather than keeping the whole world visible');
     assert.ok(Number(await b.evaluate('map.dataset.coverage'))>info.coverage,'returning from the circle owns new land');
-    const p=await position(b),mini=await b.evaluate('({x:Number(minimap.dataset.playerX),y:Number(minimap.dataset.playerY),vx:Number(minimap.dataset.viewX),vy:Number(minimap.dataset.viewY)})');
+    const p=await b.evaluate('({x:Number(map.dataset.playerX),y:Number(map.dataset.playerY)})'),mini=await b.evaluate('({x:Number(minimap.dataset.playerX),y:Number(minimap.dataset.playerY),vx:Number(minimap.dataset.viewX),vy:Number(minimap.dataset.viewY)})');
     assert.ok(Math.abs(p.x-mini.x)<.001&&Math.abs(p.y-mini.y)<.001,'overview marker tracks the actual player');
     const geometry=await b.evaluate('({scale:Number(map.dataset.scale),ox:Number(map.dataset.offsetX),oy:Number(map.dataset.offsetY)})');
     assert.ok(Math.abs(mini.vx+geometry.ox/geometry.scale)<.001&&Math.abs(mini.vy+geometry.oy/geometry.scale)<.001,'view rectangle matches the camera');
