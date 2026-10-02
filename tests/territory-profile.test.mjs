@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SKINS,createProfile,buySkin,equipSkin,settleRun} from '../territory/profile.js';
+import {SKINS,createProfile,buySkin,equipSkin,settleRun,collectReward} from '../territory/profile.js';
 import {createGame,finishRun} from '../territory/core.js';
 
 test('sixty skins have twenty per tier and distinct visible patterns or effects',()=>{
@@ -19,7 +19,7 @@ test('a new player owns and wears the free red skin with zero coins',()=>{
 test('locked hidden skins cannot be bought even with sufficient money',()=>{
   const p=createProfile({coins:1000}),s=SKINS.find(s=>s.tier==='hidden');
   assert.equal(buySkin(p,s.id),false);assert.equal(p.coins,1000);
-  p.wins=1;assert.equal(buySkin(p,s.id),true);assert.equal(p.coins,900);
+  p.wins=100;assert.equal(buySkin(p,s.id),false);assert.equal(p.coins,1000);
 });
 test('purchases deduct once and equipping requires ownership',()=>{
   const p=createProfile({coins:80}),normal=SKINS.find(s=>s.tier==='normal'&&s.price),fine=SKINS.find(s=>s.tier==='fine');
@@ -40,8 +40,8 @@ test('damaged storage is normalized without inventing ownership or currency',()=
 test('only ended runs settle peak coverage once, including after a storage round trip',()=>{
   const g=createGame({seed:1,bots:0}),p=createProfile();g.peak=.428;
   assert.equal(settleRun(p,g),0);assert.equal(p.coins,0);finishRun(g);
-  const owners=g.owners.slice();assert.equal(settleRun(p,g),42);assert.equal(p.coins,42);
-  assert.deepEqual(g.owners,owners);assert.equal(settleRun(p,g),0);
+  const land=JSON.stringify(g.territories);assert.equal(settleRun(p,g),42);assert.equal(p.coins,42);
+  assert.equal(JSON.stringify(g.territories),land);assert.equal(settleRun(p,g),0);
   const restored=createProfile(JSON.parse(JSON.stringify(p)));
   assert.equal(settleRun(restored,JSON.parse(JSON.stringify(g))),0);assert.equal(restored.coins,42);
 });

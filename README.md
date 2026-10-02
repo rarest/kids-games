@@ -41,3 +41,13 @@ deploy/        自动部署组件
 - `deploy/webhook.py` — 无依赖的 webhook 监听器（127.0.0.1:19000，HMAC 校验）
 - `deploy/deploy-local.sh` — 服务器端拉取+同步+reload
 - `deploy/games-webhook.service` — systemd 用户级服务单元
+
+## 纸片领地开发
+
+`games/territory.html` 加载 `territory/game.js`。`core.js` 是连续坐标和实际多边形地盘规则；`regions.js` 负责裁剪/真实线段；`render.js` 缓存地盘画面并绘制皮肤特效；`profile.js` 保存购买、装备、领奖收据和一次性结算。
+
+- 地图是随机柔和波浪岛，初始地盘等大正圆；围地、敌方扣除及占地比例都由实际路线区域计算。`legacy-core.js` 仅保留历史规则回归，生产页面不加载。
+- 人物与精致/隐藏领地共用材质。隐藏款在占满全岛后的三个分散宝箱里直接获得，未拥有款显示黑色；奖励按触碰单独保存。
+- 多边形库固定版本，本地打包，无外部CDN。更新依赖后执行 `npm run build:territory-geometry`，许可在 `territory/vendor/LICENSES.md`。
+- 必需检查：`npm run test:unit`、`npm run test:browser`。发布验证可用 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/territory-browser-smoke.mjs tests/territory-galaxy-browser-smoke.mjs tests/territory-vector-browser-smoke.mjs tests/responsive-browser-smoke.mjs`。
+- 页面入口及完整ES模块依赖链必须统一资源版本；合并前以远程最新 `main` 为基线，部署后核对站点资源哈希和实际浏览器操作。变更记录在 `openspec/changes/continuous-vector-territory/`。
