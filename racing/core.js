@@ -1,3 +1,6 @@
+import { routePoint } from "./routes.js";
+import { separateCars } from "./contact.js";
+import { makeHazards, safeLane, obstacleHit } from "./hazards.js";
 // Pure race, route and garage rules. Distances are metres; speeds are metres/second.
 export const BIOMES = [
   "高原草甸",
@@ -5,6 +8,14 @@ export const BIOMES = [
   "废弃工厂",
   "旧日公路",
   "城市快速路",
+  "霓虹长廊",
+  "赛博夜城",
+  "凌空桥廊",
+  "云海仙境",
+  "集装箱港区",
+  "跨海长桥",
+  "双层船桥",
+  "中国风山峡",
 ];
 export const TRACKS = [
   {
@@ -54,6 +65,78 @@ export const TRACKS = [
     radius: 245,
     height: 18,
     phase: 4,
+  },
+  {
+    id: "tunnel",
+    name: "霓虹长廊",
+    subtitle: "环形灯带 · 滑梯式管廊 · 夜色",
+    radius: 210,
+    height: 22,
+    theme: "tunnel",
+    biome: 5,
+  },
+  {
+    id: "cyber",
+    name: "赛博夜城",
+    subtitle: "霓虹高楼 · 光轨 · 繁忙夜路",
+    radius: 235,
+    height: 20,
+    theme: "cyber",
+    biome: 6,
+  },
+  {
+    id: "sky",
+    name: "凌空桥廊",
+    subtitle: "半边透明玻璃 · 半边金属网格 · 云海",
+    radius: 215,
+    height: 42,
+    theme: "sky",
+    biome: 7,
+  },
+  {
+    id: "china",
+    name: "云海仙途",
+    subtitle: "祥云 · 古亭 · 山间仙路",
+    radius: 205,
+    height: 40,
+    theme: "china",
+    biome: 8,
+  },
+  {
+    id: "container",
+    name: "箱港穿梭",
+    subtitle: "箱顶跑道 · 箱内通道 · 港区吊机",
+    radius: 250,
+    height: 30,
+    theme: "container",
+    biome: 9,
+  },
+  {
+    id: "ocean",
+    name: "碧海长桥",
+    subtitle: "海上斜拉桥 · 波光 · 岛屿",
+    radius: 250,
+    height: 30,
+    theme: "ocean",
+    biome: 10,
+  },
+  {
+    id: "ship",
+    name: "航海双层",
+    subtitle: "轮船相连 · 上下两层 · 立体交叉",
+    radius: 280,
+    height: 30,
+    theme: "ship",
+    biome: 11,
+  },
+  {
+    id: "gorge",
+    name: "山河入画",
+    subtitle: "中国风山峡 · 河水环绕 · 迎客松",
+    radius: 240,
+    height: 40,
+    theme: "gorge",
+    biome: 12,
   },
 ];
 export const CARS = [
@@ -164,17 +247,18 @@ export function makeTrack(id) {
   for (let i = 0; i <= count; i++) {
     const a = (i / count) * Math.PI * 2,
       r = spec.radius + 28 * Math.sin(a * 3) + 16 * Math.sin(a * 5 + 0.7);
+    const custom = routePoint(spec.id, i / count);
     const p = {
-      x: Math.sin(a) * r,
-      z: Math.cos(a) * r,
-      y: spec.height * (0.65 * Math.sin(a * 2) + 0.35 * Math.sin(a * 3)),
+      x: custom?.[0] ?? Math.sin(a) * r,
+      z: custom?.[2] ?? Math.cos(a) * r,
+      y:
+        custom?.[1] ??
+        spec.height * (0.65 * Math.sin(a * 2) + 0.35 * Math.sin(a * 3)),
       biome:
-        spec.id === "tour"
+        spec.biome ??
+        (spec.id === "tour"
           ? Math.floor(((i % count) / count) * 5)
-          : (i % count) / count < 0.6
-            ? spec.phase
-            : (spec.phase + 1 + Math.floor(((i % count) / count - 0.6) / 0.1)) %
-              5,
+          : spec.phase),
     };
     if (i)
       length += Math.hypot(
@@ -229,10 +313,15 @@ export function roadAt(track, s) {
 export function newRace(trackId, carId) {
   const track = makeTrack(trackId),
     model = CARS.find((c) => c.id === carId) || CARS[0];
-  const city = track.points.slice(0, -1).filter((p) => p.biome === 4),
-    cityStart = city[0].s,
-    cityEnd = track.points[track.points.indexOf(city.at(-1)) + 1].s;
+  const city = track.points
+      .slice(0, -1)
+      .filter((p) => p.biome === 4 || p.biome === 6),
+    cityStart = city[0]?.s || 0,
+    cityEnd = city.length
+      ? track.points[track.points.indexOf(city.at(-1)) + 1].s
+      : 0;
   return {
+    hazards: makeHazards(track),
     trafficStart: cityStart,
     trafficLength: cityEnd - cityStart,
     track,
@@ -251,12 +340,15 @@ export function newRace(trackId, carId) {
       speed: 0,
       nitro: 100,
       cooldown: 0,
+      respawn: 0,
+      protection: 0,
+      crashes: 0,
       finished: 0,
       finishTime: Infinity,
       skill: 0.78 + (i % 5) * 0.035,
       phase: i * 0.71,
     })),
-    traffic: Array.from({ length: 20 }, (_, i) => ({
+    traffic: Array.from({ length: city.length ? 20 : 0 }, (_, i) => ({
       s: cityStart + ((i + 0.5) / 20) * (cityEnd - cityStart),
       offset: (i % 2 ? 1 : -1) * 5.8,
       speed: 21 + (i % 4) * 2,
@@ -279,6 +371,12 @@ export function stepRace(r, input, delta) {
   const finish = r.track.length * r.laps;
   for (const c of r.cars) {
     if (c.finished) continue;
+    c.protection = Math.max(0, c.protection - dt);
+    if (c.respawn > 0) {
+      c.respawn = Math.max(0, c.respawn - dt);
+      c.cooldown = Math.max(0, c.cooldown - dt);
+      continue;
+    }
     const road = roadAt(r.track, c.s),
       before = c.s;
     c.cooldown = Math.max(0, c.cooldown - dt);
@@ -300,7 +398,13 @@ export function stepRace(r, input, delta) {
       c.offset -= road.curvature * c.speed * c.speed * 0.02 * dt;
       c.offset = clamp(c.offset, -16, 16);
     } else {
-      const target = Math.sin(c.s * 0.004 + c.phase) * 4.7;
+      const target = safeLane(
+        r.track,
+        r.hazards,
+        c,
+        r.time,
+        Math.sin(c.s * 0.004 + c.phase) * 4.7,
+      );
       c.offset += (target - c.offset) * Math.min(1, dt * 1.3);
       const corner = clamp(1 - Math.abs(road.curvature) * 22, 0.66, 1),
         targetSpeed = c.model.max * c.skill * corner;
@@ -317,6 +421,7 @@ export function stepRace(r, input, delta) {
       if (ahead) c.offset += dt * 3 * (c.offset <= 0 ? -1 : 1);
       c.offset = clamp(c.offset, -7, 7);
     }
+    c.boosting = boost;
     const offroad = Math.abs(c.offset) > 8.3,
       grass = c.model.style === "rally" ? 9 : 19;
     c.speed = clamp(
@@ -335,6 +440,7 @@ export function stepRace(r, input, delta) {
     if (offroad)
       c.speed = Math.min(c.speed, c.model.style === "rally" ? 44 : 34);
     c.s += c.speed * dt;
+    if (obstacleHit(r, c)) continue;
     if (c.s >= finish) {
       c.finishTime =
         r.time + (dt * (finish - before)) / Math.max(0.0001, c.s - before);
@@ -348,37 +454,23 @@ export function stepRace(r, input, delta) {
     c.finished = ++place;
     c.s = finish;
   }
-  for (let i = 0; i < r.cars.length; i++)
-    for (let j = i + 1; j < r.cars.length; j++) {
-      const a = r.cars[i],
-        b = r.cars[j];
-      if (a.finished || b.finished || a.cooldown || b.cooldown) continue;
-      if (Math.abs(a.s - b.s) < 4.4 && Math.abs(a.offset - b.offset) < 1.9) {
-        a.speed *= 0.83;
-        b.speed *= 0.83;
-        a.cooldown = b.cooldown = 0.7;
-        const sign = a.offset >= b.offset ? 1 : -1;
-        a.offset = clamp(a.offset + sign * 0.45, -16, 16);
-        b.offset = clamp(b.offset - sign * 0.45, -16, 16);
-      }
-    }
+  const edge = ["sky", "container", "ocean", "ship"].includes(
+    r.track.spec.theme,
+  )
+    ? 8.7
+    : 16;
+  for (let pass = 0; pass < 3; pass++)
+    for (let i = 0; i < r.cars.length; i++)
+      for (let j = i + 1; j < r.cars.length; j++)
+        separateCars(r.cars[i], r.cars[j], r.track.length, edge);
   for (const t of r.traffic) {
     t.s =
       r.trafficStart +
       wrap(t.s - r.trafficStart + t.speed * dt, r.trafficLength);
-    if (roadAt(r.track, t.s).biome !== 4) continue;
+    if (![4, 6].includes(roadAt(r.track, t.s).biome)) continue;
     for (const p of r.cars) {
-      const distance = Math.abs(
-        wrap(p.s - t.s + r.track.length / 2, r.track.length) -
-          r.track.length / 2,
-      );
-      if (
-        distance < 4.5 &&
-        Math.abs(p.offset - t.offset) < 2 &&
-        !p.cooldown &&
-        !p.finished
-      ) {
-        p.speed *= 0.6;
+      if (separateCars(p, t, r.track.length, edge, true)) {
+        p.speed = Math.min(p.speed, t.speed) * 0.95;
         p.cooldown = 0.9;
       }
     }

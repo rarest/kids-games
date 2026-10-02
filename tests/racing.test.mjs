@@ -15,8 +15,8 @@ import {
   equip,
   settleRace,
 } from "../racing/core.js";
-test("six winding routes are continuous, elevated, and include all five environments", () => {
-  assert.equal(TRACKS.length, 6);
+test("fourteen winding routes are continuous and elevated, mixed circuit includes five environments", () => {
+  assert.equal(TRACKS.length, 14);
   for (const spec of TRACKS) {
     const t = makeTrack(spec.id);
     assert.ok(t.length > 1000);
@@ -28,7 +28,10 @@ test("six winding routes are continuous, elevated, and include all five environm
         Math.min(...t.points.map((p) => p.y)) >
         12,
     );
-    assert.equal(new Set(t.points.map((p) => p.biome)).size, 5);
+    assert.equal(
+      new Set(t.points.map((p) => p.biome)).size,
+      spec.id === "tour" ? 5 : 1,
+    );
   }
 });
 test("eleven competitors race, brake and lose speed on grass, and pause never advances simulation", () => {
@@ -137,8 +140,8 @@ test("civilian traffic collides with AI as well as the player", () => {
   assert.ok(ai.cooldown > 0);
   assert.ok(ai.speed < 30);
 });
-test("theme routes emphasize their environment while retaining all five terrains", () => {
-  for (const spec of TRACKS.filter((t) => t.id !== "tour")) {
+test("single-theme routes keep their own environment for the whole course", () => {
+  for (const spec of TRACKS.filter((t) => t.id !== "tour" && !t.theme)) {
     const t = makeTrack(spec.id),
       counts = Array.from(
         { length: 5 },
@@ -177,6 +180,7 @@ test("road curvature integrates a full turn and steering is needed to stay on th
   for (let s = 0; s < track.length; s += 1) total += roadAt(track, s).curvature;
   assert.ok(Math.abs(total - Math.PI * 2) < 0.1);
   const r = newRace("tour", "apex");
+  r.hazards = [];
   r.countdown = 0;
   for (let i = 0; i < 3300 && !r.cars[0].finished; i++)
     stepRace(r, { throttle: true }, 1 / 60);
@@ -189,8 +193,12 @@ test("busy highway has civilian traffic from the start and keeps it in the urban
   for (const spec of TRACKS) {
     const r = newRace(spec.id, "apex");
     r.countdown = 0;
-    assert.ok(r.traffic.every((t) => roadAt(r.track, t.s).biome === 4));
+    assert.ok(
+      r.traffic.every((t) => [4, 6].includes(roadAt(r.track, t.s).biome)),
+    );
     for (let i = 0; i < 2000; i++) stepRace(r, { throttle: true }, 1 / 60);
-    assert.ok(r.traffic.every((t) => roadAt(r.track, t.s).biome === 4));
+    assert.ok(
+      r.traffic.every((t) => [4, 6].includes(roadAt(r.track, t.s).biome)),
+    );
   }
 });

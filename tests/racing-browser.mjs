@@ -4,7 +4,7 @@ import { writeFile } from "node:fs/promises";
 import { openBrowser, sleep } from "./game-browser-harness.mjs";
 test(
   "3D racer renders, controls, pauses, changes tracks and fits rotating devices",
-  { timeout: 120000 },
+  { timeout: 180000 },
   async () => {
     const b = await openBrowser();
     try {
@@ -23,7 +23,7 @@ test(
       );
       assert.equal(
         await b.evaluate('document.querySelectorAll("#tracks button").length'),
-        6,
+        14,
       );
       assert.equal(
         await b.evaluate('document.querySelectorAll("#cars button").length'),
@@ -57,23 +57,47 @@ test(
         await b.evaluate('document.querySelector("#position").textContent'),
         /\/ 11/,
       );
+      assert.ok(
+        Number(await b.evaluate("view.dataset.trailVertices")) > 0,
+        "moving racers emit neon trails",
+      );
       const offset = Number(await b.evaluate("view.dataset.offset"));
       await b.call("Input.dispatchKeyEvent", {
         type: "keyDown",
         key: "ArrowRight",
         code: "ArrowRight",
       });
-      await sleep(1000);
+      for (
+        let i = 0;
+        i < 80 &&
+        !(Number(await b.evaluate("view.dataset.offset")) < offset - 0.5);
+        i++
+      )
+        await sleep(100);
+      assert.equal(
+        await b.evaluate("view.dataset.steer"),
+        "-1",
+        "right key reaches the physics with the camera-correct sign",
+      );
       await b.call("Input.dispatchKeyEvent", {
         type: "keyUp",
         key: "ArrowRight",
         code: "ArrowRight",
       });
       assert.ok(
-        Number(await b.evaluate("view.dataset.offset")) > offset + 0.5,
-        "right arrow steers right",
+        Number(await b.evaluate("view.dataset.offset")) < offset - 0.5,
+        "right arrow moves towards the chase-camera right (-track normal)",
       );
       await b.size(568, 320, true);
+      // Test touch in a fresh race; a checkpoint reset from the preceding
+      // keyboard drive must not count as movement or hide steering while frozen.
+      await b.evaluate('pause.click();quit.click();start.click()');
+      for (
+        let i = 0;
+        i < 100 && !(Number(await b.evaluate('speed.textContent')) > 0);
+        i++
+      )
+        await sleep(200);
       const touchOffset = Number(await b.evaluate("view.dataset.offset"));
       const touch = await b.evaluate(
         `(()=>{const r=document.querySelector('[data-control="left"]').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,id:1}})()`,
@@ -82,14 +106,25 @@ test(
         type: "touchStart",
         touchPoints: [touch],
       });
-      await sleep(1000);
+      for (
+        let i = 0;
+        i < 80 &&
+        !(await b.evaluate(`view.dataset.steer === '1' && Number(view.dataset.offset) > ${touchOffset + 0.5} && Number(view.dataset.respawn) === 0`));
+        i++
+      )
+        await sleep(100);
+      assert.equal(
+        await b.evaluate("view.dataset.steer"),
+        "1",
+        "touch left reaches the physics with the camera-correct sign",
+      );
       await b.call("Input.dispatchTouchEvent", {
         type: "touchEnd",
         touchPoints: [],
       });
       assert.ok(
-        Number(await b.evaluate("view.dataset.offset")) < touchOffset - 0.5,
-        "touch button steers left",
+        Number(await b.evaluate("view.dataset.offset")) > touchOffset + 0.5,
+        "touch left button moves towards chase-camera left (+track normal)",
       );
       await b.evaluate('document.querySelector("#pause").click()');
       const before = await b.evaluate(
