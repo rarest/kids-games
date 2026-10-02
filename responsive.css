@@ -1,0 +1,95 @@
+/* Game-specific layout rules share viewport/safe-area conventions, not game physics. */
+html{height:100%;min-width:0;padding:0}
+body[data-game]{min-width:0}
+body[data-game="pinyin"]{height:100dvh;padding-inline:max(6px,env(safe-area-inset-left));padding-bottom:env(safe-area-inset-bottom)}
+body[data-game="pinyin"] header,body[data-game="pinyin"] #stage,body[data-game="pinyin"] #keyboard,body[data-game="pinyin"] .fhint{max-width:none;width:100%;min-width:0}
+body[data-game="pinyin"] header{flex-shrink:0;padding-top:max(8px,env(safe-area-inset-top));padding-right:56px}
+body[data-game="pinyin"] #stage{min-height:0}
+body[data-game="pinyin"] #keyboard{flex-shrink:0;padding:8px 4px}
+body[data-game="pinyin"] .krow{gap:clamp(3px,.6vw,10px);margin-bottom:5px}
+body[data-game="pinyin"] .key{max-width:none;aspect-ratio:auto;height:clamp(30px,8dvh,96px);font-size:clamp(16px,2.2vw,32px)}
+body[data-game="pinyin"] .fhint{flex-shrink:0;min-height:28px;margin:0;font-size:clamp(12px,1.5vw,18px)}
+body[data-game="pinyin"] #overlay{overflow:auto;gap:12px}
+
+body[data-game="fish"]{height:100dvh;min-height:0;padding:10px;gap:8px;justify-content:flex-start}
+body[data-game="fish"] .stage{max-width:none;flex:1;min-height:0}
+body[data-game="fish"] .overlay{overflow:auto}
+body[data-game="snake"]{height:100dvh;min-height:0;width:100%;padding:10px;gap:8px;justify-content:flex-start;overflow:hidden}
+body[data-game="snake"] .play-area{width:100%;flex:1;min-height:0;align-items:center;flex-wrap:nowrap;gap:16px}
+body[data-game="snake"] .stage{padding:6px;flex-shrink:0}
+body[data-game="snake"] .overlay{inset:6px;overflow:auto;gap:8px;padding:10px}
+body[data-game="snake"] .board{min-width:180px;width:210px;flex-shrink:0}
+body[data-game="snake"] .controls{flex-shrink:0;max-width:100%;gap:8px}
+body[data-game="snake"] .btns{max-width:none}
+
+body[data-game="maze"] .app-shell{width:100%;max-width:none}
+body[data-game="maze"] .home-screen{overflow:auto}
+body[data-game="maze"] .home-actions{width:min(80%,600px)}
+body[data-game="maze"] .shop-list{max-width:900px;width:100%;margin-inline:auto}
+body[data-game="maze"] .canvas-frame{min-width:0}
+
+body[data-game="merge4096"]{padding:12px}
+body[data-game="merge4096"] .shell{width:100%;max-width:none}
+body[data-game="merge4096"] .screen{min-height:calc(100dvh - 24px);padding:clamp(12px,2vw,26px)}
+body[data-game="merge4096"] .board{height:clamp(240px,calc(100dvh - 340px),750px)}
+body[data-game="merge4096"] .tile{font-size:clamp(12px,2vw,24px)}
+body[data-game="merge4096"] .home-screen .hero{padding:clamp(20px,5dvh,44px) 0 20px}
+body[data-game="merge4096"] .shop-grid{grid-template-columns:1fr 1fr}
+
+body[data-game="goldminer"] .game-shell{width:calc(100% - 24px);max-width:none;min-height:100dvh;padding-top:12px}
+body[data-game="goldminer"] .game-canvas{width:100%;height:100%;object-fit:contain}
+body[data-game="goldminer"] .stage-wrap{aspect-ratio:900/560;max-height:calc(100dvh - 240px)}
+body[data-game="goldminer"] .overlay{overflow:auto;align-items:safe center}
+
+@media(max-width:580px),(max-height:500px){
+  body[data-game="goldminer"] .overlay{position:fixed;inset:0;z-index:30;padding:max(24px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+}
+
+@media(min-width:900px){
+  body[data-game="merge4096"] .home-screen{display:grid;grid-template-columns:1fr 1fr;gap:14px 30px;align-content:center}
+  body[data-game="merge4096"] .home-screen .topbar,body[data-game="merge4096"] .home-screen>.nav-link{grid-column:1/-1}
+  body[data-game="merge4096"] .home-screen .hero{grid-row:3/7;grid-column:1}
+  body[data-game="merge4096"] .home-screen>.primary-button,body[data-game="merge4096"] .home-screen>.stats,body[data-game="merge4096"] .home-screen>.shop{grid-column:2}
+  body[data-game="goldminer"] .game-layout{grid-template-columns:minmax(0,1fr) 240px}
+}
+@media(max-height:500px) and (orientation:landscape){
+  body[data-game="pinyin"] header{padding-block:4px;gap:6px}
+  body[data-game="pinyin"] .title{font-size:16px}
+  body[data-game="pinyin"] .stats{font-size:14px;gap:10px}
+  body[data-game="pinyin"] #keyboard{padding-block:4px}
+  body[data-game="pinyin"] #overlay{padding:8px;gap:6px}
+  body[data-game="pinyin"] #overlay h2{font-size:22px}
+  body[data-game="pinyin"] #overlay p{font-size:12px}
+  body[data-game="pinyin"] #overlay .hint{display:none}
+  body[data-game="pinyin"] #startBtn{padding:8px 24px;font-size:17px}
+  body[data-game="fish"] h1{font-size:16px}
+  body[data-game="fish"] .controls{padding:0;font-size:11px}
+  body[data-game="snake"] h1{font-size:16px}
+  body[data-game="snake"] .board{display:none}
+  body[data-game="snake"] .controls{flex-direction:row;gap:10px}
+  body[data-game="snake"] .dpad{grid-template-columns:repeat(3,30px);grid-template-rows:repeat(3,24px);gap:3px}
+  body[data-game="snake"] .btns{max-width:540px}
+  body[data-game="snake"] .act{padding:7px 10px;font-size:12px}
+  body[data-game="snake"] .overlay p,body[data-game="snake"] .overlay .hint{display:none}
+  body[data-game="snake"] .overlay h2{font-size:18px}
+  body[data-game="snake"] #startBtn{padding:8px 24px;font-size:16px}
+  body[data-game="merge4096"] .game-screen{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,30%);gap:8px 14px}
+  body[data-game="merge4096"] .game-topbar{grid-column:1/-1}
+  body[data-game="merge4096"] .board{grid-column:1;grid-row:2/5;height:calc(100dvh - 100px);min-height:170px}
+  body[data-game="merge4096"] .draw-panel,body[data-game="merge4096"] .bonus-strip,body[data-game="merge4096"] .tools{grid-column:2;margin:0}
+  body[data-game="merge4096"] .draw-panel{flex-wrap:wrap;padding:8px;font-size:11px}
+  body[data-game="merge4096"] .bonus-strip{font-size:10px}
+  body[data-game="merge4096"] .tools button{font-size:11px;padding:6px}
+  body[data-game="goldminer"] .game-layout{grid-template-columns:minmax(0,1fr) 190px}
+  body[data-game="goldminer"] .side-panel{display:flex}
+  body[data-game="goldminer"] .legend-card{display:none}
+  body[data-game="goldminer"] .status-grid{grid-template-columns:1fr 1.5fr 1fr;margin-bottom:6px}
+  body[data-game="goldminer"] .stat-card{min-height:44px;padding:5px 10px}
+  body[data-game="goldminer"] .stat-card.target{grid-column:auto;grid-row:auto}
+  body[data-game="goldminer"] .stat-card>strong{font-size:20px}
+  body[data-game="goldminer"] .stage-wrap{max-height:none;height:calc(100dvh - 195px);aspect-ratio:auto}
+  body[data-game="goldminer"] .topbar{margin-bottom:6px}
+  body[data-game="goldminer"] .mobile-controls{margin-top:6px;position:static}
+  body[data-game="goldminer"] .drop-button,body[data-game="goldminer"] .mobile-bomb{min-height:40px}
+  body[data-game="goldminer"] footer{display:none}
+}

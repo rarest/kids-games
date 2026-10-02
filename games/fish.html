@@ -153,8 +153,9 @@
   }
   .medal { font-size: 15px; }
 </style>
+<link rel="stylesheet" href="../responsive.css?v=20261002a">
 </head>
-<body>
+<body data-game="fish">
   <h1>🐟 大鱼<span>吃</span>小鱼</h1>
   <div class="hud">
     <div class="lvl">等级 <b id="level">1</b></div>
@@ -558,7 +559,7 @@
     const rect = canvas.getBoundingClientRect();
     const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
     const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-    return { x: cx, y: cy };
+    return { x: cx * W / rect.width, y: cy * H / rect.height };
   }
   function setPointer(e) {
     if (game.state !== 'playing') return;

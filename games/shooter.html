@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071729">
+  <title>星际小队 · 小火箭游戏厅</title>
+  <link rel="stylesheet" href="../shooter/style.css?v=20261002a">
+</head>
+<body data-mode="home">
+  <main class="shell">
+    <header class="topbar"><a href="../index.html" aria-label="返回游戏厅">‹ 游戏厅</a><h1>星际小队 <span>STAR PATROL</span></h1><button id="pause" aria-label="暂停游戏" disabled>Ⅱ</button></header>
+    <div class="hud"><span>第 <b id="wave">1</b> 关</span><span>积分 <b id="score">0</b></span><span>纪录 <b id="best">0</b></span><span class="shield">护盾 <b id="shield">◆◆◆</b></span></div>
+    <section id="arena" aria-label="射击游戏区域">
+      <canvas id="game" aria-label="拖动飞船移动，自动射击机器人"></canvas>
+      <div class="overlay" id="home"><div class="card"><div class="ship-icon">✦</div><p class="eyebrow">小小飞行员，准备出发</p><h2>星际小队</h2><p>驾驶飞船，击退失控机器人。<br>躲开光球，收集积分，升级你的装备。</p><div class="instructions"><span>☝ 拖动飞船 · 自动开火</span><span>⌨ 方向键 / WASD · P 暂停</span><span>✦ 每三关挑战大型机器人</span></div><button class="primary" id="start">开始巡航</button></div></div>
+      <div class="overlay" id="paused" hidden><div class="card"><p class="eyebrow">稍作休息</p><h2>巡航已暂停</h2><p>切换页面时也会自动暂停。</p><button class="primary" id="resume">继续巡航</button></div></div>
+      <div class="overlay" id="upgrade" hidden><div class="card wide"><p class="eyebrow">任务完成</p><h2>选择一项升级</h2><p>装备将带入下一关，能量波补充至两次。</p><div class="choices"><button data-upgrade="spread"><strong>⋮ 扩散射击</strong><small>增加一道光束，最多三道</small></button><button data-upgrade="power"><strong>ϟ 强力光束</strong><small>每发伤害增加一点</small></button><button data-upgrade="shield"><strong>◇ 修复护盾</strong><small>恢复两点，最多五点</small></button></div></div></div>
+      <div class="overlay" id="over" hidden><div class="card"><p class="eyebrow">返回基地</p><h2>本次巡航结束</h2><p id="result"></p><button class="primary" id="restart">再来一次</button></div></div>
+      <div class="wave-label" id="waveLabel" aria-live="polite">准备巡航</div>
+    </section>
+    <footer><p>拖动 / 方向键移动 · 自动开火</p><button id="pulse" disabled>✦ 能量波 <b id="pulseCount">2</b><small>空格</small></button></footer>
+  </main>
+  <script type="module" src="../shooter/game.js?v=20261002a"></script>
+</body>
+</html>

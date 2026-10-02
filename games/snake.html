@@ -143,8 +143,9 @@
   }
   .board .rscore { color: var(--accent); font-variant-numeric: tabular-nums; }
 </style>
+<link rel="stylesheet" href="../responsive.css?v=20261002a">
 </head>
-<body>
+<body data-game="snake">
   <h1>🐍 贪吃蛇吃<span>痘痘</span> 💥</h1>
   <div class="hud">
     <div>得分 <b id="score">0</b></div>
@@ -156,7 +157,7 @@
         <h2 id="ovTitle">准备好了吗？</h2>
         <p id="ovDesc">控制小蛇吃掉满屏五颜六色的痘痘 💥<br>🌸+500 · 🌈吃光全屏 · ⚫分数翻倍 · 🟢+200 · 🟡+50 · 🔵加速 · 🟣减速 · 🔴+1<br>撞墙穿墙、咬自己也穿透，吃到 1000 亿分通关！</p>
         <button id="startBtn">开始游戏</button>
-        <div class="hint">鼠标移动 / 方向键 / WASD / 屏幕按钮 都能操控 · 空格暂停 · R 重开 · F 全屏 · J 放大<br>吃满 1000 亿分即通关 🎉</div>
+        <div class="hint">鼠标移动 / 方向键 / WASD / 屏幕按钮 都能操控 · 空格暂停 · R 重开 · F 全屏<br>吃满 1000 亿分即通关 🎉</div>
       </div>
     </div>
     <div class="board">
@@ -182,7 +183,6 @@
       <button class="act" data-act="restart">🔄 重开</button>
       <button class="act" data-act="refresh">🔀 刷痘</button>
       <button class="act" data-act="cheat">😈 作弊+100亿</button>
-      <button class="act" data-act="big">🔍 放大</button>
     </div>
   </div>
 
@@ -404,16 +404,12 @@
     if (fs) {
       px = Math.min(window.innerWidth, window.innerHeight) * 0.92;
     } else {
-      const big = document.querySelector('.stage').classList.contains('big');
-      const h1h  = (document.querySelector('h1')       || {}).offsetHeight || 40;
-      const hudh = (document.querySelector('.hud')     || {}).offsetHeight || 30;
-      const ctrlh= (document.querySelector('.controls')|| {}).offsetHeight || 0;
-      const boardW = window.innerWidth > 760 ? 240 : 0;   // 侧栏排行榜占位（窄屏隐藏）
-      const availW = window.innerWidth - boardW - 36;
-      const availH = window.innerHeight - h1h - hudh - ctrlh - 40;
-      px = Math.min(availW, availH, big ? 1280 : 1000);
+      const area = document.querySelector('.play-area');
+      const board = document.querySelector('.board');
+      const boardW = getComputedStyle(board).display === 'none' ? 0 : board.offsetWidth + 16;
+      px = Math.min(area.clientWidth - boardW - 12, area.clientHeight - 12);
     }
-    px = Math.max(300, Math.round(px / GRID) * GRID);      // 取整到格，避免毛边
+    px = Math.max(60, Math.floor(px / GRID) * GRID);
     canvas.width = canvas.height = px;
     canvas.style.width = canvas.style.height = px + 'px';
     SIZE = px / GRID;
@@ -746,7 +742,6 @@
     if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(k)) e.preventDefault();
 
     if (k === 'f' || k === 'F') { toggleFullscreen(); return; }
-    if (k === 'j' || k === 'J') { document.querySelector('.stage').classList.toggle('big'); fitBoard(); return; }
     if (k === 'r' || k === 'R') { start(); return; }   // 随时重新开始
 
     // 游戏没在跑时，任意方向键/空格都直接开始
@@ -826,7 +821,6 @@
         case 'restart': start(); break;
         case 'refresh': if (running) refreshPimples(); break;
         case 'cheat':   if (running) cheat(); break;
-        case 'big':     document.querySelector('.stage').classList.toggle('big'); fitBoard(); break;
       }
     });
   });

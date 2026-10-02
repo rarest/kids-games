@@ -57,6 +57,13 @@ test('Sites edition aims one hook per mineral, advances levels and persists best
   for(let i=0;i<100&&!await evaluate('!!document.querySelector(".primary-button")');i++)await sleep(100);
   const click=async text=>evaluate(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.includes(${JSON.stringify(text)}))?.click()`);
   await click('开始淘金');
+  assert.equal(await evaluate('document.getElementById("walletBalance").textContent.replaceAll(",","")'),'5000');
+  assert.equal(await evaluate('document.getElementById("score").textContent'),'0','starter wallet is not mined score');
+  await click('商店');await click('升级绞盘');
+  assert.equal(await evaluate('document.getElementById("wallet").textContent.replaceAll(",","")'),'4600');
+  assert.equal(await evaluate('document.getElementById("winchLevel").textContent'),'1/3');
+  assert.equal(await evaluate('document.getElementById("score").textContent'),'0','purchases do not alter mined score');
+  await click('返回矿井');
   await evaluate('document.getElementById("canvas").dispatchEvent(new PointerEvent("pointerdown",{bubbles:true}))');
   assert.match(await evaluate('document.getElementById("status").textContent'),/12 块矿物，12 钩齐发/);
   await evaluate('Object.defineProperty(document,"hidden",{configurable:true,value:true});document.dispatchEvent(new Event("visibilitychange"))');
@@ -69,6 +76,7 @@ test('Sites edition aims one hook per mineral, advances levels and persists best
   assert.ok(Number(await evaluate('localStorage.getItem("goldMinerBest")'))>=score);
   await click('购买');await click('购买');await click('前往第 2 关');
   assert.equal(await evaluate('document.getElementById("level").textContent'),'2');
+  assert.match(await evaluate('document.querySelector(".mine-theme").textContent'),/巨石矿井/);
   await evaluate('document.getElementById("canvas").dispatchEvent(new PointerEvent("pointerdown",{bubbles:true}))');
   assert.match(await evaluate('document.getElementById("status").textContent'),/13 块矿物，13 钩齐发/);
   await sleep(1800);await click('使用炸药');await sleep(100);
