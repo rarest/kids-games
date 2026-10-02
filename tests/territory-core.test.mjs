@@ -14,6 +14,34 @@ function board(cols=11,rows=11,bots=0){
 const owner=(g,x,y)=>g.owners[y*g.cols+x];
 const walk=(g,id,points)=>{for(const [x,y] of points)movePlayer(g,id,x+.5,y+.5)};
 
+test('a true circular route keeps fractional trail coordinates and captures only its interior',()=>{
+  const g=board(17,17),p=g.players[0];g.owners.fill(-1);g.owners[8*17+5]=0;p.x=5.5;p.y=8.5;
+  for(let n=1;n<=120;n++){
+    const a=Math.PI+n*Math.PI*2/120;
+    assert.equal(movePlayer(g,0,8.5+3*Math.cos(a),8.5+3*Math.sin(a)),true);
+    if(n===50){assert.ok(p.stroke.length>8);assert.ok(p.stroke.some(v=>Math.abs(v.x%1-.5)>.1&&Math.abs(v.y%1-.5)>.1),'tail follows actual coordinates rather than centers');}
+  }
+  assert.equal(owner(g,8,8),0);assert.equal(owner(g,12,8),-1);assert.equal(p.trail.length,0);assert.equal(p.stroke.length,0);
+});
+test('returning to a separated own region claims the bridge through enemy land without inventing enclosed land',()=>{
+  const g=board(11,11,1),p=g.players[0];g.owners.fill(1);
+  for(let y=1;y<=9;y++)for(const x of [2,8])g.owners[y*11+x]=0;
+  p.x=2.5;p.y=5.5;g.players[1].x=5.5;g.players[1].y=2.5;
+  const old=coverage(g,0);assert.equal(movePlayer(g,0,8.5,5.5),true);
+  for(let x=2;x<=8;x++)assert.equal(owner(g,x,5),0,'the actual bridge is owned');
+  assert.equal(owner(g,5,4),1);assert.equal(owner(g,5,6),1);assert.equal(p.trail.length,0);
+  assert.ok(coverage(g,0)>old);assert.ok(g.events.some(e=>e.type==='capture'&&e.id===0));
+  assert.ok(!g.events.some(e=>e.type==='cut'&&e.id===0));
+});
+test('continuous trail storage remains bounded during repeated loops and clears after a cut',()=>{
+  const g=board(17,17,1),p=g.players[0];g.owners.fill(-1);g.owners[8*17+2]=0;g.owners[2*17+8]=1;p.x=2.5;p.y=8.5;
+  movePlayer(g,0,5.5,8.5);
+  for(let n=0;n<10000;n++){const a=n*.08;movePlayer(g,0,8.5+3*Math.cos(a),8.5+3*Math.sin(a));}
+  assert.ok(p.stroke.length<=4096);assert.ok(p.stroke.length>10);
+  g.players[1].x=8.5;g.players[1].y=2.5;movePlayer(g,1,8.5,8.5);
+  assert.equal(p.stroke.length,0);assert.equal(p.trail.length,0);
+});
+
 test('a closed square captures its 3x3 center and never captures the outside',()=>{
   const g=board();walk(g,0,[[6,2],[6,6],[2,6]]);
   for(let y=3;y<=5;y++)for(let x=3;x<=5;x++)assert.equal(owner(g,x,y),0);
@@ -104,11 +132,11 @@ test('diagonal movement cannot skip a trail through a corner',()=>{
   walk(g,1,[[3,5]]);movePlayer(g,0,4.5,4.5);
   assert.ok(g.events.some(e=>e.type==='cut'&&e.id===1));
 });
-test('a severed owned return path discards the attempt instead of bridging detached land',()=>{
+test('a severed interior return path permits a bridge but never claims an invented enclosure',()=>{
   const g=board(11,11,1);g.owners[1*11+9]=1;
   walk(g,0,[[6,2],[6,6]]);g.owners[4*11+2]=1;
-  const before=g.owners.slice();movePlayer(g,0,2.5,6.5);
-  assert.deepEqual(g.owners,before);assert.equal(g.players[0].trail.length,0);
+  movePlayer(g,0,2.5,6.5);
+  assert.equal(owner(g,5,6),0);assert.equal(owner(g,4,4),-1);assert.equal(owner(g,2,4),1);assert.equal(g.players[0].trail.length,0);
 });
 test('actual generated islands can reach 100 percent through legal continuous moves',()=>{
   for(const seed of [2,17,81]){
@@ -158,7 +186,7 @@ test('walking an outside loop twice preserves its enclosed area until the real r
 });
 test('a failed return-home path stops sampling immediately after teleporting home',()=>{
   const g=board(11,11,1);g.owners[1*11+9]=1;
-  walk(g,0,[[6,2],[6,6]]);g.owners[4*11+2]=1;
+  walk(g,0,[[6,2],[6,6]]);g.owners[2*11+2]=1;
   const before=g.owners.slice();assert.equal(movePlayer(g,0,.5,6.5),false);
   const p=g.players[0];assert.deepEqual(g.owners,before);
   assert.equal(owner(g,Math.floor(p.x),Math.floor(p.y)),0);
