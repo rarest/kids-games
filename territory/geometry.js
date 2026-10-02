@@ -1,27 +1,20 @@
-// Trace the union, including holes and disconnected patches. Shared edges are
-// never drawn; right turns keep diagonally touching patches separate.
-export function contours(mask,cols,rows){
-  const edges=[],starts=new Map(),stride=cols+1;
-  const add=(x,y,u,v,d)=>{const e={x,y,u,v,d,used:false},k=y*stride+x;edges.push(e);if(!starts.has(k))starts.set(k,[]);starts.get(k).push(e)};
-  for(let i=0;i<mask.length;i++)if(mask[i]){const x=i%cols,y=Math.floor(i/cols);
-    if(!y||!mask[i-cols])add(x,y,x+1,y,0);
-    if(x===cols-1||!mask[i+1])add(x+1,y,x+1,y+1,1);
-    if(y===rows-1||!mask[i+cols])add(x+1,y+1,x,y+1,2);
-    if(!x||!mask[i-1])add(x,y+1,x,y,3);
-  }
-  const loops=[];
-  for(const first of edges){if(first.used)continue;const loop=[];let e=first;
-    while(e&&!e.used){e.used=true;loop.push({x:e.x,y:e.y});const candidates=starts.get(e.v*stride+e.u)||[],order=[(e.d+1)%4,e.d,(e.d+3)%4,(e.d+2)%4];e=order.flatMap(d=>candidates.filter(v=>!v.used&&v.d===d))[0];}
-    if(loop.length>=4)loops.push(loop);
-  }
-  return loops;
+export const containsCircle=(circles,x,y)=>circles.some(c=>(x-c.x)**2+(y-c.y)**2<=c.r*c.r+1e-9);
+// Exact squared Euclidean distance transform; padding represents the coast.
+function distanceLine(f){
+  const n=f.length,v=new Int32Array(n),z=new Float64Array(n+1),out=new Float64Array(n);let k=0;z[0]=-Infinity;z[1]=Infinity;
+  for(let q=1;q<n;q++){let s;do{s=((f[q]+q*q)-(f[v[k]]+v[k]*v[k]))/(2*q-2*v[k]);if(s<=z[k])k--;else break;}while(k>=0);k++;v[k]=q;z[k]=s;z[k+1]=Infinity;}
+  k=0;for(let q=0;q<n;q++){while(z[k+1]<q)k++;out[q]=(q-v[k])**2+f[v[k]];}return out;
 }
-export function smoothContour(points){
-  // Keep the unit edge vertices: rounding a long merged edge would cut deeply
-  // into valid land. Smoothing stays within a fraction of a logical cell.
-  let p=points;
-  for(let pass=0;pass<2;pass++){const next=[];for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length];next.push({x:a.x*.75+b.x*.25,y:a.y*.75+b.y*.25},{x:a.x*.25+b.x*.75,y:a.y*.25+b.y*.75})}p=next;}
-  return p;
+export function circleCover(mask,cols,rows){
+  const w=cols+2,h=rows+2,dist=new Float64Array(w*h);
+  for(let y=0;y<h;y++){const f=Array.from({length:w},(_,x)=>x&&y&&x<w-1&&y<h-1&&mask[(y-1)*cols+x-1]?1e12:0);dist.set(distanceLine(f),y*w);}
+  for(let x=0;x<w;x++){const d=distanceLine(Array.from({length:h},(_,y)=>dist[y*w+x]));for(let y=0;y<h;y++)dist[y*w+x]=d[y];}
+  const candidates=[];for(let i=0;i<mask.length;i++)if(mask[i]){const x=i%cols,y=Math.floor(i/cols);candidates.push({i,x:x+.5,y:y+.5,r:Math.max(.56,Math.sqrt(dist[(y+1)*w+x+1])-.55)});}
+  candidates.sort((a,b)=>b.r-a.r);const covered=new Uint8Array(mask.length),circles=[];
+  for(const c of candidates){if(covered[c.i])continue;circles.push({x:c.x,y:c.y,r:c.r});
+    for(let y=Math.max(0,Math.floor(c.y-c.r));y<Math.min(rows,Math.ceil(c.y+c.r));y++)for(let x=Math.max(0,Math.floor(c.x-c.r));x<Math.min(cols,Math.ceil(c.x+c.r));x++)if((x+.5-c.x)**2+(y+.5-c.y)**2<=c.r*c.r)covered[y*cols+x]=1;
+  }
+  return circles;
 }
 export function viewport(game,w,h,follow=true){
   const scale=follow?Math.max(w/42,h/30,Math.min(w/26,h/22)):Math.min((w-26)/game.cols,(h-32)/game.rows);
