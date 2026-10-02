@@ -1,0 +1,19 @@
+// Network transport carries input only; combat and upgrades are server-authoritative.
+export function connectTeam({endpoint,onState,onStatus,onJoined,onLeft}){
+ let socket,closed=false,retry=0,session=null,request=null,timer=null,lastInput=0;
+ const send=data=>{if(socket?.readyState===WebSocket.OPEN){socket.send(JSON.stringify(data));return true}return false};
+ function open(){
+  onStatus(retry?'连接中断，正在重新加入队伍…':'正在连接队伍…');
+  socket=new WebSocket(endpoint);
+  socket.onopen=()=>{retry=0;send(session?{type:'join',...session}:request)};
+  socket.onmessage=event=>{let m;try{m=JSON.parse(event.data)}catch{return}
+   if(m.type==='joined'){session={code:m.code,token:m.token};onJoined(m);onStatus('已连接队伍')}
+   if(m.type==='state')onState(m);
+   if(m.type==='error')onStatus(m.message);
+   if(m.type==='left'){closed=true;socket.close();onLeft()}
+  };
+  socket.onclose=()=>{if(closed)return;onStatus('连接中断，正在重新加入队伍…');if(retry<6)timer=setTimeout(open,Math.min(8000,700*2**retry++));else onStatus('暂时无法连接，请退出队伍后重新加入')};
+  socket.onerror=()=>{};
+ }
+ return {join(data){request=data;open()},send,input(data){if(performance.now()-lastInput<45)return;lastInput=performance.now();send({type:'input',...data})},close(){closed=true;clearTimeout(timer);send({type:'leave'});socket?.close();onLeft()}};
+}

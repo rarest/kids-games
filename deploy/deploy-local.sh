@@ -13,12 +13,26 @@ git reset --hard --quiet origin/main
 
 sudo rsync -a --delete \
   --exclude '.git' --exclude 'deploy' --exclude 'README.md' --exclude '.gitignore' \
-  --exclude '.agents' --exclude 'openspec' \
+  --exclude '.agents' --exclude 'openspec' --exclude 'node_modules' --exclude 'shooter/server.mjs' \
   --exclude '.user.ini' --exclude '.well-known' \
   "$REPO_DIR"/ "$DOCROOT"/
 sudo chmod -R a+rX "$DOCROOT"
 
+# The cooperative service shares the checked-in simulation with the browser.
+if [ -f shooter/server.mjs ]; then
+  npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+  mkdir -p "$HOME/.config/systemd/user"
+  cp deploy/shooter-coop.service "$HOME/.config/systemd/user/shooter-coop.service"
+  systemctl --user daemon-reload
+  systemctl --user enable --now shooter-coop.service
+  systemctl --user restart shooter-coop.service
+  sudo install -m 644 deploy/shooter-coop.conf "/opt/1panel/www/sites/$DOMAIN/proxy/shooter-coop.conf"
+fi
+
 C=$(sudo docker ps --format '{{.Names}}' | grep -i openresty | head -1)
-[ -n "$C" ] && sudo docker exec "$C" openresty -s reload 2>/dev/null || true
+if [ -n "$C" ]; then
+  sudo docker exec "$C" openresty -t
+  sudo docker exec "$C" openresty -s reload
+fi
 
 echo "deployed $(git rev-parse --short HEAD) -> https://$DOMAIN"
