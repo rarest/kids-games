@@ -78,7 +78,7 @@ export const LEVELS = [
     {"id":"street-mimic","kind":"mimic","x":53,"y":1,"min":50,"max":60}
   ],
   hazards: [
-    {"id":"hazard-0","kind":"electric","x":86.429,"y":55.2,"w":2.881,"h":0.6,"period":3,"activeFor":0.8}
+    {"id":"hazard-0","kind":"electric","x":87.87,"y":55.2,"w":2.881,"h":0.6,"period":3,"activeFor":0.8}
   ],
   decor: [
     {"id":"fence-8-1","kind":"fence","x":11.524,"y":1,"w":31.69,"h":5},
@@ -251,9 +251,9 @@ export const LEVELS = [
     {"id":"lizard3","kind":"lizard","x":320.409,"y":1,"min":312.657,"max":325.577}
   ],
   hazards: [
-    {"id":"hazard-0","kind":"faucet","x":121.445,"y":2.2,"w":2.584,"h":3,"period":2.8,"activeFor":1.2},
-    {"id":"hazard-1","kind":"faucet","x":142.117,"y":2.2,"w":2.584,"h":3,"period":3.4,"activeFor":1.1},
-    {"id":"hazard-2","kind":"press","x":209.299,"y":3.4,"w":2.584,"h":2,"period":3,"activeFor":0.7}
+    {"id":"hazard-0","kind":"faucet","x":122.737,"y":2.2,"w":2.584,"h":3,"period":2.8,"activeFor":1.2},
+    {"id":"hazard-1","kind":"faucet","x":143.409,"y":2.2,"w":2.584,"h":3,"period":3.4,"activeFor":1.1},
+    {"id":"hazard-2","kind":"press","x":210.591,"y":3.4,"w":2.584,"h":2,"period":3,"activeFor":0.7}
   ],
   decor: [
     {"id":"counter-18-1","kind":"counter","x":46.511,"y":1,"w":56.847,"h":4},
@@ -315,7 +315,7 @@ export const LEVELS = [
     {"id":"m4","kind":"mouse","x":240.35,"y":9.6,"min":231.917,"max":248.783}
   ],
   hazards: [
-    {"id":"hazard-0","kind":"electric","x":202.4,"y":7.6,"w":2.108,"h":2,"period":3,"activeFor":0.7}
+    {"id":"hazard-0","kind":"electric","x":203.454,"y":7.6,"w":2.108,"h":2,"period":3,"activeFor":0.7}
   ],
   decor: [
     {"id":"bookshelf-12-1","kind":"bookshelf","x":25.3,"y":1,"w":59.033,"h":9},
@@ -385,8 +385,8 @@ export const LEVELS = [
     {"id":"toy-mimic","kind":"mimic","x":50,"y":1,"min":47,"max":60}
   ],
   hazards: [
-    {"id":"hazard-0","kind":"press","x":94.262,"y":3.2,"w":2.772,"h":2,"period":3.1,"activeFor":0.8},
-    {"id":"hazard-1","kind":"electric","x":299.421,"y":6.7,"w":2.772,"h":0.7,"period":3,"activeFor":0.7}
+    {"id":"hazard-0","kind":"press","x":95.648,"y":3.2,"w":2.772,"h":2,"period":3.1,"activeFor":0.8},
+    {"id":"hazard-1","kind":"electric","x":300.807,"y":6.7,"w":2.772,"h":0.7,"period":3,"activeFor":0.7}
   ],
   decor: [
     {"id":"toyBox-8-1","kind":"toyBox","x":22.179,"y":1,"w":16.634,"h":5},
@@ -449,8 +449,8 @@ export const LEVELS = [
     {"id":"p2","kind":"pelican","x":310.431,"y":5,"min":291.369,"max":324.046}
   ],
   hazards: [
-    {"id":"hazard-0","kind":"water","x":138.877,"y":-1,"w":57.185,"h":2},
-    {"id":"hazard-1","kind":"water","x":261.415,"y":-1,"w":43.569,"h":2}
+    {"id":"hazard-0","kind":"water","x":167.47,"y":-1,"w":57.185,"h":2},
+    {"id":"hazard-1","kind":"water","x":283.2,"y":-1,"w":43.569,"h":2}
   ],
   decor: [
     {"id":"fence-11-1","kind":"fence","x":29.954,"y":1,"w":62.631,"h":5},
@@ -528,9 +528,9 @@ export const LEVELS = [
     {"id":"bird","kind":"bird","x":118.874,"y":25,"min":113.649,"max":128.018}
   ],
   hazards: [
-    {"id":"hazard-0","kind":"press","x":18.288,"y":1,"w":1.306,"h":2,"period":3,"activeFor":0.6},
-    {"id":"hazard-1","kind":"press","x":48.333,"y":1,"w":1.306,"h":2,"period":3.7,"activeFor":0.7},
-    {"id":"hazard-2","kind":"electric","x":120.18,"y":27,"w":1.306,"h":0.6,"period":3,"activeFor":0.7}
+    {"id":"hazard-0","kind":"press","x":18.941,"y":1,"w":1.306,"h":2,"period":3,"activeFor":0.6},
+    {"id":"hazard-1","kind":"press","x":48.986,"y":1,"w":1.306,"h":2,"period":3.7,"activeFor":0.7},
+    {"id":"hazard-2","kind":"electric","x":120.833,"y":27,"w":1.306,"h":0.6,"period":3,"activeFor":0.7}
   ],
   decor: [
     {"id":"piston-6-3","kind":"piston","x":7.838,"y":3,"w":5.225,"h":8},
@@ -592,8 +592,8 @@ export const LEVELS = [
     {"id":"m2","kind":"mouse","x":315.168,"y":5.4,"min":311.952,"max":331.248}
   ],
   hazards: [
-    {"id":"hazard-0","kind":"electric","x":286.224,"y":3.2,"w":3.216,"h":0.7,"period":3.5,"activeFor":0.9},
-    {"id":"casino-floor-spikes","kind":"spike","x":356.328,"y":1,"w":1.5,"h":0.5}
+    {"id":"hazard-0","kind":"electric","x":287.832,"y":3.2,"w":3.216,"h":0.7,"period":3.5,"activeFor":0.9},
+    {"id":"casino-floor-spikes","kind":"spike","x":357.078,"y":1,"w":1.5,"h":0.5}
   ],
   decor: [
     {"id":"slotMachine-7-5","kind":"slotMachine","x":22.512,"y":5,"w":12.864,"h":6},
@@ -675,9 +675,9 @@ export const LEVELS = [
     {"id":"l3","kind":"lizard","x":231.731,"y":50.6,"min":226.169,"max":239.146}
   ],
   hazards: [
-    {"id":"hazard-0","kind":"water","x":25.954,"y":-1,"w":29.662,"h":2},
-    {"id":"hazard-1","kind":"water","x":140.892,"y":45.2,"w":37.077,"h":2},
-    {"id":"hazard-2","kind":"faucet","x":203.923,"y":50.6,"w":1.854,"h":3,"period":3,"activeFor":0.8}
+    {"id":"hazard-0","kind":"water","x":40.785,"y":-1,"w":29.662,"h":2},
+    {"id":"hazard-1","kind":"water","x":159.431,"y":45.2,"w":37.077,"h":2},
+    {"id":"hazard-2","kind":"faucet","x":204.85,"y":50.6,"w":1.854,"h":3,"period":3,"activeFor":0.8}
   ],
   decor: [
     {"id":"brickWall-64-1","kind":"brickWall","x":118.646,"y":1,"w":237.292,"h":37},
@@ -742,7 +742,7 @@ export const LEVELS = [
     {"id":"m4","kind":"mouse","x":253.75,"y":5.8,"min":251.484,"max":262.813}
   ],
   hazards: [
-    {"id":"hazard-0","kind":"electric","x":142.734,"y":5.8,"w":2.266,"h":0.6,"period":3.4,"activeFor":1}
+    {"id":"hazard-0","kind":"electric","x":143.867,"y":5.8,"w":2.266,"h":0.6,"period":3.4,"activeFor":1}
   ],
   decor: [
     {"id":"cans-7-1","kind":"cans","x":15.859,"y":1,"w":27.188,"h":6},
@@ -824,12 +824,12 @@ export const LEVELS = [
     {"id":"k3","kind":"kangaroo","x":48.676,"y":29.8,"min":42.366,"max":62.197}
   ],
   hazards: [
-    {"id":"hazard-0","kind":"press","x":21.634,"y":1,"w":1.172,"h":2.5,"period":3.3,"activeFor":0.7},
-    {"id":"hazard-1","kind":"press","x":45.07,"y":1,"w":1.172,"h":2.5,"period":3.8,"activeFor":0.7},
-    {"id":"hazard-2","kind":"press","x":71.211,"y":1,"w":1.172,"h":2.5,"period":4.1,"activeFor":0.8},
-    {"id":"hazard-3","kind":"electric","x":35.155,"y":15.4,"w":0.901,"h":0.8,"period":3.4,"activeFor":0.8},
-    {"id":"hazard-4","kind":"press","x":45.972,"y":29.8,"w":1.082,"h":2.5,"period":3.9,"activeFor":0.8},
-    {"id":"hazard-5","kind":"press","x":57.69,"y":29.8,"w":1.082,"h":2.5,"period":3.4,"activeFor":0.7}
+    {"id":"hazard-0","kind":"press","x":22.22,"y":1,"w":1.172,"h":2.5,"period":3.3,"activeFor":0.7},
+    {"id":"hazard-1","kind":"press","x":45.656,"y":1,"w":1.172,"h":2.5,"period":3.8,"activeFor":0.7},
+    {"id":"hazard-2","kind":"press","x":71.797,"y":1,"w":1.172,"h":2.5,"period":4.1,"activeFor":0.8},
+    {"id":"hazard-3","kind":"electric","x":35.606,"y":15.4,"w":0.901,"h":0.8,"period":3.4,"activeFor":0.8},
+    {"id":"hazard-4","kind":"press","x":46.513,"y":29.8,"w":1.082,"h":2.5,"period":3.9,"activeFor":0.8},
+    {"id":"hazard-5","kind":"press","x":58.231,"y":29.8,"w":1.082,"h":2.5,"period":3.4,"activeFor":0.7}
   ],
   decor: [
     {"id":"catBox-6-1","kind":"catBox","x":5.408,"y":1,"w":7.211,"h":7},

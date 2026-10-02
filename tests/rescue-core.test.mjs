@@ -33,6 +33,10 @@ test('metal defense survives enemy contact while electric and press hazards stil
  tap(s,{action:true});run(s,{down:true},.6);assert.equal(s.players[0].hidden,true);assert.equal(s.objects[0].active,true);assert.equal(s.enemies[0].alive,false);
  s.hazards.push({id:'hazard',kind:'electric',x:1,y:1,w:3,h:1});run(s,{down:true},.05);assert.equal(s.players[0].hearts,2);
 });
+test('hazard collision shares entity bottom-center coordinates with its visible mesh',()=>{
+ const s=createGame(fixture({spawn:{x:3.1,y:1},hazards:[{id:'visible-spike',kind:'spike',x:4,y:1,w:2,h:1}]}));
+ run(s,{},.05);assert.equal(s.players[0].hearts,2);
+});
 test('solid platform blocks upward head collision while one-way shelf permits ascent',()=>{
  const solid=createGame(fixture({platforms:[floor,{id:'ceiling',x:0,y:4,w:10,h:1}]}));tap(solid,{jump:true});run(solid,{},.3);assert.ok(solid.players[0].y<2);
  const one=createGame(fixture({platforms:[floor,{id:'ceiling',x:0,y:4,w:10,h:1,oneWay:true}]}));tap(one,{jump:true});run(one,{},.3);assert.ok(one.players[0].y>3.5);
@@ -137,6 +141,7 @@ for(const kind of ['robot','owl','ufo','toyRobot','electricFish','casinoCat','ca
    const ball=s.objects.find(o=>o.kind==='ball');ball.active=true;ball.heldBy=null;ball.x=20.65;ball.y=1;ball.vx=0;ball.vy=0;ball.thrown=false;p.carrying=null;
    tap(s,{action:true});assert.equal(p.carrying?.id,'ball');tap(s,{action:true,up:true});run(s,{},.25);
    assert.equal(s.boss.hp,4-i,`hit ${i+1}`);
+   if(kind==='caterpillar')run(s,{},1);
  }
  assert.equal(s.boss.defeated,true);assert.ok(s.events.some(e=>e.type==='bossDefeated'));
 });
@@ -154,6 +159,28 @@ test('every authored Boss size and placement is hittable with actual upper ball 
   s.players[0].invulnerable=2;tap(s,{action:true});tap(s,{action:true,up:true});run(s,{},.5);
   assert.equal(s.boss.hp,4,`${l.id} ${b.kind} weakpoint out of normal throw range`);
  }
+});
+test('robot center is safe during arm attacks and supports a normal non-invulnerable orb upthrow',()=>{
+ const s=createGame(fixture({spawn:{x:20,y:1},boss:{id:'robot',kind:'robot',x:20,y:1,w:5,h:5.5,arena:{x:10,y:1,w:25}},objects:[{id:'ball',kind:'ball',x:20.7,y:1}]}));
+ run(s,{},3);assert.equal(s.players[0].hearts,3);assert.equal(s.players[0].lives,3);
+ tap(s,{action:true});tap(s,{action:true,up:true});run(s,{},.4);assert.equal(s.boss.hp,4);assert.equal(s.players[0].hearts,3);
+ const side=createGame(fixture({spawn:{x:21.9,y:1},boss:{id:'robot',kind:'robot',x:20,y:1,w:5,h:5.5}}));run(side,{},.05);assert.equal(side.players[0].hearts,2);
+});
+test('Fat Cat body is harmless and ash originates at the cigar mouth anchor',()=>{
+ const s=createGame(fixture({spawn:{x:20,y:1},boss:{id:'cat',kind:'fatCat',x:20,y:2.2,w:6,h:6.5,arena:{x:10,y:1,w:25}},objects:[{id:'ball',kind:'ball',x:20.7,y:1}]}));
+ tap(s,{action:true});tap(s,{action:true,up:true});run(s,{},.4);assert.equal(s.boss.hp,4);assert.equal(s.players[0].hearts,3);
+ updateBoss(s,2);assert.ok(s.boss.anchors.mouth.y>s.boss.y+s.boss.h*.7);assert.equal(s.boss.contactRegions.length,0);
+ for(const ash of s.projectiles.filter(q=>q.kind==='ash'))assert.equal(ash.y,s.boss.anchors.mouth.y);
+});
+test('separated caterpillar rejects hits after cooldown and has no invisible contact body',()=>{
+ const s=createGame(fixture({spawn:{x:20,y:1},boss:{id:'caterpillar',kind:'caterpillar',x:20,y:3,w:2,h:2},objects:[{id:'ball',kind:'ball',x:20.7,y:1}]}));
+ s.players[0].invulnerable=2;tap(s,{action:true});tap(s,{action:true,up:true});run(s,{},.25);assert.equal(s.boss.hp,4);
+ run(s,{},.45);assert.ok(s.boss.breakTimer>0);assert.equal(s.boss.invulnerable,0);assert.equal(s.boss.contactRegions.length,0);
+ // Isolate the absent-body collision; the visible falling segments still hurt normally.
+ s.projectiles=[];
+ const ball=s.objects[0],b=s.boss,p=s.players[0];Object.assign(ball,{x:b.x,y:b.y,thrown:true,hitIds:[],vx:0,vy:0});Object.assign(p,{x:b.x,y:b.y,invulnerable:0});
+ run(s,{},.02);assert.equal(b.hp,4);assert.equal(p.hearts,3);
+ ball.thrown=false;run(s,{},.3);assert.equal(b.breakTimer,0);assert.ok(b.segments.length===5);
 });
 test('ball is recovered after falling outside arena and Boss remains locked until defeated',()=>{
  const s=createGame(fixture({exit:{x:20,y:1},boss:{id:'boss',kind:'robot',x:20,y:1},objects:[{id:'ball',kind:'ball',x:5,y:1}]}));

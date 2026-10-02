@@ -13,8 +13,8 @@ export function updateBoss(s,dt){
  const t=b.timer,direction=Math.sign(p.x-b.x)||-1;
  switch(b.kind){
  case 'robot':
-  b.phase='armSweep';b.x=b.homeX+Math.sin(t*1.3)*1.6;
-  if(b.attackTimer>1.65){b.attackTimer=0;shot(s,b,'lightning',b.x,b.y+.4,direction*7,0);shot(s,b,'lightning',b.x,b.y+b.h*.65,direction*5,-1.4);}break;
+  b.phase='armSweep';b.x=b.homeX;
+  if(b.attackTimer>1.65){b.attackTimer=0;shot(s,b,'lightning',b.x-b.w*.42,b.y+.4,-7,0);shot(s,b,'lightning',b.x+b.w*.42,b.y+b.h*.65,5,-1.4);}break;
  case 'owl':{
   const dive=t%4.5;b.phase=dive>2.4&&dive<3.4?'dive':'perch';b.x=b.homeX+Math.sin(t)*2;
   b.y=b.homeY-(b.phase==='dive'?Math.sin((dive-2.4)*Math.PI)*2.4:0);
@@ -40,8 +40,10 @@ export function updateBoss(s,dt){
   b.segments=b.breakTimer>0?[]:Array.from({length:5},(_,i)=>({x:b.x+Math.sin(t*2-i*.7)*.6,y:b.y+i*(b.h/5),w:.7,h:b.h/5}));break;
  case 'fatCat':
   b.phase=t%4>2?'cigar':'taunt';b.x=b.homeX+Math.sin(t*.45)*.4;
-  if(b.attackTimer>1.75){b.attackTimer=0;for(const n of [-1,0,1])shot(s,b,'ash',b.x,b.y+1.6,direction*(4+n*.8),5+n*1.2,{gravity:10});}break;
+  if(b.attackTimer>1.75){b.attackTimer=0;for(const n of [-1,0,1])shot(s,b,'ash',b.x-b.w*.16,b.y+b.h*.78,direction*(4+n*.8),5+n*1.2,{gravity:10});}break;
  }
+ b.anchors={mouth:{x:b.x-b.w*.16,y:b.y+b.h*.78},hand:{x:b.x-b.w*.34,y:b.y+b.h*.52}};
+ b.contactRegions=b.kind==='fatCat'||(b.kind==='caterpillar'&&b.breakTimer>0)?[]:b.kind==='robot'?[-1,1].map(side=>({x:b.x+side*b.w*.38,y:b.y+.2,w:b.w*.25,h:b.h*.85})):[{x:b.x,y:b.y,w:b.w,h:b.h}];
  if(b.kind==='robot')b.weakpoint={kind:'orb',x:b.x,y:b.y+b.h-.45,w:.75,h:.6};
  else if(b.kind==='toyRobot')b.weakpoint={kind:'chest',x:b.x,y:b.y+b.h*.48,w:1,h:.7};
  else b.weakpoint=null;

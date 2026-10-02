@@ -99,10 +99,10 @@ function defend(s,p){
 function hitObject(s,o,target){
  if(o.hitIds.includes(target.id))return;
  if(target===s.boss){
-  if(o.kind!=='ball'||target.invulnerable>0||!target.active||target.defeated)return;
+  if(o.kind!=='ball'||target.invulnerable>0||target.breakTimer>0||!target.active||target.defeated)return;
   target.hp--;target.invulnerable=.65;s.score+=500;event(s,'bossHit',{kind:target.kind,hp:target.hp});
   if(target.kind==='caterpillar'){
-   target.breakTimer=.9;target.phase='separated';
+   target.breakTimer=.9;target.phase='separated';target.contactRegions=[];target.segments=[];
    for(let i=0;i<5;i++)s.projectiles.push({id:`segment-${s.nextEntityId++}`,kind:'segment',owner:target.id,x:target.x,y:target.y+i*target.h/5,w:.7,h:.7,vx:(i-2)*2.1,vy:4-i*.3,gravity:12,ttl:2});
   }
   o.vx=(Math.sign(o.x-target.x)||-1)*4;o.vy=5;o.thrown=false;
@@ -214,9 +214,9 @@ function substep(s,inputs,dt,pressed){
  }
  updateBoss(s,dt);updateObjects(s,dt);updateEnemies(s,dt);updateProjectiles(s,dt);
  for(const p of s.players){if(p.lives<=0||p.heldBy)continue;
-  if(s.boss?.active&&!s.boss.defeated&&overlap(p,s.boss))damage(s,p,s.boss);
+  if(s.boss?.active&&!s.boss.defeated&&(s.boss.contactRegions??[s.boss]).some(region=>overlap(p,region)))damage(s,p,s.boss);
   for(const h of s.hazards){h.active=h.period?((s.time+(h.offset??0))%h.period)<(h.activeFor??h.period/2):true;
-   if(h.active&&overlap(p,{...h,x:h.x+h.w/2,w:h.w,h:h.h??1}))damage(s,p,{x:h.x+h.w/2});}
+   if(h.active&&overlap(p,{...h,w:h.w,h:h.h??1}))damage(s,p,h);}
   for(const item of s.pickups)if(!item.collected&&overlap(p,item))collect(s,p,item);
   for(const cp of s.level.checkpoints??[])if(Math.abs(p.x-cp.x)<2&&Math.abs(p.y-cp.y)<1.5){s.checkpoint=copy(cp);}
  }
