@@ -17,3 +17,5 @@
 - [x] Four environments, obstacle models/animation, checkpoint and warning UI.
 - [x] Browser verification and independent review: 326 unit checks, all 17 browser suites / 30 checks, zero folded road faces, 22m ship overpass clearance.
 - [ ] Merge, release and public acceptance (runtime receipt: /home/ubuntu/codex-work/output/racing/RESULT.md).
+
+- [x] User follow-up: shooter waves 51 through 10000 each contain 20 random big bosses. Red at wave 52 on old core; full 326 unit checks green, campaign browser checks 51/52/101/10000, coop/latency/responsive regressions green. Shared solo/server core and bounded 3-boss spawn batches independently reviewed.

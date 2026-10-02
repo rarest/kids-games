@@ -24,7 +24,7 @@ export function buildWave(wave,random=Math.random){
  const normal=6+Math.floor(random()*4)+Math.min(14,Math.floor(wave/5));
  if(wave<=2)return [...Array(normal).fill('drone'),'yellow'];
  if(wave===30)return [...Array(normal).fill('drone'),...Array(10).fill('purple')];
- const bosses=wave===SUBSTAGES+1?20:1+Math.floor(random()*3)+Math.min(5,Math.floor(wave/20));
+ const bosses=wave>SUBSTAGES?20:1+Math.floor(random()*3)+Math.min(5,Math.floor(wave/20));
  const available=wave<10?['yellow']:wave<20?['yellow','blue']:['yellow','blue','purple'];
  return [...Array(normal).fill('drone'),...Array.from({length:bosses},()=>available[Math.min(available.length-1,Math.floor(random()*available.length))])];
 }
@@ -109,7 +109,7 @@ function tick(g,dt,input){
   p.fireClock-=dt;if(p.fireClock<=0){fireVolley(g,p);p.fireClock=.24}
  }
  g.spawnClock-=dt;
- // Bosses enter in groups of at most three so the ten-boss round stays playable.
+ // Bosses enter in groups of at most three, including the twenty-boss rounds.
  const nextKind=g.plan[g.spawnIndex];
  if(g.spawnLeft>0&&g.spawnClock<=0&&g.enemies.length<10&&(nextKind==='drone'||g.enemies.filter(e=>e.kind!=='drone').length<3)){
   const kind=nextKind||'drone',tier=TIERS[kind],boss=kind!=='drone';g.spawnIndex++;

@@ -6,7 +6,8 @@ test('campaign has 50 substages, starts gently and grows stronger',()=>{
  assert.equal(c.SUBSTAGES,50);assert.equal(c.MAX_WAVES,10000);
  const first=c.buildWave(1,()=>.5);assert.deepEqual(first.filter(k=>k!=='drone'),['yellow']);assert.ok(first.filter(k=>k==='drone').length>=6);assert.deepEqual(c.buildWave(2).filter(k=>k!=='drone'),['yellow']);assert.deepEqual(c.buildWave(30).filter(k=>k!=='drone'),Array(10).fill('purple'));
  assert.equal(c.buildWave(51).filter(k=>k!=='drone').length,20);
- assert.ok(c.buildWave(101,()=>0).filter(k=>k!=='drone').length<10);
+ assert.equal(c.buildWave(52,()=>0).filter(k=>k!=='drone').length,20);
+ assert.equal(c.buildWave(101,()=>0).filter(k=>k!=='drone').length,20);
  const hp=wave=>{const g=c.createGame(720,960,()=>.5);g.wave=wave-1;c.startWave(g);g.plan=['purple'];g.spawnLeft=1;g.spawnClock=0;c.stepGame(g,1/60);return g.enemies[0].hp};
  assert.ok(hp(2)>hp(1));assert.ok(hp(52)>hp(2));
 });
