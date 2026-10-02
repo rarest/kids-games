@@ -1,5 +1,5 @@
-import { viewport } from "./geometry.js?v=20261002vector";
-import { containsRegion, regionBounds } from "./regions.js?v=20261002vector";
+import { viewport } from "./geometry.js?v=20261002rewards";
+import { containsRegion, regionBounds } from "./regions.js?v=20261002rewards";
 const TAU = Math.PI * 2;
 function paperPath(c) {
   c.beginPath();
@@ -408,7 +408,7 @@ export function drawPaper(
   size,
   skin,
   time = 0,
-  { locked = false, active = false } = {},
+  { locked = false, active = false, roll = 0 } = {},
 ) {
   ctx.save();
   ctx.translate(x - size / 2, y - size / 2);
@@ -425,6 +425,9 @@ export function drawPaper(
     ctx.save();
     paperPath(ctx);
     ctx.clip();
+    ctx.translate(50, 50);
+    ctx.rotate(roll);
+    ctx.translate(-50, -50);
     if (skin.tier !== "normal") ctx.drawImage(material(skin), 0, 0, 100, 100);
     const shine = ctx.createRadialGradient(28, 24, 0, 50, 50, 68);
     shine.addColorStop(0, "#ffffff75");
@@ -819,7 +822,7 @@ export function createRenderer(
           ? skin
           : { color: p.color, pattern: "plain", tier: "normal" },
         time,
-        { active: !reducedMotion.matches },
+        { active: !reducedMotion.matches, roll: reducedMotion.matches ? 0 : p.rollAngle || 0 },
       );
       if (p.id === 0) {
         ctx.fillStyle = "#fffef1";
@@ -871,6 +874,31 @@ export function createRenderer(
           star(ctx, 0.55, -0.5, 0.12 * (1 + 0.2 * Math.sin(time * 2 + box.id)));
           ctx.restore();
         }
+      for (const clock of game.rewards?.clocks || [])
+        if (!clock.collected) {
+          ctx.save();
+          ctx.translate(clock.x, clock.y);
+          ctx.shadowColor = "#d5f9ff";
+          ctx.shadowBlur = 5;
+          ctx.fillStyle = "#f5fcff";
+          ctx.strokeStyle = "#488ca9";
+          ctx.lineWidth = 0.06;
+          ctx.beginPath();
+          ctx.arc(0, 0, 0.4, 0, TAU);
+          ctx.fill();
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+          line(ctx, 0, 0, 0, -0.23);
+          line(ctx, 0, 0, 0.18, 0.07);
+          ctx.fillStyle = "#fff";
+          ctx.strokeStyle = "#245168";
+          ctx.lineWidth = 0.075;
+          ctx.font = "bold 0.32px system-ui";
+          ctx.textAlign = "center";
+          ctx.strokeText("+" + clock.seconds + "s", 0, 0.76);
+          ctx.fillText("+" + clock.seconds + "s", 0, 0.76);
+          ctx.restore();
+        }
       ctx.restore();
     }
     if (minimap) {
@@ -907,6 +935,7 @@ export function createRenderer(
     canvas.dataset.baseBuilds = baseBuilds;
     canvas.dataset.galaxyParticles = particles.length;
     canvas.dataset.starTail = tail.length;
+    canvas.dataset.rollAngle = reducedMotion.matches ? 0 : p0.rollAngle || 0;
     canvas.dataset.trailPoints = p0.stroke?.length || 0;
     return geometry;
   }

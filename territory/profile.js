@@ -128,6 +128,7 @@ export function createProfile(raw) {
   return {
     coins: integer(raw.coins),
     wins: integer(raw.wins),
+    score: integer(raw.score),
     owned,
     selected: owned.includes(raw.selected) ? raw.selected : "red",
     settled,
@@ -167,6 +168,7 @@ export function settleRun(profile, game) {
   const won = game.winner === 0,
     reward = Math.floor(game.peak * 100) + (won ? 50 : 0);
   profile.coins = Math.min(Number.MAX_SAFE_INTEGER, profile.coins + reward);
+  profile.score = Math.min(Number.MAX_SAFE_INTEGER, integer(profile.score) + reward + rewardSummary(game).coins);
   if (won) profile.wins = Math.min(Number.MAX_SAFE_INTEGER, profile.wins + 1);
   profile.settled.push(game.runId);
   return reward;
@@ -176,7 +178,7 @@ export function collectReward(profile, game, event) {
   if (
     !game ||
     game.winner !== 0 ||
-    !["reward", "paused"].includes(game.mode) ||
+    !["reward", "paused", "over"].includes(game.mode) ||
     (game.mode === "paused" && game.resumeMode !== "reward") ||
     event?.id !== 0 ||
     !["coin", "chest"].includes(event.type) ||
