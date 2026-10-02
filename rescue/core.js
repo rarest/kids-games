@@ -116,6 +116,12 @@ function hitObject(s,o,target){
  else{o.active=false;contents(s,o);}
  o.hitIds.push(target.id);
 }
+function recoverObject(s,o){
+ // Authored object spawns have real support; arena bounds can sit underneath
+ // elevated terrain and are not a safe floor or respawn coordinate.
+ Object.assign(o,{x:o.recover.x,y:o.recover.y,vx:0,vy:0,thrown:false,grounded:false,groundId:null,hitIds:[]});
+ event(s,'recover',{kind:o.kind});
+}
 function updateObjects(s,dt){
  // Lower boxes settle before upper boxes, independent of authored object order.
  for(const o of [...s.objects].sort((a,b)=>a.y-b.y)){
@@ -127,10 +133,10 @@ function updateObjects(s,dt){
   if(o.grounded){o.vx*=Math.max(0,1-dt*7);if(Math.abs(o.vx)<.2){o.vx=0;o.thrown=false;}}
   if(land&&o.thrown&&o.kind==='ball'){o.vy=3;o.grounded=false;o.vx=oldVX*.5;}
   if(o.y< -4||o.x< -2||o.x>s.level.width+2){
-   if(o.kind==='ball'||o.kind==='metal'){const point=o.kind==='ball'&&s.boss?.active?{x:s.boss.arena?.x+2||o.recover.x,y:s.boss.arena?.y??o.recover.y}:o.recover;Object.assign(o,{x:point.x,y:point.y,vx:0,vy:0,thrown:false,grounded:false,hitIds:[]});event(s,'recover',{kind:o.kind});}
+   if(o.kind==='ball'||o.kind==='metal')recoverObject(s,o);
    else{o.active=false;}continue;
   }
-  if(o.kind==='ball'&&s.boss?.active&&!s.boss.defeated&&s.boss.arena){const a=s.boss.arena;if(o.x<a.x-.8||o.x>a.x+a.w+.8||o.y<a.y-2){Object.assign(o,{x:a.x+2,y:a.y,vx:0,vy:0,thrown:false,hitIds:[]});}}
+  if(o.kind==='ball'&&s.boss?.active&&!s.boss.defeated&&s.boss.arena){const a=s.boss.arena;if(o.x<a.x-.8||o.x>a.x+a.w+.8||o.y<a.y-2)recoverObject(s,o);}
   if(!o.thrown)continue;
   for(const e of s.enemies)if(e.alive&&overlap(o,e))hitObject(s,o,e);
   for(const big of s.objects)if(big!==o&&big.active&&big.kind==='bigcrate'&&overlap(o,big))hitObject(s,o,big);

@@ -13,6 +13,13 @@ test('eleven independent maps retain source-specific routes, landmarks and boss 
  const isolated=getLevel('0');isolated.platforms[0].x=999;assert.notEqual(getLevel('0').platforms[0].x,999);
  assert.deepEqual(nextLevels('D'),['E','F']);
 });
+test('each authored Boss ball spawn is inside its arena on a real fully supporting platform',()=>{
+ for(const l of LEVELS.filter(l=>l.boss)){
+  const ball=l.objects.find(o=>o.kind==='ball'),a=l.boss.arena;assert.ok(ball);
+  assert.ok(ball.x>=a.x&&ball.x<=a.x+a.w,`${l.id} ball outside arena`);
+  assert.ok(l.platforms.some(p=>Math.abs(ball.y-p.y)<.001&&ball.x-.4>=p.x&&ball.x+.4<=p.x+p.w),`${l.id} unsupported authored ball spawn`);
+ }
+});
 
 // Independent ballistic reachability (no authored route IDs or links): a character can
 // move on a platform, launch, then descend onto a next platform at the real jump constants.

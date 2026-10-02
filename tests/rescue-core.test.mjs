@@ -187,3 +187,29 @@ test('ball is recovered after falling outside arena and Boss remains locked unti
  s.objects[0].y=-10;run(s,{},.05);assert.ok(s.objects[0].y>=1);assert.equal(s.objects[0].active,true);
  s.players[0].x=20;s.players[0].invulnerable=100;run(s,{},.1);assert.equal(s.status,'playing');
 });
+for(const areaId of ['B','G'])for(const loss of ['below-map','below-arena','outside-arena'])test(`${areaId} authored Boss ball ${loss} recovers on real ground, is picked up and thrown again`,()=>{
+ const l=structuredClone(LEVELS.find(l=>l.id===areaId)),original=l.objects.find(o=>o.kind==='ball');
+ // Keep the entire original platform map; only isolate unrelated combat entities.
+ const s=createGame({...l,spawn:{x:original.x-3,y:original.y},objects:[original],enemies:[],hazards:[],pickups:[]});
+ const ball=s.objects[0],p=s.players[0];s.boss.active=true;
+ // Initial loss fixture only. Every later position comes from simulation/input.
+ if(loss==='below-map')ball.y=-10;
+ else if(loss==='below-arena')ball.y=s.boss.arena.y-2.2;
+ else ball.x=s.boss.arena.x-1.2;
+ run(s,{},.2);assert.equal(ball.grounded,true,`${areaId} ${loss}: ball did not land`);
+ const support=s.platforms.find(platform=>platform.id===ball.groundId);assert.ok(support);
+ assert.equal(ball.y,support.y);assert.ok(ball.x>=support.x+ball.w/2&&ball.x<=support.x+support.w-ball.w/2);
+ for(let f=0;f<90&&Math.abs(ball.x-p.x)>1;f++)stepGame(s,[{move:Math.sign(ball.x-p.x)}],1/60);
+ tap(s,{action:true});assert.deepEqual(p.carrying,{type:'object',id:ball.id});assert.equal(ball.heldBy,p.id);
+ tap(s,{action:true,up:true});assert.equal(p.carrying,null);assert.equal(ball.heldBy,null);assert.equal(ball.thrown,true);assert.ok(ball.vy>10);
+ const thrownY=ball.y;run(s,{},.04);assert.ok(ball.y>thrownY);assert.equal(p.lives,3);
+});
+test('all eight authored Boss balls recover onto actual support after either loss path',()=>{
+ for(const l of LEVELS.filter(l=>l.boss))for(const belowMap of [true,false]){
+  const original=l.objects.find(o=>o.kind==='ball');
+  const s=createGame({...structuredClone(l),spawn:{x:original.x-1.2,y:original.y},objects:[original],enemies:[],hazards:[],pickups:[]});
+  const ball=s.objects[0];s.boss.active=true;ball.y=belowMap?-10:s.boss.arena.y-2.2;
+  run(s,{},.25);assert.equal(ball.grounded,true,`${l.id} loss path ${belowMap}`);
+  const platform=s.platforms.find(p=>p.id===ball.groundId);assert.ok(platform,`${l.id} invented recovery support`);assert.equal(ball.y,platform.y);
+ }
+});
