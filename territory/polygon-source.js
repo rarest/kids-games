@@ -1,4 +1,4 @@
-import fast from "polygon-clipping";
+import fast from "polygon-clipping/dist/polygon-clipping.esm.js";
 import * as precise from "polyclip-ts";
 // Normal operations use robust floating-point predicates. Rare degenerate
 // output falls back to decimal clipping with sub-pixel coordinate tolerance.
