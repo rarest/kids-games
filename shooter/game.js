@@ -1,4 +1,9 @@
 import {createGame,startWave,stepGame,resizeGame,chooseUpgrade,pulse} from './core.js';
+import {createAudioController} from './audio.js?v=20261002-audio';
+import {createSoundObserver} from './sound-events.js?v=20261002-audio';
+const audio=createAudioController();
+const soundObserver=createSoundObserver();
+let soundEnabled=true;
 const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d'),arena=$('arena');
 const input={x:0,y:0},keys=new Set();
 let g=createGame(390,600),last=0,stars=[],background,drag=null,best=0,previousMode='';
@@ -18,6 +23,7 @@ function sync(){
   $('best').textContent=best;$('pause').disabled=g.mode!=='playing';$('pulse').disabled=g.mode!=='playing'||g.pulses===0;
   arena.dataset.playerX=g.player.x.toFixed(1);arena.dataset.playerY=g.player.y.toFixed(1);
   if(previousMode!==g.mode){
+    audio.setActive(g.mode==='playing'||g.mode==='upgrade',{finishEffects:g.mode==='over'});
     previousMode=g.mode;document.body.dataset.mode=g.mode;
     for(const mode of ['home','paused','upgrade','over'])$(mode).hidden=g.mode!==mode;
     $('result').textContent=`到达第 ${g.wave} 关 · 积分 ${g.score} · 历史纪录 ${best}`;
@@ -27,24 +33,29 @@ function sync(){
     keys.clear();drag=null;
   }
 }
-function start(){g=createGame(arena.clientWidth,arena.clientHeight);startWave(g);last=0;previousMode='';sync()}
+function start(){void audio.unlock();g=createGame(arena.clientWidth,arena.clientHeight);startWave(g);last=0;previousMode='';sync()}
 function pauseGame(){if(g.mode==='playing'){g.mode='paused';sync()}}
-function resume(){if(g.mode==='paused'){g.mode='playing';last=0;sync()}}
+function resume(){if(g.mode==='paused'){void audio.unlock();g.mode='playing';last=0;sync()}}
 $('start').addEventListener('click',start);$('restart').addEventListener('click',start);
 $('pause').addEventListener('click',pauseGame);$('resume').addEventListener('click',resume);
-$('pulse').addEventListener('click',()=>{pulse(g);sync()});
-document.querySelectorAll('[data-upgrade]').forEach(b=>b.addEventListener('click',()=>{chooseUpgrade(g,b.dataset.upgrade);last=0;sync()}));
+function firePulse(){if(pulse(g))audio.playEffect('pulse');sync()}
+$('pulse').addEventListener('click',firePulse);
+$('sound').addEventListener('click',()=>{soundEnabled=!soundEnabled;audio.setEnabled(soundEnabled);if(soundEnabled)void audio.unlock();$('sound').textContent=soundEnabled?'♪':'×';$('sound').setAttribute('aria-pressed',String(!soundEnabled));$('sound').setAttribute('aria-label',soundEnabled?'关闭声音':'开启声音')});
+document.querySelectorAll('[data-upgrade]').forEach(b=>b.addEventListener('click',()=>{if(chooseUpgrade(g,b.dataset.upgrade))audio.playEffect('upgrade');last=0;sync()}));
 const controls=new Set(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyW','KeyA','KeyS','KeyD','Space','KeyP','Escape']);
 addEventListener('keydown',e=>{
   if(!controls.has(e.code))return;
   if(e.target.closest('button,a')&&e.code==='Space')return;
   e.preventDefault();if(e.repeat&&['Space','KeyP','Escape'].includes(e.code))return;
-  if(e.code==='Space'){pulse(g);sync()}
+  if(e.code==='Space')firePulse();
   else if(['KeyP','Escape'].includes(e.code)){g.mode==='paused'?resume():pauseGame()}
   else keys.add(e.code);
 });
 addEventListener('keyup',e=>keys.delete(e.code));
-addEventListener('blur',pauseGame);document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseGame();last=0});
+addEventListener('blur',()=>{pauseGame();audio.setActive(false)});
+addEventListener('focus',()=>audio.setActive(!document.hidden&&(g.mode==='playing'||g.mode==='upgrade')));
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseGame();audio.setActive(!document.hidden&&(g.mode==='playing'||g.mode==='upgrade'));last=0});
+addEventListener('pagehide',()=>audio.setActive(false));
 canvas.addEventListener('pointerdown',e=>{
   if(g.mode!=='playing'||drag)return;
   canvas.setPointerCapture(e.pointerId);drag={id:e.pointerId,x:e.clientX,y:e.clientY,px:g.player.x,py:g.player.y};
@@ -79,7 +90,9 @@ function frame(now){
   const dt=last?Math.min(1,(now-last)/1000):0;last=now;
   input.x=Number(keys.has('ArrowRight')||keys.has('KeyD'))-Number(keys.has('ArrowLeft')||keys.has('KeyA'));
   input.y=Number(keys.has('ArrowDown')||keys.has('KeyS'))-Number(keys.has('ArrowUp')||keys.has('KeyW'));
+  soundObserver.before(g);
   if(!document.hidden)stepGame(g,dt,input);
+  soundObserver.after(g,name=>audio.playEffect(name));
   sync();render();requestAnimationFrame(frame);
 }
 new ResizeObserver(resize).observe(arena);resize();sync();requestAnimationFrame(frame);
