@@ -535,6 +535,7 @@ test(
         b,
         'document.readyState==="complete"&&view.dataset.phase==="home"',
       );
+      await click(b, "#players-one");
       await click(b, "#continue");
       await wait(b, 'view.dataset.phase==="playing"');
       const restored = await b.evaluate(
@@ -552,6 +553,95 @@ test(
       await key(b, "ArrowRight");
       await wait(b, `JSON.parse(view.dataset.positions)[1].x>${x + 0.4}`);
       await key(b, "ArrowRight", false);
+      assert.deepEqual(b.errors, []);
+    } finally {
+      b.close();
+    }
+  },
+);
+test(
+  "native map mode conversion preserves surviving lives, totals, selected character and reload continuation",
+  { timeout: 120000 },
+  async () => {
+    const b = await openBrowser();
+    try {
+      await b.size(960, 640);
+      await b.navigate("games/rescue.html");
+      for (const fixture of [
+        { lives: [0, 2], players: 2, selected: 1, want: [2], moving: 0 },
+        { lives: [1, 2], players: 2, selected: 1, want: [1], moving: 0 },
+        { lives: [0, 2], players: 2, selected: 2, want: [0, 2], moving: 1 },
+        { lives: [2], players: 1, selected: 2, want: [2, 3], moving: 0 },
+      ]) {
+        await b.evaluate(
+          `(async()=>{const {createProfile}=await import("/rescue/profile.js");const p=createProfile();if(!p.save({campaign:{completed:["0","B"],current:"D"},options:{players:${fixture.players},quality:"low",music:false},run:{areaId:"D",score:2000,flowers:3,stars:2,lives:${JSON.stringify(fixture.lives)},players:${fixture.players},character:"chip"}}).ok)throw Error("fixture save failed")})()`,
+        );
+        await b.call("Page.reload");
+        await wait(b, 'view.dataset.phase==="home"');
+        await click(
+          b,
+          fixture.selected === 1 ? "#players-one" : "#players-two",
+        );
+        await click(b, "#dale");
+        await click(b, "#map-open");
+        await click(b, "button[data-area=D]");
+        await wait(
+          b,
+          'view.dataset.area==="D"&&view.dataset.phase==="playing"',
+        );
+        const expected = {
+          score: 2000,
+          flowers: 3,
+          stars: 2,
+          lives: fixture.want,
+          character: "dale",
+        };
+        const values =
+          "({score:Number(view.dataset.score),flowers:Number(view.dataset.flowers),stars:Number(view.dataset.stars),lives:JSON.parse(view.dataset.positions).map(p=>p.lives),character:JSON.parse(view.dataset.positions)[0].character})";
+        assert.deepEqual(
+          await b.evaluate(values),
+          expected,
+          JSON.stringify(fixture),
+        );
+        assert.equal(
+          await b.evaluate(
+            `JSON.parse(view.dataset.positions)[${fixture.moving}].hearts`,
+          ),
+          3,
+        );
+        const x = Number(
+          await b.evaluate(
+            `JSON.parse(view.dataset.positions)[${fixture.moving}].x`,
+          ),
+        );
+        const code = fixture.moving ? "ArrowRight" : "KeyD";
+        await key(b, code);
+        await wait(
+          b,
+          `JSON.parse(view.dataset.positions)[${fixture.moving}].x>${x + 0.4}`,
+        );
+        await key(b, code, false);
+        const stored = await b.evaluate(
+          '(async()=> (await import("/rescue/profile.js")).createProfile().load())()',
+        );
+        assert.deepEqual(stored.run, {
+          areaId: "D",
+          score: 2000,
+          flowers: 3,
+          stars: 2,
+          lives: fixture.want,
+          players: fixture.selected,
+          character: "dale",
+        });
+        await b.call("Page.reload");
+        await wait(b, 'view.dataset.phase==="home"');
+        await click(b, "#continue");
+        await wait(
+          b,
+          'view.dataset.area==="D"&&view.dataset.phase==="playing"',
+        );
+        assert.deepEqual(await b.evaluate(values), expected);
+      }
       assert.deepEqual(b.errors, []);
     } finally {
       b.close();
@@ -996,6 +1086,12 @@ test(
       assert.ok(totals.flowers > 0);
       await click(b, "#next-area");
       await shot(b, "native-C-unlocked-map");
+      await click(b, "#map-panel .close-panel");
+      await wait(b, 'view.dataset.phase==="complete"&&!document.querySelector("#complete-panel").hidden');
+      assert.equal(await b.evaluate("JSON.parse(view.dataset.audio).effects.clear"), 1);
+      assert.deepEqual(await b.evaluate("({score:Number(view.dataset.score),flowers:Number(view.dataset.flowers),stars:Number(view.dataset.stars),lives:JSON.parse(view.dataset.positions).map(p=>p.lives)})"), totals);
+      await click(b, "#next-area");
+      await wait(b, 'view.dataset.phase==="map"');
       assert.equal(
         await b.evaluate(
           'document.querySelector("button[data-area=D]").disabled',
@@ -1020,6 +1116,12 @@ test(
         ),
         totals,
       );
+      await click(b, "#pause");
+      await click(b, "#paused-options");
+      await click(b, "#options-panel .close-panel");
+      await wait(b, 'view.dataset.phase==="paused"&&document.querySelector("#complete-panel").hidden');
+      await click(b, "#resume");
+      await wait(b, 'view.dataset.phase==="playing"');
       await b.call("Page.reload");
       await wait(b, 'view.dataset.phase==="home"');
       assert.match(
@@ -1040,10 +1142,18 @@ test(
       );
       await click(b, "#pause");
       await click(b, "#home");
+      for (const name of ["help", "options"]) {
+        await click(b, `#${name}-open`);
+        await click(b, `#${name}-panel .close-panel`);
+        await wait(b, 'view.dataset.phase==="home"&&document.querySelector("#complete-panel").hidden');
+      }
       await click(b, "#start");
       await wait(b, 'view.dataset.area==="0"&&view.dataset.phase==="playing"');
       assert.equal(await b.evaluate("Number(view.dataset.score)"), 0);
       await click(b, "#pause");
+      await click(b, "#paused-options");
+      await click(b, "#options-panel .close-panel");
+      await wait(b, 'view.dataset.phase==="paused"&&document.querySelector("#complete-panel").hidden');
       await click(b, "#retry");
       await wait(b, 'view.dataset.phase==="playing"');
       await b.call("Page.reload");

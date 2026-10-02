@@ -128,6 +128,7 @@ function closePanel() {
   } else activate(false);
 }
 function home() {
+  returnPanel = null;
   hidePanels();
   screen = "home";
   document.body.dataset.screen = "home";
@@ -147,6 +148,7 @@ function home() {
   resize();
 }
 function startArea(id, { resume = false, reset = false, retry = false } = {}) {
+  returnPanel = null;
   hidePanels();
   screen = "game";
   document.body.dataset.screen = "game";
@@ -168,8 +170,12 @@ function startArea(id, { resume = false, reset = false, retry = false } = {}) {
     state.score = run.score;
     state.flowers = run.flowers;
     state.stars = run.stars;
+    const lives =
+      opts.players === 1 && run.players === 2
+        ? [run.lives[0] > 0 ? run.lives[0] : run.lives[1]]
+        : run.lives;
     state.players.forEach((p, i) => {
-      p.lives = retry ? 3 : (run.lives[i] ?? 3);
+      p.lives = retry ? 3 : (lives[i] ?? 3);
       p.hearts = p.lives > 0 ? 3 : 0;
     });
   }
@@ -342,7 +348,10 @@ for (const [id, fn] of Object.entries({
   "gameover-retry": retry,
   "gameover-home": home,
   "complete-home": home,
-  "next-area": () => openPanel("map"),
+  "next-area": () => {
+    returnPanel = "complete";
+    openPanel("map");
+  },
   "map-open": () => openPanel("map"),
   "help-open": () => openPanel("help"),
   "options-open": () => openPanel("options"),

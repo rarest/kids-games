@@ -147,9 +147,9 @@ function updateObjects(s,dt){
   }
   if(o.kind==='ball'&&s.boss?.active&&!s.boss.defeated&&s.boss.arena){const a=s.boss.arena;if(o.x<a.x-.8||o.x>a.x+a.w+.8||o.y<a.y-2)recoverObject(s,o);}
   if(!o.thrown)continue;
-  for(const e of s.enemies)if(e.alive&&overlap(o,e))hitObject(s,o,e);
-  for(const big of s.objects)if(big!==o&&big.active&&big.kind==='bigcrate'&&overlap(o,big))hitObject(s,o,big);
-  if(s.boss&&!s.boss.defeated&&overlap(o,s.boss.weakpoint??s.boss))hitObject(s,o,s.boss);
+  for(const e of s.enemies)if(o.active&&e.alive&&overlap(o,e))hitObject(s,o,e);
+  for(const big of s.objects)if(o.active&&big!==o&&big.active&&big.kind==='bigcrate'&&overlap(o,big))hitObject(s,o,big);
+  if(o.active&&s.boss&&!s.boss.defeated&&overlap(o,s.boss.weakpoint??s.boss))hitObject(s,o,s.boss);
  }
 }
 function updateEnemies(s,dt){

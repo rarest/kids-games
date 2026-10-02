@@ -28,6 +28,55 @@ test('down hides inside held crate and defends against touching enemies',()=>{
  tap(s,{action:true});run(s,{down:true},.6);assert.equal(s.players[0].hearts,3);assert.equal(s.enemies[0].alive,false);assert.equal(s.objects[0].active,false);assert.equal(s.players[0].carrying,null);
  run(s,{},.03);assert.equal(s.players[0].hidden,false);
 });
+for (const kind of ["crate", "apple"])
+  for (const second of ["enemy", "bigcrate"])
+    test(`consumed ${kind} stops after its first overlapping hit before another ${second}`, () => {
+      const s = createGame(
+        fixture({
+          objects: [
+            { id: "item", kind, x: 2.8, y: 1, contents: "star" },
+            ...(second === "bigcrate"
+              ? [
+                  {
+                    id: "large",
+                    kind: "bigcrate",
+                    x: 3.7,
+                    y: 1,
+                    contents: "acorn",
+                  },
+                ]
+              : []),
+          ],
+          enemies: [
+            { id: "first", kind: "toy", x: 3.7, y: 1, h: 1.5, speed: 0 },
+            ...(second === "enemy"
+              ? [{ id: "second", kind: "toy", x: 3.7, y: 1, h: 1.5, speed: 0 }]
+              : []),
+          ],
+        }),
+      );
+      tap(s, { action: true });
+      tap(s, { action: true });
+      const item = s.objects[0];
+      assert.equal(item.active, false);
+      assert.deepEqual(item.hitIds, ["first"]);
+      assert.equal(s.enemies[0].alive, false);
+      assert.equal(s.score, 200);
+      assert.equal(s.events.filter((e) => e.type === "hit").length, 1);
+      assert.equal(
+        s.pickups.filter((p) => p.id.startsWith("item-contents")).length,
+        1,
+      );
+      if (second === "enemy") assert.equal(s.enemies[1].alive, true);
+      else {
+        assert.equal(s.objects[1].active, true);
+        assert.equal(s.events.filter((e) => e.type === "break").length, 0);
+        assert.equal(
+          s.pickups.filter((p) => p.id.startsWith("large-contents")).length,
+          0,
+        );
+      }
+    });
 test('metal defense survives enemy contact while electric and press hazards still hurt hiding player',()=>{
  const s=createGame(fixture({objects:[{id:'metal',kind:'metal',x:2.8,y:1}],enemies:[{id:'dog',kind:'dog',x:3.6,y:1,speed:2,facing:-1}]}));
  tap(s,{action:true});run(s,{down:true},.6);assert.equal(s.players[0].hidden,true);assert.equal(s.objects[0].active,true);assert.equal(s.enemies[0].alive,false);

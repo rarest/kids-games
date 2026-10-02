@@ -22,14 +22,112 @@ test('shared texture cache survives borrowed actor disposal and releases exactly
  let disposed=0;mat.map.addEventListener('dispose',()=>disposed++);const a=createAvatar('chip',pool),b=createAvatar('dale',pool);
  a.dispose();assert.equal(disposed,0);assert.ok(meshes(b.group).length);b.dispose();pool.dispose();pool.dispose();assert.equal(disposed,1);assert.deepEqual(pool.stats(),{geometries:0,materials:0,textures:0});
 });
-test('every enemy, object, pickup and projectile produces visible geometry with category silhouettes',async()=>{
- const m=await module('models'); const all=[];
- for(const kind of ['crate','metal','apple','ball','bigcrate'])all.push(m.createObject(kind));
- const enemies=['dog','bird','caterpillar','mouse','kangaroo','mimic','toy','bee','rhino','crab','lizard','pelican'].map(k=>m.createEnemy(k));all.push(...enemies);
- for(const kind of ['flower','star','acorn','zipper'])all.push(m.createPickup(kind));
- for(const kind of ['lightning','feather','alien','colorBall','spark','token','segment','ash','gear','drop'])all.push(m.createProjectile(kind));
- for(const a of all){assert.ok(meshes(a.group).length, a.group.name);a.update?.({x:4,y:2,w:1,h:1,facing:-1,animation:'run'},.2);assert.equal(a.group.position.x,4);a.dispose();}
- assert.notEqual(enemies[0].group.userData.silhouette,enemies[1].group.userData.silhouette);
+test("every enemy, object, pickup and projectile produces visible geometry with category silhouettes", async () => {
+  const m = await module("models");
+  const all = [];
+  for (const kind of ["crate", "metal", "apple", "ball", "bigcrate"])
+    all.push(m.createObject(kind));
+  const enemies = [
+    "dog",
+    "bird",
+    "caterpillar",
+    "mouse",
+    "kangaroo",
+    "mimic",
+    "toy",
+    "bee",
+    "rhino",
+    "crab",
+    "lizard",
+    "pelican",
+  ].map((k) => m.createEnemy(k));
+  all.push(...enemies);
+  for (const kind of ["flower", "star", "acorn", "zipper"])
+    all.push(m.createPickup(kind));
+  for (const kind of [
+    "lightning",
+    "feather",
+    "alien",
+    "colorBall",
+    "spark",
+    "token",
+    "segment",
+    "ash",
+    "gear",
+    "drop",
+  ])
+    all.push(m.createProjectile(kind));
+  for (const a of all) {
+    assert.ok(meshes(a.group).length, a.group.name);
+    a.update?.({ x: 4, y: 2, w: 1, h: 1, facing: -1, animation: "run" }, 0.2);
+    assert.equal(a.group.position.x, 4);
+  }
+  // Routing all kinds to one mesh must fail on real visible anatomy, not labels.
+  const part = (actor, name) => {
+    const p = actor.group.getObjectByName(name);
+    assert.ok(
+      p?.isMesh && p.visible,
+      `${actor.group.name} needs visible ${name}`,
+    );
+    return p;
+  };
+  const bounds = (p) => new Box3().setFromObject(p);
+  const [dog, bird] = enemies,
+    kangaroo = enemies[4],
+    rhino = enemies[8],
+    crab = enemies[9];
+  const dogBody = part(dog, "robot-dog-body"),
+    wheels = meshes(dog.group).filter((p) => p.name === "wheel");
+  assert.ok(dogBody.material.metalness > 0.5);
+  assert.ok(
+    bounds(dogBody).getSize(new Vector3()).x >
+      bounds(dogBody).getSize(new Vector3()).y,
+  );
+  assert.ok(
+    wheels.some((p) => p.position.x < dogBody.position.x) &&
+      wheels.some((p) => p.position.x > dogBody.position.x),
+  );
+  for (const wheel of wheels) {
+    assert.equal(wheel.geometry.type, "CylinderGeometry");
+    assert.ok(
+      bounds(wheel).getCenter(new Vector3()).y <
+        bounds(dogBody).getCenter(new Vector3()).y,
+    );
+    assert.ok(bounds(wheel).min.y < bounds(dogBody).min.y);
+  }
+  const birdBody = part(bird, "bird-body");
+  assert.equal(birdBody.geometry.type, "SphereGeometry");
+  for (const side of [-1, 1]) {
+    const wing = part(bird, `wing-${side}`);
+    assert.ok(side * (wing.position.x - birdBody.position.x) > 0);
+    assert.ok(
+      bounds(wing).getSize(new Vector3()).x >
+        bounds(wing).getSize(new Vector3()).z,
+    );
+  }
+  assert.ok(part(bird, "beak").position.x > birdBody.position.x);
+  assert.equal(part(bird, "beak").geometry.type, "ConeGeometry");
+  const kangarooHead = part(kangaroo, "head"),
+    ears = meshes(kangaroo.group).filter((p) => p.name === "ear");
+  assert.ok(
+    ears.some((p) => p.position.x < 0) && ears.some((p) => p.position.x > 0),
+  );
+  for (const ear of ears) {
+    assert.ok(ear.position.y > kangarooHead.position.y);
+    assert.ok(ear.scale.y > ear.scale.x * 1.5);
+  }
+  assert.equal(part(rhino, "horn").geometry.type, "ConeGeometry");
+  assert.ok(part(rhino, "horn").position.y > part(rhino, "head").position.y);
+  const shell = part(crab, "shell"),
+    claws = meshes(crab.group).filter((p) => p.name === "claw");
+  assert.ok(
+    claws.some((p) => p.position.x < 0) && claws.some((p) => p.position.x > 0),
+  );
+  for (const claw of claws) {
+    assert.ok(Math.abs(claw.position.x) > shell.scale.x / 2);
+    assert.ok(claw.position.y > shell.position.y);
+  }
+  for (const a of all) a.dispose();
 });
 test('Boss render anchors match real weakpoints, side contacts, cigar and separated segment state',async()=>{
  const {createBoss}=await module('models');
