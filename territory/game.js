@@ -1,6 +1,6 @@
-import{createGame,stepGame,coverage,finishRun}from'./core.js?v=20261002round';
+import{createGame,stepGame,coverage,finishRun}from'./core.js?v=20261002circles';
 import{SKINS,createProfile,buySkin,equipSkin,settleRun}from'./profile.js';
-import{drawPaper,createRenderer}from'./render.js?v=20261002round';
+import{drawPaper,createRenderer}from'./render.js?v=20261002circles';
 
 const $=id=>document.getElementById(id),KEY='paper-territory.profile.v1';
 let profile,game=null,tier='normal',mouseTarget=null,joy={x:0,y:0},joyPointer=null,last=0,hudTime=0,lastEvent=null,noticeTimer;

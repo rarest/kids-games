@@ -1,3 +1,4 @@
+import{containsCircle}from'./geometry.js?v=20261002circles';
 const COLORS=['#ed4949','#4189ee','#f3b63a','#a269db'];
 const DIRS=[[1,0],[0,1],[-1,0],[0,-1]];
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -168,11 +169,11 @@ function enter(g,p,i,previous){
 }
 export function movePlayer(g,id,x,y){
   const p=g.players[id],target=cell(g,x,y);
-  if(g.mode!=='playing'||!p?.alive||p.cooldown>0||!Number.isFinite(x)||!Number.isFinite(y)||target<0||!g.mask[target])return false;
+  if(g.mode!=='playing'||!p?.alive||p.cooldown>0||!Number.isFinite(x)||!Number.isFinite(y)||target<0||!g.mask[target]||(g.mask===g.circleMask&&!containsCircle(g.islandCircles,x,y)))return false;
   const fromX=p.x,fromY=p.y,dx=x-fromX,dy=y-fromY,steps=Math.max(1,Math.ceil(Math.hypot(dx,dy)/.12));
   for(let n=1;n<=steps&&g.mode==='playing';n++){
     const xx=fromX+dx*n/steps,yy=fromY+dy*n/steps,i=cell(g,xx,yy),previous=cell(g,p.x,p.y);
-    if(i<0||!g.mask[i])return false;
+    if(i<0||!g.mask[i]||(g.mask===g.circleMask&&!containsCircle(g.islandCircles,xx,yy)))return false;
     // A diagonal cannot squeeze between two blocked cells.
     if(i%g.cols!==previous%g.cols&&Math.floor(i/g.cols)!==Math.floor(previous/g.cols)){
       const a=cell(g,xx,p.y),b=cell(g,p.x,yy);
@@ -190,11 +191,14 @@ export function movePlayer(g,id,x,y){
   return true;
 }
 function island(g){
-  const phases=Array.from({length:3},()=>random(g)*Math.PI*2),mask=Array(g.cols*g.rows).fill(0);
+  const smallMap=Math.min(g.cols,g.rows)<=12,r=Math.min(g.cols,g.rows)*(smallMap?.43:.4*(.95+random(g)*.08)),cx=g.cols/2+(smallMap?0:(random(g)-.5)*1.2),cy=g.rows/2+(smallMap?0:(random(g)-.5)*1.2);g.islandCircles=[{x:cx,y:cy,r}];
+  const phase=random(g)*Math.PI*2;
+  for(let n=0;n<5;n++){const a=phase+n*Math.PI*2/5+random(g)*.25,small=r*(.22+random(g)*.11),d=r*(.45+random(g)*.16);
+    g.islandCircles.push({x:cx+Math.cos(a)*d,y:cy+Math.sin(a)*d,r:small});
+  }
+  const mask=Array(g.cols*g.rows).fill(0);
   for(let y=0;y<g.rows;y++)for(let x=0;x<g.cols;x++){
-    const nx=(x+.5-g.cols/2)/(g.cols*.45),ny=(y+.5-g.rows/2)/(g.rows*.45),a=Math.atan2(ny,nx);
-    const radius=.92+.065*Math.sin(a*3+phases[0])+.065*Math.cos(a*5+phases[1])+.04*Math.sin(a*7+phases[2]);
-    if(Math.hypot(nx,ny)<radius)mask[y*g.cols+x]=1;
+    if(containsCircle(g.islandCircles,x+.5,y+.5))mask[y*g.cols+x]=1;
   }
   // Keep only the central component, including on unusually small maps.
   const start=cell(g,g.cols/2,g.rows/2),seen=new Set([start]),queue=[start];mask[start]=1;
@@ -206,7 +210,7 @@ export function createGame({seed=Date.now(),cols=44,rows=38,bots=3}={}){
   const numeric=typeof seed==='number'?seed:Array.from(String(seed)).reduce((n,c)=>Math.imul(n,31)+c.charCodeAt(0),0);
   const g={seed,cols,rows,rng:numeric>>>0,mask:[],owners:Array(cols*rows).fill(-1),players:[],mode:'playing',winner:null,time:0,peak:0,events:[],revision:0,speed:3.6,
     runId:globalThis.crypto?.randomUUID?.()||`${Date.now().toString(36)}-${++runCounter}-${Math.random().toString(36).slice(2)}`};
-  g.mask=island(g);
+  g.mask=island(g);g.circleMask=g.mask;
   const candidates=[];
   for(let i=0;i<g.mask.length;i++)if(g.mask[i]){
     const x=i%cols,y=Math.floor(i/cols);

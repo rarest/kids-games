@@ -9,12 +9,13 @@ const click=async(b,selector)=>b.evaluate(`document.querySelector(${JSON.stringi
 const screenshot=async(b,path)=>{const p=await b.call('Page.captureScreenshot',{format:'png'});await writeFile(path,Buffer.from(p.data,'base64'))};
 const touch=async(b,type,x,y)=>b.call('Input.dispatchTouchEvent',{type,touchPoints:type==='touchEnd'?[]:[{x,y,id:1,radiusX:3,radiusY:3,force:1}]});
 
-test('large island camera and mosaic overview follow a real circular joystick route',{timeout:30000},async()=>{
+test('large circular island camera and dotted overview follow a real circular joystick route',{timeout:30000},async()=>{
   const b=await openBrowser();
   try{
     await b.size(390,844,true);await b.navigate('games/territory.html');await click(b,'#start');
     const info=await b.evaluate('({cols:Number(map.dataset.worldCols),rows:Number(map.dataset.worldRows),vw:Number(map.dataset.viewWidth),vh:Number(map.dataset.viewHeight),ox:Number(map.dataset.offsetX),coverage:Number(map.dataset.coverage)})');
     assert.equal(info.cols,88);assert.equal(info.rows,76);assert.ok(info.vw<44&&info.vh<38,'only the local area is visible');
+    assert.equal(await b.evaluate('map.dataset.tokenShape'),'circle');
     assert.ok((await rect(b,'#minimap')).w>=80,'whole-island map remains legible');
     const j=await rect(b,'#joystick'),cx=j.x+j.w/2,cy=j.y+j.h/2,r=j.w*.34;
     await touch(b,'touchStart',cx,cy);let maxPoints=0,movedCamera=false;
@@ -66,12 +67,14 @@ test('paper territory consumes player events before later bot events and keeps r
   }finally{b.close()}
 });
 
-test('paper territory has real shop categories, folded previews, locked silhouettes and saved equipment',{timeout:30000},async()=>{
+test('paper territory has real shop categories, circular previews, locked silhouettes and saved equipment',{timeout:30000},async()=>{
   const b=await openBrowser();
   try{
     await b.size(390,844,true);await b.navigate('games/territory.html');
     assert.equal(await b.evaluate('document.body.dataset.screen'),'home','a usable homepage loads');
     assert.equal(await b.evaluate('document.querySelector("#home-paper").dataset.skin'),'red');
+    const circle=await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search,{drawPaper}=await import('../territory/render.js'+release);const c=document.createElement('canvas');c.width=c.height=112;drawPaper(c.getContext('2d'),56,56,72,{color:'#ed4949',pattern:'plain',tier:'normal'});const pixel=(x,y)=>[...c.getContext('2d').getImageData(x,y,1,1).data];return{center:pixel(56,56),corner:pixel(24,24),edge:pixel(56,24)}})()`);
+    assert.equal(circle.center[3],255);assert.ok(circle.corner[3]<60,'circle has no filled square corners');assert.ok(circle.edge[3]>240,'circular rim exists between corners');
     await screenshot(b,'/tmp/territory-home.png');
     await click(b,'#shop');
     for(const tier of ['normal','fine','hidden']){
@@ -86,7 +89,7 @@ test('paper territory has real shop categories, folded previews, locked silhouet
       }
       if(tier==='fine'){
         assert.equal(await b.evaluate('new Set([...document.querySelectorAll(".skin-preview")].map(c=>c.toDataURL())).size'),20,'20 distinct rendered textures');
-        assert.equal(await b.evaluate(`(async()=>{const{drawPaper}=await import('../territory/render.js'),{SKINS}=await import('../territory/profile.js');return new Set(SKINS.filter(s=>s.tier==='fine').map(s=>{const c=document.createElement('canvas');c.width=c.height=112;drawPaper(c.getContext('2d'),56,56,72,{...s,color:'#629ca6'});return c.toDataURL()})).size})()`),20,'texture differences remain visible even with identical colors');
+        assert.equal(await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search,{drawPaper}=await import('../territory/render.js'+release),{SKINS}=await import('../territory/profile.js');return new Set(SKINS.filter(s=>s.tier==='fine').map(s=>{const c=document.createElement('canvas');c.width=c.height=112;drawPaper(c.getContext('2d'),56,56,72,{...s,color:'#629ca6'});return c.toDataURL()})).size})()`),20,'texture differences remain visible even with identical colors');
       }
     }
     // A legitimate persisted profile is the boundary; no production mutation API.
@@ -99,7 +102,7 @@ test('paper territory has real shop categories, folded previews, locked silhouet
     assert.equal(await b.evaluate('document.querySelector("#home-paper").dataset.skin'),'blue');
     await click(b,'#shop');await click(b,'[data-tier="hidden"]');
     assert.equal(await b.evaluate('document.querySelectorAll(".skin-card[data-locked=true]").length'),19);
-    assert.equal(await b.evaluate(`(async()=>{const{drawPaper}=await import('../territory/render.js'),{SKINS}=await import('../territory/profile.js');return new Set(SKINS.filter(s=>s.tier==='hidden').map(s=>{const c=document.createElement('canvas');c.width=c.height=128;drawPaper(c.getContext('2d'),64,64,62,{...s,color:'#629ca6'},1,{active:true});return c.toDataURL()})).size})()`),20,'20 distinct rendered hidden effects');
+    assert.equal(await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search,{drawPaper}=await import('../territory/render.js'+release),{SKINS}=await import('../territory/profile.js');return new Set(SKINS.filter(s=>s.tier==='hidden').map(s=>{const c=document.createElement('canvas');c.width=c.height=128;drawPaper(c.getContext('2d'),64,64,62,{...s,color:'#629ca6'},1,{active:true});return c.toDataURL()})).size})()`),20,'20 distinct rendered hidden effects');
     await click(b,'[data-tier="normal"]');await b.evaluate('Storage.prototype.setItem=()=>{throw new Error("storage unavailable")}');await click(b,'[data-skin="orange"] button');
     assert.match(await b.evaluate('document.querySelector("#notice").textContent'),/无法保存/,'failed persistence remains visible after purchase');
     assert.deepEqual(b.errors,[]);
