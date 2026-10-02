@@ -165,3 +165,12 @@ test('a failed return-home path stops sampling immediately after teleporting hom
   assert.equal(p.trail.length,0);assert.equal(p.openPath.length,0);assert.equal(p.pendingClaim.length,0);
   assert.equal(p.cooldown,.8);
 });
+test('cutting a completed outside sub-loop discards all pending interior claims',()=>{
+  const g=board(11,11,1),rival=g.players[1];
+  rival.x=8.5;rival.y=1.5;g.owners[1*11+8]=1;
+  walk(g,0,[[6,2],[6,6],[3,6],[3,2]]);
+  assert.ok(g.players[0].pendingClaim.includes(4*11+4));const before=g.owners.slice();
+  walk(g,1,[[6,1],[6,3]]);
+  assert.deepEqual(g.owners,before);assert.equal(g.players[0].pendingClaim.length,0);
+  assert.equal(g.players[0].openPath.length,0);assert.equal(g.players[0].trail.length,0);
+});
