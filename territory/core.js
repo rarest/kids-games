@@ -40,7 +40,7 @@ function checkResult(g){
   for(let i=0;i<g.mask.length;i++)if(g.mask[i]){total++;if(g.owners[i]>=0)counts[g.owners[i]]++;}
   g.peak=Math.max(g.peak,total?counts[0]/total:0);
   for(const p of g.players)if(p.alive&&counts[p.id]===0){
-    p.alive=false;p.trail=[];p.route=[];event(g,'eliminated',p.id);
+    p.alive=false;clearTrail(p);p.route=[];event(g,'eliminated',p.id);
   }
   if(g.mode==='over')return;
   const winner=total?counts.findIndex(n=>n===total):-1;
@@ -55,23 +55,43 @@ function inside(x,y,polygon){
   }
   return contained;
 }
+function clearTrail(p){
+  p.trail=[];p.trailStart=null;p.openPath=[];p.pendingClaim=[];
+}
+function appendTrail(g,p,i){
+  // Visible/collidable trail cells are unique. Geometry keeps only a simple
+  // open path, while completed sub-loops contribute their interiors by union.
+  if(!p.trail.some(v=>cell(g,v.x,v.y)===i))p.trail.push(center(g,i));
+  const repeated=p.openPath.indexOf(i);
+  if(repeated<0){p.openPath.push(i);return;}
+  const loop=p.openPath.slice(repeated);
+  if(loop.length>=3){
+    const polygon=loop.map(j=>center(g,j)),pending=new Set(p.pendingClaim);
+    for(let j=0;j<g.mask.length;j++)if(g.mask[j]&&!pending.has(j)){
+      const c=center(g,j);if(inside(c.x,c.y,polygon))pending.add(j);
+    }
+    p.pendingClaim=[...pending];
+  }
+  p.openPath.length=repeated+1;
+}
 function closeTrail(g,p,end){
   // The owned return path completes the polygon. No island boundary is treated
   // as an exterior seed, so loops beside coastlines cannot capture the exterior.
   const home=landPath(g,p.id,end,p.trailStart);
-  if(!home){cutTrail(g,p);return;}
-  const polygon=[center(g,p.trailStart),...p.trail,...home.map(i=>center(g,i))];
-  const traced=new Set(p.trail.map(v=>cell(g,v.x,v.y)));let gained=0;
+  if(!home){cutTrail(g,p);return false;}
+  const polygon=[...p.openPath.map(i=>center(g,i)),...home.map(i=>center(g,i))];
+  const traced=new Set([...p.trail.map(v=>cell(g,v.x,v.y)),...p.pendingClaim]);let gained=0;
   for(let i=0;i<g.mask.length;i++)if(g.mask[i]&&g.owners[i]!==p.id){
     const pos=center(g,i);
     if(traced.has(i)||inside(pos.x,pos.y,polygon)){g.owners[i]=p.id;gained++;}
   }
-  p.trail=[];p.trailStart=null;
+  clearTrail(p);
   if(gained){g.revision++;event(g,'capture',p.id,{cells:gained});}
   checkResult(g);
   for(const other of g.players)if(other.id!==p.id&&other.alive&&!other.trail.length&&g.owners[cell(g,other.x,other.y)]!==other.id){
     returnHome(g,other);event(g,'displaced',other.id);
   }
+  return true;
 }
 function returnHome(g,p){
   p.route=[];p.cooldown=.8;
@@ -85,19 +105,21 @@ function returnHome(g,p){
 }
 function cutTrail(g,p){
   if(!p.trail.length)return;
-  p.trail=[];p.trailStart=null;returnHome(g,p);
+  clearTrail(p);returnHome(g,p);
   event(g,'cut',p.id);
 }
-function enter(g,p,i,previous){
+function touchTrail(g,p,i){
   for(const other of g.players)if(other.id!==p.id&&other.alive&&other.trail.some(v=>cell(g,v.x,v.y)===i))cutTrail(g,other);
-  if(g.owners[i]===p.id){if(p.trail.length)closeTrail(g,p,i);}
+}
+function enter(g,p,i,previous){
+  touchTrail(g,p,i);
+  if(g.owners[i]===p.id){if(p.trail.length&&!closeTrail(g,p,i))return false;}
   else {
     if(!p.trail.length){
       if(g.owners[previous]!==p.id)return false;
-      p.trailStart=previous;
+      p.trailStart=previous;p.openPath=[previous];p.pendingClaim=[];
     }
-    const last=p.trail.at(-1);
-    if(!last||cell(g,last.x,last.y)!==i)p.trail.push(center(g,i));
+    appendTrail(g,p,i);
   }
   return true;
 }
@@ -112,6 +134,9 @@ export function movePlayer(g,id,x,y){
     if(i%g.cols!==previous%g.cols&&Math.floor(i/g.cols)!==Math.floor(previous/g.cols)){
       const a=cell(g,xx,p.y),b=cell(g,p.x,yy);
       if(!g.mask[a]||!g.mask[b])return false;
+      // Both cells touched at a corner can hold an enemy trail, regardless of
+      // movement direction. Only one is used for the orthogonal polygon path.
+      touchTrail(g,p,b);
       // Visit the intermediate cell too: diagonal movement must not skip a trail.
       if(!enter(g,p,a,previous))return false;
       if(!enter(g,p,i,a))return false;
@@ -151,7 +176,7 @@ export function createGame({seed=Date.now(),cols=44,rows=38,bots=3}={}){
       if(d>best||selected<0){best=d;selected=i;}
     }
     if(selected<0)break;
-    const c=center(g,selected),p={id,...c,trail:[],trailStart:null,alive:true,color:COLORS[id],name:id?`纸片 ${id}`:'你',cooldown:0,route:[]};
+    const c=center(g,selected),p={id,...c,trail:[],trailStart:null,openPath:[],pendingClaim:[],alive:true,color:COLORS[id],name:id?`纸片 ${id}`:'你',cooldown:0,route:[]};
     g.players.push(p);
     for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
       const i=cell(g,c.x+dx,c.y+dy);if(g.mask[i]&&g.owners[i]===-1)g.owners[i]=id;

@@ -135,3 +135,33 @@ test('actual generated islands can reach 100 percent through legal continuous mo
     assert.ok(g.events.length<=100);
   }
 });
+test('ten thousand repeated two-cell detours keep trajectory state bounded by the map',()=>{
+  const g=board();walk(g,0,[[3,2]]);
+  for(let i=0;i<10000;i++)walk(g,0,[[4,2],[3,2]]);
+  const p=g.players[0];assert.equal(p.trail.length,2);
+  assert.equal(new Set(p.trail.map(v=>Math.floor(v.y)*g.cols+Math.floor(v.x))).size,2);
+  assert.ok(p.openPath.length<=g.mask.length);assert.ok(p.pendingClaim.length<=g.mask.length);
+  assert.equal(owner(g,3,2),-1);assert.equal(owner(g,4,2),-1);
+});
+for(const reverse of [false,true])test(`diagonal corner collision detects both touched cells (${reverse?'reverse':'forward'})`,()=>{
+  const g=board(11,11,1),p=g.players[1];
+  g.owners[4*11+2]=1;p.x=2.5;p.y=4.5;walk(g,1,[[2,3]]);
+  if(reverse){g.owners[4*11+4]=0;g.players[0].x=4.5;g.players[0].y=4.5;}
+  movePlayer(g,0,reverse?2.5:4.5,reverse?2.5:4.5);
+  assert.ok(g.events.some(e=>e.type==='cut'&&e.id===1));assert.equal(p.trail.length,0);
+});
+test('walking an outside loop twice preserves its enclosed area until the real return home',()=>{
+  const g=board();walk(g,0,[[6,2],[6,6],[3,6],[3,2],[6,2],[6,6],[3,6],[3,2]]);
+  assert.equal(owner(g,4,4),-1,'claims remain tentative while outside');
+  walk(g,0,[[2,2]]);assert.equal(owner(g,4,4),0);assert.equal(owner(g,8,4),-1);
+  assert.equal(g.players[0].pendingClaim.length,0);assert.equal(g.players[0].openPath.length,0);
+});
+test('a failed return-home path stops sampling immediately after teleporting home',()=>{
+  const g=board(11,11,1);g.owners[1*11+9]=1;
+  walk(g,0,[[6,2],[6,6]]);g.owners[4*11+2]=1;
+  const before=g.owners.slice();assert.equal(movePlayer(g,0,.5,6.5),false);
+  const p=g.players[0];assert.deepEqual(g.owners,before);
+  assert.equal(owner(g,Math.floor(p.x),Math.floor(p.y)),0);
+  assert.equal(p.trail.length,0);assert.equal(p.openPath.length,0);assert.equal(p.pendingClaim.length,0);
+  assert.equal(p.cooldown,.8);
+});
