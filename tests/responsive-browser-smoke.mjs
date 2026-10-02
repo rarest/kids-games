@@ -6,12 +6,13 @@ import {openBrowser,sleep} from './game-browser-harness.mjs';
 test('all game areas adapt to phone, tablet and desktop, including rotation',{timeout:90000},async()=>{
   const b=await openBrowser();
   try{
-    const games=[['pinyin','#stage'],['snake','.stage'],['fish','.stage'],['fishing','#game'],['goldminer','.stage-wrap'],['maze','.canvas-frame'],['merge4096','.board'],['shooter','#arena']];
+    const games=[['pinyin','#stage'],['snake','.stage'],['fish','.stage'],['fishing','#game'],['goldminer','.stage-wrap'],['maze','.canvas-frame'],['merge4096','.board'],['shooter','#arena'],['territory','#map']];
     for(const [name,selector]of games){
       await b.size(390,844,true);await b.navigate(`games/${name}.html`);
       if(name==='maze')await b.evaluate('startButton.click();document.querySelector(".stage-node:not(:disabled)").click()');
       if(name==='merge4096')await b.evaluate('startButton.click();joyMode.click();autoPauseButton.click()');
       if(name==='shooter')await b.evaluate('document.getElementById("start").click()');
+      if(name==='territory')await b.evaluate('document.getElementById("start").click()');
       for(const [w,h,touch]of [[320,568,true],[568,320,true],[390,844,true],[844,390,true],[820,1180,true],[1180,820,true],[1440,900,false]]){
         await b.size(w,h,touch);
         const rect=await b.evaluate(`(()=>{const el=document.querySelector(${JSON.stringify(selector)}),r=el?.getBoundingClientRect();return {width:r?.width,height:r?.height,x:r?.x,y:r?.y,scroll:document.documentElement.scrollWidth,view:innerWidth}})()`);
@@ -27,7 +28,7 @@ test('all game areas adapt to phone, tablet and desktop, including rotation',{ti
       }
       assert.deepEqual(b.errors,[],name);
     }
-    await b.navigate('index.html');assert.equal(await b.evaluate('document.querySelectorAll(".card").length'),8);
+    await b.navigate('index.html');assert.equal(await b.evaluate('document.querySelectorAll(".card").length'),9);
   }finally{b.close()}
 });
 
