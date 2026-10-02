@@ -45,6 +45,151 @@ const shot = async (b, name) => {
   await writeFile(`/tmp/parkour-${name}.png`, Buffer.from(r.data, "base64"));
 };
 
+for (const failedKey of ["glow-parkour-wardrobe-v1", "glow-parkour-v1"]) {
+  test(
+    `scoped review: outfit purchase rolls back when ${failedKey} cannot save`,
+    { timeout: 60000 },
+    async () => {
+      const b = await openBrowser();
+      try {
+        await b.size(640, 480);
+        await b.navigate("games/parkour.html");
+        await b.evaluate(
+          'localStorage.setItem("glow-parkour-v1",JSON.stringify({coins:2,owned:["red"],equipped:"red",progress:{}}))',
+        );
+        await b.navigate("games/parkour.html");
+        await b.evaluate(
+          `window.__nativeSetItem=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k===${JSON.stringify(failedKey)})throw new DOMException('Quota full','QuotaExceededError');return window.__nativeSetItem.call(this,k,v);};shop.click();document.querySelector('[data-shop-tab=outfits]').click();document.querySelector('button[data-outfit=academy]').click();`,
+        );
+        assert.match(
+          await b.evaluate('document.querySelector("#status").textContent'),
+          /保存失败/,
+        );
+        await b.evaluate("Storage.prototype.setItem=window.__nativeSetItem");
+        await b.navigate("games/parkour.html");
+        assert.equal(
+          await b.evaluate("coins.textContent"),
+          "2",
+          "failed purchase cannot durably debit the wallet",
+        );
+        assert.equal(
+          await b.evaluate("view.dataset.outfit"),
+          "",
+          "failed purchase cannot grant a free equipped outfit",
+        );
+        assert.equal(
+          await b.evaluate(
+            'JSON.parse(localStorage.getItem("glow-parkour-wardrobe-v1")||"null")?.owned?.includes("academy")??false',
+          ),
+          false,
+        );
+        await b.evaluate(
+          'shop.click();document.querySelector("[data-shop-tab=outfits]").click();document.querySelector("button[data-outfit=academy]").click()',
+        );
+        await b.navigate("games/parkour.html");
+        assert.equal(
+          await b.evaluate("coins.textContent"),
+          "0",
+          "a subsequent successful purchase debits exactly once",
+        );
+        assert.equal(
+          await b.evaluate("view.dataset.outfit"),
+          "academy",
+          "successful retry survives reload",
+        );
+        assert.deepEqual(b.errors, []);
+      } finally {
+        b.close();
+      }
+    },
+  );
+}
+
+test(
+  "scoped review: BFCache history return preserves a working jump loop",
+  { timeout: 60000 },
+  async () => {
+    const b = await openBrowser();
+    try {
+      await b.size(640, 480);
+      await b.navigate("games/parkour.html");
+      await b.evaluate(
+        'window.__historyMarker=42;window.addEventListener("pageshow",e=>window.__restoredFromCache=e.persisted)',
+      );
+      const position = await b.evaluate(
+        '(()=>{const r=document.querySelector(".brand").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()',
+      );
+      await click(b, position.x, position.y);
+      await wait(b, 'location.pathname.endsWith("/index.html")');
+      await b.evaluate("history.back()");
+      await wait(
+        b,
+        'location.pathname.endsWith("/games/parkour.html") && document.body.dataset.ready === "true"',
+      );
+      assert.equal(
+        await b.evaluate("window.__historyMarker"),
+        42,
+        "same document restored rather than reloaded",
+      );
+      assert.equal(
+        await b.evaluate("window.__restoredFromCache"),
+        true,
+        "native persisted pageshow observed",
+      );
+      await click(b, 520, 250);
+      await wait(b, "Number(view.dataset.y)>.4");
+      assert.deepEqual(b.errors, []);
+    } finally {
+      b.close();
+    }
+  },
+);
+
+test(
+  "scoped review: every touch button is at least 48px and fits narrow viewports",
+  { timeout: 60000 },
+  async () => {
+    const b = await openBrowser();
+    const verify = async (width) => {
+      const buttons = await b.evaluate(
+        'Array.from(document.querySelectorAll("button")).filter(b=>b.getClientRects().length).map(b=>{const r=b.getBoundingClientRect();return {id:b.id||b.textContent.trim(),x:r.x,right:r.right,w:r.width,h:r.height};})',
+      );
+      for (const r of buttons) {
+        assert.ok(r.w >= 48 && r.h >= 48, JSON.stringify(r));
+        assert.ok(r.x >= -1 && r.right <= width + 1, JSON.stringify(r));
+      }
+      assert.ok(
+        await b.evaluate("document.documentElement.scrollWidth <= innerWidth"),
+      );
+    };
+    try {
+      await b.size(390, 844, true);
+      await b.navigate("games/parkour.html");
+      for (const [width, height] of [
+        [320, 568],
+        [568, 320],
+        [390, 844],
+        [844, 390],
+      ]) {
+        await b.size(width, height, true);
+        await verify(width);
+        await b.evaluate(
+          'start.click();document.querySelector("[data-level=sakura-1]").click()',
+        );
+        await verify(width);
+        await b.evaluate(
+          'pause.click();document.querySelector("#pause-home").click();editor.click()',
+        );
+        await verify(width);
+        await b.evaluate('document.querySelector("#editor-close").click()');
+      }
+      assert.deepEqual(b.errors, []);
+    } finally {
+      b.close();
+    }
+  },
+);
+
 test(
   "audio unlock creates native context only after interaction and follows mute and pause",
   { timeout: 60000 },

@@ -47,7 +47,8 @@ let scene,
   shopTab = "skins",
   running = true;
 let needsRender = true,
-  lastRenderTime = 0;
+  lastRenderTime = 0,
+  frameId = 0;
 function status(text) {
   $("status").textContent = text;
   clearTimeout(statusTimer);
@@ -56,11 +57,33 @@ function status(text) {
   }, 6000);
 }
 function saveAppearance() {
-  const profileSaved = writeProfile(storage, profile),
-    wardrobeSaved = writeWardrobe(storage, wardrobe);
-  if (!profileSaved || !wardrobeSaved)
+  let saved = false;
+  try {
+    const previousProfile = storage.getItem("glow-parkour-v1");
+    if (writeProfile(storage, profile)) {
+      saved = writeWardrobe(storage, wardrobe);
+      if (!saved) {
+        // Native setItem is atomic per key; only the successful first write needs undo.
+        if (previousProfile === null) storage.removeItem("glow-parkour-v1");
+        else storage.setItem("glow-parkour-v1", previousProfile);
+      }
+    }
+  } catch {}
+  if (!saved)
     status("本地保存失败：当前外观与余额仍可使用，关闭页面后可能丢失。");
   $("coins").textContent = String(profile.coins);
+  return saved;
+}
+function commitShopChange(previousProfile, previousWardrobe) {
+  if (!saveAppearance()) {
+    Object.assign(profile, previousProfile);
+    Object.assign(wardrobe, previousWardrobe);
+    status(
+      "本地保存失败：本次购买或装备已取消，金币未扣除。请释放存储空间后重试。",
+    );
+  }
+  appearance();
+  renderShop();
 }
 const panels = [
   "home-panel",
@@ -158,26 +181,26 @@ function renderShop() {
   for (const button of $("skins").querySelectorAll("[data-skin]"))
     button.onclick = () => {
       const id = button.dataset.skin;
+      const previousProfile = structuredClone(profile),
+        previousWardrobe = structuredClone(wardrobe);
       if (!profile.owned.includes(id) && !buySkin(profile, id)) {
         status("金币不足，需要 2 金币。先去旅途中收集吧。");
         return;
       }
       equipSkin(profile, id);
-      appearance();
-      saveAppearance();
-      renderShop();
+      commitShopChange(previousProfile, previousWardrobe);
     };
   for (const button of $("outfits").querySelectorAll("[data-outfit]"))
     button.onclick = () => {
       const id = button.dataset.outfit;
+      const previousProfile = structuredClone(profile),
+        previousWardrobe = structuredClone(wardrobe);
       if (!wardrobe.owned.includes(id) && !buyOutfit(profile, wardrobe, id)) {
         status("金币不足，需要 2 金币购买整套衣服。");
         return;
       }
       equipOutfit(wardrobe, id);
-      appearance();
-      saveAppearance();
-      renderShop();
+      commitShopChange(previousProfile, previousWardrobe);
     };
   $("skins").hidden = shopTab !== "skins";
   $("outfits").hidden = shopTab !== "outfits";
@@ -252,7 +275,7 @@ function readback() {
 }
 function frame(now) {
   if (!running) return;
-  requestAnimationFrame(frame);
+  frameId = requestAnimationFrame(frame);
   const dt = Math.min(0.25, (now - lastTime) / 1000 || 0.016);
   lastTime = now;
   if (document.hidden) return;
@@ -474,16 +497,31 @@ try {
       '3D画面暂时中断，请重新加载。<a href="../index.html">返回游戏厅</a>';
     running = false;
   });
-  window.addEventListener(
-    "pagehide",
-    () => {
-      running = false;
+  window.addEventListener("pagehide", (event) => {
+    running = false;
+    cancelAnimationFrame(frameId);
+    controls.clear();
+    jumpRequested = false;
+    audio.setPaused(true);
+    if (event.persisted) {
+      pause();
+    } else {
       controls.dispose();
       audio.dispose();
       scene.dispose();
-    },
-    { once: true },
-  );
+    }
+  });
+  window.addEventListener("pageshow", (event) => {
+    if (!event.persisted) return;
+    controls.clear();
+    jumpRequested = false;
+    lastTime = performance.now();
+    needsRender = true;
+    running = true;
+    scene.resize();
+    if (mode === "home") audio.setPaused(false);
+    frameId = requestAnimationFrame(frame);
+  });
   showHome();
   scene.setTimeOfDay(wardrobe.timeOfDay);
   scene.update(state, 0.016, "home");
@@ -495,7 +533,7 @@ try {
     $("storage-note").textContent = storageMessage;
     status(storageMessage);
   }
-  requestAnimationFrame(frame);
+  frameId = requestAnimationFrame(frame);
 } catch (error) {
   $("loading").innerHTML =
     `<p>无法启动3D画面。${error.message.includes("WebGL") ? "当前浏览器无法使用 WebGL。" : "请重新加载后再试。"}</p><a href="../index.html">返回游戏厅</a>`;
