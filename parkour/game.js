@@ -402,6 +402,7 @@ try {
     $("mute").textContent = value ? "♪̸" : "♫";
     $("mute").setAttribute("aria-label", value ? "打开声音" : "静音");
     audio.setMuted(value);
+    if (mode === "playing") view.focus({ preventScroll: true });
   };
   for (const button of document.querySelectorAll("[data-shop-tab]"))
     button.onclick = () => {

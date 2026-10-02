@@ -45,6 +45,52 @@ const shot = async (b, name) => {
   await writeFile(`/tmp/parkour-${name}.png`, Buffer.from(r.data, "base64"));
 };
 
+test(
+  "mute pointer click preserves playing keyboard movement and jump",
+  { timeout: 60000 },
+  async () => {
+    const b = await openBrowser();
+    try {
+      await b.size(960, 640);
+      await b.navigate("games/parkour.html");
+      await b.evaluate(
+        'start.click();document.querySelector("[data-level=sakura-1]").click()',
+      );
+      const mutePosition = await b.evaluate(
+        "(()=>{const r=mute.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()",
+      );
+      await click(b, mutePosition.x, mutePosition.y);
+      const before = Number(await b.evaluate("view.dataset.x"));
+      await key(b, "ArrowUp");
+      await sleep(350);
+      await key(b, "ArrowUp", false);
+      assert.ok(
+        Number(await b.evaluate("view.dataset.x")) > before + 0.4,
+        "native direction key still moves after clicking mute",
+      );
+      await key(b, "Space");
+      await wait(b, "Number(view.dataset.y)>.4");
+      await key(b, "Space", false);
+      assert.equal(
+        await b.evaluate('mute.getAttribute("aria-pressed")'),
+        "true",
+        "Space jumps rather than reactivating the mute button",
+      );
+      await b.evaluate("pause.click()");
+      await click(b, mutePosition.x, mutePosition.y);
+      assert.notEqual(
+        await b.evaluate("document.activeElement.id"),
+        "view",
+        "paused controls do not focus through the modal",
+      );
+      assert.equal(await b.evaluate("view.dataset.mode"), "paused");
+      assert.deepEqual(b.errors, []);
+    } finally {
+      b.close();
+    }
+  },
+);
+
 for (const failedKey of ["glow-parkour-wardrobe-v1", "glow-parkour-v1"]) {
   test(
     `scoped review: outfit purchase rolls back when ${failedKey} cannot save`,
