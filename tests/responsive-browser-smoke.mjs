@@ -17,7 +17,7 @@ test('all game areas adapt to phone, tablet and desktop, including rotation',{ti
         const rect=await b.evaluate(`(()=>{const el=document.querySelector(${JSON.stringify(selector)}),r=el?.getBoundingClientRect();return {width:r?.width,height:r?.height,x:r?.x,y:r?.y,scroll:document.documentElement.scrollWidth,view:innerWidth}})()`);
         assert.ok(rect.scroll<=w+1,`${name} ${w}x${h}: horizontal overflow ${JSON.stringify(rect)}`);
         assert.ok(rect.width>100&&rect.height>90,`${name} ${w}x${h}: usable play area ${JSON.stringify(rect)}`);
-        if(['pinyin','fish','fishing','shooter'].includes(name))assert.ok(rect.width>=w*.9,`${name} ${w}: fills width`);
+        if(['pinyin','fish','fishing','shooter'].includes(name))assert.ok(rect.width>=w*.9,`${name} ${w}: fills width ${JSON.stringify(rect)}`);
         if(name==='pinyin'){
           const k=await b.evaluate('(()=>{const r=keyboard.getBoundingClientRect();return {w:r.width,b:r.bottom,key:document.querySelector(".key").getBoundingClientRect().height}})()');
           assert.ok(k.w>=w*.9&&k.b<=h+1&&k.key>=28,`keyboard ${w}x${h} ${JSON.stringify(k)}`);
