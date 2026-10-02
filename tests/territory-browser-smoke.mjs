@@ -9,7 +9,7 @@ const click=async(b,selector)=>b.evaluate(`document.querySelector(${JSON.stringi
 const screenshot=async(b,path)=>{const p=await b.call('Page.captureScreenshot',{format:'png'});await writeFile(path,Buffer.from(p.data,'base64'))};
 const touch=async(b,type,x,y)=>b.call('Input.dispatchTouchEvent',{type,touchPoints:type==='touchEnd'?[]:[{x,y,id:1,radiusX:3,radiusY:3,force:1}]});
 
-test('large circular island camera and dotted overview follow a real circular joystick route',{timeout:30000},async()=>{
+test('large wavy island camera and blank overview follow a real circular joystick route',{timeout:30000},async()=>{
   const b=await openBrowser();
   try{
     await b.size(390,844,true);await b.navigate('games/territory.html');await click(b,'#start');
@@ -35,7 +35,7 @@ test('continuous colored trail renders translucently instead of opaque square ti
   const b=await openBrowser();
   try{
     await b.size(1440,900,false);await b.navigate('games/territory.html');
-    const pixels=await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search;const{createGame}=await import('../territory/core.js'+release),{createRenderer}=await import('../territory/render.js'+release);const c=document.createElement('canvas');c.style.cssText='width:800px;height:600px;position:fixed;left:0;top:0;z-index:99';document.body.append(c);const g=createGame({seed:7,bots:0});g.owners.fill(-1);const p=g.players[0];p.x=24.5;p.y=17.5;const renderer=createRenderer(c),skin={color:'#ed4949',tier:'normal',pattern:'plain'};const geom=renderer.draw(g,skin);const x=Math.round((geom.ox+20.75*geom.scale)*devicePixelRatio),y=Math.round((geom.oy+16.25*geom.scale)*devicePixelRatio);const before=[...c.getContext('2d').getImageData(x,y,1,1).data];p.stroke=[{x:18,y:19},{x:19.5,y:16.5},{x:22,y:16},{x:24.5,y:17.5}];renderer.draw(g,skin);const after=[...c.getContext('2d').getImageData(x,y,1,1).data];c.remove();return{before,after}})()`);
+    const pixels=await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search;const{createGame}=await import('../territory/core.js'+release),{createRenderer}=await import('../territory/render.js'+release);const c=document.createElement('canvas');c.style.cssText='width:800px;height:600px;position:fixed;left:0;top:0;z-index:99';document.body.append(c);const g=createGame({seed:7,bots:0});g.territories=[[]];g.areas=[0];const p=g.players[0];p.x=24.5;p.y=17.5;const renderer=createRenderer(c),skin={color:'#ed4949',tier:'normal',pattern:'plain'};const geom=renderer.draw(g,skin);const x=Math.round((geom.ox+20.75*geom.scale)*devicePixelRatio),y=Math.round((geom.oy+16.25*geom.scale)*devicePixelRatio);const before=[...c.getContext('2d').getImageData(x,y,1,1).data];p.stroke=[{x:18,y:19},{x:19.5,y:16.5},{x:22,y:16},{x:24.5,y:17.5}];renderer.draw(g,skin);const after=[...c.getContext('2d').getImageData(x,y,1,1).data];c.remove();return{before,after}})()`);
     assert.ok(pixels.before[1]-pixels.after[1]>15,'colored ribbon is visible');assert.ok(pixels.after[1]>90,'underlying paper remains visible through the ribbon');assert.notDeepEqual(pixels.after.slice(0,3),[237,73,73],'ribbon is not opaque red');
     assert.deepEqual(b.errors,[]);
   }finally{b.close()}
@@ -89,11 +89,11 @@ test('paper territory has real shop categories, circular previews, locked silhou
       }
       if(tier==='fine'){
         assert.equal(await b.evaluate('new Set([...document.querySelectorAll(".skin-preview")].map(c=>c.toDataURL())).size'),20,'20 distinct rendered textures');
-        assert.equal(await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search,{drawPaper}=await import('../territory/render.js'+release),{SKINS}=await import('../territory/profile.js');return new Set(SKINS.filter(s=>s.tier==='fine').map(s=>{const c=document.createElement('canvas');c.width=c.height=112;drawPaper(c.getContext('2d'),56,56,72,{...s,color:'#629ca6'});return c.toDataURL()})).size})()`),20,'texture differences remain visible even with identical colors');
+        assert.equal(await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search,{drawPaper}=await import('../territory/render.js'+release),{SKINS}=await import('../territory/profile.js'+release);return new Set(SKINS.filter(s=>s.tier==='fine').map(s=>{const c=document.createElement('canvas');c.width=c.height=112;drawPaper(c.getContext('2d'),56,56,72,{...s,color:'#629ca6'});return c.toDataURL()})).size})()`),20,'texture differences remain visible even with identical colors');
       }
     }
     // A legitimate persisted profile is the boundary; no production mutation API.
-    await b.evaluate('localStorage.setItem("paper-territory.profile.v1",JSON.stringify({coins:100,wins:1,owned:["red"],selected:"red",settled:[]}))');
+    await b.evaluate('localStorage.setItem("paper-territory.profile.v1",JSON.stringify({coins:100,wins:1,owned:["red","hidden-galaxy"],selected:"red",settled:[]}))');
     await b.navigate('games/territory.html');await click(b,'#shop');
     await click(b,'[data-skin="blue"] button');
     assert.equal(await b.evaluate('document.querySelector("#wallet").textContent'),'80');
@@ -102,7 +102,7 @@ test('paper territory has real shop categories, circular previews, locked silhou
     assert.equal(await b.evaluate('document.querySelector("#home-paper").dataset.skin'),'blue');
     await click(b,'#shop');await click(b,'[data-tier="hidden"]');
     assert.equal(await b.evaluate('document.querySelectorAll(".skin-card[data-locked=true]").length'),19);
-    assert.equal(await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search,{drawPaper}=await import('../territory/render.js'+release),{SKINS}=await import('../territory/profile.js');return new Set(SKINS.filter(s=>s.tier==='hidden').map(s=>{const c=document.createElement('canvas');c.width=c.height=128;drawPaper(c.getContext('2d'),64,64,62,{...s,color:'#629ca6'},1,{active:true});return c.toDataURL()})).size})()`),20,'20 distinct rendered hidden effects');
+    assert.equal(await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search,{drawPaper}=await import('../territory/render.js'+release),{SKINS}=await import('../territory/profile.js'+release);return new Set(SKINS.filter(s=>s.tier==='hidden').map(s=>{const c=document.createElement('canvas');c.width=c.height=128;drawPaper(c.getContext('2d'),64,64,62,{...s,color:'#629ca6'},1,{active:true});return c.toDataURL()})).size})()`),20,'20 distinct rendered hidden effects');
     await click(b,'[data-tier="normal"]');await b.evaluate('Storage.prototype.setItem=()=>{throw new Error("storage unavailable")}');await click(b,'[data-skin="orange"] button');
     assert.match(await b.evaluate('document.querySelector("#notice").textContent'),/无法保存/,'failed persistence remains visible after purchase');
     assert.deepEqual(b.errors,[]);
@@ -115,7 +115,7 @@ test('paper territory speed selector keeps native keyboard navigation without mo
     await b.size(1440,900,false);await b.navigate('games/territory.html');await click(b,'#start');
     const p=await position(b);await b.evaluate('document.querySelector("#speed").focus()');
     await b.call('Input.dispatchKeyEvent',{type:'keyDown',key:'ArrowDown',code:'ArrowDown'});await b.call('Input.dispatchKeyEvent',{type:'keyUp',key:'ArrowDown',code:'ArrowDown'});await sleep(100);
-    assert.equal(await b.evaluate('document.querySelector("#speed").value'),'5.2','arrow changes the native speed selection');
+    assert.equal(await b.evaluate('document.querySelector("#speed").value'),'6.2','arrow changes the native speed selection');
     assert.deepEqual(await position(b),p,'focused select never steers the player');
     assert.deepEqual(b.errors,[]);
   }finally{b.close()}

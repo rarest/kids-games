@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,movePlayer} from '../territory/core.js';
+import {createGame,movePlayer} from '../territory/legacy-core.js';
 import {circleCover,containsCircle} from '../territory/geometry.js';
 test('islands consist of connected large and small circles sampled into the same logical mask',()=>{
   for(let seed=1;seed<=12;seed++){const g=createGame({seed,cols:88,rows:76});assert.ok(g.islandCircles.length>=4);assert.ok(new Set(g.islandCircles.map(c=>c.r)).size>3);

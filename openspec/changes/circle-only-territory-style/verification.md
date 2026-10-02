@@ -8,6 +8,8 @@
 - 独立审查另检查 500 个随机形状的中心归属与邻接连接；100×100 几何计算均值约 3.9–6.0 ms。
 - `npm test` 退出码 0：248 项单元检查、19 项浏览器检查全部通过。
 - OpenSpec 严格校验、`git diff --check` 通过。
-- 生产发布：进行中。
+- PR #26 已合并，生产提交 `d3c5ce2`，服务器仓库及站点文件已同步。
+- 公网 HTML、core、game、render、geometry、style 六个资源哈希与测试版本一致；两个域名的普通页面请求也一致。
+- 公网 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/territory-browser-smoke.mjs tests/responsive-browser-smoke.mjs`：11 项通过。
 
-后续动作：合并主线，核对公网资源哈希并执行公网游玩检查。
+圆形版本已交付。接续用户新增的银河领地效果与圆弧边界移动需求，先由 `galaxy-territory-smooth-boundary` 记录；随后新增彻底去格、真实围地、波浪海岸和触碰宝箱奖励要求，统一由 `continuous-vector-territory` 交付。

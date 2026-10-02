@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame, movePlayer, stepGame, coverage, finishRun} from '../territory/core.js';
+import {createGame, movePlayer, stepGame, coverage, finishRun} from '../territory/legacy-core.js';
 
 // Hand-made maps make geometric expectations independent of the random generator.
 function board(cols=11,rows=11,bots=0){
