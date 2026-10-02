@@ -13,3 +13,8 @@
 .reward-status strong{font-size:20px;color:#273e44}
 .result-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,4vw,40px);width:100%;max-width:440px;margin-left:auto;margin-right:auto}
 .result-stats strong{font-size:clamp(20px,6vw,30px);overflow-wrap:anywhere}
+.diamonds{color:#387bb4;background:#effaff;border-color:#badce7}
+.diamond-exchange{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;margin-bottom:14px}
+.diamond-exchange button{font-size:12px;padding:10px;min-height:40px}
+.shop-tabs{flex-wrap:wrap}
+@media(max-width:600px){.topbar{gap:6px}.wallet-pill{min-width:44px;padding:6px 8px}.wordmark{letter-spacing:1px;font-size:15px}.wordmark span{display:none}.hall-link{font-size:11px}.shop-tabs button{flex:1 1 42%;padding:10px}.diamond-exchange{gap:7px}}

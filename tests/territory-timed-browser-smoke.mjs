@@ -36,7 +36,7 @@ test('actual page enters full-island prizes, clocks extend time, pause freezes a
   assert.equal(await b.evaluate('document.body.dataset.screen'),'result');
   const result=await b.evaluate('({score:Number(document.getElementById("result-score").textContent),coins:Number(document.getElementById("result-coins").textContent),profile:JSON.parse(localStorage.getItem("paper-territory.profile.v1"))})');
   assert.ok(result.coins>=155);assert.equal(result.score,result.coins);assert.equal(result.profile.wins,1);assert.equal(result.profile.score,result.score);assert.equal(result.profile.owned.length,4);
-  await b.size(320,720,true);assert.equal(await b.evaluate('document.documentElement.scrollWidth<=innerWidth'),true,'winning score columns fit the narrowest supported phone');
+  await b.size(320,720,true);assert.ok(await b.evaluate('document.documentElement.scrollWidth')<=320,'winning score columns fit the narrowest supported phone');
   await b.evaluate('document.getElementById("return-home").click()');await b.navigate('games/territory.html');assert.equal(Number(await b.evaluate('document.getElementById("total-score").textContent')),result.score);
   assert.deepEqual(b.errors,[]);
  }finally{b.close()}

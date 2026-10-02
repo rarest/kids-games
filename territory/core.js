@@ -15,7 +15,7 @@ import {
   nearestSegment,
   simplifyPath,
   clamp,
-} from "./regions.js?v=20261002rewards";
+} from "./regions.js?v=20261002animals";
 const COLORS = ["#ed4949", "#4189ee", "#f3b63a", "#a269db"];
 export function random(g) {
   g.rng = (g.rng + 0x6d2b79f5) >>> 0;

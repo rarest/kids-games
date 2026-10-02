@@ -1,3 +1,4 @@
+import { ANIMALS } from './animals.js?v=20261002animals';
 const NORMAL = [
   ["red", "朱砂红", "#ed4949"],
   ["orange", "橘子橙", "#f18a3c"],
@@ -95,6 +96,7 @@ export const SKINS = [
     winsRequired: i + 1,
     effect,
   })),
+  ...ANIMALS.map(([animal, name, color]) => ({ id: `animal-${animal}`, name, color, animal, tier: 'special', pattern: `animal-${animal}`, effect: 'none', price: 100, currency: 'diamonds', winsRequired: 0 })),
 ];
 const skinById = new Map(SKINS.map((s) => [s.id, s]));
 const validNumber = (n) =>
@@ -129,6 +131,7 @@ export function createProfile(raw) {
     coins: integer(raw.coins),
     wins: integer(raw.wins),
     score: integer(raw.score),
+    diamonds: integer(raw.diamonds),
     owned,
     selected: owned.includes(raw.selected) ? raw.selected : "red",
     settled,
@@ -137,15 +140,22 @@ export function createProfile(raw) {
 }
 export function buySkin(profile, id) {
   const skin = skinById.get(id);
+  const currency = skin?.currency === 'diamonds' ? 'diamonds' : 'coins';
   if (
     !skin ||
     skin.tier === "hidden" ||
     profile.owned.includes(id) ||
-    profile.coins < skin.price
+    integer(profile[currency]) < skin.price
   )
     return false;
-  profile.coins -= skin.price;
+  profile[currency] -= skin.price;
   profile.owned.push(id);
+  return true;
+}
+export function exchangeDiamonds(profile, coins) {
+  if (!Number.isSafeInteger(coins) || coins <= 0 || integer(profile.coins) < coins || integer(profile.diamonds) > Number.MAX_SAFE_INTEGER - coins * 2 || !Number.isSafeInteger(coins * 2)) return false;
+  profile.coins -= coins;
+  profile.diamonds = integer(profile.diamonds) + coins * 2;
   return true;
 }
 export function equipSkin(profile, id) {

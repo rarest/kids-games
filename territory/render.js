@@ -1,5 +1,6 @@
-import { viewport } from "./geometry.js?v=20261002rewards";
-import { containsRegion, regionBounds } from "./regions.js?v=20261002rewards";
+import { viewport } from "./geometry.js?v=20261002animals";
+import { containsRegion, regionBounds } from "./regions.js?v=20261002animals";
+import { drawAnimal } from './animals.js?v=20261002animals';
 const TAU = Math.PI * 2;
 function paperPath(c) {
   c.beginPath();
@@ -428,7 +429,8 @@ export function drawPaper(
     ctx.translate(50, 50);
     ctx.rotate(roll);
     ctx.translate(-50, -50);
-    if (skin.tier !== "normal") ctx.drawImage(material(skin), 0, 0, 100, 100);
+    if (skin.tier !== "normal" && skin.tier !== 'special') ctx.drawImage(material(skin), 0, 0, 100, 100);
+    if (skin.tier === 'special') drawAnimal(ctx, 50, 53, 80, skin.animal);
     const shine = ctx.createRadialGradient(28, 24, 0, 50, 50, 68);
     shine.addColorStop(0, "#ffffff75");
     shine.addColorStop(0.48, "#ffffff08");
@@ -484,7 +486,7 @@ function circlePath(circles, tile) {
 }
 const materials = new Map();
 export function material(skin) {
-  const key = [skin.color, skin.tier, skin.pattern, skin.effect].join(":");
+  const key = [skin.color, skin.tier, skin.pattern, skin.effect, skin.animal].join(":");
   if (materials.has(key)) return materials.get(key);
   const canvas = document.createElement("canvas");
   canvas.width = canvas.height = 192;
@@ -493,6 +495,9 @@ export function material(skin) {
   c.fillStyle = skin.color;
   c.fillRect(0, 0, 100, 100);
   texture(c, skin.pattern);
+  if (skin.tier === 'special') {
+    for (const x of [25, 75]) for (const y of [25, 75]) drawAnimal(c, x, y, 43, skin.animal);
+  }
   for (let i = 0; i < 650; i++) {
     const x = (i * 47.713) % 100,
       y = (i * 31.419) % 100;
@@ -601,7 +606,7 @@ export function createRenderer(
     }
     geometry = viewport(game, w, h, follow);
     const { scale, ox, oy } = geometry;
-    const key = `${game.runId}:${game.revision}:${skin.id}:${skin.color}:${skin.tier}:${skin.pattern}:${skin.effect}`;
+    const key = `${game.runId}:${game.revision}:${skin.id}:${skin.color}:${skin.tier}:${skin.pattern}:${skin.effect}:${skin.animal}`;
     if (key !== previous) {
       previous = key;
       base.width = game.cols * tile;
@@ -657,7 +662,7 @@ export function createRenderer(
       c.strokeStyle = "#fff8";
       c.lineWidth = 1.5;
       c.stroke(coast);
-      if (bounds && skin.tier !== "normal") {
+      if (bounds && ['fine', 'hidden'].includes(skin.tier)) {
         const count = Math.min(
           skin.tier === "hidden" ? 160 : 96,
           Math.max(

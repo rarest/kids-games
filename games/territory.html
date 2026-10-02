@@ -6,13 +6,14 @@
   <meta name="theme-color" content="#f7f2e6">
   <meta name="description" content="驾驶圆形小纸片，在柔润的波浪岛屿上画出透明曲线、圈出领地。手机摇杆、电脑鼠标都能玩。">
   <title>纸片领地 · 小火箭游戏厅</title>
-  <link rel="stylesheet" href="../territory/style.css?v=20261002rewards">
+  <link rel="stylesheet" href="../territory/style.css?v=20261002animals">
 </head>
 <body data-screen="home" data-mode="home">
   <header class="topbar">
     <a class="hall-link" href="../index.html" aria-label="返回游戏厅">← 游戏厅</a>
     <a class="wordmark" href="territory.html">纸片领地<span>PAPER ISLANDS</span></a>
     <div class="wallet-pill" aria-label="金币"><span class="coin">✦</span><span id="wallet">0</span></div>
+    <div class="wallet-pill diamonds" aria-label="钻石"><span>◇</span><span id="diamond-wallet">0</span></div>
   </header>
   <main>
     <section id="home-screen" class="home-screen" aria-label="纸片领地主页">
@@ -30,7 +31,8 @@
     </section>
     <section id="shop-screen" class="shop-screen" hidden aria-label="纸片商店">
       <div class="section-heading"><div><span class="eyebrow">THE PAPER COLLECTION</span><h1>挑一张，喜欢的纸。</h1><p>颜色只是心情，不影响速度与碰撞。</p></div><button id="shop-back" class="secondary small">← 返回主页</button></div>
-      <div class="shop-tabs" role="tablist" aria-label="皮肤分类"><button data-tier="normal" role="tab" aria-selected="true">普通纸 <span>20</span></button><button data-tier="fine" role="tab" aria-selected="false">精致纸 <span>20</span></button><button data-tier="hidden" role="tab" aria-selected="false">隐藏纸 <span>20</span></button></div>
+      <div class="shop-tabs" role="tablist" aria-label="皮肤分类"><button data-tier="normal" role="tab" aria-selected="true">普通纸 <span>20</span></button><button data-tier="fine" role="tab" aria-selected="false">精致纸 <span>20</span></button><button data-tier="hidden" role="tab" aria-selected="false">隐藏纸 <span>20</span></button><button data-tier="special" role="tab" aria-selected="false">动物特别款 <span>20</span></button></div>
+      <div class="diamond-exchange"><span>1 金币 = 2 钻石</span><button id="exchange-one" class="secondary small">兑换2钻石 · 1金币</button><button id="exchange-fifty" class="secondary small">兑换100钻石 · 50金币</button></div>
       <p id="shop-description" class="shop-description"></p><div id="skin-grid" class="skin-grid"></div>
     </section>
     <section id="game-screen" class="game-screen" hidden aria-label="游戏地图">
@@ -43,6 +45,6 @@
   </main>
   <div id="pause-dialog" class="modal-backdrop" hidden><section class="pause-dialog" role="dialog" aria-modal="true" aria-labelledby="pause-title"><span class="eyebrow">TAKE A LITTLE BREATH</span><h2 id="pause-title">小纸片，休息一下。</h2><p>这座岛会等你回来。</p><button id="resume" class="primary">继续圈地 ↗</button><button id="finish" class="secondary">结束本局并结算</button></section></div>
   <p id="notice" class="notice" role="status" aria-live="polite" hidden></p>
-  <script type="module" src="../territory/game.js?v=20261002rewards"></script>
+  <script type="module" src="../territory/game.js?v=20261002animals"></script>
 </body>
 </html>

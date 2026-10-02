@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {SKINS,createProfile,buySkin,equipSkin,settleRun,collectReward} from '../territory/profile.js';
 import {createGame,finishRun} from '../territory/core.js';
 
-test('sixty skins have twenty per tier and distinct visible patterns or effects',()=>{
-  assert.equal(SKINS.length,60);assert.equal(new Set(SKINS.map(s=>s.id)).size,60);
-  for(const tier of ['normal','fine','hidden'])assert.equal(SKINS.filter(s=>s.tier===tier).length,20);
+test('eighty skins have twenty per tier and distinct visible patterns or effects',()=>{
+  assert.equal(SKINS.length,80);assert.equal(new Set(SKINS.map(s=>s.id)).size,80);
+  for(const tier of ['normal','fine','hidden','special'])assert.equal(SKINS.filter(s=>s.tier===tier).length,20);
   assert.equal(new Set(SKINS.filter(s=>s.tier==='normal').map(s=>s.color)).size,20);
   assert.equal(new Set(SKINS.filter(s=>s.tier==='fine').map(s=>s.pattern)).size,20);
   assert.equal(new Set(SKINS.filter(s=>s.tier==='hidden').map(s=>s.effect)).size,20);
