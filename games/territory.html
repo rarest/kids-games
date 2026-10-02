@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f7f2e6">
   <meta name="description" content="驾驶折角小纸片，在青蓝海上的纸艺岛屿圈出你的领地。手机摇杆、电脑鼠标都能玩。">
   <title>纸片领地 · 小火箭游戏厅</title>
-  <link rel="stylesheet" href="../territory/style.css?v=20261002c">
+  <link rel="stylesheet" href="../territory/style.css?v=20261002round">
 </head>
 <body data-screen="home" data-mode="home">
   <header class="topbar">
@@ -34,13 +34,13 @@
     </section>
     <section id="game-screen" class="game-screen" hidden aria-label="游戏地图">
       <div class="game-hud"><div class="coverage"><span>你的领地</span><strong id="coverage">0.0<span>%</span></strong></div><div id="rankings" class="rankings" aria-label="纸片排名"></div><button id="pause" class="pause-button" aria-label="暂停游戏">Ⅱ</button></div>
-      <div class="play-layout"><div class="map-frame"><canvas id="map" aria-label="纸片岛屿地图"></canvas><span id="map-hint" class="map-hint">走出去，再回到自己的颜色</span><span class="map-compass">N ↑</span></div><div class="controls"><div id="joystick" role="group" aria-label="自由方向摇杆"><span class="joy-rings"></span><span class="joy-arrow north">↑</span><span class="joy-arrow south">↓</span><span class="joy-arrow west">←</span><span class="joy-arrow east">→</span><span id="joy-knob"></span></div><div class="control-copy"><strong>松手即停</strong><span id="input-help" class="desktop-help">鼠标跟随 / WASD</span><label class="speed-label">速度<select id="speed" aria-label="游戏速度"><option value="3.6">舒缓</option><option value="5.2">标准</option></select></label></div></div></div>
-      <p class="game-footnote">透明条纹是未完成的路 · 回家闭合才能变成领地</p>
+      <div class="play-layout"><div class="map-frame"><canvas id="map" aria-label="纸片岛屿局部地图"></canvas><aside class="minimap-card" aria-label="全岛小地图"><span>全岛 · 白点是你</span><canvas id="minimap" width="128" height="111" aria-label="马赛克领地与当前位置"></canvas></aside><span id="map-hint" class="map-hint">走出去，再回到自己的颜色</span></div><div class="controls"><div id="joystick" role="group" aria-label="自由方向摇杆"><span class="joy-rings"></span><span class="joy-arrow north">↑</span><span class="joy-arrow south">↓</span><span class="joy-arrow west">←</span><span class="joy-arrow east">→</span><span id="joy-knob"></span></div><div class="control-copy"><strong>松手即停</strong><span id="input-help" class="desktop-help">鼠标跟随 / WASD</span><label class="speed-label">速度<select id="speed" aria-label="游戏速度"><option value="3.6">舒缓</option><option value="5.2">标准</option></select></label></div></div></div>
+      <p class="game-footnote">沿任意角度画透明曲线 · 回家围地，也能连接两块自己的领地</p>
     </section>
     <section id="result-screen" class="result-screen" hidden aria-label="本局结算"><span class="eyebrow">YOUR LITTLE EXPEDITION</span><canvas id="result-paper" width="128" height="128" aria-label="本局纸片"></canvas><h1 id="result-title"></h1><p id="result-copy"></p><div class="result-stats"><div><span>最高占地</span><strong id="result-peak"></strong></div><div><span>本局金币</span><strong id="result-coins"></strong></div></div><button id="return-home" class="primary">回到主页 ↗</button></section>
   </main>
   <div id="pause-dialog" class="modal-backdrop" hidden><section class="pause-dialog" role="dialog" aria-modal="true" aria-labelledby="pause-title"><span class="eyebrow">TAKE A LITTLE BREATH</span><h2 id="pause-title">小纸片，休息一下。</h2><p>这座岛会等你回来。</p><button id="resume" class="primary">继续圈地 ↗</button><button id="finish" class="secondary">结束本局并结算</button></section></div>
   <p id="notice" class="notice" role="status" aria-live="polite" hidden></p>
-  <script type="module" src="../territory/game.js?v=20261002c"></script>
+  <script type="module" src="../territory/game.js?v=20261002round"></script>
 </body>
 </html>

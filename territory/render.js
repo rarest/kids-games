@@ -1,3 +1,4 @@
+import{contours,smoothContour,viewport}from'./geometry.js?v=20261002round';
 const TAU=Math.PI*2;
 function paperPath(c){c.beginPath();c.moveTo(0,0);c.lineTo(78,0);c.lineTo(100,22);c.lineTo(100,100);c.lineTo(0,100);c.closePath()}
 function line(c,x,y,u,v){c.beginPath();c.moveTo(x,y);c.lineTo(u,v);c.stroke()}
@@ -71,43 +72,47 @@ export function drawPaper(ctx,x,y,size,skin,time=0,{locked=false,active=false}={
   ctx.restore();
 }
 
-export function createRenderer(canvas){
-  const ctx=canvas.getContext('2d'),base=document.createElement('canvas');let previous='',geometry={scale:1,ox:0,oy:0},width=0,height=0;
+function shapePath(mask,cols,rows,tile){
+  const path=new Path2D();for(const loop of contours(mask,cols,rows)){const p=smoothContour(loop);path.moveTo(p[0].x*tile,p[0].y*tile);for(const v of p.slice(1))path.lineTo(v.x*tile,v.y*tile);path.closePath()}return path;
+}
+export function createRenderer(canvas,{follow=false,minimap=null}={}){
+  const ctx=canvas.getContext('2d'),base=document.createElement('canvas'),miniBase=document.createElement('canvas'),tile=18;let previous='',geometry={scale:1,ox:0,oy:0},width=0,height=0,baseBuilds=0;
   function draw(game,skin,time=0){
     // Hidden canvases have no layout size. Preserve their intrinsic aspect ratio;
     // client dimensions also avoid resizing from the rotated hero's bounding box.
     const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return geometry;
     const dpr=Math.min(2,window.devicePixelRatio||1);
     if(width!==w||height!==h||canvas.width!==Math.round(w*dpr)){width=w;height=h;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);previous=''}
-    const scale=Math.min((w-26)/game.cols,(h-32)/game.rows),ox=(w-game.cols*scale)/2,oy=(h-game.rows*scale)/2;geometry={scale,ox,oy};
-    const key=`${game.runId}:${game.revision}:${w}:${h}:${dpr}:${skin.color}`;
+    geometry=viewport(game,w,h,follow);const{scale,ox,oy}=geometry;
+    const key=`${game.runId}:${game.revision}:${skin.color}`;
     if(key!==previous){
-      previous=key;base.width=canvas.width;base.height=canvas.height;const c=base.getContext('2d');c.scale(dpr,dpr);
-      const water=c.createLinearGradient(0,0,w,h);water.addColorStop(0,'#b2dcd5');water.addColorStop(.5,'#83c5c8');water.addColorStop(1,'#64aeb9');c.fillStyle=water;c.fillRect(0,0,w,h);
-      c.lineWidth=1;c.strokeStyle='#e9fffa34';for(let i=0;i<65;i++){const x=(i*137.31)%w,y=(i*87.47)%h;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+7,y+3,x+15,y);c.stroke()}
-      const shape=new Path2D();for(let i=0;i<game.mask.length;i++)if(game.mask[i])shape.rect(ox+(i%game.cols)*scale,oy+Math.floor(i/game.cols)*scale,scale+.12,scale+.12);
+      previous=key;base.width=game.cols*tile;base.height=game.rows*tile;baseBuilds++;const c=base.getContext('2d'),bw=base.width,bh=base.height;
+      const water=c.createLinearGradient(0,0,bw,bh);water.addColorStop(0,'#b2dcd5');water.addColorStop(.5,'#83c5c8');water.addColorStop(1,'#64aeb9');c.fillStyle=water;c.fillRect(0,0,bw,bh);
+      c.lineWidth=1;c.strokeStyle='#e9fffa34';for(let i=0;i<650;i++){const x=(i*137.31)%bw,y=(i*87.47)%bh;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+7,y+3,x+15,y);c.stroke()}
+      const shape=shapePath(game.mask,game.cols,game.rows,tile);
       c.shadowColor='#3f6b6955';c.shadowBlur=13;c.shadowOffsetX=1;c.shadowOffsetY=8;c.fillStyle='#f8efd8';c.fill(shape);c.shadowColor='transparent';
-      c.save();c.clip(shape);c.fillStyle='#fff9e7';c.fillRect(0,0,w,h);for(let i=0;i<game.mask.length;i++)if(game.mask[i]&&game.owners[i]>=0){const p=game.players[game.owners[i]];c.fillStyle=(p.id===0?skin.color:p.color)+'7a';c.fillRect(ox+i%game.cols*scale,oy+Math.floor(i/game.cols)*scale,scale+.2,scale+.2)}
-      c.fillStyle='#c5ac732c';for(let i=0;i<1000;i++)c.fillRect((i*97.47)%w,(i*39.67)%h,.8,.8);c.restore();
-      // Stroke the coastline only: the interior remains a continuous sheet.
-      c.strokeStyle='#fff8';c.lineWidth=1;c.beginPath();for(let i=0;i<game.mask.length;i++)if(game.mask[i]){
-        const gx=i%game.cols,gy=Math.floor(i/game.cols),x=ox+gx*scale,y=oy+gy*scale;
-        if(gy===0||!game.mask[i-game.cols]){c.moveTo(x,y);c.lineTo(x+scale,y)}
-        if(gy===game.rows-1||!game.mask[i+game.cols]){c.moveTo(x,y+scale);c.lineTo(x+scale,y+scale)}
-        if(gx===0||!game.mask[i-1]){c.moveTo(x,y);c.lineTo(x,y+scale)}
-        if(gx===game.cols-1||!game.mask[i+1]){c.moveTo(x+scale,y);c.lineTo(x+scale,y+scale)}
-      }c.stroke();
+      c.save();c.clip(shape);c.fillStyle='#fff9e7';c.fillRect(0,0,bw,bh);
+      for(const p of game.players){const land=shapePath(game.mask.map((v,i)=>v&&game.owners[i]===p.id),game.cols,game.rows,tile);c.fillStyle=(p.id===0?skin.color:p.color)+'7a';c.fill(land);c.strokeStyle=(p.id===0?skin.color:p.color)+'40';c.lineWidth=1;c.stroke(land)}
+      c.fillStyle='#c5ac732c';for(let i=0;i<5000;i++)c.fillRect((i*97.47)%bw,(i*39.67)%bh,.8,.8);c.restore();
+      c.strokeStyle='#fff8';c.lineWidth=1.5;c.stroke(shape);
+      if(minimap){miniBase.width=128;miniBase.height=Math.round(128*game.rows/game.cols);const m=miniBase.getContext('2d'),sx=128/game.cols,sy=miniBase.height/game.rows;m.fillStyle='#78b9bf';m.fillRect(0,0,128,miniBase.height);
+        for(let y=0;y<game.rows;y+=4)for(let x=0;x<game.cols;x+=4){const counts=new Map();for(let yy=y;yy<Math.min(y+4,game.rows);yy++)for(let xx=x;xx<Math.min(x+4,game.cols);xx++){const i=yy*game.cols+xx;if(game.mask[i])counts.set(game.owners[i],(counts.get(game.owners[i])||0)+1)}if(!counts.size)continue;const id=[...counts].sort((a,b)=>b[1]-a[1])[0][0];m.fillStyle=id<0?'#f3ecd9':id===0?skin.color:game.players[id].color;m.fillRect(x*sx,y*sy,4*sx-.5,4*sy-.5);}
+      }
     }
-    ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(base,0,0);ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#83c5c8';ctx.fillRect(0,0,w,h);ctx.drawImage(base,ox,oy,game.cols*scale,game.rows*scale);
     for(const p of game.players){
       if(!p.alive)continue;const color=p.id===0?skin.color:p.color;
-      for(const t of p.trail){
-        const x=ox+Math.floor(t.x)*scale,y=oy+Math.floor(t.y)*scale;ctx.save();ctx.beginPath();ctx.rect(x,y,scale,scale);ctx.clip();ctx.fillStyle=color+'60';ctx.fillRect(x,y,scale,scale);ctx.strokeStyle=color+'b0';ctx.lineWidth=Math.max(.6,scale*.1);for(let k=-scale;k<scale*2;k+=scale*.45)line(ctx,x+k,y,x+k+scale,y+scale);ctx.restore();
-      }
+      const stroke=p.stroke?.length?p.stroke:p.trail;
+      if(stroke.length){ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(ox+stroke[0].x*scale,oy+stroke[0].y*scale);for(const t of stroke.slice(1))ctx.lineTo(ox+t.x*scale,oy+t.y*scale);ctx.lineTo(ox+p.x*scale,oy+p.y*scale);ctx.strokeStyle=color+'55';ctx.lineWidth=Math.max(5,scale*.5);ctx.stroke();ctx.strokeStyle=color+'78';ctx.lineWidth=1;ctx.setLineDash([scale*.3,scale*.25]);ctx.stroke();ctx.restore();}
+      if(p.x*scale+ox< -30||p.x*scale+ox>w+30||p.y*scale+oy< -30||p.y*scale+oy>h+30)continue;
       const size=Math.max(16,scale*1.45);drawPaper(ctx,ox+p.x*scale,oy+p.y*scale,size,p.id===0?skin:{color:p.color,pattern:'plain',tier:'normal'},time,{active:true});
       if(p.id===0){ctx.fillStyle='#fffef1';ctx.font=`700 ${Math.max(9,scale*.6)}px system-ui`;ctx.textAlign='center';ctx.shadowColor='#356c69';ctx.shadowBlur=3;ctx.fillText('你',ox+p.x*scale,oy+p.y*scale-size*.8);ctx.shadowBlur=0}
     }
-    canvas.dataset.scale=scale;canvas.dataset.offsetX=ox;canvas.dataset.offsetY=oy;canvas.dataset.paperSize=Math.max(16,scale*1.45);
+    if(minimap){if(minimap.width!==128)minimap.width=128;if(minimap.height!==miniBase.height)minimap.height=miniBase.height;const m=minimap.getContext('2d'),sx=128/game.cols,sy=minimap.height/game.rows;m.drawImage(miniBase,0,0);m.strokeStyle='#fff';m.lineWidth=1;m.strokeRect(-ox/scale*sx,-oy/scale*sy,w/scale*sx,h/scale*sy);
+      for(const p of game.players)if(p.alive){m.beginPath();m.arc(p.x*sx,p.y*sy,p.id===0?3.2:2,0,TAU);m.fillStyle=p.id===0?'#fff':p.color;m.fill();m.strokeStyle=p.id===0?skin.color:'#fff9';m.lineWidth=1.5;m.stroke()}
+      minimap.dataset.playerX=game.players[0].x;minimap.dataset.playerY=game.players[0].y;minimap.dataset.viewX=-ox/scale;minimap.dataset.viewY=-oy/scale;minimap.dataset.viewWidth=w/scale;minimap.dataset.viewHeight=h/scale;
+    }
+    canvas.dataset.scale=scale;canvas.dataset.offsetX=ox;canvas.dataset.offsetY=oy;canvas.dataset.paperSize=Math.max(16,scale*1.45);canvas.dataset.worldCols=game.cols;canvas.dataset.worldRows=game.rows;canvas.dataset.viewWidth=w/scale;canvas.dataset.viewHeight=h/scale;canvas.dataset.baseBuilds=baseBuilds;canvas.dataset.trailPoints=game.players[0].stroke?.length||0;
     return geometry;
   }
   return{draw,getGeometry:()=>geometry};

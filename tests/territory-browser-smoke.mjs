@@ -3,11 +3,42 @@ import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
 import {openBrowser,sleep} from './game-browser-harness.mjs';
 
-const position=async b=>b.evaluate('(()=>{const a=document.querySelector("#map");return{x:Number(a.dataset.playerX),y:Number(a.dataset.playerY)}})()');
+const position=async b=>b.evaluate('(()=>{const a=document.querySelector("#minimap");return{x:Number(a.dataset.playerX),y:Number(a.dataset.playerY)}})()');
 const rect=async(b,selector)=>b.evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,h:r.height}})()`);
 const click=async(b,selector)=>b.evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
 const screenshot=async(b,path)=>{const p=await b.call('Page.captureScreenshot',{format:'png'});await writeFile(path,Buffer.from(p.data,'base64'))};
 const touch=async(b,type,x,y)=>b.call('Input.dispatchTouchEvent',{type,touchPoints:type==='touchEnd'?[]:[{x,y,id:1,radiusX:3,radiusY:3,force:1}]});
+
+test('large island camera and mosaic overview follow a real circular joystick route',{timeout:30000},async()=>{
+  const b=await openBrowser();
+  try{
+    await b.size(390,844,true);await b.navigate('games/territory.html');await click(b,'#start');
+    const info=await b.evaluate('({cols:Number(map.dataset.worldCols),rows:Number(map.dataset.worldRows),vw:Number(map.dataset.viewWidth),vh:Number(map.dataset.viewHeight),ox:Number(map.dataset.offsetX),coverage:Number(map.dataset.coverage)})');
+    assert.equal(info.cols,88);assert.equal(info.rows,76);assert.ok(info.vw<44&&info.vh<38,'only the local area is visible');
+    assert.ok((await rect(b,'#minimap')).w>=80,'whole-island map remains legible');
+    const j=await rect(b,'#joystick'),cx=j.x+j.w/2,cy=j.y+j.h/2,r=j.w*.34;
+    await touch(b,'touchStart',cx,cy);let maxPoints=0,movedCamera=false;
+    for(let n=0;n<32;n++){const a=Math.PI+(n+.5)*Math.PI*2/32;await touch(b,'touchMove',cx-Math.sin(a)*r,cy+Math.cos(a)*r);await sleep(130);const state=await b.evaluate('({points:Number(map.dataset.trailPoints),ox:Number(map.dataset.offsetX)})');maxPoints=Math.max(maxPoints,state.points);if(Math.abs(state.ox-info.ox)>2)movedCamera=true;if(n===15)await screenshot(b,'/tmp/territory-rounded-tail-phone.png');}
+    await touch(b,'touchEnd');await sleep(180);
+    assert.ok(maxPoints>10,'actual curved trail is recorded');assert.ok(movedCamera,'camera follows rather than keeping the whole world visible');
+    assert.ok(Number(await b.evaluate('map.dataset.coverage'))>info.coverage,'returning from the circle owns new land');
+    const p=await b.evaluate('({x:Number(map.dataset.playerX),y:Number(map.dataset.playerY)})'),mini=await b.evaluate('({x:Number(minimap.dataset.playerX),y:Number(minimap.dataset.playerY),vx:Number(minimap.dataset.viewX),vy:Number(minimap.dataset.viewY)})');
+    assert.ok(Math.abs(p.x-mini.x)<.001&&Math.abs(p.y-mini.y)<.001,'overview marker tracks the actual player');
+    const geometry=await b.evaluate('({scale:Number(map.dataset.scale),ox:Number(map.dataset.offsetX),oy:Number(map.dataset.offsetY)})');
+    assert.ok(Math.abs(mini.vx+geometry.ox/geometry.scale)<.001&&Math.abs(mini.vy+geometry.oy/geometry.scale)<.001,'view rectangle matches the camera');
+    await screenshot(b,'/tmp/territory-rounded-circle-phone.png');await click(b,'#pause');const builds=await b.evaluate('map.dataset.baseBuilds');await sleep(400);assert.equal(await b.evaluate('map.dataset.baseBuilds'),builds,'static world is cached rather than repainted each frame');assert.deepEqual(b.errors,[]);
+  }finally{b.close()}
+});
+
+test('continuous colored trail renders translucently instead of opaque square tiles',{timeout:15000},async()=>{
+  const b=await openBrowser();
+  try{
+    await b.size(1440,900,false);await b.navigate('games/territory.html');
+    const pixels=await b.evaluate(`(async()=>{const{createGame}=await import('../territory/core.js'),{createRenderer}=await import('../territory/render.js');const c=document.createElement('canvas');c.style.cssText='width:800px;height:600px;position:fixed;left:0;top:0;z-index:99';document.body.append(c);const g=createGame({seed:7,bots:0});g.owners.fill(-1);const p=g.players[0];p.x=24.5;p.y=17.5;const renderer=createRenderer(c),skin={color:'#ed4949',tier:'normal',pattern:'plain'};const geom=renderer.draw(g,skin);const x=Math.round((geom.ox+20.75*geom.scale)*devicePixelRatio),y=Math.round((geom.oy+16.25*geom.scale)*devicePixelRatio);const before=[...c.getContext('2d').getImageData(x,y,1,1).data];p.stroke=[{x:18,y:19},{x:19.5,y:16.5},{x:22,y:16},{x:24.5,y:17.5}];renderer.draw(g,skin);const after=[...c.getContext('2d').getImageData(x,y,1,1).data];c.remove();return{before,after}})()`);
+    assert.ok(pixels.before[1]-pixels.after[1]>15,'colored ribbon is visible');assert.ok(pixels.after[1]>90,'underlying paper remains visible through the ribbon');assert.notDeepEqual(pixels.after.slice(0,3),[237,73,73],'ribbon is not opaque red');
+    assert.deepEqual(b.errors,[]);
+  }finally{b.close()}
+});
 
 for(const action of ['purchase','settlement'])test(`paper territory hero preserves its 8:7 proportions after ${action}`,{timeout:15000},async()=>{
   const b=await openBrowser();
@@ -138,7 +169,7 @@ test('paper territory closes a real keyboard loop into owned land and clears can
   try{
     await b.size(390,844,true);await b.navigate('games/territory.html');await click(b,'#start');
     const before=Number(await b.evaluate('map.dataset.coverage'));
-    for(const[key,ms]of [['ArrowRight',920],['ArrowDown',620],['ArrowLeft',920],['ArrowUp',620]]){
+    for(const[key,ms]of [['ArrowRight',1620],['ArrowDown',1020],['ArrowLeft',1620],['ArrowUp',1020]]){
       await b.call('Input.dispatchKeyEvent',{type:'keyDown',key,code:key});await sleep(ms);await b.call('Input.dispatchKeyEvent',{type:'keyUp',key,code:key});
     }
     await sleep(120);assert.ok(Number(await b.evaluate('map.dataset.coverage'))>before+.005,'closing a route increases actual ownership');

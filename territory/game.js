@@ -1,10 +1,10 @@
-import{createGame,stepGame,coverage,finishRun}from'./core.js';
+import{createGame,stepGame,coverage,finishRun}from'./core.js?v=20261002round';
 import{SKINS,createProfile,buySkin,equipSkin,settleRun}from'./profile.js';
-import{drawPaper,createRenderer}from'./render.js';
+import{drawPaper,createRenderer}from'./render.js?v=20261002round';
 
 const $=id=>document.getElementById(id),KEY='paper-territory.profile.v1';
 let profile,game=null,tier='normal',mouseTarget=null,joy={x:0,y:0},joyPointer=null,last=0,hudTime=0,lastEvent=null,noticeTimer;
-const keys=new Set(),renderer=createRenderer($('map'));
+const keys=new Set(),renderer=createRenderer($('map'),{follow:true,minimap:$('minimap')});
 const coarsePointer=matchMedia('(pointer: coarse)');
 function inputHelp(touch=coarsePointer.matches){$('input-help').textContent=touch?'拖动摇杆，自由转向':'鼠标跟随 / WASD'}
 coarsePointer.addEventListener('change',()=>inputHelp());inputHelp();
@@ -38,7 +38,7 @@ function updateHud(){const p=game.players[0];$('map').dataset.playerX=p.x.toFixe
   let playerNotice=false;for(const event of readNewEvents(game.events,lastEvent)){lastEvent=event;if(event.id!==0)continue;if(event.type==='cut'){playerNotice=true;$('map-hint').textContent='这次路被切断了，旧领地还在';notify('回到自己的纸上，再试一次。')}else if(event.type==='capture'){playerNotice=true;$('map-hint').textContent=`收下 ${event.cells} 格新领地！`}}
   if(!playerNotice&&game.players[0].trail.length)$('map-hint').textContent='回到自己的颜色，闭合这条路';
 }
-function start(){game=createGame();game.speed=Number($('speed').value);lastEvent=null;hudTime=0;screen('game');$('map-hint').textContent='走出去，再回到自己的颜色';updateHud();renderer.draw(game,selected());last=performance.now()}
+function start(){game=createGame({cols:88,rows:76});game.speed=Number($('speed').value);lastEvent=null;hudTime=0;screen('game');$('map-hint').textContent='画弧线，绕一圈，再回到自己的颜色';updateHud();renderer.draw(game,selected());last=performance.now()}
 function pause(){if(!game||game.mode!=='playing')return;clearInput();game.mode='paused';document.body.dataset.mode='paused';$('pause-dialog').hidden=false;$('resume').focus()}
 function resume(){if(!game||game.mode!=='paused')return;clearInput();game.mode='playing';document.body.dataset.mode='playing';$('pause-dialog').hidden=true;last=performance.now()}
 function end(){if(!game)return;clearInput();finishRun(game);const reward=settleRun(profile,game);save();refreshProfile();const won=game.winner===0;screen('result');$('result-title').textContent=won?'整座岛，都是你的了。':!game.players[0].alive?'小纸片，下次再来。':'把这一片风景带回家。';$('result-copy').textContent=won?'100% 占地达成！胜场 +1，另获 50 金币。':!game.players[0].alive?'领地被夺完了。这次的最好成绩已经结算。':'本局已结束，按最高占地结算金币。';$('result-peak').textContent=(game.peak*100).toFixed(1)+'%';$('result-coins').textContent='+'+reward}

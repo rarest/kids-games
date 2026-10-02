@@ -56,7 +56,28 @@ function inside(x,y,polygon){
   return contained;
 }
 function clearTrail(p){
-  p.trail=[];p.trailStart=null;p.openPath=[];p.pendingClaim=[];
+  p.trail=[];p.trailStart=null;p.openPath=[];p.pendingClaim=[];p.stroke=[];
+}
+function simplifyStroke(points,tolerance){
+  const keep=new Set([0,points.length-1]),stack=[[0,points.length-1]],limit=tolerance*tolerance;
+  while(stack.length){const [a,b]=stack.pop(),s=points[a],e=points[b],dx=e.x-s.x,dy=e.y-s.y,length=dx*dx+dy*dy;let far=-1,best=limit;
+    for(let i=a+1;i<b;i++){const p=points[i],t=length?clamp(((p.x-s.x)*dx+(p.y-s.y)*dy)/length,0,1):0,d=(p.x-s.x-t*dx)**2+(p.y-s.y-t*dy)**2;if(d>best){best=d;far=i}}
+    if(far>=0){keep.add(far);stack.push([a,far],[far,b]);}
+  }
+  return [...keep].sort((a,b)=>a-b).map(i=>points[i]);
+}
+function tracePosition(p,x,y){
+  const points=p.stroke,last=points.at(-1);if(last&&Math.hypot(x-last.x,y-last.y)<.00001)return;
+  const third=points.at(-3),second=points.at(-2);
+  // Repeating the same out-and-back adds no new ribbon geometry. Keep one
+  // traversal with the current endpoint instead of accumulating reversals.
+  if(third&&Math.hypot(third.x-last.x,third.y-last.y)<.00001&&Math.hypot(second.x-x,second.y-y)<.00001)points.length-=2;
+  const before=points.at(-2),tip=points.at(-1);
+  if(before&&tip){const ax=tip.x-before.x,ay=tip.y-before.y,bx=x-tip.x,by=y-tip.y;
+    if(ax*bx+ay*by>=0&&Math.abs(ax*by-ay*bx)<.00001)points.pop();
+  }
+  points.push({x,y});
+  if(points.length>4096){let tolerance=.025;do{p.stroke=simplifyStroke(p.stroke,tolerance);tolerance*=2;}while(p.stroke.length>4096);}
 }
 function appendTrail(g,p,i){
   // Visible/collidable trail cells are unique. Geometry keeps only a simple
@@ -77,9 +98,11 @@ function appendTrail(g,p,i){
 function closeTrail(g,p,end){
   // The owned return path completes the polygon. No island boundary is treated
   // as an exterior seed, so loops beside coastlines cannot capture the exterior.
+  if(g.owners[p.trailStart]!==p.id){cutTrail(g,p);return false;}
   const home=landPath(g,p.id,end,p.trailStart);
-  if(!home){cutTrail(g,p);return false;}
-  const polygon=[...p.openPath.map(i=>center(g,i)),...home.map(i=>center(g,i))];
+  // Two separated own regions may be reconnected across enemy land. Without
+  // an existing home path only the traversed bridge/sub-loops are claimed.
+  const polygon=home?[...(p.stroke?.length?p.stroke:p.openPath.map(i=>center(g,i))),...home.map(i=>center(g,i))]:[];
   const traced=new Set([...p.trail.map(v=>cell(g,v.x,v.y)),...p.pendingClaim]);let gained=0;
   for(let i=0;i<g.mask.length;i++)if(g.mask[i]&&g.owners[i]!==p.id){
     const pos=center(g,i);
@@ -109,7 +132,27 @@ function cutTrail(g,p){
   event(g,'cut',p.id);
 }
 function touchTrail(g,p,i){
-  for(const other of g.players)if(other.id!==p.id&&other.alive&&other.trail.some(v=>cell(g,v.x,v.y)===i))cutTrail(g,other);
+  // Legacy handcrafted states without a precise stroke retain cell detection.
+  for(const other of g.players)if(other.id!==p.id&&other.alive&&!(other.stroke?.length>1)&&other.trail.some(v=>cell(g,v.x,v.y)===i))cutTrail(g,other);
+}
+function pointSegmentDistance(p,a,b){
+  const dx=b.x-a.x,dy=b.y-a.y,length=dx*dx+dy*dy,t=length?clamp(((p.x-a.x)*dx+(p.y-a.y)*dy)/length,0,1):0;
+  return (p.x-a.x-t*dx)**2+(p.y-a.y-t*dy)**2;
+}
+function segmentDistance(a,b,c,d){
+  const dx=b.x-a.x,dy=b.y-a.y,ux=d.x-c.x,uy=d.y-c.y,den=dx*uy-dy*ux;
+  if(Math.abs(den)>1e-12){const vx=c.x-a.x,vy=c.y-a.y,t=(vx*uy-vy*ux)/den,u=(vx*dy-vy*dx)/den;if(t>=0&&t<=1&&u>=0&&u<=1)return 0;}
+  return Math.min(pointSegmentDistance(a,c,d),pointSegmentDistance(b,c,d),pointSegmentDistance(c,a,b),pointSegmentDistance(d,a,b));
+}
+function touchStroke(g,p,x,y){
+  const a={x:p.x,y:p.y},b={x,y},radius=.25;
+  for(const other of g.players){
+    if(other.id===p.id||!other.alive||!other.trail.length||!(other.stroke?.length>1))continue;
+    for(let n=1;n<other.stroke.length;n++){const c=other.stroke[n-1],d=other.stroke[n];
+      if(Math.max(a.x,b.x)+radius<Math.min(c.x,d.x)||Math.min(a.x,b.x)-radius>Math.max(c.x,d.x)||Math.max(a.y,b.y)+radius<Math.min(c.y,d.y)||Math.min(a.y,b.y)-radius>Math.max(c.y,d.y))continue;
+      if(segmentDistance(a,b,c,d)<=radius*radius){cutTrail(g,other);break;}
+    }
+  }
 }
 function enter(g,p,i,previous){
   touchTrail(g,p,i);
@@ -117,7 +160,7 @@ function enter(g,p,i,previous){
   else {
     if(!p.trail.length){
       if(g.owners[previous]!==p.id)return false;
-      p.trailStart=previous;p.openPath=[previous];p.pendingClaim=[];
+      p.trailStart=previous;p.openPath=[previous];p.pendingClaim=[];p.stroke=[{x:p.x,y:p.y}];
     }
     appendTrail(g,p,i);
   }
@@ -134,14 +177,15 @@ export function movePlayer(g,id,x,y){
     if(i%g.cols!==previous%g.cols&&Math.floor(i/g.cols)!==Math.floor(previous/g.cols)){
       const a=cell(g,xx,p.y),b=cell(g,p.x,yy);
       if(!g.mask[a]||!g.mask[b])return false;
+      touchStroke(g,p,xx,yy);
       // Both cells touched at a corner can hold an enemy trail, regardless of
       // movement direction. Only one is used for the orthogonal polygon path.
       touchTrail(g,p,b);
       // Visit the intermediate cell too: diagonal movement must not skip a trail.
       if(!enter(g,p,a,previous))return false;
       if(!enter(g,p,i,a))return false;
-    }else if(i!==previous&&!enter(g,p,i,previous))return false;
-    p.x=xx;p.y=yy;
+    }else{touchStroke(g,p,xx,yy);if(i!==previous&&!enter(g,p,i,previous))return false;}
+    p.x=xx;p.y=yy;if(p.trail.length)tracePosition(p,xx,yy);
   }
   return true;
 }
@@ -176,7 +220,7 @@ export function createGame({seed=Date.now(),cols=44,rows=38,bots=3}={}){
       if(d>best||selected<0){best=d;selected=i;}
     }
     if(selected<0)break;
-    const c=center(g,selected),p={id,...c,trail:[],trailStart:null,openPath:[],pendingClaim:[],alive:true,color:COLORS[id],name:id?`纸片 ${id}`:'你',cooldown:0,route:[]};
+    const c=center(g,selected),p={id,...c,trail:[],stroke:[],trailStart:null,openPath:[],pendingClaim:[],alive:true,color:COLORS[id],name:id?`纸片 ${id}`:'你',cooldown:0,route:[]};
     g.players.push(p);
     for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
       const i=cell(g,c.x+dx,c.y+dy);if(g.mask[i]&&g.owners[i]===-1)g.owners[i]=id;
