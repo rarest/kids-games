@@ -2,10 +2,11 @@ import {createServer} from 'node:http';
 import {randomBytes} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {WebSocketServer,WebSocket} from 'ws';
+import {encodeVolleys} from './snapshot.js';
 import {createGame,startWave,stepGame,addPilot,pilots,laser,pulse,drawUpgrade,continueWave,MAX_PILOTS} from './core.js';
 
 const WIDTH=720,HEIGHT=960;
-const pilotKeys=['id','disconnected','retired','player','hp','shield','spread','power','pulses','lasers','laserPower','beam','reward','invincible'];
+const pilotKeys=['id','inputSequence','disconnected','retired','player','hp','shield','spread','power','pulses','lasers','laserPower','beam','reward','invincible'];
 const pickPilot=p=>Object.fromEntries(pilotKeys.map(k=>[k,p[k]]));
 const code=()=>randomBytes(4).toString('hex').slice(0,6).toUpperCase();
 export function createCoopServer({port=Number(process.env.PORT)||8787,host='127.0.0.1',origins=['https://games.nblord.com','https://games.596996.xyz']}={}){
@@ -17,14 +18,14 @@ export function createCoopServer({port=Number(process.env.PORT)||8787,host='127.
   if(req.url!=='/shooter-ws'||!origins.includes(req.headers.origin)||connections.size>=512||[...connections].filter(c=>c.ip===ip).length>=64){socket.write('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n');socket.destroy();return}
   wss.handleUpgrade(req,socket,head,ws=>wss.emit('connection',ws,req));
  });
- const send=(ws,data)=>{if(ws?.readyState===WebSocket.OPEN){if(ws.bufferedAmount>256000){ws.close(1013,'Slow connection');return}ws.send(JSON.stringify(data))}};
- function state(room){
+ const send=(ws,data)=>{if(ws?.readyState===WebSocket.OPEN){if(ws.bufferedAmount>256000){ws.close(1013,'Slow connection');return}ws.send(typeof data==='string'?data:JSON.stringify(data))}};
+ function state(room,compact=false){
   const g=room.g,game={...pickPilot(g),partners:g.partners.map(pickPilot),width:g.width,height:g.height,mode:g.mode,wave:g.wave,score:g.score,time:g.time,spawnIndex:g.spawnIndex,plan:g.plan,
-   bullets:g.bullets.map(b=>[Math.round(b.x),Math.round(b.y),b.owner,Math.round(b.vx),Math.round(b.vy)]),enemyBullets:g.enemyBullets.map(b=>[Math.round(b.x),Math.round(b.y),b.color,Math.round(b.vx),Math.round(b.vy)]),
-   enemies:g.enemies.map(e=>({kind:e.kind,x:Math.round(e.x),y:Math.round(e.y),r:e.r,hp:e.hp,maxHp:e.maxHp})),effects:g.effects};
+   bullets:compact?[]:g.bullets.map(b=>[Math.round(b.x),Math.round(b.y),b.owner,Math.round(b.vx),Math.round(b.vy)]),enemyBullets:g.enemyBullets.map(b=>[Math.round(b.x),Math.round(b.y),b.color,Math.round(b.vx),Math.round(b.vy)]),
+   enemies:g.enemies.map(e=>({id:e.id,kind:e.kind,x:Math.round(e.x),y:Math.round(e.y),r:e.r,hp:e.hp,maxHp:e.maxHp})),effects:g.effects};if(compact)game.volleys=encodeVolleys(g.bullets);
   return {type:'state',game,host:room.host,code:room.code,members:[...room.members.values()].map(m=>({id:m.id,online:!!m.ws})),revision:room.revision};
  }
- const broadcast=room=>{const packet=state(room);for(const m of room.members.values())send(m.ws,packet)};
+ const broadcast=room=>{let legacy,compact;for(const m of room.members.values()){if(m.ws?.readyState!==WebSocket.OPEN||m.ws.bufferedAmount>65536)continue;const packet=m.protocol===2?(compact??=JSON.stringify(state(room,true))):(legacy??=JSON.stringify(state(room)));send(m.ws,packet)}};
  function leave(c,permanent=false){
   const room=c.room,m=c.member;if(!room||!m||m.ws!==c.ws)return;
   m.ws=null;m.input={};const pilot=[room.g,...room.g.partners].find(p=>p.id===m.id);if(pilot)pilot.disconnected=true;m.until=Date.now()+(permanent?0:120000);c.room=c.member=null;
@@ -51,7 +52,7 @@ export function createCoopServer({port=Number(process.env.PORT)||8787,host='127.
    if(!first){const peers=pilots(room.g).filter(v=>v!==p);if(peers.length)for(const k of ['spread','power','laserPower'])p[k]=Math.min(...peers.map(v=>v[k]));if(room.g.mode==='playing')room.g.mode='paused'}
    member={id,token:randomBytes(24).toString('hex'),input:{},ws:null,until:0};room.members.set(id,member);
   }
-  member.ws=c.ws;member.until=0;const pilot=[room.g,...room.g.partners].find(p=>p.id===member.id);pilot.disconnected=false;c.member=member;c.room=room;room.lastActive=Date.now();
+  member.protocol=msg.protocol===2?2:1;member.ws=c.ws;member.until=0;const pilot=[room.g,...room.g.partners].find(p=>p.id===member.id);pilot.disconnected=false;c.member=member;c.room=room;room.lastActive=Date.now();
   if(!room.members.get(room.host)?.ws)room.host=member.id;
   send(c.ws,{type:'joined',code:room.code,id:member.id,token:member.token});broadcast(room);
  }
@@ -61,7 +62,7 @@ export function createCoopServer({port=Number(process.env.PORT)||8787,host='127.
   if(msg.type==='leave'){leave(c,true);send(c.ws,{type:'left'});return}
   if(msg.type==='input'){
    const clamp=n=>Number.isFinite(n)?Math.max(-1,Math.min(1,n)):0;
-   m.input={x:clamp(msg.x),y:clamp(msg.y)};
+   m.input={x:clamp(msg.x),y:clamp(msg.y),sequence:Number.isSafeInteger(msg.sequence)&&msg.sequence>=0?msg.sequence:0};
    if(Number.isFinite(msg.tx)&&Number.isFinite(msg.ty))m.input.target={x:Math.max(18,Math.min(WIDTH-18,msg.tx)),y:Math.max(24,Math.min(HEIGHT-18,msg.ty))};
    m.inputAt=Date.now();return;
   }

@@ -88,9 +88,10 @@ function damage(g,amount,p=g){
 }
 export function fireVolley(g,p=g){
  const speed=Math.max(520,g.height*.85);
+ const volley={id:g.nextVolley=(g.nextVolley||0)+1,owner:p.id,x:p.player.x,y:p.player.y-20,speed,spread:p.spread};
  for(let i=0;i<p.spread;i++){
   const angle=p.spread===1?0:(i/(p.spread-1)-.5)*1.25;
-  g.bullets.push({owner:p.id,x:p.player.x,y:p.player.y-20,r:4,vy:-Math.cos(angle)*speed,vx:Math.sin(angle)*speed,damage:p.power});
+  g.bullets.push({volley,lane:i,owner:p.id,x:p.player.x,y:p.player.y-20,r:4,vy:-Math.cos(angle)*speed,vx:Math.sin(angle)*speed,damage:p.power});
  }
 }
 function tick(g,dt,input){
@@ -100,7 +101,7 @@ function tick(g,dt,input){
  for(const p of pilots(g)){
   p.invincible=Math.max(0,p.invincible-dt);if(p.beam)p.beam.ttl=Math.max(0,p.beam.ttl-dt);
   if(p.hp<=0)continue;
-  const control=p===g?input:input.partners?.[p.id]||{};
+  const control=p===g?input:input.partners?.[p.id]||{};p.inputSequence=control.sequence||0;
   let dx=control.x||0,dy=control.y||0;
   if(control.target){dx=control.target.x-p.player.x;dy=control.target.y-p.player.y;const distance=Math.hypot(dx,dy);if(distance<speed*dt){p.player.x=control.target.x;p.player.y=control.target.y;dx=dy=0}}
   const length=Math.hypot(dx,dy)||1;
@@ -113,7 +114,7 @@ function tick(g,dt,input){
  if(g.spawnLeft>0&&g.spawnClock<=0&&g.enemies.length<10&&(nextKind==='drone'||g.enemies.filter(e=>e.kind!=='drone').length<3)){
   const kind=nextKind||'drone',tier=TIERS[kind],boss=kind!=='drone';g.spawnIndex++;
   const hp=Math.ceil((tier.hp+(g.wave-1)*(boss?1:.15))*(1+Math.min(.6,(pilots(g).length-1)*.08)));
-  g.enemies.push({kind,damage:tier.damage+(boss?Math.min(5,Math.floor((g.wave-1)/SUBSTAGES))+(pilots(g).length>1?1:0):0),x:g.width*(.15+g.random()*.7),y:-tier.r,r:tier.r,hp,maxHp:hp,
+  g.enemies.push({id:g.nextEnemy=(g.nextEnemy||0)+1,kind,damage:tier.damage+(boss?Math.min(5,Math.floor((g.wave-1)/SUBSTAGES))+(pilots(g).length>1?1:0):0),x:g.width*(.15+g.random()*.7),y:-tier.r,r:tier.r,hp,maxHp:hp,
    vy:boss?Math.max(36,g.height*.16):40+Math.min(65,g.wave*.5),vx:(g.random()>.5?1:-1)*(boss?25:18),fire:1.8+g.random()});
   g.spawnLeft--;g.spawnClock=.65;
  }
