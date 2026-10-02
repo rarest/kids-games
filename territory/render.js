@@ -74,7 +74,10 @@ export function drawPaper(ctx,x,y,size,skin,time=0,{locked=false,active=false}={
 export function createRenderer(canvas){
   const ctx=canvas.getContext('2d'),base=document.createElement('canvas');let previous='',geometry={scale:1,ox:0,oy:0},width=0,height=0;
   function draw(game,skin,time=0){
-    const r=canvas.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1),w=Math.max(1,r.width),h=Math.max(1,r.height);
+    // Hidden canvases have no layout size. Preserve their intrinsic aspect ratio;
+    // client dimensions also avoid resizing from the rotated hero's bounding box.
+    const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return geometry;
+    const dpr=Math.min(2,window.devicePixelRatio||1);
     if(width!==w||height!==h||canvas.width!==Math.round(w*dpr)){width=w;height=h;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);previous=''}
     const scale=Math.min((w-26)/game.cols,(h-32)/game.rows),ox=(w-game.cols*scale)/2,oy=(h-game.rows*scale)/2;geometry={scale,ox,oy};
     const key=`${game.runId}:${game.revision}:${w}:${h}:${dpr}:${skin.color}`;

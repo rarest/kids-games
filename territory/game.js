@@ -3,7 +3,7 @@ import{SKINS,createProfile,buySkin,equipSkin,settleRun}from'./profile.js';
 import{drawPaper,createRenderer}from'./render.js';
 
 const $=id=>document.getElementById(id),KEY='paper-territory.profile.v1';
-let profile,game=null,tier='normal',mouseTarget=null,joy={x:0,y:0},joyPointer=null,last=0,hudTime=0,eventTime=-1,noticeTimer;
+let profile,game=null,tier='normal',mouseTarget=null,joy={x:0,y:0},joyPointer=null,last=0,hudTime=0,lastEvent=null,noticeTimer;
 const keys=new Set(),renderer=createRenderer($('map'));
 const coarsePointer=matchMedia('(pointer: coarse)');
 function inputHelp(touch=coarsePointer.matches){$('input-help').textContent=touch?'拖动摇杆，自由转向':'鼠标跟随 / WASD'}
@@ -31,12 +31,14 @@ function renderShop(){
     card.append(c,h,info,button);if(locked){const lock=document.createElement('span');lock.className='lock-symbol';lock.textContent='●';lock.setAttribute('aria-hidden','true');card.append(lock)}$('skin-grid').append(card);
   }
 }
+export function readNewEvents(events,cursor){return events.slice(cursor?events.indexOf(cursor)+1:0)}
 function updateHud(){const p=game.players[0];$('map').dataset.playerX=p.x.toFixed(5);$('map').dataset.playerY=p.y.toFixed(5);$('map').dataset.coverage=coverage(game,0).toFixed(5);$('map').dataset.skin=selected().id;
   $('coverage').innerHTML=`${(coverage(game,0)*100).toFixed(1)}<span>%</span>`;
   $('rankings').replaceChildren();for(const p of [...game.players].sort((a,b)=>coverage(game,b.id)-coverage(game,a.id))){const amount=coverage(game,p.id)*100,color=p.id===0?selected().color:p.color,node=document.createElement('div');node.className='rank-item';const dot=document.createElement('i');dot.style.background=color;const label=document.createElement('span');label.textContent=p.id===0?'你':p.name;const pct=document.createElement('strong');pct.textContent=p.alive?amount.toFixed(1)+'%':'出局';const bar=document.createElement('div');bar.className='rank-track';const fill=document.createElement('span');fill.style.width=amount+'%';fill.style.background=color;bar.append(fill);node.append(dot,label,pct,bar);$('rankings').append(node)}
-  const event=game.events.at(-1);if(event&&event.time!==eventTime){eventTime=event.time;if(event.type==='cut'&&event.id===0){$('map-hint').textContent='这次路被切断了，旧领地还在';notify('回到自己的纸上，再试一次。')}else if(event.type==='capture'&&event.id===0){$('map-hint').textContent=`收下 ${event.cells} 格新领地！`}else if(game.players[0].trail.length){$('map-hint').textContent='回到自己的颜色，闭合这条路'}}
+  let playerNotice=false;for(const event of readNewEvents(game.events,lastEvent)){lastEvent=event;if(event.id!==0)continue;if(event.type==='cut'){playerNotice=true;$('map-hint').textContent='这次路被切断了，旧领地还在';notify('回到自己的纸上，再试一次。')}else if(event.type==='capture'){playerNotice=true;$('map-hint').textContent=`收下 ${event.cells} 格新领地！`}}
+  if(!playerNotice&&game.players[0].trail.length)$('map-hint').textContent='回到自己的颜色，闭合这条路';
 }
-function start(){game=createGame();game.speed=Number($('speed').value);eventTime=-1;hudTime=0;screen('game');$('map-hint').textContent='走出去，再回到自己的颜色';updateHud();renderer.draw(game,selected());last=performance.now()}
+function start(){game=createGame();game.speed=Number($('speed').value);lastEvent=null;hudTime=0;screen('game');$('map-hint').textContent='走出去，再回到自己的颜色';updateHud();renderer.draw(game,selected());last=performance.now()}
 function pause(){if(!game||game.mode!=='playing')return;clearInput();game.mode='paused';document.body.dataset.mode='paused';$('pause-dialog').hidden=false;$('resume').focus()}
 function resume(){if(!game||game.mode!=='paused')return;clearInput();game.mode='playing';document.body.dataset.mode='playing';$('pause-dialog').hidden=true;last=performance.now()}
 function end(){if(!game)return;clearInput();finishRun(game);const reward=settleRun(profile,game);save();refreshProfile();const won=game.winner===0;screen('result');$('result-title').textContent=won?'整座岛，都是你的了。':!game.players[0].alive?'小纸片，下次再来。':'把这一片风景带回家。';$('result-copy').textContent=won?'100% 占地达成！胜场 +1，另获 50 金币。':!game.players[0].alive?'领地被夺完了。这次的最好成绩已经结算。':'本局已结束，按最高占地结算金币。';$('result-peak').textContent=(game.peak*100).toFixed(1)+'%';$('result-coins').textContent='+'+reward}

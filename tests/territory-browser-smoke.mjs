@@ -9,6 +9,32 @@ const click=async(b,selector)=>b.evaluate(`document.querySelector(${JSON.stringi
 const screenshot=async(b,path)=>{const p=await b.call('Page.captureScreenshot',{format:'png'});await writeFile(path,Buffer.from(p.data,'base64'))};
 const touch=async(b,type,x,y)=>b.call('Input.dispatchTouchEvent',{type,touchPoints:type==='touchEnd'?[]:[{x,y,id:1,radiusX:3,radiusY:3,force:1}]});
 
+for(const action of ['purchase','settlement'])test(`paper territory hero preserves its 8:7 proportions after ${action}`,{timeout:15000},async()=>{
+  const b=await openBrowser();
+  try{
+    await b.size(390,844,true);await b.navigate('games/territory.html');
+    const ratio=()=>b.evaluate('(()=>{const s=getComputedStyle(document.getElementById("hero-map"));return parseFloat(s.width)/parseFloat(s.height)})()');
+    assert.ok(Math.abs(await ratio()-8/7)<.02,'initial art is 8:7 within subpixel rounding');
+    if(action==='purchase'){
+      await b.evaluate('localStorage.setItem("paper-territory.profile.v1",JSON.stringify({coins:100,owned:["red"],selected:"red"}))');await b.navigate('games/territory.html');
+      await click(b,'#shop');await click(b,'[data-skin="blue"] button');await click(b,'[data-skin="blue"] button');await click(b,'#shop-back');
+      assert.equal(await b.evaluate('document.getElementById("home-paper").dataset.skin'),'blue');
+    }else{await click(b,'#start');await click(b,'#pause');await click(b,'#finish');await click(b,'#return-home')}
+    assert.ok(Math.abs(await ratio()-8/7)<.02,`returning home after ${action} does not stretch the island`);
+    assert.deepEqual(b.errors,[]);
+  }finally{b.close()}
+});
+
+test('paper territory consumes player events before later bot events and keeps reading a bounded queue',{timeout:15000},async()=>{
+  const b=await openBrowser();
+  try{
+    await b.size(390,844,true);await b.navigate('games/territory.html');
+    const events=await b.evaluate(`(async()=>{const{readNewEvents}=await import(document.querySelector('script[type=module]').src);const capture={type:'capture',id:0,time:1,cells:8},bot={type:'capture',id:1,time:1};let queue=[capture,bot],cursor=queue.at(-1);const first=readNewEvents(queue,null).map(e=>[e.type,e.id]);const repeated=readNewEvents(queue,cursor).length;for(let i=0;i<100;i++)queue.push({type:'capture',id:2,time:2+i});queue=queue.slice(-100);const afterEviction=readNewEvents(queue,cursor).length;cursor=queue.at(-1);const cut={type:'cut',id:0,time:102};queue.push(cut,{type:'capture',id:3,time:102});queue=queue.slice(-100);const afterRotation=readNewEvents(queue,cursor).map(e=>[e.type,e.id]);return{first,repeated,afterEviction,afterRotation}})()`);
+    assert.deepEqual(events,{first:[['capture',0],['capture',1]],repeated:0,afterEviction:100,afterRotation:[['cut',0],['capture',3]]});
+    assert.deepEqual(b.errors,[]);
+  }finally{b.close()}
+});
+
 test('paper territory has real shop categories, folded previews, locked silhouettes and saved equipment',{timeout:30000},async()=>{
   const b=await openBrowser();
   try{
