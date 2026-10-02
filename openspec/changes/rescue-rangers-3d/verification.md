@@ -3,11 +3,11 @@
 ## 当前状态
 
 - 用户已确认方案并授权开始实现、接入游戏厅及发布。
-- 独立分支 `feat/rescue-3d`，基于最新 `origin/main 323c2a9`；未修改其他已有分支。
+- 游戏已通过 [PR #35](https://github.com/rarest/kids-games/pull/35) 合并发布；游戏发布提交 `0b9b1c551fb7ca69fdeee965da4fe5467f8917e5`。主站及备用站真实浏览器验收均 2/2，通过后记录结果。
 - 基线 `npm run test:unit` 372/372 通过，0 失败（`/tmp/rescue-baseline-unit.log`）。
 - 公网现有跑酷页面实际 Three.js 渲染 ready、无 Runtime 错误；游戏清单、HTML、bundle 与本地基线一致。
-- 原版 11 张区域地图与世界路线截图已获取在 `/tmp/rescue-reference/`，尚未把新增游戏发布到公网。
-- 原 GitHub 仓库权限核实为 ADMIN；源站 `/home/ubuntu/games-site` HEAD `323c2a9`，`games-webhook.service` 与 `shooter-coop.service` 的用户服务均 active。没有改动部署服务。
+- 原版 11 张区域地图与世界路线截图用于新制作三维场景；完整游戏已加入公网大厅，共 12 款游戏。
+- 沿用现有 webhook 部署链，源站自动更新到游戏发布提交；`games-webhook.service` 与 `shooter-coop.service` 的用户服务均 active。
 - 首页插画生成请求被图像服务拒绝，没有生成或使用任何该请求的图片。决定首页使用实时三维游戏场景，避免让插画阻挡功能实现。
 
 ## 已落实接口补充
@@ -51,13 +51,32 @@
 - 两项原生集成通过 2/2，日志 `/tmp/rescue-integration-green.log`。最终构建与原始 esbuild 内存重建字节一致，SHA `59a8ec4049becfa431ef62dec90b388a8d20eef1d859d90cc746e32504e41ff9`。
 - 完整 `npm run test:unit` 457/457、0 fail/skip，通过（49.85 秒，`/tmp/rescue-final-unit.log`）。完整 `npm run test:browser` exit 0：22 个串行脚本、59/59 测试、0 fail/cancelled/skipped（`/tmp/rescue-final-browser.log`）。原有 20 个游戏脚本及新增 rescue 页面脚本保留，再追加集成脚本。原生 C 本轮 91.98 秒完成，实际 400 分/2 花/2 命携带到 D 且刷新保留；新一轮/重试清零当前分数而保留最高分。
 
-- Task4 实施提交 `532c4c9`，独立任务审查通过。整分支审查范围 `323c2a9..da89f75` 发现 1 个 Important 及 4 个 Minor，已在单次修复波次 `ecee285` 全部处理，独立复审确认五项全部解决、无新增问题；尚未发布。完整门禁对应修复前版本，末轮修复按影响范围重新检查。
+- Task4 实施提交 `532c4c9`，独立任务审查通过。整分支审查范围 `323c2a9..da89f75` 发现 1 个 Important 及 4 个 Minor，已在单次修复波次 `ecee285` 全部处理，独立复审确认五项全部解决、无新增问题；已发布并完成双域真实操作验收。完整门禁对应修复前版本，末轮修复按影响范围重新检查。
 
 ## 整分支复核
 
 - Important：合法双人 D 区入口存档 `lives=[0,2]`，首页改选单人后从地图进入，原控制器只复制死亡 P1，造成无法行动且保存时原入口被归一化为 null。独立 Chromium 原生点击和按键已重现，分数 2000/花 3 的入口丢失；已通关区域和最高分保留。完整复核没有重复运行全套门禁。
 - 同批修复范围包括木箱消耗后重叠目标多命中、通用敌人测试依赖名称元数据、三处美术/渲染模块长行格式，以及结算→地图→返回时遗失结算面板。四项为 Minor，均已在一次修复波次处理。
-- J 控制器调用已独立核对：真实核心结局状态进入 `complete()`，把同一真实 state 交给生产展示函数，没有遗漏的 J 专属页面分支。公开验收仍待发布后实际操作。
+- J 控制器调用已独立核对：真实核心结局状态进入 `complete()`，把同一真实 state 交给生产展示函数，没有遗漏的 J 专属页面分支。公开验收随后在双域完成，结果见下文。
+
+## 公网发布与真实操作
+
+2026-10-03（北京时间）上线：主入口 [松鼠大作战](https://games.nblord.com/games/rescue.html)，备用入口 [松鼠大作战备用站](https://games.596996.xyz/games/rescue.html)。游戏厅目录可搜索实际卡片。
+
+- PR #35 合并于 UTC 2026-10-02 18:05:09，游戏发布提交 `0b9b1c551fb7ca69fdeee965da4fe5467f8917e5`。服务器由真实 push webhook 自动拉取、同步、重载；没有另建部署链。发布后源仓库干净，两个既有用户服务 active。
+- 同一原生集成检查设置实际 `GAMES_TEST_ORIGIN`，关闭本地服务：主域名 2/2、23.96 秒；备用域名 2/2、25.76 秒。实际搜索大厅、点击游戏、开始、移动从 x2.881 到 x4.801、拾取 s1、真实投掷、刷新继续从区域入口 x2.881 恢复，再正常返回 12 款游戏大厅。两端 WebGL 正常、三维几何实际渲染，异常列表均为空。
+- 两域另检查真实 J 模拟结果经过线上共用生产展示函数形成 DOM 结局；这项范围仍为完整模拟加实际 DOM，不称为网页从 0 到 J 的完整战役。
+- 每域六份公开资源均 HTTP 200 且 SHA 与最终文件完全一致；下表为两域共同值。首次 Python urllib 回读返回 403，随后 curl 和实际 Chromium 均正常；资源核对使用 curl 成功结果，未因此修改线上服务。
+- 主站截图已实际查看举箱，备用站截图已实际查看刷新继续；证据 `/tmp/rescue-evidence/public-main/`、`/tmp/rescue-evidence/public-secondary/`（hall-search/native-pickup/native-throw/reloaded-continue.png、result.json、ending.json）。原生日志 `/tmp/rescue-public-main.log`、`/tmp/rescue-public-secondary.log`；资源 `/tmp/rescue-evidence/public-resource-hashes.json`。
+
+| 文件 | 双域共同 SHA-256 |
+| --- | --- |
+| `games.js` | `dc7f3dff8a1548a480b6314d21b780a57f6b02c463774d492780aec330e6c89c` |
+| `index.html` | `813c5aa947d02723378500eb89c0bcb60f47bba350dc84ca073c798d6bc6381b` |
+| `games/rescue.html` | `bb0b8c4f99750781c35405f80b6cafa1ef9c723631a3cc7fda0ffa9284330aed` |
+| `rescue/bundle.js` | `8a2a601e96d4be3655519fed584235251941cb3b56a2653e87fbeb9b67fa41fd` |
+| `rescue/style.css` | `04410de360c5122a27100e6b88467b17991659287929e6ac770fed8f1168f395` |
+| `rescue/completion.js` | `5df33e10283c0dcf1a854fcb3a44910f2dfd8e461c7624f02ed17c7e63a94aac` |
 
 ## 授权与验收
 
