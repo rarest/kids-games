@@ -1,6 +1,6 @@
-import {decodeVolleys} from './snapshot.js?v=20261002perf';
-import {connectTeam} from './online.js?v=20261002perf';
-import {createGame,startWave,stepGame,resizeGame,drawUpgrade,continueWave,pulse,laser,TIERS,stageNumber,substageNumber,checkpoint,restoreCheckpoint,pilots,SUBSTAGES} from './core.js?v=20261002perf';
+import {decodeVolleys} from './snapshot.js?v=20261002boss20';
+import {connectTeam} from './online.js?v=20261002boss20';
+import {createGame,startWave,stepGame,resizeGame,drawUpgrade,continueWave,pulse,laser,TIERS,stageNumber,substageNumber,checkpoint,restoreCheckpoint,pilots,SUBSTAGES} from './core.js?v=20261002boss20';
 import {createAudioController} from './audio.js?v=20261002-audio2';
 import {createSoundObserver} from './sound-events.js?v=20261002-audio2';
 const audio=createAudioController(),soundObserver=createSoundObserver();
@@ -44,7 +44,7 @@ function sync(){
     $('resultTitle').textContent=g.mode==='won'?'全部200大关通关！':'本次巡航结束';
     $('restart').textContent=g.mode==='won'?'重新开始':'重试本小关';
     $('result').textContent=`第 ${stageNumber(g)} 大关 · 第 ${substageNumber(g)} 小关 · 积分 ${g.score} · 纪录 ${best}`;
-    $('waveLabel').textContent=g.wave===SUBSTAGES+1?'20只随机大Boss分批来袭 · 激光可穿透多个目标':'随机大Boss · 躲开紫色巨兽的绿色子弹';
+    $('waveLabel').textContent=g.wave>SUBSTAGES?'20只随机大Boss分批来袭 · 激光可穿透多个目标':'随机大Boss · 躲开紫色巨兽的绿色子弹';
     if(g.mode==='upgrade'){
       $('clearedLabel').textContent=`第 ${stageNumber(g)} 大关 · 第 ${substageNumber(g)} 小关完成`;
       $('cardResult').textContent='';$('nextWave').hidden=true;

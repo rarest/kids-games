@@ -759,6 +759,7 @@ input {
   .menu {
     top: 0;
     bottom: 10px;
+    left: auto;
     right: 12px;
     max-height: calc(100% - 10px);
     width: 310px;
@@ -880,5 +881,107 @@ input {
   }
   #podium strong {
     font-size: 20px;
+  }
+}
+
+#hazard-warning {
+  position: absolute;
+  left: 50%;
+  top: 105px;
+  transform: translateX(-50%);
+  max-width: 75%;
+  text-align: center;
+  background: #362217dc;
+  color: #ffd69a;
+  border: 1px solid #ffa25170;
+  border-radius: 9px;
+  padding: 9px 15px;
+  font-size: 13px;
+}
+#penalty {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  max-width: 90%;
+  text-align: center;
+  background: #381e16ee;
+  color: #ffd6a9;
+  border: 1px solid #ffb363;
+  border-radius: 12px;
+  padding: 15px 22px;
+  font-size: 18px;
+  font-weight: 700;
+}
+@media (max-width: 600px) {
+  #hazard-warning {
+    top: 156px;
+    font-size: 11px;
+    padding: 7px 10px;
+  }
+  #penalty {
+    font-size: 14px;
+  }
+}
+@media (max-height: 500px) and (min-width: 500px) {
+  #hazard-warning {
+    top: 68px;
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+  #penalty {
+    top: 47%;
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+}
+
+#visual-settings {
+  position: relative;
+  font-size: 12px;
+}
+#visual-settings summary {
+  list-style: none;
+  cursor: pointer;
+  border: 1px solid #ffffff2a;
+  border-radius: 9px;
+  padding: 8px 12px;
+  background: #132429dd;
+}
+#visual-settings summary::-webkit-details-marker {
+  display: none;
+}
+.visual-options {
+  position: absolute;
+  right: 0;
+  top: 43px;
+  width: 190px;
+  padding: 12px;
+  background: #132e35f5;
+  border: 1px solid #ffffff40;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px #0008;
+}
+.visual-options label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 5px 0;
+}
+.visual-options select {
+  max-width: 115px;
+}
+#visual-settings:focus-within {
+  z-index: 9;
+}
+@media (max-width: 600px) {
+  #visual-settings summary {
+    padding: 7px;
+    font-size: 10px;
+  }
+  .visual-options {
+    top: 36px;
   }
 }

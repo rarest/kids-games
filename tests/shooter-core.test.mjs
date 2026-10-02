@@ -8,9 +8,9 @@ test('starts with ten life and ten laser shots per wave',()=>{
  const g=createGame(400,600);startWave(g);assert.equal(g.hp,10);assert.equal(g.shield,0);assert.equal(g.lasers,10);
  g.lasers=0;g.mode='upgrade';g.reward={kind:'shield'};continueWave(g);assert.equal(g.lasers,10);
 });
-test('each substage has random big bosses; stage 2 substage 1 has twenty',()=>{
+test('every substage from stage 2 onward has twenty random big bosses',()=>{
  assert.equal(SUBSTAGES,50);assert.equal(MAX_WAVES,10000);
- for(let n=1;n<=MAX_WAVES;n++){const plan=buildWave(n,rng());assert.ok(plan.some(k=>k!=='drone'));const bosses=plan.filter(k=>k!=='drone').length;if(n===51)assert.equal(bosses,20);else if(n===30)assert.equal(bosses,10);else assert.ok(bosses>=1&&bosses<=8)}
+ for(let n=1;n<=MAX_WAVES;n++){const plan=buildWave(n,rng());assert.ok(plan.some(k=>k!=='drone'));const bosses=plan.filter(k=>k!=='drone').length;if(n>SUBSTAGES)assert.equal(bosses,20,`wave ${n}`);else if(n===30)assert.equal(bosses,10);else assert.ok(bosses>=1&&bosses<=8)}
  assert.notDeepEqual(buildWave(20,()=>0),buildWave(20,()=>.99));
  assert.ok(buildWave(51,()=>.99).filter(k=>k!=='drone').every(k=>k==='purple'));
  assert.deepEqual(buildWave(1,()=>.99).filter(k=>k!=='drone'),['yellow']);

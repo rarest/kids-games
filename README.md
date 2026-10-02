@@ -57,9 +57,12 @@ deploy/        自动部署组件
 
 入口 `games/racing.html`，逻辑在 `racing/core.js`，三维画面在 `racing/scene.js`，车库和操作在 `racing/game.js`。玩家与10位电脑车手跑两圈，前三名分别获得3000、1500、700赛事金币，其余名次无奖金。4种车型、6款涂装使用奖金解锁，购买和装备保存在当前浏览器。
 
-六条起伏蜿蜒赛道包含高原、山地、废弃工厂、旧公路和城市交通；主题路线以对应地形为主。车模为实际三维几何，采用金属反射、珠光车漆与薄膜干涉花纹，光照角度和车辆朝向改变时涂装会变色，车辆与场景投射阴影。
+十四条起伏蜿蜒赛道包含高原、山地、废弃工厂、旧公路和城市交通；主题路线以对应地形为主，并有霓虹管道长廊、赛博朋克城市、半玻璃半网格空中桥、中国风云海古亭等幻想地图，以及集装箱箱顶/箱内、跨海长桥、双层船桥和河水环绕的中国风山峡。每条主题赛道有独立走法，仅五境环线组合环境。车模为实际三维几何，采用金属反射、珠光车漆与薄膜干涉花纹，光照角度和车辆朝向改变时涂装会变色，车辆与场景投射阴影。
 
+- 每张赛道的圈起点有T字复活标记。路障、摆锤、尖刺木桩、刀片、升降钉板及中国风古亭会撞毁车辆；空中桥驶出边缘会坠落。撞毁停5秒，回本圈T点，已完成圈数保留，仍可争取前三名；AI遵守相同规则。前方危险提前提示，复活后有3秒机关保护。
+- 赛车实体按车身尺寸分离，冲线车辆离开赛道，不在终点堆叠；所有赛车带霓虹拖尾，氮气时更宽更亮。
+- 画面菜单提供随赛程渐变、黎明、正午、晚霞、深夜；天空、金属环境反射、太阳方向、长短阴影和车灯随时段变化。中国风地图增加曲干迎客松、山峡河水、奇花异草、灌木和种植石岛。
 - 自动油门默认开启；方向键 / WASD驾驶，空格使用氮气。手机用转向、刹车和氮气按钮。切到后台自动暂停。
 - 自动画质根据帧耗时降低分辨率，另有精细和流畅选项；场景重复物件实例化，车辆零件按材质合并。比赛计算在浏览器本地执行。
 - 修改源码后执行 `npm run build:racing` 并提交 `racing/bundle.js`；Three.js固定版本、本地打包，许可证见 `racing/THIRD-PARTY-NOTICES.txt`。
-- 检查 `node --test tests/racing.test.mjs tests/racing-render.test.mjs tests/racing-browser.mjs`。发布后用 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-browser.mjs` 验证公网真实页面。
+- 检查 `npm run test:unit` 与 `npm run test:browser`。发布后分别执行 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-browser.mjs`、`GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-worlds-browser.mjs`、`GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-scenery-browser.mjs`，顺序验证公网操作、机关、场景和光影，避免软件渲染浏览器并行争用GPU。
