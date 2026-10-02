@@ -17,3 +17,12 @@ test('circle covers preserve all owned cell centers, exclude others, and use one
     if(cols===3)assert.equal(disks.length,1,'small starting land is a single circle, not a square with rounded corners');
   }
 });
+test('a captured corner branch remains visibly connected to the original circular territory',()=>{
+  const g=createGame({seed:7,cols:88,rows:76,bots:0});
+  for(const [x,y]of [[24.5,36.5],[24.5,35.5],[24.5,36.5]])assert.equal(movePlayer(g,0,x,y),true);
+  const mask=Array.from(g.owners,o=>o===0?1:0),disks=circleCover(mask,g.cols,g.rows);
+  const reached=new Set([0]),queue=[0];
+  for(const i of queue)for(let j=0;j<disks.length;j++)if(!reached.has(j)&&Math.hypot(disks[i].x-disks[j].x,disks[i].y-disks[j].y)<=disks[i].r+disks[j].r){reached.add(j);queue.push(j);}
+  assert.equal(reached.size,disks.length,'all circles in this connected territory must overlap');
+  for(let i=0;i<mask.length;i++)assert.equal(containsCircle(disks,i%g.cols+.5,Math.floor(i/g.cols)+.5),Boolean(mask[i]));
+});

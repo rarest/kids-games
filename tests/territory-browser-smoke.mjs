@@ -89,7 +89,7 @@ test('paper territory has real shop categories, circular previews, locked silhou
       }
       if(tier==='fine'){
         assert.equal(await b.evaluate('new Set([...document.querySelectorAll(".skin-preview")].map(c=>c.toDataURL())).size'),20,'20 distinct rendered textures');
-        assert.equal(await b.evaluate(`(async()=>{const{drawPaper}=await import('../territory/render.js'),{SKINS}=await import('../territory/profile.js');return new Set(SKINS.filter(s=>s.tier==='fine').map(s=>{const c=document.createElement('canvas');c.width=c.height=112;drawPaper(c.getContext('2d'),56,56,72,{...s,color:'#629ca6'});return c.toDataURL()})).size})()`),20,'texture differences remain visible even with identical colors');
+        assert.equal(await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search,{drawPaper}=await import('../territory/render.js'+release),{SKINS}=await import('../territory/profile.js');return new Set(SKINS.filter(s=>s.tier==='fine').map(s=>{const c=document.createElement('canvas');c.width=c.height=112;drawPaper(c.getContext('2d'),56,56,72,{...s,color:'#629ca6'});return c.toDataURL()})).size})()`),20,'texture differences remain visible even with identical colors');
       }
     }
     // A legitimate persisted profile is the boundary; no production mutation API.
@@ -102,7 +102,7 @@ test('paper territory has real shop categories, circular previews, locked silhou
     assert.equal(await b.evaluate('document.querySelector("#home-paper").dataset.skin'),'blue');
     await click(b,'#shop');await click(b,'[data-tier="hidden"]');
     assert.equal(await b.evaluate('document.querySelectorAll(".skin-card[data-locked=true]").length'),19);
-    assert.equal(await b.evaluate(`(async()=>{const{drawPaper}=await import('../territory/render.js'),{SKINS}=await import('../territory/profile.js');return new Set(SKINS.filter(s=>s.tier==='hidden').map(s=>{const c=document.createElement('canvas');c.width=c.height=128;drawPaper(c.getContext('2d'),64,64,62,{...s,color:'#629ca6'},1,{active:true});return c.toDataURL()})).size})()`),20,'20 distinct rendered hidden effects');
+    assert.equal(await b.evaluate(`(async()=>{const release=new URL(document.querySelector('script[type=module]').src).search,{drawPaper}=await import('../territory/render.js'+release),{SKINS}=await import('../territory/profile.js');return new Set(SKINS.filter(s=>s.tier==='hidden').map(s=>{const c=document.createElement('canvas');c.width=c.height=128;drawPaper(c.getContext('2d'),64,64,62,{...s,color:'#629ca6'},1,{active:true});return c.toDataURL()})).size})()`),20,'20 distinct rendered hidden effects');
     await click(b,'[data-tier="normal"]');await b.evaluate('Storage.prototype.setItem=()=>{throw new Error("storage unavailable")}');await click(b,'[data-skin="orange"] button');
     assert.match(await b.evaluate('document.querySelector("#notice").textContent'),/无法保存/,'failed persistence remains visible after purchase');
     assert.deepEqual(b.errors,[]);
