@@ -29,7 +29,7 @@
 - carrying 为 `null` 或 `{type:'object'|'player',id}`；heldBy 为 null 或 player id。对象 `kind` 是 crate/metal/apple/ball/bigcrate，物品另用 `contents`。hazard.kind 是 spike/water/electric/press/faucet；platform.kind 可含 conveyor/moving。
 - `rescue/scene.js`: `createScene(canvas)` 返回 `setLevel(level), update(state,dt), resize(width,height), setQuality(mode), diagnostics(), dispose()`。`rescue/avatar.js` 返回可动画 group；`scenery.js` 与 `materials.js` 服务 scene，不能更改物理状态。
 - `rescue/controls.js`: `createControls({target=window,players=1,gamepads,onPause,capture,joystick,jump,action})` 返回 `sample(),clear(),setPlayers(n),dispose(),bindings`；`bindings` 是稳定手柄 index 的只读副本。正常外部事件边界支持注入 target/Gamepad provider；手柄断开/失焦/暂停清除输入，同一次按钮保持不重复触发 action。
-- `rescue/audio.js`: `createAudio(options)` 返回 `unlock(),setOptions(options),setActive(bool),consume(state),diagnostics(),dispose()`，用户手势后启用浏览器合成旋律与事件音效。`consume(state)` 根据真实 game 对象身份重置事件游标，并根据真实 theme 更新音乐；音乐与音效可分别设置。暂停、隐藏和离页停止声音；通关事件须得到一次正常播放。
+- `rescue/audio.js`: `createAudio(options)` 返回 `unlock(),setOptions(options),setActive(bool,{finishEffects=false}?),consume(state),diagnostics(),dispose()`，用户手势后启用浏览器合成旋律与事件音效。`consume(state)` 根据真实 game 对象身份重置事件游标，并根据真实 theme 更新音乐；音乐与音效可分别设置。暂停、隐藏和离页停止全部声音；终态可先消费事件，再停音乐并让当前结束音效自然播放完。
 - `rescue/profile.js`: `createProfile(storage?)` 返回 `load(),save(profile),error`；`save` 返回明确的成功或失败结果。profile 持久化当前分支、完成区域、独立 `bestScore`、区域入口 run、角色/模式、声音/画质；无效存档恢复默认，存储不可用给可见说明。
 - `rescue/game.js`: 主循环、首页/地图/教程/奖励/结局 UI，与上述模块协调；实机输入驱动纯模拟，DOM 诊断只展示真实状态，不提供测试专用作弊功能。
 
