@@ -60,3 +60,11 @@ test('game over stops music but permits the final collision sound to finish',asy
   assert.ok(music.every(source=>source.stops===2));assert.equal(effect.stops,1,'only its natural end remains scheduled');
   a.setEnabled(false);assert.equal(effect.stops,2,'mute still silences the tail immediately');
 });
+test('campaign hull damage without shields still emits collision audio',()=>{
+  const game=createGame(400,600);game.mode='playing';game.spawnLeft=1;game.spawnClock=99;
+  game.hp=1;game.shield=0;game.invincible=0;
+  game.enemyBullets=[{x:game.player.x,y:game.player.y,r:5,vx:0,vy:0,damage:1}];
+  const observer=createSoundObserver(),heard=[];
+  observer.before(game);stepGame(game,1/60);observer.after(game,name=>heard.push(name));
+  assert.equal(game.mode,'over');assert.deepEqual(heard,['damage']);
+});
