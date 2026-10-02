@@ -29,14 +29,14 @@ const snapshot = b => b.evaluate('({x:Number(view.dataset.x),y:Number(view.datas
 const waitForHall = async b => {
   for (let i = 0; i < 120; i++) {
     try {
-      if (await b.evaluate('location.pathname.endsWith("/index.html") && document.readyState === "complete" && document.querySelectorAll(".card").length === 11')) return;
+      if (await b.evaluate('location.pathname.endsWith("/index.html") && document.readyState === "complete" && document.querySelectorAll(".card").length === 12')) return;
     } catch (error) {
       // A real navigation can replace the inspected context during this poll.
       if (!/Inspected target navigated or closed|Execution context was destroyed|Cannot find context with specified id/.test(error.message)) throw error;
     }
     await sleep(60);
   }
-  assert.fail(`game hall did not render eleven cards: ${JSON.stringify(await b.evaluate('({path:location.pathname,ready:document.readyState,cards:document.querySelectorAll(".card").length})'))}`);
+  assert.fail(`game hall did not render twelve cards: ${JSON.stringify(await b.evaluate('({path:location.pathname,ready:document.readyState,cards:document.querySelectorAll(".card").length})'))}`);
 };
 
 // Removing the catalog entry, pointing it at another game, or losing the preset
@@ -47,7 +47,7 @@ test('hall search reaches parkour and a real preset jump credits its first coin 
     await b.size(960, 640);
     await b.navigate('index.html');
     await waitForHall(b);
-    assert.equal(await b.evaluate('document.querySelectorAll(".card").length'), 11);
+    assert.equal(await b.evaluate('document.querySelectorAll(".card").length'), 12);
     assert.equal(await b.evaluate(`document.querySelector('a[href="games/parkour.html"] .name')?.textContent`), '微光跑酷');
     const description = await b.evaluate(`document.querySelector('a[href="games/parkour.html"] .desc').textContent`);
     for (const requirement of [/12关/, /3D/, /自创/]) assert.match(description, requirement);
@@ -85,7 +85,7 @@ test('hall search reaches parkour and a real preset jump credits its first coin 
     console.log('actual preset wallet survives reload', await b.evaluate('coins.textContent'));
     await click(b, '.brand');
     await waitForHall(b);
-    assert.equal(await b.evaluate('document.querySelectorAll(".card").length'), 11);
+    assert.equal(await b.evaluate('document.querySelectorAll(".card").length'), 12);
     assert.deepEqual(b.errors, []);
   } finally {
     b.close();

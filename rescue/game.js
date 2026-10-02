@@ -3,6 +3,7 @@ import { LEVELS, getLevel } from "./levels.js";
 import { availableAreas } from "./campaign.js";
 import { createScene } from "./scene.js";
 import { createControls } from "./controls.js";
+import { presentCompletion } from "./completion.js";
 import { createProfile } from "./profile.js";
 import { createAudio } from "./audio.js";
 const $ = (id) => document.getElementById(id),
@@ -215,13 +216,7 @@ function complete() {
   saved.run = totals;
   const ok = save();
   optionsUI();
-  $("complete-title").textContent = state.ending
-    ? "朋友获救了！"
-    : "区域完成！";
-  $("complete-copy").textContent = state.ending
-    ? `奇奇和蒂蒂终于救出了朋友。一路收获 ${state.score} 分，${state.flowers} 朵花和 ${state.stars} 颗星。`
-    : `${state.areaLevel.name}探索完成，收获 ${state.score} 分。选择地图上亮起的下一站。`;
-  $("next-area").textContent = state.ending ? "再去探险" : "选择下一站";
+  presentCompletion(state, document);
   openPanel("complete", true);
   if (ok) notify("进度已保存，可从下一站起点继续。");
 }
