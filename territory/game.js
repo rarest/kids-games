@@ -2,8 +2,9 @@ import {
   createGame,
   stepGame,
   coverage,
+  coverageLabel,
   finishRun,
-} from "./core.js?v=20261002vector";
+} from "./core.js?v=20261002rewards";
 import {
   SKINS,
   createProfile,
@@ -12,8 +13,8 @@ import {
   settleRun,
   collectReward,
   rewardSummary,
-} from "./profile.js?v=20261002vector";
-import { drawPaper, createRenderer } from "./render.js?v=20261002vector";
+} from "./profile.js?v=20261002rewards";
+import { drawPaper, createRenderer } from "./render.js?v=20261002rewards";
 
 const $ = (id) => document.getElementById(id),
   KEY = "paper-territory.profile.v1";
@@ -96,6 +97,7 @@ function refreshProfile() {
   const skin = selected();
   $("wallet").textContent = profile.coins;
   $("selected-name").textContent = skin.name;
+  $("total-score").textContent = profile.score;
   paperPreview($("home-paper"), skin, 38);
   paperPreview($("result-paper"), skin, 75);
   drawHero();
@@ -187,7 +189,7 @@ function updateHud() {
   $("map").dataset.coverage = coverage(game, 0).toFixed(5);
   $("map").dataset.skin = selected().id;
   $("coverage").innerHTML =
-    `${(coverage(game, 0) * 100).toFixed(1)}<span>%</span>`;
+    `${coverageLabel(game, 0)}<span>%</span>`;
   $("rankings").replaceChildren();
   for (const p of [...game.players].sort(
     (a, b) => coverage(game, b.id) - coverage(game, a.id),
@@ -201,7 +203,7 @@ function updateHud() {
     const label = document.createElement("span");
     label.textContent = p.id === 0 ? "你" : p.name;
     const pct = document.createElement("strong");
-    pct.textContent = p.alive ? amount.toFixed(1) + "%" : "出局";
+    pct.textContent = p.alive ? coverageLabel(game, p.id) + "%" : "出局";
     const bar = document.createElement("div");
     bar.className = "rank-track";
     const fill = document.createElement("span");
@@ -239,11 +241,18 @@ function updateHud() {
               "动态纸片",
           );
       }
+    } else if (event.type === "clock") {
+      notify(`拾到钟表，领奖时间 +${event.seconds} 秒`);
     }
   }
   if (game.mode === "reward")
     $("map-hint").textContent =
-      `胜利奖励 · 金币 ${game.rewards.coins.filter((c) => !c.collected).length} · 宝箱 ${game.rewards.chests.filter((c) => !c.collected).length}`;
+      `胜利奖励 · 金币 ${game.rewards.coins.filter((c) => !c.collected).length} · 宝箱 ${game.rewards.chests.filter((c) => !c.collected).length} · 钟表可加时`;
+  const rewarding = game.mode === "reward" || game.resumeMode === "reward";
+  $("reward-clock").hidden = !rewarding;
+  $("reward-seconds").textContent = Math.ceil(game.rewards?.remaining || 0);
+  $("map").dataset.rewardRemaining = game.rewards?.remaining || 0;
+  $("run-score").textContent = Math.floor(game.peak * 100) + (game.winner === 0 ? 50 : 0) + rewardSummary(game).coins;
   if (!playerNotice && game.players[0].trail.length)
     $("map-hint").textContent = "回到自己的颜色，闭合这条路";
 }
@@ -302,6 +311,7 @@ function end() {
       : "本局已结束，按最高占地结算金币。";
   $("result-peak").textContent = (game.peak * 100).toFixed(1) + "%";
   $("result-coins").textContent = "+" + (reward + extra);
+  $("result-score").textContent = reward + extra;
 }
 function direction(dt) {
   const x =

@@ -8,3 +8,8 @@
 .minimap-card{position:absolute;right:10px;top:10px;width:120px;padding:6px;border:1px solid #fffbeccc;border-radius:9px;background:#fffbeddb;box-shadow:0 3px 12px #31595421;pointer-events:none}.minimap-card>span{display:block;font-size:9px;color:#5c7e72;line-height:1.5;margin-bottom:4px;text-align:center}.map-frame #minimap{width:100%;height:auto;display:block;border-radius:4px;image-rendering:pixelated}@media(max-width:600px){.minimap-card{width:100px;right:7px;top:7px;padding:5px}.minimap-card>span{font-size:8px}}@media(orientation:landscape) and (max-height:550px){.minimap-card{width:88px;right:6px;top:6px;padding:4px}.minimap-card>span{font-size:7px;margin-bottom:2px}}
 .minimap-card{aspect-ratio:1;border-radius:12px;padding:6px}.minimap-card>span{position:absolute;bottom:-13px;left:0;width:100%;margin:0;white-space:nowrap}.map-frame #minimap{border-radius:7px;image-rendering:auto}@media(orientation:landscape) and (max-height:550px){.minimap-card{padding:4px}.minimap-card>span{bottom:-10px}}
 #reward-finish{font-size:10px;min-height:30px;padding:5px 8px;white-space:nowrap;flex-shrink:0}body[data-mode=reward] .rankings{display:none}
+/* Score and reward timer sit outside the map, leaving the island unobscured. */
+.reward-status{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px;font-size:13px;color:#58676b}
+.reward-status strong{font-size:20px;color:#273e44}
+.result-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,4vw,40px);width:100%;max-width:440px;margin-left:auto;margin-right:auto}
+.result-stats strong{font-size:clamp(20px,6vw,30px);overflow-wrap:anywhere}

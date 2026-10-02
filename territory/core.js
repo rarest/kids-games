@@ -15,7 +15,7 @@ import {
   nearestSegment,
   simplifyPath,
   clamp,
-} from "./regions.js?v=20261002vector";
+} from "./regions.js?v=20261002rewards";
 const COLORS = ["#ed4949", "#4189ee", "#f3b63a", "#a269db"];
 export function random(g) {
   g.rng = (g.rng + 0x6d2b79f5) >>> 0;
@@ -95,6 +95,7 @@ export function createGame({
       hunt: null,
       retreat: false,
       thinkAt: 0,
+      rollAngle: 0,
     });
     g.initialDisks.push({ x, y, r: startRadius });
     g.territories.push(disk(x, y, startRadius));
@@ -106,6 +107,8 @@ export function createGame({
 }
 export const coverage = (g, id) =>
   clamp((g.areas[id] || 0) / g.worldArea, 0, 1);
+export const coverageLabel = (g, id) =>
+  g.winner === id ? "100.0" : (Math.min(999, Math.floor(coverage(g, id) * 1000)) / 10).toFixed(1);
 function clear(p) {
   p.trail = [];
   p.stroke = [];
@@ -135,18 +138,25 @@ function rewards(g) {
   if (g.rewards) return;
   const c = g.boundary,
     phase = random(g) * Math.PI * 2;
-  g.rewards = { coins: [], chests: [] };
+  g.rewards = { coins: [], chests: [], clocks: [], remaining: 30 };
+  const at = (a, r) => {
+    while (!containsRegion(g.world, c.x + Math.cos(a) * r, c.y + Math.sin(a) * r)) r *= 0.96;
+    return { x: c.x + Math.cos(a) * r, y: c.y + Math.sin(a) * r };
+  };
+  const clusters = Array.from({ length: 6 }, (_, i) => at(phase + i * Math.PI / 3, c.r * 0.68));
   for (let i = 0; i < 60; i++) {
-    const a = i * 2.399 + phase;
-    let r = Math.sqrt((i + 0.5) / 60) * (c.r - 1);
-    while (
-      !containsRegion(g.world, c.x + Math.cos(a) * r, c.y + Math.sin(a) * r)
-    )
-      r *= 0.96;
+    let q;
+    if (i < 30) q = at(i * 2.399 + phase, Math.sqrt((i + 0.5) / 30) * (c.r - 1));
+    else {
+      const center = clusters[Math.floor((i - 30) / 5)], a = ((i - 30) % 5) * Math.PI * 2 / 5;
+      q = { x: center.x + Math.cos(a) * 0.85, y: center.y + Math.sin(a) * 0.85 };
+    }
+    // Keep dense groups distinct, including when a scatter point is nearby.
+    for (let k = 0; k < 300 && (!containsRegion(g.world, q.x, q.y) || g.rewards.coins.some(v => Math.hypot(v.x - q.x, v.y - q.y) < 0.58)); k++)
+      q = at(phase + (i + k * 0.31) * 2.399, Math.sqrt(((i + k * 17) % 60 + 0.5) / 60) * (c.r - 1));
     g.rewards.coins.push({
       id: i,
-      x: c.x + Math.cos(a) * r,
-      y: c.y + Math.sin(a) * r,
+      ...q,
       collected: false,
       amount: 5,
     });
@@ -160,6 +170,8 @@ function rewards(g) {
       collected: false,
     });
   }
+  for (let i = 0; i < 9; i++)
+    g.rewards.clocks.push({ id: i, ...at(phase + i * 2.399 + 0.9, c.r * [0.3, 0.52, 0.78][i % 3]), seconds: [2, 5, 10][i % 3], collected: false });
 }
 function result(g) {
   g.peak = Math.max(g.peak, coverage(g, 0));
@@ -171,12 +183,18 @@ function result(g) {
       event(g, "eliminated", p.id);
     }
   if (g.mode !== "playing") return;
-  const winner = g.areas.findIndex((a) => g.worldArea - a < 1e-6);
+  const winner = g.areas.findIndex((a, id) =>
+    g.worldArea - a <= Math.max(1e-6, g.worldArea * 1e-5) &&
+    g.areas.every((other, j) => j === id || other < 1e-7));
   if (winner >= 0) {
+    // Close only sub-visible neutral remnants; make ownership and 100% agree.
+    g.territories = g.territories.map((_, id) => id === winner ? g.world : []);
+    g.areas = g.areas.map((_, id) => id === winner ? g.worldArea : 0);
+    g.revision++;
     g.winner = winner;
     if (winner === 0) g.peak = 1;
     g.mode = winner === 0 ? "reward" : "over";
-    for (const p of g.players) clear(p);
+    for (const p of g.players) { clear(p); if (p.id !== winner) p.alive = false; }
     if (winner === 0) rewards(g);
     event(g, "win", winner);
   } else if (!g.players[0].alive) {
@@ -255,14 +273,17 @@ function collectAlong(g, a, b) {
   for (const [type, items, radius] of [
     ["coin", g.rewards.coins, 0.65],
     ["chest", g.rewards.chests, 0.85],
+    ["clock", g.rewards.clocks, 0.65],
   ])
     for (const item of items) {
       const q = nearestSegment(item, [a.x, a.y], [b.x, b.y]);
       if (!item.collected && Math.hypot(q.x - item.x, q.y - item.y) < radius) {
         item.collected = true;
+        if (type === "clock") g.rewards.remaining += item.seconds;
         event(g, type, 0, {
           rewardId: item.id,
           ...(type === "coin" ? { amount: item.amount } : {}),
+          ...(type === "clock" ? { seconds: item.seconds } : {}),
         });
       }
     }
@@ -282,6 +303,7 @@ export function movePlayer(g, id, x, y) {
     to = { x, y };
   if (!segmentInside(g.world, from, to)) return false;
   if (g.mode === "reward") {
+    p.rollAngle += Math.hypot(x - p.x, y - p.y) / 0.725;
     p.x = x;
     p.y = y;
     if (id === 0) collectAlong(g, from, to);
@@ -317,6 +339,7 @@ export function movePlayer(g, id, x, y) {
     );
     if (inside && p.stroke.length) {
       trace(p, a);
+      p.rollAngle += Math.hypot(a.x - p.x, a.y - p.y) / 0.725;
       p.x = a.x;
       p.y = a.y;
       capture(g, p);
@@ -341,6 +364,7 @@ export function movePlayer(g, id, x, y) {
       }
       trace(p, b);
     }
+    p.rollAngle += Math.hypot(b.x - p.x, b.y - p.y) / 0.725;
     p.x = b.x;
     p.y = b.y;
   }
@@ -443,7 +467,8 @@ export function stepGame(g, dt, input = { x: 0, y: 0 }) {
   result(g);
   let remaining = Math.min(dt, 5);
   while (remaining > 1e-8 && ["playing", "reward"].includes(g.mode)) {
-    const slice = Math.min(remaining, 1 / 30);
+    const rewarding = g.mode === "reward",
+      slice = Math.min(remaining, 1 / 30, rewarding ? g.rewards.remaining : Infinity);
     remaining -= slice;
     g.time += slice;
     for (const p of g.players) p.cooldown = Math.max(0, p.cooldown - slice);
@@ -460,6 +485,10 @@ export function stepGame(g, dt, input = { x: 0, y: 0 }) {
         p.y + (dy / Math.max(1, length)) * speed * slice,
         speed * slice,
       );
+    }
+    if (rewarding) {
+      g.rewards.remaining = Math.max(0, g.rewards.remaining - slice);
+      if (g.rewards.remaining <= 1e-8) { g.rewards.remaining = 0; finishRun(g); }
     }
     if (g.mode !== "playing") continue;
     for (const bot of g.players.slice(1))

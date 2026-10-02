@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f7f2e6">
   <meta name="description" content="驾驶圆形小纸片，在柔润的波浪岛屿上画出透明曲线、圈出领地。手机摇杆、电脑鼠标都能玩。">
   <title>纸片领地 · 小火箭游戏厅</title>
-  <link rel="stylesheet" href="../territory/style.css?v=20261002vector">
+  <link rel="stylesheet" href="../territory/style.css?v=20261002rewards">
 </head>
 <body data-screen="home" data-mode="home">
   <header class="topbar">
@@ -22,10 +22,11 @@
         <p class="intro">从一小块领地出发，画出一条路，再回到自己的颜色。每一次闭合，都是新的一片天地。</p>
         <div class="home-actions"><button id="start" class="primary">开始圈地 <span>↗</span></button><button id="shop" class="secondary">纸片商店 <span>✦</span></button></div>
         <div class="equipped"><canvas id="home-paper" width="72" height="72" aria-label="当前纸片"></canvas><div><span>今天的小纸片</span><strong id="selected-name">朱砂红</strong></div><span class="little-tag">已装备</span></div>
+        <p class="local-note">累计积分 <strong id="total-score">0</strong></p>
       </div>
       <div class="hero-art"><canvas id="hero-map" width="640" height="560" aria-label="纸艺岛屿示意"></canvas><span class="art-stamp">MAKE A LITTLE<br>ROOM FOR YOU.</span><div class="art-label"><i></i> 四张纸片，一座随机小岛</div></div>
       <div class="how-to"><article><span>01</span><h2>走出你的颜色</h2><p>鼠标跟随 · 摇杆自由移动<br>也支持方向键 / WASD</p></article><article><span>02</span><h2>闭合，就归你</h2><p>回到自己的领地收下围地<br>被切断只丢这次扩张</p></article><article><span>03</span><h2>把整座岛涂满</h2><p>与三位电脑纸片争夺<br>100% 占地即获胜</p></article></div>
-      <p class="local-note">金币 = 本局最高占地百分比取整，胜利另加 50。占满全岛后还可捡金币、开三个宝箱获得隐藏纸片。金币、胜场与纸片保存在这台设备。</p>
+      <p class="local-note">金币 = 本局最高占地百分比取整，胜利另加 50。全岛胜利进入30秒领奖，触碰钟表加2／5／10秒，时间到自动结算。金币疏密错落，三个宝箱赠隐藏纸。积分与金币奖励等值，购买不扣积分，存档保存在这台设备。</p>
     </section>
     <section id="shop-screen" class="shop-screen" hidden aria-label="纸片商店">
       <div class="section-heading"><div><span class="eyebrow">THE PAPER COLLECTION</span><h1>挑一张，喜欢的纸。</h1><p>颜色只是心情，不影响速度与碰撞。</p></div><button id="shop-back" class="secondary small">← 返回主页</button></div>
@@ -34,13 +35,14 @@
     </section>
     <section id="game-screen" class="game-screen" hidden aria-label="游戏地图">
       <div class="game-hud"><div class="coverage"><span>你的领地</span><strong id="coverage">0.0<span>%</span></strong></div><div id="rankings" class="rankings" aria-label="纸片排名"></div><button id="reward-finish" class="secondary small" hidden>结束领奖</button><button id="pause" class="pause-button" aria-label="暂停游戏">Ⅱ</button></div>
+      <div class="reward-status"><span>本局积分 <strong id="run-score">0</strong></span><span id="reward-clock" hidden>领奖剩余 <strong id="reward-seconds">30</strong> 秒</span></div>
       <div class="play-layout"><div class="map-frame"><canvas id="map" aria-label="纸片岛屿局部地图"></canvas><aside class="minimap-card" aria-label="我的领地小地图"><span>我的领地 · 白点是你</span><canvas id="minimap" width="128" height="111" aria-label="真实领地形状与当前位置"></canvas></aside><span id="map-hint" class="map-hint">走出去，再回到自己的颜色</span></div><div class="controls"><div id="joystick" role="group" aria-label="自由方向摇杆"><span class="joy-rings"></span><span class="joy-arrow north">↑</span><span class="joy-arrow south">↓</span><span class="joy-arrow west">←</span><span class="joy-arrow east">→</span><span id="joy-knob"></span></div><div class="control-copy"><strong>松手即停</strong><span id="input-help" class="desktop-help">鼠标跟随 / WASD</span><label class="speed-label">速度<select id="speed" aria-label="游戏速度"><option value="4.5">舒缓</option><option value="6.2">标准</option></select></label></div></div></div>
       <p class="game-footnote">沿任意角度画透明曲线 · 回家围地，也能连接两块自己的领地</p>
     </section>
-    <section id="result-screen" class="result-screen" hidden aria-label="本局结算"><span class="eyebrow">YOUR LITTLE EXPEDITION</span><canvas id="result-paper" width="128" height="128" aria-label="本局纸片"></canvas><h1 id="result-title"></h1><p id="result-copy"></p><div class="result-stats"><div><span>最高占地</span><strong id="result-peak"></strong></div><div><span>本局金币</span><strong id="result-coins"></strong></div></div><button id="return-home" class="primary">回到主页 ↗</button></section>
+    <section id="result-screen" class="result-screen" hidden aria-label="本局结算"><span class="eyebrow">YOUR LITTLE EXPEDITION</span><canvas id="result-paper" width="128" height="128" aria-label="本局纸片"></canvas><h1 id="result-title"></h1><p id="result-copy"></p><div class="result-stats"><div><span>最高占地</span><strong id="result-peak"></strong></div><div><span>本局金币</span><strong id="result-coins"></strong></div><div><span>本局积分</span><strong id="result-score"></strong></div></div><button id="return-home" class="primary">回到主页 ↗</button></section>
   </main>
   <div id="pause-dialog" class="modal-backdrop" hidden><section class="pause-dialog" role="dialog" aria-modal="true" aria-labelledby="pause-title"><span class="eyebrow">TAKE A LITTLE BREATH</span><h2 id="pause-title">小纸片，休息一下。</h2><p>这座岛会等你回来。</p><button id="resume" class="primary">继续圈地 ↗</button><button id="finish" class="secondary">结束本局并结算</button></section></div>
   <p id="notice" class="notice" role="status" aria-live="polite" hidden></p>
-  <script type="module" src="../territory/game.js?v=20261002vector"></script>
+  <script type="module" src="../territory/game.js?v=20261002rewards"></script>
 </body>
 </html>
