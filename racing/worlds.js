@@ -3,6 +3,7 @@ import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { buildIndustrial } from "./industrial.js";
 import { roadAt } from "./core.js";
 import { hazardState } from "./hazards.js";
+import { surfaceMaterial, paintSurface } from "./materials.js";
 const unit = new THREE.BoxGeometry(1, 1, 1),
   tau = Math.PI * 2;
 const mat = (color, extra = {}) =>
@@ -96,14 +97,23 @@ function eaves(radius, y) {
     }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+  geo.setAttribute(
+    "uv",
+    new THREE.Float32BufferAttribute(
+      vertices.flatMap((_, i) =>
+        i % 3 === 0 ? [vertices[i] / radius, vertices[i + 2] / radius] : [],
+      ),
+      2,
+    ),
+  );
   geo.setIndex(indices);
   geo.computeVertexNormals();
   return geo;
 }
 export function makePavilion() {
   const g = new THREE.Group(),
-    wood = mat(0x63292b),
-    stone = mat(0xb7b4a3),
+    wood = surfaceMaterial("bark", { color: 0x63292b }),
+    stone = surfaceMaterial("stone"),
     jade = mat(0x285759, {
       metalness: 0.35,
       roughness: 0.4,
@@ -220,8 +230,11 @@ export function buildFantasy(parent, track) {
     theme === "sky"
       ? null
       : tex((c, s) => {
-          c.fillStyle = night ? "#182339" : "#b1b6b6";
-          c.fillRect(0, 0, s, s);
+          paintSurface(c, night ? "metal" : "paving");
+          if (night) {
+            c.fillStyle = "rgba(16,28,48,.8)";
+            c.fillRect(0, 0, s, s);
+          }
           c.strokeStyle = night ? "#517592" : "#7f8d8d";
           c.lineWidth = 2;
           for (let i = 0; i < 4; i++) {
@@ -270,10 +283,12 @@ export function buildFantasy(parent, track) {
         track,
         -9,
         9,
-        mat(night ? 0x72869a : 0xf3edda, {
+        surfaceMaterial(night ? "metal" : "paving", {
+          color: night ? 0x8ba3b6 : 0xffffff,
           map: floor,
           side: THREE.DoubleSide,
-          roughness: 0.77,
+          roughness: night ? 0.43 : 0.86,
+          metalness: night ? 0.35 : 0,
         }),
       ),
     );

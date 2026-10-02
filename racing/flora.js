@@ -1,10 +1,11 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { roadAt } from "./core.js";
+import { surfaceMaterial } from './materials.js';
 
 const TAU = Math.PI * 2;
 const material = (color, extra = {}) =>
-  new THREE.MeshStandardMaterial({ color, roughness: 0.95, ...extra });
+  surfaceMaterial('leaves',{ color, roughness: 0.95, ...extra });
 
 function branch(points, radius, segments = 12, sides = 7) {
   const curve = new THREE.CatmullRomCurve3(points.map((p) => new THREE.Vector3(...p))),
@@ -42,7 +43,7 @@ function mergedMesh(parts, mat, name) {
 }
 
 export function makePine() {
-  const tree = new THREE.Group(), wood = material(0x685245),
+  const tree = new THREE.Group(), wood = surfaceMaterial('bark',{color:0x685245}),
     dark = material(0x204c3a), light = material(0x44774d);
   const trunk = [branch([[0, 0.24, 0], [0.22, 1.5, 0.1], [-0.3, 2.8, 0.15],
     [0.6, 4.2, -0.16], [1.18, 5.4, 0], [1.55, 6.18, -0.1]], 0.32, 22)];
@@ -87,7 +88,7 @@ export function makeBroadleaf() {
   for (const angle of [0, 2.1, 4.2])
     trunk.push(branch([[0, 0.25, 0], [Math.cos(angle) * 0.52, 0.13, Math.sin(angle) * 0.52],
       [Math.cos(angle) * 0.85, 0.05, Math.sin(angle) * 0.85]], 0.14, 6));
-  tree.add(mergedMesh(trunk, material(0x685344), "tree-trunk"),
+  tree.add(mergedMesh(trunk, surfaceMaterial('bark',{color:0x685344}), "tree-trunk"),
     mergedMesh(crowns[0], material(0x396044), "tree-crown-dark"),
     mergedMesh(crowns[1], material(0x6f8c46), "tree-crown-light"));
   tree.name = "branching-broadleaf";
@@ -266,8 +267,8 @@ export function buildFlora(parent, track) {
     const patch = new THREE.CylinderGeometry(1, 1, 0.1, 8);
     patch.translate(0, 0.015, 0);
     for (const [geometry, mat, rows, kind] of [
-      [rock, material(0x767c6d), islands, "island"],
-      [patch, material(0x627a4c), moss, "moss"],
+      [rock, surfaceMaterial('stone',{color:0xb4b5a1}), islands, "island"],
+      [patch, surfaceMaterial('grass',{color:0xbbc5a4}), moss, "moss"],
     ]) {
       const prototype = new THREE.Group();
       prototype.add(new THREE.Mesh(geometry, mat));

@@ -6,6 +6,15 @@ import { buildFlora } from "./flora.js";
 import { makeTrails } from "./trails.js";
 import { makeHazards } from "./hazards.js";
 import { buildFantasy, buildHazardModels, checkpoint } from "./worlds.js";
+import {
+  surfaceMaterial,
+  surfaceTextures,
+  isSurfaceTexture,
+  qualitySettings,
+  textureQuality,
+  paintSurface,
+  contactTexture,
+} from "./materials.js";
 const TAU = Math.PI * 2;
 function rng(seed = 731) {
   return () => {
@@ -25,31 +34,12 @@ function texture(paint, w = 256, h = 256) {
 }
 function asphalt() {
   return texture((c, w, h) => {
-    c.fillStyle = "#343b3e";
-    c.fillRect(0, 0, w, h);
-    const r = rng();
-    for (let i = 0; i < 16000; i++) {
-      const v = 42 + r() * 35;
-      c.fillStyle = `rgba(${v},${v + 3},${v + 5},.3)`;
-      c.fillRect(r() * w, r() * h, 1.2, 1.2);
-    }
+    paintSurface(c, "asphalt");
     c.fillStyle = "#d9dace";
     c.fillRect(10, 0, 3, h);
     c.fillRect(w - 13, 0, 3, h);
     c.fillStyle = "#e6ddaf";
     c.fillRect(w / 2 - 2, 15, 4, 120);
-  });
-}
-function grass() {
-  return texture((c, w, h) => {
-    c.fillStyle = "#5c7142";
-    c.fillRect(0, 0, w, h);
-    const r = rng(144);
-    for (let i = 0; i < 18000; i++) {
-      const v = 35 + r() * 45;
-      c.fillStyle = `rgba(${v + 18},${v + 35},${v},.55)`;
-      c.fillRect(r() * w, r() * h, 1, 2);
-    }
   });
 }
 function concrete() {
@@ -83,7 +73,9 @@ function box(g, mat, x, y, z, w, h, d, rot = 0) {
 }
 function loft(sections) {
   const verts = [],
-    indices = [];
+    uv = [],
+    indices = [],
+    rings = [];
   for (const [z, w, lo, hi] of sections) {
     const ring = [
       [-w * 0.88, lo],
@@ -95,36 +87,57 @@ function loft(sections) {
       [w, lo + 0.08],
       [w * 0.88, lo],
     ];
-    for (const [x, y] of ring) verts.push(x, y, z);
+    rings.push(ring);
+    const lengths = [0];
+    for (let j = 0; j < 8; j++) {
+      const a = ring[j],
+        b = ring[(j + 1) % 8];
+      lengths.push(lengths[j] + Math.hypot(b[0] - a[0], b[1] - a[1]));
+    }
+    // A duplicated seam gives each side panel real UV area, including vertical faces.
+    for (let j = 0; j <= 8; j++) {
+      const [x, y] = ring[j % 8];
+      verts.push(x, y, z);
+      uv.push(lengths[j] / lengths[8], z * 0.2 + 0.5);
+    }
   }
   for (let i = 0; i < sections.length - 1; i++)
     for (let j = 0; j < 8; j++) {
-      const a = i * 8 + j,
-        b = i * 8 + ((j + 1) % 8),
-        c = b + 8,
-        d = a + 8;
-      indices.push(a, b, d, b, c, d);
+      const a = i * 9 + j,
+        b = a + 1,
+        c = b + 9,
+        d = a + 9;
+      indices.push(a, d, b, b, d, c);
     }
-  for (let j = 1; j < 7; j++) {
-    indices.push(0, j + 1, j);
-    const b = (sections.length - 1) * 8;
-    indices.push(b, b + j, b + j + 1);
+  // End caps need their own planar UVs and normals, independent of the side unwrap.
+  for (const section of [0, sections.length - 1]) {
+    const base = verts.length / 3,
+      [z, w, lo, hi] = sections[section];
+    for (const [x, y] of rings[section]) {
+      verts.push(x, y, z);
+      uv.push(x / (w * 2) + 0.5, (y - lo) / (hi - lo));
+    }
+    for (let j = 1; j < 7; j++) {
+      if (section === 0) indices.push(base, base + j, base + j + 1);
+      else indices.push(base, base + j + 1, base + j);
+    }
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.Float32BufferAttribute(verts, 3));
-  for (let i = 0; i < indices.length; i += 3)
-    [indices[i + 1], indices[i + 2]] = [indices[i + 2], indices[i + 1]];
+  geo.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
   geo.setIndex(indices);
-  geo.setAttribute(
-    "uv",
-    new THREE.Float32BufferAttribute(
-      verts.flatMap((_, i) =>
-        i % 3 === 0 ? [verts[i] * 0.5 + 0.5, verts[i + 2] * 0.2 + 0.5] : [],
-      ),
-      2,
-    ),
-  );
   geo.computeVertexNormals();
+  const normals = geo.attributes.normal;
+  for (let i = 0; i < sections.length; i++) {
+    const a = i * 9,
+      b = a + 8,
+      n = new THREE.Vector3()
+        .fromBufferAttribute(normals, a)
+        .add(new THREE.Vector3().fromBufferAttribute(normals, b))
+        .normalize();
+    normals.setXYZ(a, n.x, n.y, n.z);
+    normals.setXYZ(b, n.x, n.y, n.z);
+  }
   return geo;
 }
 // Merge the static car parts by material: detailed silhouettes without a draw call per trim piece.
@@ -133,32 +146,39 @@ export function makeCar(model, skin, traffic = false) {
     parts = new THREE.Group();
   const paint = new THREE.MeshPhysicalMaterial({
     color: skin.color,
-    metalness: 0.82,
-    roughness: 0.25,
+    ...surfaceTextures("paint"),
+    normalScale: new THREE.Vector2(0.035, 0.035),
+    metalness: 0.72,
+    roughness: 0.22,
     clearcoat: 1,
-    clearcoatRoughness: 0.16,
+    clearcoatRoughness: 0.08,
+    envMapIntensity: 1.35,
     iridescence: skin.iridescence * 0.28,
     iridescenceIOR: 1.45,
     iridescenceThicknessRange: [130, 390],
   });
+  paint.userData.surface = "paint";
   const pattern = new THREE.MeshPhysicalMaterial({
     color: skin.stripe,
     metalness: 0.65,
     roughness: 0.19,
     clearcoat: 1,
+    clearcoatRoughness: 0.07,
+    envMapIntensity: 1.4,
     iridescence: skin.iridescence,
     iridescenceIOR: 1.8,
     iridescenceThicknessRange: [180, 700],
   });
-  const black = new THREE.MeshStandardMaterial({
+  const black = surfaceMaterial("carbon", {
     color: 0x11161a,
-    roughness: 0.62,
   });
+  const rubber = surfaceMaterial("rubber", { color: 0x171a1c });
   const glass = new THREE.MeshPhysicalMaterial({
     color: 0x20343e,
-    metalness: 0.25,
-    roughness: 0.1,
+    metalness: 0.05,
+    roughness: 0.045,
     clearcoat: 1,
+    envMapIntensity: 1.5,
   });
   const chrome = new THREE.MeshStandardMaterial({
     color: 0xc0ccd2,
@@ -175,7 +195,7 @@ export function makeCar(model, skin, traffic = false) {
     emissive: 0xf21b25,
     emissiveIntensity: 1.2,
   });
-  const materials = [paint, pattern, black, glass, chrome, head, tail];
+  const materials = [paint, pattern, black, rubber, glass, chrome, head, tail];
   const hyper = model.style === "hyper",
     rally = model.style === "rally",
     muscle = model.style === "muscle";
@@ -330,11 +350,11 @@ export function makeCar(model, skin, traffic = false) {
     for (const x of [-0.7, 0.7])
       box(parts, chrome, x, hood + 0.19, rear + 0.35, 0.05, 0.43, 0.12);
   }
-  const tireGeo = new THREE.CylinderGeometry(0.43, 0.43, 0.29, 18),
-    rimGeo = new THREE.CylinderGeometry(0.29, 0.29, 0.305, 12);
+  const tireGeo = new THREE.CylinderGeometry(0.43, 0.43, 0.29, 32),
+    rimGeo = new THREE.CylinderGeometry(0.29, 0.29, 0.305, 24);
   for (const x of [-wide, wide])
     for (const z of [rear + 0.65, front - 0.73]) {
-      const tire = new THREE.Mesh(tireGeo, black);
+      const tire = new THREE.Mesh(tireGeo, rubber);
       tire.rotation.z = Math.PI / 2;
       tire.position.set(x, 0.44, z);
       parts.add(tire);
@@ -376,9 +396,33 @@ export function makeCar(model, skin, traffic = false) {
   parts.traverse((o) => {
     if (o.isMesh && o.geometry !== boxGeo) o.geometry.dispose();
   });
+  const shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(wide * 2.1, front - rear - 0.35).rotateX(
+      -Math.PI / 2,
+    ),
+    new THREE.MeshBasicMaterial({
+      map: contactTexture(),
+      transparent: true,
+      opacity: 0.32,
+      depthWrite: false,
+      toneMapped: false,
+    }),
+  );
+  shadow.name = "contact-shadow";
+  shadow.position.y = -0.015;
+  group.add(shadow);
   return group;
 }
-function ribbon(track, near, far, map, material, side = 1, raise = 0) {
+function ribbon(
+  track,
+  near,
+  far,
+  map,
+  material,
+  side = 1,
+  raise = 0,
+  repeats = 1,
+) {
   const verts = [],
     uv = [],
     indices = [],
@@ -393,7 +437,7 @@ function ribbon(track, near, far, map, material, side = 1, raise = 0) {
         p.y + raise - Math.max(0, Math.abs(out) - 9) * 0.075,
         p.z + p.nz * out,
       );
-      uv.push(dist === near ? 0 : 1, s / (map ? 8 : 20));
+      uv.push(dist === near ? 0 : repeats, s / (map ? 8 : 20));
     }
     if (i < points.length - 1) {
       const a = i * 2;
@@ -414,6 +458,10 @@ function terrain(track, material) {
     segments = 80,
     geo = new THREE.PlaneGeometry(size, size, segments, segments);
   geo.rotateX(-Math.PI / 2);
+  // World-sized ground needs small grass tiles, independently of roadside ribbons.
+  const uv = geo.attributes.uv;
+  for (let i = 0; i < uv.count; i++)
+    uv.setXY(i, uv.getX(i) * 128, uv.getY(i) * 128);
   const attr = geo.attributes.position;
   for (let i = 0; i < attr.count; i++) {
     const x = attr.getX(i),
@@ -534,14 +582,8 @@ export class RaceScene {
     this.fleet = new THREE.Group();
     this.scene.add(this.fleet);
     this.roadTexture = asphalt();
-    this.grassTexture = grass();
-    this.grassTexture.repeat.set(14, 1);
     this.wallTexture = concrete();
-    this.sharedTextures = new Set([
-      this.roadTexture,
-      this.grassTexture,
-      this.wallTexture,
-    ]);
+    this.sharedTextures = new Set([this.roadTexture, this.wallTexture]);
     this.frame = 0;
     this.firstCamera = true;
     this.quality = "auto";
@@ -571,31 +613,46 @@ export class RaceScene {
     this.frameAverage = 0;
     this.samples = 0;
     this.quality = value;
-    this.renderer.setPixelRatio(
-      value === "low"
-        ? this.software
-          ? 0.5
-          : 0.75
-        : this.software
-          ? 0.65
-          : Math.min(
-              devicePixelRatio || 1,
-              value === "high"
-                ? this.mobile
-                  ? 1.7
-                  : 2
-                : this.mobile
-                  ? 1.25
-                  : 1.6,
-            ),
+    const q = qualitySettings(
+      value,
+      this.software,
+      this.mobile,
+      devicePixelRatio || 1,
     );
-    this.sun.shadow.mapSize.set(
-      value === "low" ? 512 : this.mobile ? 1024 : 2048,
-      value === "low" ? 512 : this.mobile ? 1024 : 2048,
-    );
+    this.renderer.setPixelRatio(q.ratio);
+    this.sun.shadow.mapSize.set(q.shadowSize, q.shadowSize);
+    this.setTextureQuality(q.anisotropy);
     this.sun.shadow.map?.dispose();
     this.sun.shadow.map = null;
     this.resize();
+  }
+  setTextureQuality(requested) {
+    const value = Math.min(
+      requested,
+      this.renderer.capabilities.getMaxAnisotropy(),
+    );
+    const types = new Set();
+    let detailed = 0;
+    textureQuality(value);
+    this.scene.traverse((o) => {
+      for (const m of Array.isArray(o.material) ? o.material : [o.material])
+        if (m) {
+          if (m.userData.surface) types.add(m.userData.surface);
+          if (m.normalMap) detailed++;
+          for (const k of [
+            "map",
+            "normalMap",
+            "roughnessMap",
+            "clearcoatNormalMap",
+          ])
+            if (m[k] && m[k].anisotropy !== value) {
+              m[k].anisotropy = value;
+              m[k].needsUpdate = true;
+            }
+        }
+    });
+    this.canvas.dataset.surfaceTypes = [...types].sort().join(",");
+    this.canvas.dataset.normalMaterials = String(detailed);
   }
   adapt(frameSeconds) {
     if (this.quality !== "auto" || this.software) return;
@@ -628,8 +685,21 @@ export class RaceScene {
     });
     for (const g of geos) if (g !== boxGeo) g.dispose();
     for (const m of mats) {
-      for (const key of ["map", "alphaMap", "emissiveMap"])
-        if (m[key] && !this.sharedTextures.has(m[key])) m[key].dispose();
+      for (const key of [
+        "map",
+        "alphaMap",
+        "emissiveMap",
+        "normalMap",
+        "roughnessMap",
+        "metalnessMap",
+        "clearcoatNormalMap",
+      ])
+        if (
+          m[key] &&
+          !this.sharedTextures.has(m[key]) &&
+          !isSurfaceTexture(m[key])
+        )
+          m[key].dispose();
       m.dispose();
     }
     group.clear();
@@ -639,29 +709,28 @@ export class RaceScene {
     this.track = track;
     this.fantasy = null;
     if (!track.spec.theme) {
-      const asphaltMat = new THREE.MeshStandardMaterial({
+      const asphaltMat = surfaceMaterial("asphalt", {
         map: this.roadTexture,
         roughness: 0.96,
         side: THREE.DoubleSide,
       });
-      const grassMat = new THREE.MeshStandardMaterial({
-        map: this.grassTexture,
+      const grassMat = surfaceMaterial("grass", {
         color: 0xa3b78c,
         roughness: 1,
         side: THREE.DoubleSide,
       });
       this.world.add(
         ribbon(track, -9, 9, true, asphaltMat, 1, 0.03),
-        ribbon(track, 9, 30, true, grassMat, 1),
-        ribbon(track, 9, 30, true, grassMat, -1),
+        ribbon(track, 9, 30, true, grassMat, 1, 0, 14),
+        ribbon(track, 9, 30, true, grassMat, -1, 0, 14),
         terrain(track, grassMat),
       );
-      const gray = new THREE.MeshStandardMaterial({
+      const gray = surfaceMaterial("stone", {
           color: 0x848b8b,
           roughness: 0.88,
           map: this.wallTexture,
         }),
-        rust = new THREE.MeshStandardMaterial({
+        rust = surfaceMaterial("metal", {
           color: 0x704534,
           roughness: 0.9,
         }),
@@ -910,19 +979,19 @@ export class RaceScene {
       makeBatch(
         this.world,
         boxGeo,
-        new THREE.MeshStandardMaterial({ color: 0x615039, roughness: 1 }),
+        surfaceMaterial("bark", { color: 0x615039 }),
         treeTrunks,
       );
       makeBatch(
         this.world,
         new THREE.ConeGeometry(1, 1, 9),
-        new THREE.MeshStandardMaterial({ color: 0x3e6249, roughness: 1 }),
+        surfaceMaterial("leaves", { color: 0x3e6249 }),
         treeCrowns,
       );
       makeBatch(
         this.world,
         new THREE.SphereGeometry(1, 10, 7),
-        new THREE.MeshStandardMaterial({ color: 0x486d46, roughness: 1 }),
+        surfaceMaterial("leaves", { color: 0x486d46 }),
         broadCrowns,
       );
       makeBatch(this.world, boxGeo, dark, lamps);
@@ -959,7 +1028,7 @@ export class RaceScene {
       makeBatch(
         this.world,
         hillGeo,
-        new THREE.MeshStandardMaterial({ color: 0x798576, roughness: 1 }),
+        surfaceMaterial("stone", { color: 0xa7aca0 }),
         hills,
       );
     } else this.fantasy = buildFantasy(this.world, track);
@@ -1047,6 +1116,14 @@ export class RaceScene {
     this.frame = 0;
     this.renderer.shadowMap.needsUpdate = true;
     this.canvas.dataset.track = track.spec.id;
+    this.setTextureQuality(
+      qualitySettings(
+        this.quality,
+        this.software,
+        this.mobile,
+        devicePixelRatio || 1,
+      ).anisotropy,
+    );
     this.dirty = true;
   }
   setCars(race, skin) {
@@ -1067,6 +1144,14 @@ export class RaceScene {
       this.track,
       race.cars,
       race.cars.map((c, i) => (i === 0 ? skin : SKINS[i % SKINS.length])),
+    );
+    this.setTextureQuality(
+      qualitySettings(
+        this.quality,
+        this.software,
+        this.mobile,
+        devicePixelRatio || 1,
+      ).anisotropy,
     );
     this.firstCamera = true;
   }
@@ -1185,10 +1270,7 @@ export class RaceScene {
     this.canvas.dataset.lightMode = this.lightMode;
     this.canvas.dataset.lightPeriod = lightState.label;
     this.neonLights.forEach(
-      (light) =>
-        (light.intensity = this.night
-          ? lightState.neonIntensity
-          : 0),
+      (light) => (light.intensity = this.night ? lightState.neonIntensity : 0),
     );
     this.headlights.forEach((light, i) => {
       const side = i ? 1 : -1;
@@ -1210,5 +1292,9 @@ export class RaceScene {
     this.dirty = false;
     this.canvas.dataset.triangles = String(this.renderer.info.render.triangles);
     this.canvas.dataset.draws = String(this.renderer.info.render.calls);
+    this.canvas.dataset.pixelRatio = String(this.renderer.getPixelRatio());
+    this.canvas.dataset.textureCount = String(
+      this.renderer.info.memory.textures,
+    );
   }
 }

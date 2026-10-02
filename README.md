@@ -76,6 +76,8 @@ deploy/        自动部署组件
 - 赛车实体按车身尺寸分离，冲线车辆离开赛道，不在终点堆叠；所有赛车带霓虹拖尾，氮气时更宽更亮。
 - 画面菜单提供随赛程渐变、黎明、正午、晚霞、深夜；天空、金属环境反射、太阳方向、长短阴影和车灯随时段变化。中国风地图增加曲干迎客松、山峡河水、奇花异草、灌木和种植石岛。
 - 自动油门默认开启；方向键 / WASD驾驶，空格使用氮气。手机用转向、刹车和氮气按钮。切到后台自动暂停。
+- 车漆、碳纤维、轮胎、路面、岩石、植被、金属和水面使用本地生成的256×256共享颜色、法线、粗糙度贴图；车身侧壁/封口分别展开UV，路面颜色与凹凸对齐。水面波纹随时间移动，赛车增加接触阴影。无需下载远程材质。
+- 精细画质提高画面分辨率、纹理过滤和阴影细节；软件渲染时精细模式使用1倍画布和1024阴影，自动/流畅模式保留较低负载。切换赛道保留共享材质贴图，释放赛道独有的纹理。
 - 自动画质根据帧耗时降低分辨率，另有精细和流畅选项；场景重复物件实例化，车辆零件按材质合并。比赛计算在浏览器本地执行。
 - 修改源码后执行 `npm run build:racing` 并提交 `racing/bundle.js`；Three.js固定版本、本地打包，许可证见 `racing/THIRD-PARTY-NOTICES.txt`。
-- 检查 `npm run test:unit` 与 `npm run test:browser`。发布后分别执行 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-browser.mjs`、`GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-worlds-browser.mjs`、`GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-scenery-browser.mjs`，顺序验证公网操作、机关、场景和光影，避免软件渲染浏览器并行争用GPU。
+- 检查 `npm run test:unit` 与 `npm run test:browser`。发布后分别执行 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-browser.mjs`、`GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-worlds-browser.mjs`、`GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-scenery-browser.mjs`，以及 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-materials-browser.mjs`，顺序验证公网操作、机关、场景、光影和材质，避免软件渲染浏览器并行争用GPU。
