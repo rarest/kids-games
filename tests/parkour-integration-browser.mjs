@@ -26,6 +26,18 @@ const shot = async (b, name) => {
   await writeFile(`/tmp/parkour-integration-${name}.png`, Buffer.from(r.data, 'base64'));
 };
 const snapshot = b => b.evaluate('({x:Number(view.dataset.x),y:Number(view.dataset.y),z:Number(view.dataset.z),yaw:Number(view.dataset.cameraYaw),distance:Number(view.dataset.cameraDistance),resources:JSON.parse(view.dataset.resources),triangles:Number(view.dataset.triangles),calls:Number(view.dataset.drawCalls)})');
+const waitForHall = async b => {
+  for (let i = 0; i < 120; i++) {
+    try {
+      if (await b.evaluate('location.pathname.endsWith("/index.html") && document.readyState === "complete" && document.querySelectorAll(".card").length === 11')) return;
+    } catch (error) {
+      // A real navigation can replace the inspected context during this poll.
+      if (!/Inspected target navigated or closed|Execution context was destroyed|Cannot find context with specified id/.test(error.message)) throw error;
+    }
+    await sleep(60);
+  }
+  assert.fail(`game hall did not render eleven cards: ${JSON.stringify(await b.evaluate('({path:location.pathname,ready:document.readyState,cards:document.querySelectorAll(".card").length})'))}`);
+};
 
 // Removing the catalog entry, pointing it at another game, or losing the preset
 // coin save must break this complete visitor path. Motion uses native inputs only.
@@ -34,6 +46,7 @@ test('hall search reaches parkour and a real preset jump credits its first coin 
   try {
     await b.size(960, 640);
     await b.navigate('index.html');
+    await waitForHall(b);
     assert.equal(await b.evaluate('document.querySelectorAll(".card").length'), 11);
     assert.equal(await b.evaluate(`document.querySelector('a[href="games/parkour.html"] .name')?.textContent`), '微光跑酷');
     const description = await b.evaluate(`document.querySelector('a[href="games/parkour.html"] .desc').textContent`);
@@ -69,8 +82,9 @@ test('hall search reaches parkour and a real preset jump credits its first coin 
     await b.navigate('games/parkour.html');
     await wait(b, 'document.body.dataset.ready === "true"');
     assert.equal(await b.evaluate('coins.textContent'), '1', 'actual collected coin survives page reload');
+    console.log('actual preset wallet survives reload', await b.evaluate('coins.textContent'));
     await click(b, '.brand');
-    await wait(b, 'location.pathname.endsWith("/index.html")');
+    await waitForHall(b);
     assert.equal(await b.evaluate('document.querySelectorAll(".card").length'), 11);
     assert.deepEqual(b.errors, []);
   } finally {
@@ -146,16 +160,22 @@ test('twelve scene switches and sustained native movement keep resources bounded
           assert.ok(first.resources.textures <= previous.textures + 1, `${theme}: texture leak`);
         }
         if (cycle === 2) await shot(b, `switch-${theme}`);
+        const pausePoint = await b.evaluate('(()=>{const r=document.querySelector("#pause").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()');
+        // Cache the button before holding movement: CDP query/click round trips
+        // must not let the player walk off the first platform before pausing.
         await key(b, 'ArrowUp');
-        await wait(b, 'Number(view.dataset.x) > .4');
-        await click(b, '#pause');
+        for (const type of ['mousePressed', 'mouseReleased']) {
+          await b.call('Input.dispatchMouseEvent', { type, ...pausePoint, button: 'left', clickCount: 1 });
+        }
         const paused = await snapshot(b);
+        assert.equal(paused.y, 0, `held-key pause must begin standing: ${JSON.stringify({theme,cycle,key:'ArrowUp held',paused})}`);
+        assert.ok(Math.abs(paused.x) <= 1.5 && Math.abs(paused.z) <= 1.5, `held-key pause must stay inside every first platform: ${JSON.stringify({theme,cycle,key:'ArrowUp held',paused})}`);
         await sleep(250);
         assert.deepEqual(await snapshot(b), paused, 'pause freezes position, camera and resources');
         await click(b, '#resume');
         await frames(b, 4);
         const resumed = await snapshot(b);
-        assert.equal(resumed.x, paused.x, 'resume clears a key still held by the visitor');
+        assert.equal(resumed.x, paused.x, `resume clears a key still held by the visitor: ${JSON.stringify({theme,cycle,key:'ArrowUp held',paused,resumed})}`);
         await key(b, 'ArrowUp', false);
         await click(b, '#pause');
         await click(b, '#quit');

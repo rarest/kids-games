@@ -2,11 +2,11 @@
 
 ## 当前状态
 
-- 用户已批准自由移动3D平台跑酷设计；实施中，尚未上线。
-- 基于远程最新 `origin/main` 4e3d2af，新建 `feat/3d-parkour` 与独立 parkour 工作树。
-- 现有294项单元测试通过。现有3D赛车和纸片领地保持不变。
+- 已于2026-10-02完成上线，入口为 `https://games.nblord.com/games/parkour.html` 和 `https://games.596996.xyz/games/parkour.html`，两域真实操作验收通过。
+- 初始基于 `origin/main` 4e3d2af，新建 `feat/3d-parkour` 与独立 parkour 工作树；实施期间已合并更新后的4276c1d，保留赛车与射击最新版本。
+- 初始基线294项单元检查；完整发布门禁365项单元及41项浏览器回归通过，随后单行静音焦点修复的3项相关回归以及公网检查通过。现有游戏实现未改。
 - OpenSpec `3d-platform-parkour` 严格校验通过；计划在 `docs/superpowers/plans/2026-10-02-3d-parkour.md`。
-- 后续先完成纯逻辑及可达性，再实现真实3D和编辑器界面，审查、全项目回归后走既有发布链。
+- 核心、3D和编辑器、集成、独立审查均完成；全部审查findings关闭。上线与验证细节见文末。
 
 ## 核心实现
 
@@ -44,6 +44,18 @@
 - Task3独立审查Spec/Quality Approved，无findings。最终全分支审查Ready to release，无Critical/Important，1项Minor为游玩点击静音后按钮焦点阻挡键盘。
 - 修复 `50dc4c4` 仅在playing静音后恢复canvas焦点；窄测试真实鼠标/方向键/空格RED→GREEN，暂停不抢焦点；3项受影响输入/音频回归通过。其他游戏及纯逻辑源码、测试未变，沿用已绿门禁，未无故重复旧检查。修复限定复审中，最新bundle重建SHA一致 `70ab4b43ae5bd1aa21351f28576cb40999421447bbc85428b9636697bdbfb9bc`。
 - 最后Minor限定复审已关闭，Ready to release，无剩余findings，进入已授权PR合并及两域公网验证。
+
+## 上线与公网验收（2026-10-02）
+
+- PR32已合并，游戏上线提交 `925451ab285d8174175db2d4e708411cba7619fd`，既有GitHub webhook自动部署到oci-cc-arm的1Panel文档根。现场生产HEAD925451a、仓库无修改；webhook与co-op服务active。
+- 两域均核对index.html、games.js、games/parkour.html、parkour/bundle.js及style.css：HTTP200且响应内容SHA与已审查本地文件逐字一致。bundle SHA256 `70ab4b43ae5bd1aa21351f28576cb40999421447bbc85428b9636697bdbfb9bc`；缓存版本 `20261002parkour1`。
+- 主域实际公网 `parkour-browser.mjs` 9/9通过，181.48秒，覆盖原生键盘/鼠标/双指、衣服/皮肤/时段、编辑器真实通关与练习币隔离、存档故障、原生音频及BFCache。日志 `/tmp/parkour-public-primary-browser.log`。
+- 公网integration首轮六尺寸通过（46.50秒），但返回游戏厅在目录加载前读取0卡，以及资源项在x2.93已离台时暂停、恢复后掉落复位x0。保留原失败日志 `/tmp/parkour-public-primary-integration.log`，没有将该首轮称为全部通过。
+- 测试修复 `004713f` 仅修改一个浏览器测试文件：有界等待真实document complete及11卡，重试明确导航上下文更换；提前缓存按钮坐标后立即原生暂停，并增加站稳/平台内硬断言。没有改产品、放宽钱包/输入清除/资源断言，六尺寸用例未改；独立限定复审Approved，无findings。
+- 主域修复后实际入口与12次切换两项2/2通过（89.65秒），最大真实位移1.7，geometry/texture前后16/3。日志 `/tmp/parkour-public-primary-integration-fixed.log`。主域新游戏所有12项检查均已覆盖通过（9功能+原六尺寸1+修复2）。
+- 次域实际游戏厅搜索→点击跑酷→原生跳跃收首币→钱包1及重载保留→返回11卡，1/1通过（21.68秒）。日志 `/tmp/parkour-public-hall-secondary-green.log`。
+- 回退方式：在新分支针对PR32的合并提交做保留主线其他改动的revert，经PR回main触发同一部署链；原上线前main4276c1d仅作核对基线，不直接reset生产或覆盖其他游戏。没有执行回退。
+- 游戏源码不再改动；后续仅将测试等待修复及已完成上线记录同步main，资源哈希保持一致。
 
 ## 已执行检查
 
