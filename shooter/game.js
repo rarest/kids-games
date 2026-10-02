@@ -1,5 +1,6 @@
-import {connectTeam} from './online.js?v=20261002coop';
-import {createGame,startWave,stepGame,resizeGame,drawUpgrade,continueWave,pulse,laser,TIERS,stageNumber,substageNumber,checkpoint,restoreCheckpoint,pilots,SUBSTAGES} from './core.js?v=20261002coop';
+import {decodeVolleys} from './snapshot.js?v=20261002perf';
+import {connectTeam} from './online.js?v=20261002perf';
+import {createGame,startWave,stepGame,resizeGame,drawUpgrade,continueWave,pulse,laser,TIERS,stageNumber,substageNumber,checkpoint,restoreCheckpoint,pilots,SUBSTAGES} from './core.js?v=20261002perf';
 import {createAudioController} from './audio.js?v=20261002-audio2';
 import {createSoundObserver} from './sound-events.js?v=20261002-audio2';
 const audio=createAudioController(),soundObserver=createSoundObserver();
@@ -8,7 +9,8 @@ const localCoopPort=new URLSearchParams(location.search).get('coopPort')||'8787'
 let online=null,team=null,myId=null,networkStatus='',snapshotAt=0,pointerTarget=null,renderScale=1,offsetX=0,offsetY=0;
 const me=()=>online?pilots(g).find(p=>p.id===myId)||g:g;
 const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d'),arena=$('arena');
-const input={x:0,y:0},keys=new Set();
+const input={x:0,y:0},keys=new Set(),bulletCache=new Map();
+let lastUI=0;
 let g=createGame(390,600),last=0,stars=[],background,drag=null,best=0,previousMode='',savedRun=null;
 try{savedRun=JSON.parse(localStorage.getItem('starPatrolRun'));const restored=restoreCheckpoint(390,600,savedRun);savedRun=restored?checkpoint(restored):null}catch{}
 $('continueRun').hidden=!savedRun;
@@ -33,7 +35,7 @@ function sync(){
   $('laser').disabled=g.mode!=='playing'||p.lasers===0||p.beam?.ttl>0;
   if(g.score>best){best=g.score;try{localStorage.setItem('starPatrolBest',String(best))}catch{}}
   text('best',best);
-  if(online)syncTeam();$('pause').disabled=g.mode!=='playing';$('pulse').disabled=g.mode!=='playing'||p.pulses===0;
+  $('pause').disabled=g.mode!=='playing';$('pulse').disabled=g.mode!=='playing'||p.pulses===0;if(online)syncTeam();
   arena.dataset.playerX=p.player.x.toFixed(1);arena.dataset.playerY=p.player.y.toFixed(1);
   if(previousMode!==g.mode){
     audio.setActive(g.mode==='playing'||g.mode==='upgrade',{finishEffects:g.mode==='over'||g.mode==='won'});
@@ -102,7 +104,7 @@ function render(){
   ctx.fillStyle='#b9e0f4';for(const s of stars){ctx.globalAlpha=s.r===1.5?.6:.28;ctx.fillRect(s.x,(s.y+g.time*12)%g.height,s.r,s.r)}ctx.globalAlpha=1;
   // Short grid lines provide motion depth without high-cost blur or shadows.
   ctx.strokeStyle='#173348';ctx.lineWidth=1;for(let i=1;i<7;i++){ctx.beginPath();ctx.moveTo(g.width/2,0);ctx.lineTo(i*g.width/6,g.height);ctx.stroke()}
-  ctx.fillStyle='#72efd9';for(const b of g.bullets)ctx.fillRect(b.x-1.5,b.y-8,3,12);
+  ctx.fillStyle='#72efd9';ctx.beginPath();for(const b of g.bullets)if(b.x>-4&&b.x<g.width+4&&b.y>-16&&b.y<g.height+16)ctx.rect(b.x-1.5,b.y-8,3,12);ctx.fill();
   for(const p of pilots(g))if(p.beam?.ttl>0){ctx.globalAlpha=p.beam.ttl/.22;ctx.fillStyle='#8ae8ff';ctx.fillRect(p.beam.x-22,0,44,p.beam.y);ctx.fillStyle='#f0ffff';ctx.fillRect(p.beam.x-5,0,10,p.beam.y);ctx.globalAlpha=1;}
   for(const b of g.enemyBullets){ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fillStyle=b.color||'#ff9a7d';ctx.fill()}
   for(const e of g.enemies){
@@ -125,9 +127,24 @@ function frame(now){
   input.x=Number(keys.has('ArrowRight')||keys.has('KeyD'))-Number(keys.has('ArrowLeft')||keys.has('KeyA'));
   input.y=Number(keys.has('ArrowDown')||keys.has('KeyS'))-Number(keys.has('ArrowUp')||keys.has('KeyW'));
   soundObserver.before(g);
-  if(online){if(g.mode==='playing'&&now-snapshotAt<100){for(const b of [...g.bullets,...g.enemyBullets]){b.x+=b.vx*dt;b.y+=b.vy*dt}}for(const p of pilots(g)){const f=1-Math.exp(-dt*30);if(Number.isFinite(p.player.tx)){p.player.x+=(p.player.tx-p.player.x)*f;p.player.y+=(p.player.ty-p.player.y)*f}}if(!document.hidden&&g.mode==='playing')online.input(pointerTarget||input)}else if(!document.hidden)stepGame(g,dt,input);
+  if(online){
+   const frameDt=Math.min(dt,.05),f=1-Math.exp(-frameDt*20),active=g.mode==='playing'&&!document.hidden;
+   if(active){online.input(pointerTarget||input);if(now-snapshotAt<150){for(const b of g.bullets){b.x+=b.vx*frameDt;b.y+=b.vy*frameDt}for(const b of g.enemyBullets){b.x+=b.vx*frameDt;b.y+=b.vy*frameDt}}}
+   for(const p of pilots(g)){
+    if(p.id===myId&&p.hp>0&&active){
+     const speed=Math.min(560,Math.max(260,g.width*.55));let dx=input.x,dy=input.y;
+     if(pointerTarget){dx=pointerTarget.tx-p.player.x;dy=pointerTarget.ty-p.player.y;const distance=Math.hypot(dx,dy);if(distance<speed*frameDt){p.player.x=pointerTarget.tx;p.player.y=pointerTarget.ty;dx=dy=0}}
+     const length=Math.hypot(dx,dy)||1;
+     p.player.x=Math.max(18,Math.min(g.width-18,p.player.x+dx/length*speed*frameDt));p.player.y=Math.max(24,Math.min(g.height-18,p.player.y+dy/length*speed*frameDt));
+     // Wait until the server has applied the latest input before reconciling a stop.
+     if(!pointerTarget&&!dx&&!dy&&p.inputSequence>=online.sequence&&Number.isFinite(p.player.tx)){p.player.x+=(p.player.tx-p.player.x)*f;p.player.y+=(p.player.ty-p.player.y)*f}
+    }else if(Number.isFinite(p.player.tx)){p.player.x+=(p.player.tx-p.player.x)*f;p.player.y+=(p.player.ty-p.player.y)*f}
+   }
+   for(const e of g.enemies)if(Number.isFinite(e.tx)){e.x+=(e.tx-e.x)*f;e.y+=(e.ty-e.y)*f}
+  }else if(!document.hidden)stepGame(g,dt,input);
   soundObserver.after(g,name=>audio.playEffect(name));
-  sync();render();requestAnimationFrame(frame);
+  arena.dataset.playerX=me().player.x.toFixed(1);arena.dataset.playerY=me().player.y.toFixed(1);
+  if(now-lastUI>=100||previousMode!==g.mode){sync();lastUI=now}render();requestAnimationFrame(frame);
 }
 function syncTeam(){
  const p=me(),owner=team?.host===myId,connected=team?.members.filter(m=>m.online).length||0;
@@ -149,7 +166,7 @@ function joinOnline(code){
  networkStatus='连接中';g=createGame(720,960);g.mode='lobby';document.body.dataset.online='true';$('teamBar').hidden=false;previousMode='';
  const endpoint=location.hostname==='127.0.0.1'||location.hostname==='localhost'?`ws://${location.hostname}:${new URLSearchParams(location.search).get('coopPort')||localCoopPort}/shooter-ws`:`${location.protocol==='https:'?'wss:':'ws:'}//${location.host}/shooter-ws`;
  online=connectTeam({endpoint,onStatus:status=>{networkStatus=status;text('joinStatus',status);if(g.mode==='lobby')text('lobbyStatus',status)},onJoined:m=>{myId=m.id;history.replaceState(null,'',`${location.pathname}?team=${m.code}`);$('inviteLink').value=`${location.origin}${location.pathname}?team=${m.code}${location.hostname==='127.0.0.1'||location.hostname==='localhost'?'&coopPort='+new URL(endpoint).port:''}`},onState:m=>{
-  soundObserver.before(g);const previous=g;g=m.game;for(const p of pilots(g)){const old=pilots(previous).find(v=>v.id===p.id);p.player.tx=p.player.x;p.player.ty=p.player.y;if(old){p.player.x=old.player.x;p.player.y=old.player.y}}g.bullets=g.bullets.map(([x,y,owner,vx,vy])=>({x,y,owner,vx,vy}));g.enemyBullets=g.enemyBullets.map(([x,y,color,vx,vy])=>({x,y,color,vx,vy,r:5}));snapshotAt=performance.now();team=m;soundObserver.after(g,n=>audio.playEffect(n));sync();
+  soundObserver.before(g);const previous=g;g=m.game;for(const p of pilots(g)){const old=pilots(previous).find(v=>v.id===p.id);p.player.tx=p.player.x;p.player.ty=p.player.y;if(old){p.player.x=old.player.x;p.player.y=old.player.y}}g.bullets=g.volleys?decodeVolleys(g.volleys,bulletCache):g.bullets.map(([x,y,owner,vx,vy])=>({x,y,owner,vx,vy}));g.enemyBullets=g.enemyBullets.map(([x,y,color,vx,vy])=>({x,y,color,vx,vy,r:5}));const oldEnemies=new Map(previous.enemies.map(e=>[e.id,e]));for(const e of g.enemies){e.tx=e.x;e.ty=e.y;const old=oldEnemies.get(e.id);if(old){e.x=old.x;e.y=old.y}}snapshotAt=performance.now();team=m;soundObserver.after(g,n=>audio.playEffect(n));sync();
  },onLeft:leaveOnline});
  online.join(code?{type:'join',code:code.toUpperCase()}:{type:'create'});resize();sync();
 }
