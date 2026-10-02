@@ -3,12 +3,15 @@
   "scripts": {
     "test": "npm run test:unit && npm run test:browser",
     "test:unit": "node --test tests/*.test.mjs",
-    "test:browser": "node --test tests/browser-smoke.mjs && node --test tests/theme-browser-smoke.mjs && node --test tests/goldminer-browser-smoke.mjs && node --test tests/merge4096-browser-smoke.mjs && node --test tests/responsive-browser-smoke.mjs && node --test tests/shooter-campaign-browser.mjs && node --test tests/shooter-audio-browser-smoke.mjs && node --test tests/territory-browser-smoke.mjs",
+    "test:browser": "node --test tests/browser-smoke.mjs && node --test tests/theme-browser-smoke.mjs && node --test tests/goldminer-browser-smoke.mjs && node --test tests/merge4096-browser-smoke.mjs && node --test tests/responsive-browser-smoke.mjs && node --test tests/shooter-campaign-browser.mjs && node --test tests/shooter-audio-browser-smoke.mjs && node --test tests/shooter-coop-browser.mjs && node --test tests/territory-browser-smoke.mjs",
     "build:goldminer": "esbuild goldminer-sites/main.tsx --bundle --minify --jsx=automatic --outfile=goldminer-sites/bundle.js"
   },
   "devDependencies": {
     "esbuild": "^0.25.12",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
+  },
+  "dependencies": {
+    "ws": "^8.22.0"
   }
 }
