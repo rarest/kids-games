@@ -41,6 +41,9 @@
 - 12次真实选关切换（四主题各3次），geometry/texture计数分别16/3、14/3、8/3、14/3且每轮一致。24时段原生左右输入中途最大位移3.95，持续游玩前后资源16/3，无累积增长。
 - README已核对：时段从主页选择，游玩中时段栏隐藏；自创金币不入钱包、20套服装各2币、收费皮肤12款各2币准确。
 - Task3独立审查及最后全分支审查待完成；部署仍待执行。
+- Task3独立审查Spec/Quality Approved，无findings。最终全分支审查Ready to release，无Critical/Important，1项Minor为游玩点击静音后按钮焦点阻挡键盘。
+- 修复 `50dc4c4` 仅在playing静音后恢复canvas焦点；窄测试真实鼠标/方向键/空格RED→GREEN，暂停不抢焦点；3项受影响输入/音频回归通过。其他游戏及纯逻辑源码、测试未变，沿用已绿门禁，未无故重复旧检查。修复限定复审中，最新bundle重建SHA一致 `70ab4b43ae5bd1aa21351f28576cb40999421447bbc85428b9636697bdbfb9bc`。
+- 最后Minor限定复审已关闭，Ready to release，无剩余findings，进入已授权PR合并及两域公网验证。
 
 ## 已执行检查
 
