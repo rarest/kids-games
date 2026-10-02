@@ -13,15 +13,15 @@
 - 被切断只丢本次扩张，已拥有领地不清空；占满所有地图内格子才胜利。
 - 不触碰 shooter/、其他游戏核心逻辑；不得覆盖并行修改。
 - 不新增依赖；测试必须覆盖真实行为；手机、平板、电脑兼容。
-- 不部署未验证代码。主代理负责发布，子代理不得启动浏览器或部署。
+- 不部署未验证代码。主代理负责发布，浏览器测试必须使用独立端口和配置目录。
 
 ### Task 1: 纯规则引擎、随机地图、皮肤与存档
 **Files:** Create territory/core.js, territory/profile.js, tests/territory-core.test.mjs, tests/territory-profile.test.mjs。
 **Interfaces:** 核心导出 createGame({seed?,cols=44,rows=38,bots=3}={}), stepGame(game,dt,input={x:0,y:0}), movePlayer(game,id,x,y), finishRun(game), coverage(game,id)。状态含 cols/rows、mask (0/1)、owners (-1 无主, 0 玩家, 1.. 人机)、players [{id,x,y,trail,alive,color,name}]、mode='playing'|'paused'|'over'、winner=null|id、time、peak、events (有上限)，revision 底图修改计数，seed。可增加必要内部状态。坐标以格为单位连续位置。
 profile 导出 SKINS 数组 60 项 ({id,name,tier,color,pattern,price,winsRequired,effect})、createProfile(raw?)、buySkin(profile,id)、equipSkin(profile,id)、settleRun(profile,game)。profile 含 coins,wins,owned,selected,settled；settleRun 不改地图只按一次有效结束局结算，并返回所得数值。每局唯一 runId。跨刷新安全、校验无效存档。渲染可按 pattern/effect 展示不同纸片，不要只设置不可见元数据。
-- [ ] 先写测试并运行红灯：闭合 3x3 中心区域、不误占外部、切断保留所有原地盘、越界无效、长帧不穿轨迹、随机地图多种子连通且形状不同、电脑实际扩张、100% 胜利与零领地淘汰；60款数量、锁定不可买、扣款一次、已拥有装备、损坏存档、结算幂等。
+- [x] 先写测试并运行红灯：闭合 3x3 中心区域、不误占外部、切断保留所有原地盘、越界无效、长帧不穿轨迹、随机地图多种子连通且形状不同、电脑实际扩张、100% 胜利与零领地淘汰；60款数量、锁定不可买、扣款一次、已拥有装备、损坏存档、结算幂等。
 - [ ] 实现核心。地图使用不规则连通 mask；角色连续移动子步进。闭合轨迹与领地内路径组成多边形（或等价正确算法），填充内部；真实边界与复杂轮廓测试。电脑规划合法闭合线路而非凭空占地。被切回剩余领地并短暂冷却，不返还被别人占领部分。胜者含电脑。
-- [ ] 实现商店配置普通/精致/隐藏各20，正常皮肤不同彩色，精致纸纹，隐藏不同特效主题；默认价格20/60/100，隐藏胜场1..20，红色免费，初始0金币；结算 floor(peak*100) + 胜利50。
+- [x] 实现商店配置普通/精致/隐藏各20，正常皮肤不同彩色，精致纸纹，隐藏不同特效主题；默认价格20/60/100，隐藏胜场1..20，红色免费，初始0金币；结算 floor(peak*100) + 胜利50。
 - [ ] 跑专属 node --test，修复，自检，提交本任务文件，写报告列 API 与测试结果。
 
 ### Task 2: 可玩页面、渲染、商店和游戏厅入口
