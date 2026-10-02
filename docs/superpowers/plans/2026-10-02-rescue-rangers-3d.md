@@ -28,8 +28,8 @@
 
 **Interfaces:** Produces the exact core/levels/state contract in the spec. `campaign.js` exposes `createCampaign(), completeArea(campaign,id), availableAreas(campaign)`; completing a level records it and unlocks next choices, all completed areas remain replayable. `bosses.js` operates only on plain state and exposes `updateBoss(state,dt)`; hit detection still happens in core.
 
-- [ ] Inspect every private PNG in `/tmp/rescue-reference/` with view_image. Record each original area's layout/theme/landmarks/Boss mapping in a concise `rescue/REFERENCE.md`; source images are not shipped. Confirm the tree/restaurant/desk/industrial/vertical-route distinctions; independent data, no shared repeating terrain generator.
-- [ ] Write meaningful RED tests for directional movement/jump landing; action pickup→hold→throw→enemy hit; down while holding→hide and defend; reusable metal/ball; heavy apple; bigcrate content; holding/throwing teammate and no hold cycle; damage cooldown/3 hearts/life restart; moving/conveyor platform/hazard collision; 11 unique playable areas, branch progression, 8 distinct Boss behavior and five valid ball hits, bonus room collections, complete ending. Expected assertions derive from fixtures, e.g.:
+- [x] Inspect every private PNG in `/tmp/rescue-reference/` with view_image. Record each original area's layout/theme/landmarks/Boss mapping in a concise `rescue/REFERENCE.md`; source images are not shipped. Confirm the tree/restaurant/desk/industrial/vertical-route distinctions; independent data, no shared repeating terrain generator.
+- [x] Write meaningful RED tests for directional movement/jump landing; action pickup→hold→throw→enemy hit; down while holding→hide and defend; reusable metal/ball; heavy apple; bigcrate content; holding/throwing teammate and no hold cycle; damage cooldown/3 hearts/life restart; moving/conveyor platform/hazard collision; 11 unique playable areas, branch progression, 8 distinct Boss behavior and five valid ball hits, bonus room collections, complete ending. Expected assertions derive from fixtures, e.g.:
 
 ```js
 const s = createGame({id:'fixture', width:30,height:12,spawn:{x:2,y:1},platforms:[{id:'floor',x:0,y:1,w:30,h:1}],objects:[{id:'box',kind:'crate',x:2.9,y:1}],enemies:[],hazards:[],decor:[],exit:{x:28,y:1},boss:null},{players:2});
@@ -41,9 +41,9 @@ assert.equal(s.players[0].carrying,null);
 assert.ok(s.objects.find(o=>o.id==='box').vx>0);
 ```
 
-- [ ] Run `node --test tests/rescue-core.test.mjs tests/rescue-levels.test.mjs tests/rescue-campaign.test.mjs`, observe missing behavior failures, then implement exact interfaces.
-- [ ] For level data, hand author platform path plus recognizable original landmarks and enemy/object arrangement. Verify route reachability with independent small jump/reachability fixtures; preserve vertical A/F/H and multi-section 0/J. Record any precise reference gaps in report, do not quietly replace with a different game.
-- [ ] Run focused tests and `npm run test:unit` once, fix real failures, `git diff --check`, commit only task files. Report API deviations, commands/results and remaining fidelity questions.
+- [x] Run `node --test tests/rescue-core.test.mjs tests/rescue-levels.test.mjs tests/rescue-campaign.test.mjs`, observe missing behavior failures, then implement exact interfaces.
+- [x] For level data, hand author platform path plus recognizable original landmarks and enemy/object arrangement. Verify route reachability with independent small jump/reachability fixtures; preserve vertical A/F/H and multi-section 0/J. Record any precise reference gaps in report, do not quietly replace with a different game.
+- [x] Run focused tests and `npm run test:unit` once, fix real failures, `git diff --check`, commit only task files. Report API deviations, commands/results and remaining fidelity questions.
 
 ### Task 2: 三维角色、材质、关卡场景和共享镜头
 
@@ -51,7 +51,7 @@ assert.ok(s.objects.find(o=>o.id==='box').vx>0);
 
 **Interfaces:** Consumes Task 1's immutable level and dynamic state. Produces `createScene(canvas)` per spec, no simulation mutation. Avatar returns `{group,update(player,time),dispose()}`. Models expose named constructors for crate/metal/apple/ball, enemy categories and Boss types.
 
-- [ ] Write RED tests around real model constructors: character poses actually move limb transforms for running/holding/hidden, different enemies/Bosses have distinct visible meshes; material cache shares textures and releases owned resources; camera frame includes both real player bounds. Avoid fixed triangle-count snapshots.
+- [x] Write RED tests around real model constructors: character poses actually move limb transforms for running/holding/hidden, different enemies/Bosses have distinct visible meshes; material cache shares textures and releases owned resources; camera frame includes both real player bounds. Avoid fixed triangle-count snapshots.
 
 ```js
 const actor=createAvatar('chip');
@@ -59,16 +59,18 @@ actor.update({x:2,y:1,facing:1,animation:'carry',carrying:{type:'object',id:'box
 assert.ok(actor.group.getObjectByName('left-arm').rotation.z < -0.5);
 ```
 
-- [ ] Run `node --test tests/rescue-render.test.mjs`, confirm RED, then implement smooth recognizable characters, all object/enemy/Boss models, shared wood/metal/brick/fabric/leaf textures and shadows.
-- [ ] Implement every theme's three-dimensional landmarks based on `level.decor`; shared scenery constructors may be reused but stage composition must remain distinct. Use instancing for repeating leaves/tiles/wires and bounded hit particles. Center camera follows both characters, fit width/height and aspect, no free orbit needed for side-scrolling play.
-- [ ] Implement high/auto/low quality, adaptive DPR/shadow downshift, measured diagnostics, explicit WebGL error, resource dispose/cache lifecycle. Repeated setLevel does not accumulate textures/geometries.
-- [ ] Run focused renderer tests and affected unit checks once, commit task files. Root will inspect actual gameplay screenshots during Task 3.
+- [x] Run `node --test tests/rescue-render.test.mjs`, confirm RED, then implement smooth recognizable characters, all object/enemy/Boss models, shared wood/metal/brick/fabric/leaf textures and shadows.
+- [x] Implement every theme's three-dimensional landmarks based on `level.decor`; shared scenery constructors may be reused but stage composition must remain distinct. Use instancing for repeating leaves/tiles/wires and bounded hit particles. Center camera follows both characters, fit width/height and aspect, no free orbit needed for side-scrolling play.
+- [x] Implement high/auto/low quality, adaptive DPR/shadow downshift, measured diagnostics, explicit WebGL error, resource dispose/cache lifecycle. Repeated setLevel does not accumulate textures/geometries.
+- [x] Run focused renderer tests and affected unit checks once, commit task files. Root will inspect actual gameplay screenshots during Task 3.
 
 ### Task 3: 可玩页面、双手柄/键盘/触控、音效与完整 UI
 
 **Files:** Create `games/rescue.html`, `rescue/game.js`, `rescue/controls.js`, `rescue/audio.js`, `rescue/profile.js`, `rescue/style.css`, `tests/rescue-input.test.mjs`, `tests/rescue-profile.test.mjs`, `tests/rescue-browser.mjs`; modify `package.json` with `build:rescue` and add browser check; create `rescue/bundle.js`.
 
 **Interfaces:** Consumes Tasks 1/2. Controls/audio/profile produce exact spec interfaces. Main entry binds full loop to home/map/play/bonus/ending UI, stores completed branches and options, never exports a test-only cheat API. Use canvas dataset for genuine diagnostics (player positions, carrying count, theme, phase, graphics stats).
+
+**Input defaults:** P1 A/D move, W/S up/down, Space jump, E pickup/throw; P2 Left/Right move, Up/Down up/down, Enter jump, RightShift pickup/throw; Escape pauses. Standard gamepad A (button 0) jumps, B (button 1) acts, Start (button 9) pauses; axes/D-pad move and choose upthrow/down crouch or one-way drop. Bind distinct available gamepad indices once, neutralize only a disconnected player's pad without shifting the other, and bind the sole available pad to P1 in solo mode. Touch joystick includes vertical up/down, with separate jump/action buttons. Capture brief key/touch presses until sampled; after clear/pause, held buttons must release before triggering a new action.
 
 - [ ] Write RED input tests for independent keys, two distinct standard Gamepad indices, same-button holds not retriggering, hot disconnect neutralizes only lost controller, deadzone, clear/blur. Sample API receives state via production constructor injection only if needed at normal external boundary; do not assert on mocks.
 - [ ] Write RED storage tests for normal save/reload, malformed data/default, unknown area filtering, storage exceptions visible and no falsely saved success.
