@@ -1,6 +1,12 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { roadAt } from "./core.js";
+import {
+  surfaceMaterial,
+  surfaceTextures,
+  paintSurface,
+  rockGeometry,
+} from "./materials.js";
 const box = new THREE.BoxGeometry(1, 1, 1);
 const material = (color, opts = {}) =>
   new THREE.MeshStandardMaterial({ color, roughness: 0.65, ...opts });
@@ -62,13 +68,20 @@ function water(parent, level) {
   const g = new THREE.PlaneGeometry(3000, 3000, 70, 70);
   g.rotateX(-Math.PI / 2);
   const m = new THREE.MeshPhysicalMaterial({
+    ...surfaceTextures("water"),
+    normalMap: surfaceTextures("water").normalMap.clone(),
+    normalScale: new THREE.Vector2(0.4, 0.4),
     color: 0x16728c,
-    metalness: 0.36,
-    roughness: 0.19,
+    metalness: 0.06,
+    roughness: 0.13,
+    ior: 1.333,
+    envMapIntensity: 1.3,
     clearcoat: 0.75,
     side: THREE.DoubleSide,
   });
+  m.normalMap.repeat.set(96, 96);
   const clock = { value: 0 };
+  m.userData.surface = "water";
   m.onBeforeCompile = (shader) => {
     shader.uniforms.waveTime = clock;
     shader.vertexShader = "uniform float waveTime;\n" + shader.vertexShader;
@@ -87,7 +100,10 @@ function water(parent, level) {
   sea.position.y = level;
   sea.receiveShadow = true;
   parent.add(sea);
-  return (time) => (clock.value = time);
+  return (time) => {
+    clock.value = time;
+    m.normalMap.offset.set(time * 0.013, time * 0.009);
+  };
 }
 export function makeShip() {
   const root = new THREE.Group(),
@@ -190,11 +206,10 @@ export function buildIndustrial(parent, track, landscapeOnly = false) {
     posts = [],
     supports = [],
     cables = [];
-  const steel = material(0x718993, { metalness: 0.7, roughness: 0.32 });
+  const steel = surfaceMaterial("metal", { color: 0x718993 });
   if (!landscapeOnly) {
     const road = paintTexture((c) => {
-      c.fillStyle = theme === "container" ? "#52636b" : "#343c42";
-      c.fillRect(0, 0, 256, 256);
+      paintSurface(c, "asphalt");
       c.fillStyle = "#ede4b7";
       c.fillRect(7, 0, 3, 256);
       c.fillRect(246, 0, 3, 256);
@@ -203,7 +218,7 @@ export function buildIndustrial(parent, track, landscapeOnly = false) {
     deck(
       parent,
       track,
-      material(0xd5e0df, {
+      surfaceMaterial("asphalt", {
         map: road,
         side: THREE.DoubleSide,
         roughness: 0.88,
@@ -404,15 +419,22 @@ export function buildIndustrial(parent, track, landscapeOnly = false) {
     }
   } else if (theme === "china" || theme === "gorge") {
     const riverMat = new THREE.MeshPhysicalMaterial({
+      ...surfaceTextures("water"),
+      normalMap: surfaceTextures("water").normalMap.clone(),
+      normalScale: new THREE.Vector2(0.35, 0.35),
       color: 0x337d8e,
       roughness: 0.17,
-      metalness: 0.4,
+      metalness: 0.06,
+      ior: 1.333,
+      envMapIntensity: 1.3,
       clearcoat: 0.7,
       side: THREE.DoubleSide,
     });
+    riverMat.normalMap.repeat.set(8, 8);
     const pos = [],
       uv = [],
       idx = [];
+    riverMat.userData.surface = "water";
     track.points.forEach((p, i) => {
       const q = roadAt(track, p.s);
       for (const offset of [18, 62]) {
@@ -445,46 +467,28 @@ export function buildIndustrial(parent, track, landscapeOnly = false) {
           w: 20 + (s % 10),
           h: height,
           d: 23 + (s % 8),
-          color: side < 0 ? 0x708878 : 0x668278,
+          color: side < 0 ? 0xb7bcb0 : 0xa6b3a8,
         });
       }
       banks.push({ ...at(s, 12), y: seaLevel + 2, w: 10, h: 7, d: 40 });
     }
-    instances(
-      parent,
-      new THREE.CylinderGeometry(0.48, 1, 1, 9, 3),
-      material(0xffffff, { roughness: 0.95 }),
-      cliffs,
-    );
+    instances(parent, rockGeometry(), surfaceMaterial("stone"), cliffs);
     instances(
       parent,
       new THREE.SphereGeometry(1, 12, 8),
-      material(0x61765b),
+      surfaceMaterial("grass", { color: 0xbbc5a4 }),
       banks,
     );
     deck(
       parent,
       track,
-      material(0x9b9a88, { roughness: 1, side: THREE.DoubleSide }),
+      surfaceMaterial("stone", { side: THREE.DoubleSide }),
       9,
       15,
       -0.4,
     );
-    const ripple = paintTexture((c) => {
-      c.fillStyle = "#a1c6b8";
-      c.fillRect(0, 0, 256, 256);
-      c.strokeStyle = "#7c9c94";
-      c.lineWidth = 2;
-      for (let y = 0; y < 256; y += 16) {
-        c.beginPath();
-        for (let x = 0; x <= 256; x += 8)
-          c.lineTo(x, y + Math.sin(x * 0.08) * 3);
-        c.stroke();
-      }
-    });
-    riverMat.map = ripple;
     animate = (time) => {
-      ripple.offset.y = time * 0.015;
+      riverMat.normalMap.offset.set(time * 0.011, time * 0.017);
     };
   }
   return { meta, update: animate };

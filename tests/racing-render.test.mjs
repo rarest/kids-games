@@ -2,6 +2,25 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { CARS, SKINS } from "../racing/core.js";
 import { makeCar } from "../racing/scene.js";
+test("car finish has fine paint relief, separate treaded rubber and carbon aero surfaces", () => {
+  const car = makeCar(CARS[0], SKINS[0]);
+  const paint = car.children.find(
+    (m) =>
+      m.material.clearcoat === 1 &&
+      m.material.color.getHex() === SKINS[0].color,
+  );
+  assert.ok(paint.material.normalMap && paint.material.roughnessMap);
+  assert.ok(
+    car.children.some(
+      (m) => m.material.userData.surface === "rubber" && m.material.normalMap,
+    ),
+  );
+  assert.ok(
+    car.children.some(
+      (m) => m.material.userData.surface === "carbon" && m.material.normalMap,
+    ),
+  );
+});
 test("every styled car has valid merged geometry, glossy paint, iridescent patterns and shadow casters", () => {
   for (const car of CARS)
     for (const skin of SKINS) {
@@ -76,4 +95,30 @@ test("solid collision envelopes cover each car including aero parts and steering
         model.id + " length",
       );
     }
+});
+
+test("car paint triangles have nondegenerate UVs on side panels and end caps", () => {
+  for (const model of CARS) {
+    const car = makeCar(model, SKINS[0]);
+    const body = car.children.find(
+      (m) => m.material.userData.surface === "paint",
+    ).geometry;
+    const uv = body.attributes.uv,
+      p = body.attributes.position,
+      indices = body.index.array;
+    for (let i = 0; i < indices.length; i += 3) {
+      const [a, b, c] = [indices[i], indices[i + 1], indices[i + 2]],
+        area =
+          (uv.getX(b) - uv.getX(a)) * (uv.getY(c) - uv.getY(a)) -
+          (uv.getY(b) - uv.getY(a)) * (uv.getX(c) - uv.getX(a));
+      const ab = new THREE.Vector3()
+          .fromBufferAttribute(p, b)
+          .sub(new THREE.Vector3().fromBufferAttribute(p, a)),
+        ac = new THREE.Vector3()
+          .fromBufferAttribute(p, c)
+          .sub(new THREE.Vector3().fromBufferAttribute(p, a));
+      if (ab.cross(ac).length() > 1e-7)
+        assert.ok(Math.abs(area) > 1e-9, model.id + " triangle " + i / 3);
+    }
+  }
 });
