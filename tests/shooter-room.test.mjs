@@ -2,14 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {WebSocket} from 'ws';
 import {createCoopServer} from '../shooter/server.mjs';
+import {decodeVolleys} from '../shooter/snapshot.js';
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 async function connect(url){const ws=new WebSocket(url,{origin:'http://localhost'}),messages=[];ws.on('message',data=>messages.push(JSON.parse(data)));await new Promise((r,j)=>{ws.once('open',r);ws.once('error',j)});return {ws,messages,send:data=>ws.send(JSON.stringify(data)),async next(type,where=()=>true){for(let i=0;i<100;i++){const at=messages.findIndex(m=>m.type===type&&where(m));if(at>=0)return messages.splice(at,1)[0];await delay(20)}throw Error('Missing '+type)}}}
 test('public protocol: join, independent input, room isolation, capacity, no client stat writes and reconnect',{timeout:20000},async()=>{
  const app=createCoopServer({port:0,origins:['http://localhost']});await app.ready;const url=`ws://127.0.0.1:${app.address().port}/shooter-ws`;const clients=[];
  try{
   const a=await connect(url);clients.push(a);a.send({type:'create'});const owner=await a.next('joined');
-  const b=await connect(url);clients.push(b);b.send({type:'join',code:owner.code});const guest=await b.next('joined');assert.notEqual(owner.id,guest.id);
-  a.send({type:'start'});await a.next('state',m=>m.game.mode==='playing');await b.next('state',m=>m.game.mode==='playing');
+  const b=await connect(url);clients.push(b);b.send({type:'join',code:owner.code,protocol:2});const guest=await b.next('joined');assert.notEqual(owner.id,guest.id);
+  a.send({type:'start'});await a.next('state',m=>m.game.mode==='playing');const compact=await b.next('state',m=>m.game.mode==='playing'&&m.game.volleys.length>0);assert.equal(compact.game.bullets.length,0);assert.ok(decodeVolleys(compact.game.volleys).length>0);
   b.send({type:'input',x:1,y:0,hp:9999,score:1e9});await delay(200);const state=await a.next('state',m=>m.game.time>.15);
   const p=state.game.partners.find(p=>p.id===guest.id);assert.ok(p.player.x>86.4);assert.equal(p.hp,10);assert.equal(state.game.hp,10);assert.ok(state.game.score<1e9);
   for(let i=2;i<16;i++){const guest=await connect(url);clients.push(guest);guest.send({type:'join',code:owner.code});await guest.next('joined')}
