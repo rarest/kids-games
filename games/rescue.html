@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#efe5cf" />
+    <title>救援大冒险 · 奇奇与蒂蒂</title>
+    <link rel="stylesheet" href="../rescue/style.css?v=20261002rescue1" />
+  </head>
+  <body data-screen="home">
+    <main id="app">
+      <div id="stage">
+        <canvas
+          id="view"
+          tabindex="0"
+          aria-label="救援大冒险三维游戏画面"
+        ></canvas>
+      </div>
+      <section id="home-panel" aria-label="开始冒险">
+        <div class="eyebrow">CHIP & DALE · 一起出发</div>
+        <div class="home-title">
+          <h1>救援大冒险</h1>
+          <p id="best-score" class="muted">最高纪录：0 分</p>
+        </div>
+        <p class="intro">
+          小小搭档，大大勇气。<br />举起箱子，穿过街区，救出朋友。
+        </p>
+        <div class="choice" aria-label="玩家人数">
+          <button id="players-one" aria-pressed="true">单人冒险</button
+          ><button id="players-two" aria-pressed="false">双人合作</button>
+        </div>
+        <div class="choice" aria-label="一号玩家角色">
+          <button id="chip" aria-pressed="true">奇奇 · 软帽</button
+          ><button id="dale" aria-pressed="false">蒂蒂 · 红鼻</button>
+        </div>
+        <div class="start-row">
+          <button id="start" class="primary">开始冒险 <span>→</span></button
+          ><button id="continue" hidden>继续冒险</button>
+        </div>
+        <div class="home-links">
+          <button id="map-open">区域地图</button
+          ><button id="help-open">怎么玩</button
+          ><button id="options-open">设置</button
+          ><a class="control" href="../index.html">游戏大厅</a>
+        </div>
+        <p id="saved-label" class="muted"></p>
+      </section>
+      <div id="hud" hidden>
+        <div>
+          <strong id="area-name">街区与实验室</strong>
+          <div id="hearts"></div>
+        </div>
+        <div class="totals">
+          <span id="score">0 分</span><span id="collectibles">花 0 · 星 0</span>
+        </div>
+        <button id="pause" aria-label="暂停冒险">暂停</button>
+      </div>
+      <div id="touch-controls" hidden>
+        <div
+          id="joystick"
+          data-touch="stick"
+          role="group"
+          aria-label="方向摇杆：左右移动，上投，下蹲"
+        >
+          <span class="stick-arrows">↑<br />← &nbsp; →<br />↓</span
+          ><span class="stick-knob"></span>
+        </div>
+        <p id="keyboard-hint">
+          A / D 移动 · 空格跳跃 · E 举起 / 投掷<br />W 上投 · S 下蹲 · Esc 暂停
+        </p>
+        <div class="touch-actions">
+          <button id="touch-jump" data-touch="jump">跳跃</button
+          ><button id="touch-action" data-touch="action">
+            举起<span> / 投掷</span>
+          </button>
+        </div>
+      </div>
+      <div id="bonus-bar" hidden>
+        <span id="bonus-count"></span
+        ><button id="bonus-finish">返回冒险</button>
+      </div>
+      <p id="notice" role="status" aria-live="polite"></p>
+      <div id="overlay" hidden>
+        <section id="pause-panel" class="panel" hidden>
+          <div class="eyebrow">歇一口气</div>
+          <h2>冒险已暂停</h2>
+          <p>准备好了，就继续一起出发。</p>
+          <button id="resume" class="primary">继续冒险</button
+          ><button id="retry">本区重新开始</button
+          ><button id="paused-options">设置</button
+          ><button id="home">返回首页</button>
+        </section>
+        <section id="map-panel" class="panel" hidden>
+          <div class="eyebrow">我们的路线</div>
+          <h2>区域地图</h2>
+          <p id="map-copy">完成区域后，新的路线会亮起来。</p>
+          <div id="area-grid"></div>
+          <button class="close-panel">返回</button>
+        </section>
+        <section id="options-panel" class="panel" hidden>
+          <h2>按自己的节奏</h2>
+          <button id="music" aria-pressed="true">音乐：开</button
+          ><button id="sound" aria-pressed="true">音效：开</button>
+          <div class="choice quality">
+            <button data-quality="auto">自动画质</button
+            ><button data-quality="high">精致</button
+            ><button data-quality="low">流畅</button>
+          </div>
+          <p class="muted">自动画质会根据画面的流畅程度调整。</p>
+          <button class="close-panel">返回</button>
+        </section>
+        <section id="help-panel" class="panel" hidden>
+          <h2>一起救出朋友</h2>
+          <p>
+            靠近箱子，举起再投掷。举着箱子向下蹲，可以躲进箱子。拿起彩球，击中守关敌人五次。
+          </p>
+          <p>
+            收集 50 朵花获得一颗星，10
+            颗星奖励一条生命。橡果补心，飞虫伙伴提供短暂保护。
+          </p>
+          <dl>
+            <dt>一号玩家</dt>
+            <dd>A / D 移动 · W / S 上 / 下<br />空格跳跃 · E 举起 / 投掷</dd>
+            <dt>二号玩家</dt>
+            <dd>方向键移动与上 / 下<br />Enter 跳跃 · 右 Shift 举起 / 投掷</dd>
+            <dt>手柄与触屏</dt>
+            <dd>
+              左摇杆 / 方向键移动，A 跳跃，B 举起 / 投掷，Start
+              暂停。两只手柄分别控制两位玩家。触屏摇杆控制一号玩家。
+            </dd>
+          </dl>
+          <button class="close-panel">出发吧</button>
+        </section>
+        <section id="complete-panel" class="panel" hidden>
+          <div class="eyebrow">又前进了一步</div>
+          <h2 id="complete-title">区域完成</h2>
+          <p id="complete-copy"></p>
+          <button id="next-area" class="primary">选择下一站</button
+          ><button id="complete-home">返回首页</button>
+        </section>
+        <section id="gameover-panel" class="panel" hidden>
+          <h2>再试一次吧</h2>
+          <p>搭档还在等着你。重新从本区起点出发。</p>
+          <button id="gameover-retry" class="primary">重新挑战</button
+          ><button id="gameover-home">返回首页</button>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="../rescue/bundle.js?v=20261002rescue1"></script>
+  </body>
+</html>

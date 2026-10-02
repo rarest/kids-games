@@ -10,6 +10,7 @@
 index.html     合集落地页（数据驱动，读取 games.js 自动列出所有游戏，含搜索）
 games.js       游戏目录清单 —— 新增游戏在这里加一行
 games/         所有游戏的 HTML 入口
+  ├─ rescue.html    🐿️ 松鼠大作战（11区域3D横版合作救援）
   ├─ parkour.html   🌸 微光跑酷（自由移动3D跑酷）
   ├─ racing.html    🏎️ 峰谷竞速（3D赛车）
   ├─ pinyin.html    🚀 拼音打字小火箭
@@ -56,7 +57,7 @@ deploy/        自动部署组件
 
 ## 微光跑酷（自由移动3D跑酷）
 
-入口 `games/parkour.html`。四种风景（樱花林、百花林、城市天桥、林间木屋）共12关，自由移动，第一关提供逐步教程；主页人物可单击跳跃。游戏厅目录及跑酷资源版本为 `20261002parkour1`。
+入口 `games/parkour.html`。四种风景（樱花林、百花林、城市天桥、林间木屋）共12关，自由移动，第一关提供逐步教程；主页人物可单击跳跃。跑酷资源版本为 `20261002parkour1`。
 
 - WASD / 方向键按镜头方向移动，空格或单击场景跳跃；拖动鼠标调整镜头，拖动释放不会跳跃，↺ 镜头朝向下一落点。手机用左下摇杆和右下跳跃按钮，可同时移动和跳跃。暂停、切到后台或失去焦点会停止移动，恢复后不会沿用按住的输入。
 - 每枚预设金币每局只领取一次，掉落后保留已领取记录；重新出发可再领。踩到旗帜存档点后，掉落从该点重试；走进终点记录最快时间。余额、记录和外观保存在当前浏览器。
@@ -81,3 +82,14 @@ deploy/        自动部署组件
 - 自动画质根据帧耗时降低分辨率，另有精细和流畅选项；场景重复物件实例化，车辆零件按材质合并。比赛计算在浏览器本地执行。
 - 修改源码后执行 `npm run build:racing` 并提交 `racing/bundle.js`；Three.js固定版本、本地打包，许可证见 `racing/THIRD-PARTY-NOTICES.txt`。
 - 检查 `npm run test:unit` 与 `npm run test:browser`。发布后分别执行 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-browser.mjs`、`GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-worlds-browser.mjs`、`GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-scenery-browser.mjs`，以及 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-materials-browser.mjs`，顺序验证公网操作、机关、场景、光影和材质，避免软件渲染浏览器并行争用GPU。
+
+## 松鼠大作战（3D 横版合作救援）
+
+入口 `games/rescue.html`。11 个区域沿经典分支探索，举箱攻击、拾回 Boss 球、奖励房收集，最终救出朋友；已完成区域可回玩。支持单人奇奇/蒂蒂、本地双人键盘、两个标准手柄及手机单人触控。
+
+- 1P：A/D 移动，空格跳跃，E 举起/投掷，W+E 上投，举箱时按 S 蹲藏，S+空格下穿单向平台；2P：左右方向键移动，Enter 跳跃，右 Shift 举起/投掷，向上+右 Shift 上投，向下蹲藏，向下+Enter 下穿单向平台。Esc 暂停。可举起和扔出队友。
+- 手柄：方向键/左摇杆移动，A 跳跃，B 举起/投掷，Start 暂停；触屏使用方向盘与跳跃、举起按钮。
+- 进度保存到当前浏览器：继续游戏从区域起点恢复入口分数、收集物和生命；区域完成后保存分支解锁与下一站入口。最高分独立保留。
+- 游戏厅目录版本 `20261003rescue1`，松鼠页面 CSS/bundle 版本 `20261002rescue1`。源码在 `rescue/`；本地 Three.js 0.186.1，资源许可见 `rescue/THIRD-PARTY-NOTICES.txt`。修改源码后执行 `npm run build:rescue` 并提交原始 esbuild 产物 `rescue/bundle.js`。
+- 门禁：`npm run test:unit`、`npm run test:browser`。占满关卡回归在 `tests/rescue-occupied.test.mjs`；其 D 区使用正常双人独立输入，其余区域单人。浏览器原生 C 区通关检查在 `tests/rescue-browser.mjs`。
+- 公网入口与真实操作验收：`GAMES_TEST_ORIGIN=https://games.nblord.com RESCUE_EVIDENCE_DIR=/tmp/rescue-main node --test tests/rescue-integration-browser.mjs`；把域名换为 `https://games.596996.xyz` 可验收另一入口。测试启动独立 Chromium，截图和状态 JSON 保存到指定目录。

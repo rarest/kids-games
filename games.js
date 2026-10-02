@@ -2,6 +2,13 @@
    字段: file 路径 | emoji 图标 | name 名称 | desc 一句话 | tags 标签(用于搜索/分类) */
 window.GAMES = [
   {
+    file: "games/rescue.html",
+    emoji: "🐿️",
+    name: "松鼠大作战",
+    desc: "11个经典区域的3D横版重制，举箱子、扔队友，双人合作救援",
+    tags: ["经典", "3D", "双人", "手柄", "闯关"],
+  },
+  {
     file: "games/parkour.html",
     emoji: "🌸",
     name: "微光跑酷",
