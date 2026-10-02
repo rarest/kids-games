@@ -39,7 +39,9 @@ function hazardModel(h,pool){const a=createAsset(pool,`hazard:${h.id}`);const w=
 // WebGL-independent scene graph: tests and the renderer consume the same objects.
 export function createWorld(){
  const resources=createMaterials(),group=new THREE.Group(),entities=new Map();group.name='rescue-world';let scenery=null,backdrop=null,level=null,stateIdentity=null,lastEvent=0,disposed=false;
- const particles=[],dummy=new THREE.Object3D(),particleMesh=new THREE.InstancedMesh(resources.geometry('sphere'),resources.material('plain','#ffe1a0',{emissive:'#d5a558',emissiveIntensity:.2}),48);particleMesh.name='hit-particles';particleMesh.count=0;group.add(particleMesh);
+ const particles=[],dummy=new THREE.Object3D(),particleMesh=new THREE.InstancedMesh(resources.geometry('sphere'),resources.material('plain','#ffe1a0',{emissive:'#d5a558',emissiveIntensity:.2}),48);particleMesh.name='hit-particles';
+ // At most 48 dynamic instances: bypass the stale sphere cached on empty frames.
+ particleMesh.frustumCulled=false;particleMesh.count=0;group.add(particleMesh);
  function clear(){entities.forEach(a=>a.dispose());entities.clear();scenery?.dispose();scenery=null;backdrop?.dispose();backdrop=null;particles.length=0;particleMesh.count=0;}
  function setLevel(next){if(disposed)throw new Error('Scene has been disposed');if(level===next)return;clear();level=next;scenery=createScenery(next,resources);group.add(scenery.group);backdrop=createBackdrop(next,resources);group.add(backdrop.group);
   const exit=createAsset(resources,'exit-marker');exit.part('torus','#ead090',[1.0,1.6,.25],[0,1.0,0],'exit-ring',exit.group,'metal');exit.part('star','#f4d888',[.40,.40,.4],[0,1.95,0],'exit-star');exit.group.position.set(next.exit?.x??0,next.exit?.y??1,-.5);entities.set('exit',exit);group.add(exit.group);
