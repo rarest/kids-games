@@ -26,6 +26,9 @@ const key = (b, code, down = true) =>
       : undefined,
   });
 const click = async (b, selector) => {
+  await b.evaluate(
+    `document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:"nearest"})`,
+  );
   const p = await b.evaluate(
     `(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`,
   );
@@ -168,12 +171,35 @@ test(
       await touch("touchStart", await pos("#touch-action"));
       await touch("touchEnd", stick);
       await wait(b, "Number(view.dataset.carrying)===1");
+      await touch("touchStart", { x: stick.x, y: stick.y + 35 });
+      await wait(b, 'view.dataset.hidden==="true"');
+      await touch("touchEnd", stick);
       await touch("touchStart", await pos("#touch-jump"));
       await touch("touchEnd", stick);
       await wait(b, "Number(view.dataset.y)>1.3");
-      await touch("touchStart", await pos("#touch-action"));
-      await touch("touchEnd", stick);
+      const action = await pos("#touch-action");
+      await b.call("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: [{ x: stick.x, y: stick.y - 35, id: 1 }],
+      });
+      await b.call("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: [
+          { x: stick.x, y: stick.y - 35, id: 1 },
+          { ...action, id: 2 },
+        ],
+      });
+      await b.call("Input.dispatchTouchEvent", {
+        type: "touchEnd",
+        touchPoints: [],
+      });
       await wait(b, "Number(view.dataset.carrying)===0");
+      assert.ok(
+        await b.evaluate(
+          "JSON.parse(view.dataset.physics).objects.some(o=>o.thrown&&o.vy>0)",
+        ),
+        "native up direction and action throw upward",
+      );
       assert.deepEqual(b.errors, []);
     } finally {
       b.close();
@@ -559,6 +585,493 @@ test(
       await key(b, "Enter");
       await key(b, "Enter", false);
       await wait(b, "JSON.parse(view.dataset.positions)[1].y>1.3");
+      assert.deepEqual(b.errors, []);
+    } finally {
+      b.close();
+    }
+  },
+);
+test(
+  "terminal production events finish real Web Audio once and hard pause stops voices",
+  { timeout: 60000 },
+  async () => {
+    const b = await openBrowser();
+    try {
+      await b.navigate("games/rescue.html");
+      await b.evaluate(
+        '(async()=>{window.__terminalAudio=(await import("/rescue/audio.js")).createAudio({music:false});document.querySelector("#help-open").addEventListener("click",()=>window.__terminalAudio.unlock())})()',
+      );
+      await click(b, "#help-open");
+      await wait(b, 'window.__terminalAudio.diagnostics().state==="running"');
+      const first = await b.evaluate(
+        '(async()=>{const {createGame,stepGame,finishBonus}=await import("/rescue/core.js");const {getLevel}=await import("/rescue/levels.js");const level=getLevel("C");const s=createGame({...level,exit:{...level.spawn}});stepGame(s,[{}],1/60);const a=window.__terminalAudio;a.consume(s);finishBonus(s);window.__terminalState=s;a.setActive(true);a.consume(s);a.setActive(false,{finishEffects:true});const before=a.diagnostics();a.consume(s);return {before,after:a.diagnostics(),events:s.events.map(e=>e.type)}})()',
+      );
+      assert.ok(
+        first.events.includes("clear"),
+        "production finishBonus emits clear",
+      );
+      assert.equal(
+        first.before.voices,
+        1,
+        "terminal oscillator must remain scheduled after menu opens",
+      );
+      assert.equal(first.after.voices, 1, "same clear event must not replay");
+      await sleep(650);
+      assert.equal(
+        await b.evaluate("__terminalAudio.diagnostics().voices"),
+        0,
+        "real oscillator onended clears the voice naturally",
+      );
+      const stop = await b.evaluate(
+        '(()=>{const a=__terminalAudio;a.setActive(true);a.consume({level:{theme:"street"},events:[{id:"event-1",type:"lifeLost"}]});const before=a.diagnostics().voices;a.setActive(false);return {before,after:a.diagnostics().voices}})()',
+      );
+      assert.deepEqual(stop, { before: 1, after: 0 });
+      await b.evaluate("__terminalAudio.dispose()");
+      assert.deepEqual(b.errors, []);
+    } finally {
+      b.close();
+    }
+  },
+);
+
+// Native controls only. Geometry is observed from the running page; no game state setters.
+const clampRoute = (n, a, b) => Math.max(a, Math.min(b, n));
+function nativeRoute(platforms, from, exit) {
+  const queue = [[from]],
+    seen = new Set([from.id]);
+  while (queue.length) {
+    const path = queue.shift(),
+      a = path.at(-1);
+    if (exit.x >= a.x && exit.x <= a.x + a.w && Math.abs(exit.y - a.y) < 0.2)
+      return path;
+    for (const b of platforms) {
+      const rise = b.y - a.y,
+        d = 196 - 56 * rise;
+      const gap = Math.max(0, b.x - a.x - a.w, a.x - b.x - b.w);
+      if (
+        !seen.has(b.id) &&
+        rise <= 3.5 &&
+        rise >= -9 &&
+        d >= 0 &&
+        gap < (7.2 * (14 + Math.sqrt(d))) / 28 - 0.15
+      ) {
+        seen.add(b.id);
+        queue.push([...path, b]);
+      }
+    }
+  }
+  return null;
+}
+async function nativeCompleteC(b) {
+  const level = await b.evaluate(
+    '(async()=> (await import("/rescue/levels.js")).getLevel("C"))()',
+  );
+  let plan = null,
+    previousTime = -1,
+    previousJump = false,
+    previousAction = false,
+    lastLog = -10,
+    previousLives = 3;
+  const held = new Set(),
+    trace = [];
+  async function apply(input) {
+    const wanted = new Set();
+    if (input.move < 0) wanted.add("KeyA");
+    if (input.move > 0) wanted.add("KeyD");
+    if (input.jump) wanted.add("Space");
+    if (input.action) wanted.add("KeyE");
+    for (const code of held)
+      if (!wanted.has(code)) {
+        await key(b, code, false);
+        held.delete(code);
+      }
+    for (const code of wanted)
+      if (!held.has(code)) {
+        await key(b, code);
+        held.add(code);
+      }
+  }
+  const started = Date.now();
+  try {
+    while (Date.now() - started < 600000) {
+      const live = await b.evaluate(
+        "({phase:view.dataset.phase,time:Number(view.dataset.simTime),p:JSON.parse(view.dataset.positions)[0],physics:JSON.parse(view.dataset.physics),score:Number(view.dataset.score)})",
+      );
+      if (live.phase !== "playing") return { live, trace };
+      if (live.time === previousTime) {
+        await sleep(10);
+        continue;
+      }
+      previousTime = live.time;
+      const { p, physics: s } = live;
+      if (p.lives !== previousLives) {
+        plan = null;
+        previousLives = p.lives;
+      }
+      if (live.time - lastLog >= 2) {
+        const entry = {
+          t: live.time,
+          x: p.x,
+          y: p.y,
+          ground: p.groundId,
+          lives: p.lives,
+          hearts: p.hearts,
+          score: live.score,
+        };
+        trace.push(entry);
+        console.log("C native", JSON.stringify(entry));
+        lastLog = live.time;
+      }
+      const platforms = [
+        ...s.platforms,
+        ...s.objects
+          .filter(
+            (o) =>
+              o.active &&
+              !o.heldBy &&
+              !o.thrown &&
+              o.grounded &&
+              o.kind !== "ball",
+          )
+          .map((o) => ({
+            id: o.id,
+            x: o.x - o.w / 2,
+            y: o.y + o.h,
+            w: o.w,
+            h: o.h,
+            oneWay: false,
+          })),
+      ];
+      let input = { move: 0 };
+      if (plan?.mode === "air") {
+        plan.next = platforms.find((m) => m.id === plan.next.id) ?? plan.next;
+        plan.landing = clampRoute(
+          plan.landing,
+          plan.next.x + 0.9,
+          plan.next.x + plan.next.w - 0.9,
+        );
+        const clear =
+          !plan.next.oneWay &&
+          plan.next.y > plan.current.y + 0.1 &&
+          p.vy > 0 &&
+          p.y < plan.next.y + 0.05;
+        input.move = clear
+          ? 0
+          : Math.abs(plan.landing - p.x) < 0.1
+            ? 0
+            : Math.sign(plan.landing - p.x);
+        if (p.grounded && live.time > plan.jumpAt + 0.1) plan = null;
+      }
+      if (!plan && p.grounded) {
+        const current = platforms.find((m) => m.id === p.groundId);
+        if (current) {
+          const path = nativeRoute(platforms, current, level.exit);
+          assert.ok(path, `route from actual support ${current.id}`);
+          if (path.length === 1)
+            plan = { mode: "exit", current, target: level.exit.x };
+          else {
+            const next = path[1],
+              margin = Math.min(
+                current.kind === "moving" ? 1 : 0.65,
+                current.w / 3,
+              ),
+              leftBound = current.x + margin,
+              rightBound = current.x + current.w - margin;
+            const left = Math.max(leftBound, next.x + 0.65),
+              right = Math.min(rightBound, next.x + next.w - 0.65);
+            let launch =
+              left <= right
+                ? clampRoute(p.x, left, right)
+                : next.x > current.x
+                  ? rightBound
+                  : leftBound;
+            if (!next.oneWay && next.y > current.y + 0.1) {
+              const before = next.x - 0.55,
+                after = next.x + next.w + 0.55;
+              if (before >= leftBound && before <= rightBound) launch = before;
+              else if (after >= leftBound && after <= rightBound)
+                launch = after;
+            }
+            for (const ceiling of platforms.filter(
+              (m) =>
+                !m.oneWay &&
+                m.id !== current.id &&
+                m.y > current.y + 1.3 &&
+                m.y < current.y + 4.8,
+            )) {
+              if (
+                launch + 0.4 > ceiling.x &&
+                launch - 0.4 < ceiling.x + ceiling.w
+              ) {
+                const before = ceiling.x - 0.65,
+                  after = ceiling.x + ceiling.w + 0.65;
+                if (before >= leftBound && before <= rightBound)
+                  launch = before;
+                else if (after >= leftBound && after <= rightBound)
+                  launch = after;
+              }
+            }
+            plan = {
+              mode: "walk",
+              current,
+              next,
+              target: clampRoute(launch, leftBound, rightBound),
+            };
+          }
+        }
+      }
+      if (plan?.mode === "walk" || plan?.mode === "exit") {
+        plan.current =
+          platforms.find((m) => m.id === plan.current.id) ?? plan.current;
+        if (plan.next)
+          plan.next = platforms.find((m) => m.id === plan.next.id) ?? plan.next;
+        if (plan.mode === "walk") {
+          const margin = Math.min(
+            plan.current.kind === "moving" ? 1 : 0.65,
+            plan.current.w / 3,
+          );
+          plan.target = clampRoute(
+            plan.target,
+            plan.current.x + margin,
+            plan.current.x + plan.current.w - margin,
+          );
+        }
+        if (p.grounded && p.groundId !== plan.current.id) {
+          plan = null;
+          input.move = 0;
+        } else {
+          input.move =
+            Math.abs(p.x - plan.target) < 0.1
+              ? 0
+              : Math.sign(plan.target - p.x);
+          if (
+            plan.mode === "walk" &&
+            p.grounded &&
+            Math.abs(p.x - plan.target) < 0.2 &&
+            !previousJump
+          ) {
+            const { current, next } = plan;
+            let landing = clampRoute(p.x, next.x + 0.7, next.x + next.w - 0.7);
+            if (next.y <= current.y + 0.15) {
+              if (next.x + next.w > current.x + current.w)
+                landing = Math.max(landing, current.x + current.w + 0.65);
+              else if (next.x < current.x)
+                landing = Math.min(landing, current.x - 0.65);
+            }
+            plan = { mode: "air", current, next, landing, jumpAt: live.time };
+            input = { move: 0, jump: true };
+          }
+        }
+      }
+      const foe = s.enemies.find(
+        (e) =>
+          e.alive && Math.abs(e.y - p.y) < 2.5 && Math.abs(e.x - p.x) < 4.2,
+      );
+      const carried = s.objects.find((o) => o.id === p.carrying?.id);
+      const near = s.objects.find(
+        (o) =>
+          o.active &&
+          !o.heldBy &&
+          ["crate", "metal"].includes(o.kind) &&
+          Math.abs(o.x - p.x) < 1.4 &&
+          Math.abs(o.y - p.y) < 1.4,
+      );
+      const big = s.objects.find(
+        (o) =>
+          o.active &&
+          o.kind === "bigcrate" &&
+          Math.abs(o.x - p.x) < 4 &&
+          Math.abs(o.y - p.y) < 1.5,
+      );
+      if (!previousAction && ((carried && (foe || big)) || (!carried && near)))
+        input.action = true;
+      const direction = Math.sign(input.move || 0);
+      const hazard = s.hazards.find(
+        (h) =>
+          h.period &&
+          p.y < h.y + h.h &&
+          p.y + 1.25 > h.y &&
+          Math.abs(h.x - p.x) < h.w / 2 + 1.4 &&
+          direction * (h.x - p.x) > 0.1,
+      );
+      if (hazard && p.grounded) {
+        const phase = (live.time + (hazard.offset ?? 0)) % hazard.period;
+        const distance = Math.abs(hazard.x - p.x) + hazard.w / 2 + 0.7;
+        if (
+          phase < (hazard.activeFor ?? hazard.period / 2) ||
+          hazard.period - phase < distance / 7.2 + 0.12
+        ) {
+          input.move = 0;
+          input.jump = false;
+        }
+      }
+      if (
+        p.grounded &&
+        !previousJump &&
+        ((foe && Math.abs(foe.x - p.x) < 1.8) ||
+          s.projectiles.some(
+            (q) =>
+              Math.abs(
+                q.x + q.vx * 0.18 - p.x - (input.move || 0) * 7.2 * 0.18,
+              ) < 1.1 &&
+              q.y + q.vy * 0.18 < p.y + 1.4 &&
+              q.y + q.vy * 0.18 + q.h > p.y,
+          ))
+      )
+        input.jump = true;
+      await apply(input);
+      previousJump = !!input.jump;
+      previousAction = !!input.action;
+    }
+    assert.fail("native C route exceeded 10 minutes");
+  } finally {
+    for (const code of held) await key(b, code, false);
+    await mkdir(root, { recursive: true });
+    await writeFile(
+      `${root}/native-C-route.json`,
+      JSON.stringify(trace, null, 2),
+    );
+  }
+}
+test(
+  "native authored C traversal, real bonus, completion unlocks D and reload preserves progress and best score",
+  { timeout: 720000 },
+  async () => {
+    const b = await openBrowser();
+    try {
+      await b.size(568, 320);
+      await b.navigate("games/rescue.html");
+      // Prerequisite fixture: validated normal region entrance, not a mid-region save.
+      await b.evaluate(
+        '(async()=>{const {createProfile}=await import("/rescue/profile.js");const p=createProfile(),v=p.load();v.campaign={completed:["0","A"],current:"C"};v.options.quality="low";v.options.music=false;v.run={areaId:"C",score:0,flowers:0,stars:0,lives:[3],players:1,character:"chip"};if(!p.save(v).ok)throw Error("prerequisite fixture rejected")})()',
+      );
+      await b.call("Page.reload");
+      await wait(b, 'view.dataset.phase==="home"');
+      await click(b, "#map-open");
+      assert.equal(
+        await b.evaluate(
+          'document.querySelector("button[data-area=D]").disabled',
+        ),
+        true,
+      );
+      await click(b, "#map-panel .close-panel");
+      await click(b, "#continue");
+      await wait(b, 'view.dataset.area==="C"&&view.dataset.phase==="playing"');
+      const spawn = await b.evaluate(
+        "({x:Number(view.dataset.x),y:Number(view.dataset.y),entities:JSON.parse(view.dataset.graphics).liveEntities})",
+      );
+      assert.ok(Math.abs(spawn.x - 4.217) < 0.1);
+      assert.ok(Math.abs(spawn.y - 1) < 0.1);
+      const result = await nativeCompleteC(b);
+      assert.equal(result.live.phase, "bonus", JSON.stringify(result.live));
+      await shot(b, "native-C-bonus");
+      const flowers = Number(await b.evaluate("view.dataset.flowers"));
+      await key(b, "KeyD");
+      await wait(b, `Number(view.dataset.flowers)>${flowers}`);
+      await key(b, "KeyD", false);
+      assert.equal(await b.evaluate("view.dataset.level"), "bonus-C");
+      await click(b, "#bonus-finish");
+      await wait(b, 'view.dataset.phase==="complete"');
+      const terminal = await b.evaluate("JSON.parse(view.dataset.audio)");
+      assert.equal(terminal.effects.clear, 1);
+      assert.equal(terminal.active, false);
+      assert.ok(
+        terminal.voices > 0,
+        "main page preserves its real clear oscillator",
+      );
+      await sleep(650);
+      assert.equal(
+        await b.evaluate("JSON.parse(view.dataset.audio).voices"),
+        0,
+      );
+      assert.equal(
+        await b.evaluate("JSON.parse(view.dataset.audio).effects.clear"),
+        1,
+      );
+      await shot(b, "native-C-complete");
+      const totals = await b.evaluate(
+        "({score:Number(view.dataset.score),flowers:Number(view.dataset.flowers),stars:Number(view.dataset.stars),lives:JSON.parse(view.dataset.positions).map(p=>p.lives)})",
+      );
+      assert.ok(totals.score > 0);
+      assert.ok(totals.flowers > 0);
+      await click(b, "#next-area");
+      await shot(b, "native-C-unlocked-map");
+      assert.equal(
+        await b.evaluate(
+          'document.querySelector("button[data-area=D]").disabled',
+        ),
+        false,
+      );
+      assert.match(
+        await b.evaluate(
+          'document.querySelector("button[data-area=C]").getAttribute("aria-label")',
+        ),
+        /已完成/,
+      );
+      await b.evaluate(
+        'document.querySelector("button[data-area=D]").scrollIntoView({block:"center"})',
+      );
+      await click(b, "button[data-area=D]");
+      await wait(b, 'view.dataset.area==="D"&&view.dataset.phase==="playing"');
+      await shot(b, "native-next-D");
+      assert.deepEqual(
+        await b.evaluate(
+          "({score:Number(view.dataset.score),flowers:Number(view.dataset.flowers),stars:Number(view.dataset.stars),lives:JSON.parse(view.dataset.positions).map(p=>p.lives)})",
+        ),
+        totals,
+      );
+      await b.call("Page.reload");
+      await wait(b, 'view.dataset.phase==="home"');
+      assert.match(
+        await b.evaluate('document.querySelector("#best-score").textContent'),
+        new RegExp(String(totals.score)),
+      );
+      await click(b, "#continue");
+      await wait(b, 'view.dataset.area==="D"&&view.dataset.phase==="playing"');
+      await shot(b, "native-D-reloaded");
+      assert.deepEqual(
+        await b.evaluate(
+          "({score:Number(view.dataset.score),flowers:Number(view.dataset.flowers),stars:Number(view.dataset.stars),lives:JSON.parse(view.dataset.positions).map(p=>p.lives)})",
+        ),
+        totals,
+      );
+      assert.ok(
+        await b.evaluate('JSON.parse(view.dataset.completed).includes("C")'),
+      );
+      await click(b, "#pause");
+      await click(b, "#home");
+      await click(b, "#start");
+      await wait(b, 'view.dataset.area==="0"&&view.dataset.phase==="playing"');
+      assert.equal(await b.evaluate("Number(view.dataset.score)"), 0);
+      await click(b, "#pause");
+      await click(b, "#retry");
+      await wait(b, 'view.dataset.phase==="playing"');
+      await b.call("Page.reload");
+      await wait(b, 'view.dataset.phase==="home"');
+      assert.match(
+        await b.evaluate('document.querySelector("#best-score").textContent'),
+        new RegExp(String(totals.score)),
+      );
+      const persisted = await b.evaluate(
+        '(async()=> (await import("/rescue/profile.js")).createProfile().load())()',
+      );
+      assert.equal(persisted.bestScore, totals.score);
+      assert.equal(persisted.run.score, 0);
+      assert.ok(persisted.campaign.completed.includes("C"));
+      await writeFile(
+        `${root}/native-C-result.json`,
+        JSON.stringify(
+          {
+            prerequisite: { completed: ["0", "A"], entrance: "C", lives: [3] },
+            spawn,
+            totals,
+            persisted,
+            errors: b.errors,
+          },
+          null,
+          2,
+        ),
+      );
       assert.deepEqual(b.errors, []);
     } finally {
       b.close();

@@ -117,3 +117,27 @@ test("a run with no surviving players is rejected instead of restoring a softloc
   );
   assert.deepEqual(p.load().run.lives, [0, 4]);
 });
+test("best score survives lower new runs, retries and reload independently of the entry run", () => {
+  const s = storage(),
+    p = profile(s),
+    value = p.load();
+  value.run = { areaId: "0", score: 17000, lives: [3], players: 1 };
+  assert.equal(p.save(value).ok, true);
+  assert.equal(
+    profile(s).load().bestScore,
+    17000,
+    "migrate an existing normal run score",
+  );
+  value.run = { areaId: "0", score: 0, lives: [3], players: 1 };
+  value.bestScore = 0;
+  p.save(value);
+  assert.equal(profile(s).load().bestScore, 17000);
+  value.run = null;
+  value.bestScore = 23000;
+  p.save(value);
+  const again = profile(s).load();
+  assert.equal(again.bestScore, 23000);
+  assert.equal(again.run, null);
+  s.setItem(PROFILE_KEY, JSON.stringify({ bestScore: -100 }));
+  assert.equal(profile(s).load().bestScore, 0);
+});

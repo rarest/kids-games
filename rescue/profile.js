@@ -41,7 +41,13 @@ export function normalizeProfile(raw = {}) {
     };
     if (run.lives.every((life) => life === 0)) run = null;
   }
-  return { version: 1, campaign, options, run };
+  return {
+    version: 1,
+    campaign,
+    options,
+    run,
+    bestScore: Math.max(number(raw?.bestScore), run?.score ?? 0),
+  };
 }
 export function createProfile(storage) {
   if (storage === undefined) {
@@ -58,14 +64,17 @@ export function createProfile(storage) {
       };
     }
   }
-  let error = "";
+  let error = "",
+    bestScore = 0;
   return {
     load() {
       try {
         const raw = storage.getItem(PROFILE_KEY);
         error = "";
         try {
-          return normalizeProfile(raw ? JSON.parse(raw) : {});
+          const value = normalizeProfile(raw ? JSON.parse(raw) : {});
+          bestScore = value.bestScore;
+          return value;
         } catch {
           return normalizeProfile();
         }
@@ -76,7 +85,10 @@ export function createProfile(storage) {
     },
     save(value) {
       try {
-        storage.setItem(PROFILE_KEY, JSON.stringify(normalizeProfile(value)));
+        const normalized = normalizeProfile(value);
+        normalized.bestScore = Math.max(bestScore, normalized.bestScore);
+        storage.setItem(PROFILE_KEY, JSON.stringify(normalized));
+        bestScore = normalized.bestScore;
         error = "";
         return { ok: true };
       } catch {

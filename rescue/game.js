@@ -51,6 +51,7 @@ function save() {
   return result.ok;
 }
 function optionsUI() {
+  $("best-score").textContent = `最高纪录：${saved.bestScore} 分`;
   for (const [id, value] of [
     ["players-one", saved.options.players === 1],
     ["players-two", saved.options.players === 2],
@@ -88,10 +89,12 @@ function runValues(areaId, source = state) {
     character: source.players[0].character,
   };
 }
-function activate(value) {
+function activate(value, finishEffects = false) {
   if (state) setPaused(state, !value);
   controls.clear();
-  audio.setActive(value && !document.hidden);
+  audio.setActive(value && !document.hidden, {
+    finishEffects: finishEffects && !document.hidden,
+  });
   last = 0;
   if (scene && state) diagnostics();
 }
@@ -100,9 +103,9 @@ function hidePanels() {
   $("overlay").hidden = true;
   panel = null;
 }
-function openPanel(name) {
+function openPanel(name, finishEffects = false) {
   if (panel === name) return;
-  activate(false);
+  activate(false, finishEffects);
   hidePanels();
   panel = name;
   $(name + "-panel").hidden = false;
@@ -207,7 +210,6 @@ function renderMap() {
 function complete() {
   if (completed) return;
   completed = true;
-  activate(false);
   const next = saved.campaign.current;
   const totals = runValues(next);
   saved.run = totals;
@@ -220,7 +222,7 @@ function complete() {
     ? `奇奇和蒂蒂终于救出了朋友。一路收获 ${state.score} 分，${state.flowers} 朵花和 ${state.stars} 颗星。`
     : `${state.areaLevel.name}探索完成，收获 ${state.score} 分。选择地图上亮起的下一站。`;
   $("next-area").textContent = state.ending ? "再去探险" : "选择下一站";
-  openPanel("complete");
+  openPanel("complete", true);
   if (ok) notify("进度已保存，可从下一站起点继续。");
 }
 function hud() {
@@ -264,6 +266,10 @@ function diagnostics() {
         lives: q.lives,
         carrying: q.carrying,
         hidden: q.hidden,
+        grounded: q.grounded,
+        groundId: q.groundId,
+        vx: q.vx,
+        vy: q.vy,
       })),
     ),
     players: String(p.length),
@@ -277,6 +283,13 @@ function diagnostics() {
     stars: String(state.stars),
     simTime: String(state.time),
     completed: JSON.stringify(saved.campaign.completed),
+    physics: JSON.stringify({
+      platforms: state.platforms,
+      objects: state.objects,
+      enemies: state.enemies,
+      hazards: state.hazards,
+      projectiles: state.projectiles,
+    }),
   });
 }
 function frame(now) {
@@ -292,9 +305,14 @@ function frame(now) {
       scene.setLevel(state.level);
       renderedLevel = state.level;
     }
-    if (state.status === "cleared") complete();
-    else if (state.status === "gameover" && !panel) openPanel("gameover");
     audio.consume(state);
+    if (state.score > saved.bestScore) {
+      saved.bestScore = state.score;
+      save();
+      optionsUI();
+    }
+    if (state.status === "cleared") complete();
+    else if (state.status === "gameover" && !panel) openPanel("gameover", true);
     hud();
   }
   if (screen === "home" && !panel) state.time += dt;
@@ -380,6 +398,7 @@ const observer = new ResizeObserver(resize);
 observer.observe($("stage"));
 window.addEventListener("blur", () => {
   controls.clear();
+  audio.setActive(false);
   if (screen === "game" && !panel) openPanel("pause");
 });
 document.addEventListener("visibilitychange", () => {

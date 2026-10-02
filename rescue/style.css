@@ -156,6 +156,15 @@ h2 {
   line-height: 1.6;
   color: #82765b;
 }
+.home-title {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+#best-score {
+  white-space: nowrap;
+}
 #saved-label:empty {
   display: none;
 }

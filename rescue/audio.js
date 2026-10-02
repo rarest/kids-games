@@ -21,9 +21,16 @@ export function createAudio(options = {}) {
     identity = null,
     lastEvent = 0,
     theme = "street";
-  const voices = new Set();
-  function tone(note, duration = 0.14, type = "triangle", volume = 0.045) {
-    if (!context || context.state !== "running") return;
+  const voices = new Map();
+  const effects = {};
+  function tone(
+    note,
+    duration = 0.14,
+    type = "triangle",
+    volume = 0.045,
+    effect = true,
+  ) {
+    if (!context || context.state !== "running") return false;
     const osc = context.createOscillator(),
       gain = context.createGain(),
       now = context.currentTime;
@@ -34,7 +41,7 @@ export function createAudio(options = {}) {
     gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
     osc.connect(gain);
     gain.connect(context.destination);
-    voices.add(osc);
+    voices.set(osc, effect);
     osc.onended = () => {
       voices.delete(osc);
       osc.disconnect();
@@ -42,14 +49,16 @@ export function createAudio(options = {}) {
     };
     osc.start(now);
     osc.stop(now + duration + 0.02);
+    return true;
   }
-  function silence() {
-    for (const osc of voices) {
+  function silence(finishEffects = false) {
+    for (const [osc, effect] of voices) {
+      if (finishEffects && effect) continue;
       try {
         osc.stop();
       } catch {}
+      voices.delete(osc);
     }
-    voices.clear();
   }
   function updateMusic() {
     if (timer) {
@@ -60,8 +69,8 @@ export function createAudio(options = {}) {
       timer = setInterval(() => {
         const melody = MELODIES[theme] ?? MELODIES.tree;
         const n = melody[step % melody.length];
-        tone(n, 0.16, "triangle", 0.032);
-        if (step % 2 === 0) tone(n - 24, 0.19, "sine", 0.025);
+        tone(n, 0.16, "triangle", 0.032, false);
+        if (step % 2 === 0) tone(n - 24, 0.19, "sine", 0.025, false);
         step++;
       }, 210);
   }
@@ -83,9 +92,9 @@ export function createAudio(options = {}) {
       silence();
       updateMusic();
     },
-    setActive(value) {
+    setActive(value, { finishEffects = false } = {}) {
       active = !!value;
-      if (!active) silence();
+      if (!active) silence(finishEffects);
       updateMusic();
     },
     consume(state) {
@@ -119,7 +128,8 @@ export function createAudio(options = {}) {
           clear: 28,
           stun: -4,
         };
-        if (notes[e.type] !== undefined)
+        if (
+          notes[e.type] !== undefined &&
           tone(
             notes[e.type],
             ["clear", "bossDefeated", "extraLife"].includes(e.type)
@@ -127,7 +137,9 @@ export function createAudio(options = {}) {
               : 0.13,
             e.type === "damage" ? "sawtooth" : "sine",
             0.06,
-          );
+          )
+        )
+          effects[e.type] = (effects[e.type] ?? 0) + 1;
       }
     },
     diagnostics() {
@@ -138,6 +150,7 @@ export function createAudio(options = {}) {
         sound: enabled.sound,
         voices: voices.size,
         lastEvent,
+        effects: { ...effects },
       };
     },
     dispose() {
