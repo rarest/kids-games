@@ -4,17 +4,18 @@ import {
   coverage,
   coverageLabel,
   finishRun,
-} from "./core.js?v=20261002rewards";
+} from "./core.js?v=20261002animals";
 import {
   SKINS,
   createProfile,
   buySkin,
+  exchangeDiamonds,
   equipSkin,
   settleRun,
   collectReward,
   rewardSummary,
-} from "./profile.js?v=20261002rewards";
-import { drawPaper, createRenderer } from "./render.js?v=20261002rewards";
+} from "./profile.js?v=20261002animals";
+import { drawPaper, createRenderer } from "./render.js?v=20261002animals";
 
 const $ = (id) => document.getElementById(id),
   KEY = "paper-territory.profile.v1";
@@ -98,6 +99,7 @@ function refreshProfile() {
   $("wallet").textContent = profile.coins;
   $("selected-name").textContent = skin.name;
   $("total-score").textContent = profile.score;
+  $("diamond-wallet").textContent = profile.diamonds;
   paperPreview($("home-paper"), skin, 38);
   paperPreview($("result-paper"), skin, 75);
   drawHero();
@@ -109,6 +111,9 @@ function drawHero(time = 0) {
 }
 function renderShop() {
   $("wallet").textContent = profile.coins;
+  $("diamond-wallet").textContent = profile.diamonds;
+  $("exchange-one").disabled = profile.coins < 1;
+  $("exchange-fifty").disabled = profile.coins < 50;
   for (const tab of document.querySelectorAll("[data-tier]"))
     tab.setAttribute("aria-selected", String(tab.dataset.tier === tier));
   $("shop-description").textContent =
@@ -116,7 +121,9 @@ function renderShop() {
       ? "20 种纯色。朱砂红免费，其余每张 20 金币。"
       : tier === "fine"
         ? "20 种细密纹理，人物和领地使用同一张材质，每张 60 金币。"
-        : "占满全岛后，触碰散落的三个宝箱，直接获得三款未拥有的动态隐藏纸。";
+        : tier === 'special'
+          ? "20 种卡通小动物，每款100钻石。1金币可兑换2钻石；人物和领地拥有相同的动物纹章。"
+          : "占满全岛后，触碰散落的三个宝箱，直接获得三款未拥有的动态隐藏纸。";
   $("skin-grid").replaceChildren();
   for (const skin of SKINS.filter((s) => s.tier === tier)) {
     const owned = profile.owned.includes(skin.id),
@@ -142,7 +149,7 @@ function renderShop() {
       ? "全岛胜利后触碰宝箱获得"
       : owned
         ? "已收入纸片册"
-        : `${skin.price} 金币`;
+        : `${skin.price} ${skin.currency === 'diamonds' ? '钻石' : '金币'}`;
     const button = document.createElement("button");
     button.textContent = locked
       ? "尚未解锁"
@@ -150,9 +157,9 @@ function renderShop() {
         ? "正在装备"
         : owned
           ? "装备"
-          : `购买 · ${skin.price}`;
+          : `购买 · ${skin.price}${skin.currency === 'diamonds' ? ' ◇' : ''}`;
     button.disabled =
-      locked || equipped || (!owned && profile.coins < skin.price);
+      locked || equipped || (!owned && profile[skin.currency === 'diamonds' ? 'diamonds' : 'coins'] < skin.price);
     button.addEventListener("click", () => {
       if (owned) {
         if (equipSkin(profile, skin.id)) {
@@ -405,6 +412,14 @@ for (const tab of document.querySelectorAll("[data-tier]"))
     renderShop();
   });
 $("reward-finish").addEventListener("click", end);
+for (const [id, coins] of [['exchange-one', 1], ['exchange-fifty', 50]])
+  $(id).addEventListener('click', () => {
+    if (!exchangeDiamonds(profile, coins)) return;
+    const saved = save();
+    refreshProfile();
+    renderShop();
+    if (saved) notify(`兑换成功：${coins} 金币 → ${coins * 2} 钻石`);
+  });
 $("map").addEventListener("pointermove", (e) => {
   if (
     e.pointerType !== "mouse" ||

@@ -2,7 +2,7 @@ import {
   union,
   intersection,
   difference,
-} from "./vendor/polyclip.js?v=20261002rewards";
+} from "./vendor/polyclip.js?v=20261002animals";
 export { union, intersection, difference };
 export const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 export function disk(x, y, r, segments = 128) {
