@@ -1,15 +1,16 @@
 # 🚀 小火箭游戏厅 (kids-games)
 
-给小朋友的趣味小游戏合集，纯静态单文件 HTML，无后端、无构建、无广告。
+给小朋友的趣味网页游戏合集，适应手机、平板和电脑，无广告。单人游戏在浏览器计算；联网射击使用合作服务，部分游戏资源需要本地打包。
 
-在线访问：https://games.596996.xyz
+在线访问：https://games.nblord.com
 
 ## 目录结构
 
 ```
 index.html     合集落地页（数据驱动，读取 games.js 自动列出所有游戏，含搜索）
 games.js       游戏目录清单 —— 新增游戏在这里加一行
-games/         所有游戏（每个都是独立单文件 HTML）
+games/         所有游戏的 HTML 入口
+  ├─ racing.html    🏎️ 峰谷竞速（3D赛车）
   ├─ pinyin.html    🚀 拼音打字小火箭
   ├─ snake.html     🐍 贪吃蛇吃痘痘
   ├─ fish.html      🐟 大鱼吃小鱼
@@ -51,3 +52,14 @@ deploy/        自动部署组件
 - 多边形库固定版本，本地打包，无外部CDN。更新依赖后执行 `npm run build:territory-geometry`，许可在 `territory/vendor/LICENSES.md`。
 - 必需检查：`npm run test:unit`、`npm run test:browser`。发布验证可用 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/territory-browser-smoke.mjs tests/territory-galaxy-browser-smoke.mjs tests/territory-vector-browser-smoke.mjs tests/responsive-browser-smoke.mjs`。
 - 页面入口及完整ES模块依赖链必须统一资源版本；合并前以远程最新 `main` 为基线，部署后核对站点资源哈希和实际浏览器操作。变更记录在 `openspec/changes/continuous-vector-territory/`。
+
+## 峰谷竞速（3D赛车）
+
+入口 `games/racing.html`，逻辑在 `racing/core.js`，三维画面在 `racing/scene.js`，车库和操作在 `racing/game.js`。玩家与10位电脑车手跑两圈，前三名分别获得3000、1500、700赛事金币，其余名次无奖金。4种车型、6款涂装使用奖金解锁，购买和装备保存在当前浏览器。
+
+六条起伏蜿蜒赛道包含高原、山地、废弃工厂、旧公路和城市交通；主题路线以对应地形为主。车模为实际三维几何，采用金属反射、珠光车漆与薄膜干涉花纹，光照角度和车辆朝向改变时涂装会变色，车辆与场景投射阴影。
+
+- 自动油门默认开启；方向键 / WASD驾驶，空格使用氮气。手机用转向、刹车和氮气按钮。切到后台自动暂停。
+- 自动画质根据帧耗时降低分辨率，另有精细和流畅选项；场景重复物件实例化，车辆零件按材质合并。比赛计算在浏览器本地执行。
+- 修改源码后执行 `npm run build:racing` 并提交 `racing/bundle.js`；Three.js固定版本、本地打包，许可证见 `racing/THIRD-PARTY-NOTICES.txt`。
+- 检查 `node --test tests/racing.test.mjs tests/racing-render.test.mjs tests/racing-browser.mjs`。发布后用 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/racing-browser.mjs` 验证公网真实页面。

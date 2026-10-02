@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#12252b" />
+    <title>峰谷竞速 · 3D赛车</title>
+    <link rel="stylesheet" href="../racing/style.css?v=20261002race1" />
+  </head>
+  <body>
+    <canvas id="view" aria-label="三维赛车画面"></canvas>
+    <div id="loading" role="status">正在准备跑车与赛道…</div>
+    <header>
+      <a href="../index.html">← 游戏厅</a>
+      <div class="brand">SUMMIT <span>峰谷竞速</span></div>
+      <div class="header-actions">
+        <button id="sound" aria-pressed="false">声音 关</button
+        ><select id="quality" aria-label="画质">
+          <option value="auto">自动画质</option>
+          <option value="high">精细画质</option>
+          <option value="low">流畅画质</option></select
+        ><span class="wallet">◈ <b id="coins">0</b></span>
+      </div>
+    </header>
+    <main id="garage" hidden>
+      <section class="intro">
+        <span class="eyebrow">THE ROAD IS YOURS</span>
+        <h1>越过山海<br />驶向第一</h1>
+        <p>与你竞速的，是十位车手。<br />前方的风景，永远不止一条直道。</p>
+      </section>
+      <section class="menu" aria-label="赛事与车库">
+        <div class="tabs">
+          <button data-tab="routes" class="active">选赛道</button
+          ><button data-tab="models">选赛车</button
+          ><button data-tab="paints">换涂装</button>
+        </div>
+        <div class="menu-scroll">
+          <section id="routes">
+            <div class="section-label">六条路线 / 每场两圈</div>
+            <div id="tracks" class="choices"></div>
+            <p class="hint">
+              🏆 冠军 3000 · 亚军 1500 · 季军 700 金币<br />其他名次不发奖金。金币用于解锁车库物品。
+            </p>
+          </section>
+          <section id="models" hidden>
+            <div class="section-label">四种车型 / 奖金解锁</div>
+            <div id="cars" class="choices"></div>
+          </section>
+          <section id="paints" hidden>
+            <div class="section-label">车身涂装 / 随光影变幻的赛车纹</div>
+            <div id="skins" class="choices"></div>
+          </section>
+        </div>
+        <div class="start-row">
+          <label><input type="checkbox" id="auto" checked /> 自动油门</label
+          ><button id="start" class="primary" disabled>准备赛道…</button>
+        </div>
+        <div class="controls-hint">
+          ← → / A D 转向 · ↓ / S 刹车 · 空格 氮气<br />关闭自动油门后，↑ / W
+          加速。手机使用下方按钮。
+        </div>
+      </section>
+      <div class="car-caption">
+        <span id="car-name">逐风 GT</span
+        ><small id="paint-name">流光极光 / 金属珠光车漆</small>
+      </div>
+    </main>
+    <section id="hud" hidden aria-label="比赛信息">
+      <div class="hud-top">
+        <div class="rank">
+          <small>POSITION</small><strong id="position">11 / 11</strong
+          ><span id="lap">第 1 / 2 圈</span>
+        </div>
+        <div class="race-info">
+          <span id="route-name"></span><strong id="timer">00:00.0</strong
+          ><button id="pause">Ⅱ 暂停</button>
+        </div>
+      </div>
+      <canvas
+        id="map"
+        width="160"
+        height="160"
+        aria-label="赛道小地图"
+      ></canvas>
+      <div id="leaderboard"></div>
+      <div id="countdown" aria-live="polite"></div>
+      <div class="speedometer">
+        <strong id="speed">0</strong><span>KM/H</span>
+        <div class="nitro-track"><i id="nitro"></i></div>
+        <small id="surface">赛道</small>
+      </div>
+      <div class="drive-controls">
+        <div class="steering">
+          <button data-control="left" aria-label="左转">◀</button
+          ><button data-control="right" aria-label="右转">▶</button>
+        </div>
+        <div class="pedals">
+          <button data-control="brake">刹车</button
+          ><button data-control="throttle" id="gas">油门</button
+          ><button data-control="boost" class="boost">氮气</button>
+        </div>
+      </div>
+    </section>
+    <div id="paused" class="veil" hidden>
+      <section class="dialog">
+        <span class="eyebrow">TAKE A BREATH</span>
+        <h2>比赛已暂停</h2>
+        <p>回来以后继续这场比赛。</p>
+        <button id="resume" class="primary">继续比赛</button
+        ><button id="quit">返回车库</button>
+      </section>
+    </div>
+    <div id="result" class="veil" hidden>
+      <section class="dialog result">
+        <span class="eyebrow">FINISH LINE</span>
+        <h2 id="result-title"></h2>
+        <div id="podium"></div>
+        <p id="reward"></p>
+        <p id="result-time"></p>
+        <button id="again" class="primary">再赛一场</button
+        ><button id="back">返回车库</button>
+      </section>
+    </div>
+    <div id="toast" role="status"></div>
+    <script type="module" src="../racing/bundle.js?v=20261002race1"></script>
+  </body>
+</html>
