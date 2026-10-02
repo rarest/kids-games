@@ -1,0 +1,15 @@
+[Unit]
+Description=Cooperative space shooter
+After=network.target
+[Service]
+Type=simple
+WorkingDirectory=%h/games-site
+ExecStart=/usr/bin/node %h/games-site/shooter/server.mjs
+Environment=PORT=8787
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+MemoryMax=512M
+[Install]
+WantedBy=default.target
