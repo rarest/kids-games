@@ -163,7 +163,7 @@
 - 主站原生按键从起点正常举箱/投掷和跳跃，在 x49.164 触发箱子怪实际 lunge，怪位置x52.900，未损失生命，异常列表为空。日志 `/tmp/rescue-mimic-native-public.log`、状态和截图 `/tmp/rescue-evidence/mimic/public/`。根代理已查看原生接近与攻击截图，等待露眼、攻击张嘴露牙均可见；仅暂停截图遮罩临时隐藏，不改运行中游戏状态。
 
 
-## 两设备联网验收（首次已发布，最终小修复待审查更新）
+## 两设备联网验收（online2 已发布，软件渲染压力复核仍有未通过项）
 
 房间 UI、两端独立原生键盘/触控、托举物体和队友、投掷、暂停/重连、GPU/页面生命周期与本机存档隔离已有专项通过记录。app 的可信右键被阻止，双击后 visualViewport.scale 保持不变。新增服务仅监听 `127.0.0.1:8788`，原射击服务保持 `8787`；首次版本已由控制器沿原 webhook 发布 PR41（`20261003rescue-online1`）；下述为发布前验收记录，最终小修复状态见本节末。
 
@@ -241,3 +241,16 @@ Final combinedfix ruling fromactualpublicpost-reviewevidence: equal-auto restore
 最终代码范围9889bdd..7adfa09经唯一局部复审：相同auto保留、三处nullable等待、测试relay有序正常关闭及online2缓存一致四项均ADDRESSED，新Critical/Important/Minor均为0。根独立构建与bundle逐字节一致，SHA `a1544fec8965d46a56252557a0c87ca38e18768574bdeeaa7c6039a0dcb33de4`。
 
 修正relay后的唯一200msRTT canonical全部原行为和存档断言通过，首响应19.7/32.3ms，双方退出回home；其新增关闭时间诊断误取刷新前旧slot0连接，使整体1/1 FAIL，原始日志保留。最小同peer真实关闭专项GREEN明确收到26800.379→转发26894.681→关闭26899.953，客机home/null。裁决：不将附加诊断失败冒充整套GREEN，也不据此扩大生产网络修复或重复完整大套件；最终公网运行正式未附加诊断的canonical继续完成交付。该裁决若错误，影响退出顺序验证，因此同时保留最小顺序实证与后续公网双方退出检查。
+
+
+### online2 原部署链交付回执（2026-10-03）
+
+PR42 于2026-10-03T12:39:07Z合并，main `7a459a25813616a19fc1d012ab9e58fea38e3efd`；原webhook在20:39:10完成发布。服务器仓库和docroot bundle SHA均为`a1544fec8965d46a56252557a0c87ca38e18768574bdeeaa7c6039a0dcb33de4`。救援PID147055、射击PID143350、webhook PID1044均active且没有变化。12项双域公网资源HTTP200且SHA匹配，日志 `/tmp/rescue-evidence/online2-public-hashes.log`。
+
+主站正式未附加诊断 canonical2/2通过：联网原生各端键盘和禁用方向键、队友/箱子举起投掷、390×844客机触控、暂停/手动继续、重试、房主刷新原席恢复、双方退出home、本机存档字节和选项、session令牌清理和异常列表，以及双击scale、可信右键拦截、320宽有无存档按钮检查。联网49.264秒，触控7.197秒，合计56.642秒；日志 `/tmp/rescue-evidence/online2-public-main.log`。
+
+备用域名正式canonical完成入房、独立控制、举箱投掷和390×844触控，房主刷新原席后手动继续又在epoch9/tick257暂停，等待客机playing失败；整体1/1FAIL61.491秒，不能写成双域整套通过。两端仍连接/ready，客机autoDPR0.5/frame45.7ms；缺少当时输入间隔实证，未确定具体阻塞来源。日志 `/tmp/rescue-evidence/online2-public-secondary.log`。随后私有诊断驱动被中断，Node报pending promise/event loop resolved，无有效finally JSON，不能记作通过或故障原因。额外320×568私有备用站流程完成入房和独立按键后，实际重试在tick21进入输入保护暂停；两端DPR0.5，诊断frame86.6/91.6ms，RTT148.5/297.3ms；整体失败，日志 `/tmp/rescue-evidence/online2-secondary-narrow.log`，JSON `/tmp/rescue-evidence/public-online-failure.json`。已保留这些未通过的软件渲染压力结果，不扩大超时，也不把新运行冒充连续性GREEN。
+
+独立Node真实公网WS ping各8次：主站均值133.908ms/范围133.499–135.333ms；备用站均值133.256ms/范围132.898–134.285ms。记录 `/tmp/rescue-evidence/public-ws-rtt.json`，为当前测试机器到服务的往返，不是用户两台设备互连延迟；浏览器RTT包含其调度延迟，不能据上述失败断定备用域名网络更差。生产CPU负载0.05/0.03/0.00、服务进程正常；本地cgroup未记录OOM。软件渲染慢帧与恢复/重试保护暂停仍保留为后续明确性能调查项，原200msRTT完整街区61.497秒通过样本也保持其原条件，不扩大为所有设备保证。
+
+发布前加入的匿名真实救援及射击WS会话连续接收状态和pong，跨PR42部署未断开；记录 `/tmp/rescue-evidence/rescue-preservation.json`、`/tmp/rescue-evidence/shooter-preservation.json`。最终文档归档之后只关闭这两个测试会话，不影响真实玩家房间。
