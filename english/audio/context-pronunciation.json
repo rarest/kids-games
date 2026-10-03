@@ -1,0 +1,16 @@
+{
+  "read": {
+    "voice": "en-US-AriaNeural",
+    "context": "I read a book every day.",
+    "word": "read",
+    "start_seconds": 0.2625,
+    "end_seconds": 0.45
+  },
+  "use": {
+    "voice": "en-US-AriaNeural",
+    "context": "I use a book.",
+    "word": "use",
+    "start_seconds": 0.225,
+    "end_seconds": 0.5375
+  }
+}

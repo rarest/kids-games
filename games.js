@@ -2,6 +2,13 @@
    字段: file 路径 | emoji 图标 | name 名称 | desc 一句话 | tags 标签(用于搜索/分类) */
 window.GAMES = [
   {
+    file: "games/english.html",
+    emoji: "🔵",
+    name: "珠珠学习乐园",
+    desc: "人教PEP三到六年级英语，36条3D路线、沿途10题、美式发音和33款珠珠皮肤",
+    tags: ["英语", "学习", "3D", "皮肤", "手机"],
+  },
+  {
     file: "games/rescue.html?v=20261003rescue-online3",
     emoji: "🐿️",
     name: "松鼠大作战",

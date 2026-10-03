@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 
-test('game hall loads a versioned local catalog and preserves all twelve games including paper territory', async () => {
+test('game hall loads a versioned local catalog and preserves all thirteen games including paper territory', async () => {
   const index = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const catalogReferences=[...index.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>\s*<\/script>/gi)].map(match=>new URL(match[1],'https://games.test/index.html')).filter(url=>url.pathname==='/games.js');
   assert.equal(catalogReferences.length,1,'exactly one game catalog is loaded');
@@ -11,8 +11,11 @@ test('game hall loads a versioned local catalog and preserves all twelve games i
   assert.match(catalog.searchParams.get('v')||'',/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/,'a nonempty cache version is present');
   const source = await readFile(new URL(`..${catalog.pathname}`, import.meta.url), 'utf8');
   const context = { window: {} }; vm.runInNewContext(source, context);
-  assert.equal(context.window.GAMES.length, 12);
-  assert.equal(new Set(context.window.GAMES.map(game=>game.file)).size,12,'all twelve entries are unique');
+  assert.equal(context.window.GAMES.length, 13);
+  assert.equal(new Set(context.window.GAMES.map(game=>game.file)).size,13,'all thirteen entries are unique');
+  const english=context.window.GAMES.find(game=>game.file==='games/english.html');
+  assert.equal(english?.name,'珠珠学习乐园');assert.ok(english.tags.includes('英语'));
+  await assert.doesNotReject(()=>readFile(new URL('../games/english.html',import.meta.url),'utf8'));
   const territory=context.window.GAMES.find(game=>game.file==='games/territory.html');
   assert.equal(territory?.name,'纸片领地');assert.ok(territory.tags.includes('圈地'));
   const territoryPage=await readFile(new URL(`../${territory.file}`,import.meta.url),'utf8');
