@@ -71,18 +71,18 @@ Prediction is cleared on suspend/disconnect; while not playing no movement comma
 
 ### Task 3: Room UI, game lifecycle integration and touch protection
 
-**Files:** Modify rescue/game.js, rescue/scene.js (confirmed buffer resize dedup only), games/rescue.html, rescue/style.css, games.js, index.html (hall script cache query only), README.md; create a small rescue/net-ui.js if this keeps UI separate; add tests/rescue-online-browser.mjs and touch regressions, with tests/rescue-online-harness.mjs if needed for shared real-browser transport setup; tests/game-browser-harness.mjs may add optional chromeFlags while preserving defaults; update tests/rescue-integration-browser.mjs catalog expectations if metadata changes. Build rescue/bundle.js after source changes. Consume Tasks1/2 only through agreed APIs.
+**Files:** Modify rescue/game.js, rescue/scene.js (confirmed buffer resize dedup only), games/rescue.html, rescue/style.css, games.js, index.html (hall script cache query only), README.md; create a small rescue/net-ui.js if this keeps UI separate; add tests/rescue-online-browser.mjs and touch regressions, with tests/rescue-online-harness.mjs if needed for shared real-browser transport setup; tests/game-browser-harness.mjs may add optional chromeFlags while preserving defaults; small rescue/frame-time.js and tests/rescue-frame-time.test.mjs cover actual online elapsed and retained local cap; update tests/rescue-integration-browser.mjs catalog expectations if metadata changes. Build rescue/bundle.js after source changes. Consume Tasks1/2 only through agreed APIs.
 **Interfaces:** Home online entry/create/join/lobby/start/leave; HUD and paused overlays for network state. Each device samples controls slot0 then sends to its assigned network slot. Authority drives hud/audio/results/map, visual prediction drives scene/camera. Keep local modes independent.
 
-- [ ] **Step 1: Add RED native two-browser and touch tests.** Real UI creating/joining/start, independent keyboard+touch, player2 cannot hijack player1, native carry/throw both observe consistent links, pause/resume/hidden/GPU-loss readiness, reconnect plus leave/error paths; doubletap scale unchanged and trusted contextmenu default prevented. Use isolated browsers, focus emulation for both, server from Task1 on free port; real ws forwarded through a test origin without production hardcoded localhost override.
+- [x] **Step 1: Add RED native two-browser and touch tests.** Real UI creating/joining/start, independent keyboard+touch, player2 cannot hijack player1, native carry/throw both observe consistent links, pause/resume/hidden/GPU-loss readiness, reconnect plus leave/error paths; doubletap scale unchanged and trusted contextmenu default prevented. Use isolated browsers, focus emulation for both, server from Task1 on free port; real ws forwarded through a test origin without production hardcoded localhost override.
 ```js
 await click(host,'#online-open');await click(host,'#online-create');
 const code=await host.evaluate('document.querySelector("#online-code").textContent');
 await click(guest,'#online-open');await guest.call('Input.insertText',{text:code});
 await click(guest,'#online-join');await click(host,'#online-start');
 ```
-- [ ] **Step 2: Record expected native RED failures.**
-- [ ] **Step 3: Implement online UI and correct lifecycle.** Reset render state on genuine level changes only. Never call local save/complete()/retry flow on predicted or online state; map chosen from server campaign. Home/leave disposes transport. A blocked client does not resume server by closing a panel. Gate start/resume with room readiness. Show Chinese user-facing status only; no implementation jargon or testing setters. Handle tab/GPU recovery handshake while remaining paused.
+- [x] **Step 2: Record expected native RED failures.**
+- [x] **Step 3: Implement online UI and correct lifecycle.** Reset render state on genuine level changes only. Never call local save/complete()/retry flow on predicted or online state; map chosen from server campaign. Home/leave disposes transport. A blocked client does not resume server by closing a panel. Gate start/resume with room readiness. Show Chinese user-facing status only; no implementation jargon or testing setters. Handle tab/GPU recovery handshake while remaining paused.
 ```js
 if(online){
  const sample=controls.sample()[0]??{};
@@ -91,8 +91,8 @@ if(online){
 }else stepGame(state,controls.sample(),dt);
 ```
 Use app-scoped contextmenu/selectstart prevention and appropriate touch-action/user-select/-webkit-touch-callout CSS. Retain existing local tests' home IDs/flows. Hall card accurately says本机/联网双人. Bump page CSS/bundle and hall cache version consistently; retain latest mimic and GPU fixes.
-- [ ] **Step 4: Build via npm run build:rescue, run new native tests and affected old rescue-browser regressions (keyboard2p, viewports, freeze/BFCache, GPU, room bonus) once each.** Record actual screenshot/state/errors. Same-version passed geometry tests do not need repeat. Profile native response with latency transport before requesting review.
-- [ ] **Step 5: Commit only owned files and report integration API decisions/measurements.**
+- [x] **Step 4: Build via npm run build:rescue, run new native tests and affected old rescue-browser regressions (keyboard2p, viewports, freeze/BFCache, GPU, room bonus) once each.** Record actual screenshot/state/errors. Same-version passed geometry tests do not need repeat. Record native rendering and scheduling observations; strict delayed-response and uninterrupted active-session acceptance remains Task 4.
+- [x] **Step 5: Commit only owned files and report integration API decisions/measurements.**
 
 ### Task 4: Deployment wiring and meaningful low-latency acceptance
 
