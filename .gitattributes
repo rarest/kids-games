@@ -1,1 +1,4 @@
 rescue/bundle.js -whitespace
+
+# Bundled Three.js shader strings preserve upstream whitespace.
+english/bundle.js linguist-generated -whitespace
