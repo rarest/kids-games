@@ -443,6 +443,8 @@ export function createEnemy(kind, pool) {
   const base = tracked(a).update;
   a.update = (e, t = 0) => {
     base(e, t);
+    // Mirror the anatomy on a patrol turn while keeping its face toward the camera.
+    group.scale.x *= (e.facing ?? 1) < 0 ? -1 : 1;
     for (const s of [-1, 1]) {
       const wing = group.getObjectByName(`wing-${s}`);
       if (wing) wing.rotation.z = s * (0.3 + Math.sin(t * 20) * 0.6);

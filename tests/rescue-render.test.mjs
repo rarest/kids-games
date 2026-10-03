@@ -4,6 +4,31 @@ import { Box3, Vector3, Frustum, Matrix4, OrthographicCamera } from 'three';
 import { LEVELS } from '../rescue/levels.js';
 async function module(name) { const m=await import(`../rescue/${name}.js`).catch(()=>null); assert.ok(m,`${name} rendering module must exist`); return m; }
 const meshes=g=>{const a=[];g.traverse(o=>{if(o.isMesh)a.push(o)});return a};
+test('enemy heads and beaks point in their patrol direction after a turn',async()=>{
+ const {createEnemy}=await module('models');
+ for(const [kind,front] of [['dog','muzzle'],['bird','beak'],['pelican','beak'],['caterpillar','segment-3'],['mouse','muzzle'],['kangaroo','muzzle'],['rhino','horn'],['lizard','head']]){
+  const a=createEnemy(kind);
+  try{for(const facing of [1,-1,1]){
+   a.update({x:10,y:3,w:1.7,h:1.2,facing},.2);a.group.updateMatrixWorld(true);
+   const tip=a.group.getObjectByName(front).getWorldPosition(new Vector3());
+   assert.ok((tip.x-10)*facing>0,`${kind} ${front} points against its ${facing} patrol direction`);
+  }}finally{a.dispose();}
+ }
+});
+test('both bird pupils remain visible from the game camera in either patrol direction',async()=>{
+ const {createEnemy}=await module('models'),{Raycaster}=await import('three');
+ for(const kind of ['bird','pelican']){
+  const a=createEnemy(kind);
+  try{for(const facing of [-1,1])for(const t of [.1,.25]){
+   a.update({x:0,y:0,w:1,h:1,facing},t);a.group.updateMatrixWorld(true);
+   for(const pupil of meshes(a.group).filter(m=>m.name==='pupil')){
+    const center=pupil.getWorldPosition(new Vector3()),origin=center.clone().add(new Vector3(0,3,34));
+    const hit=new Raycaster(origin,center.clone().sub(origin).normalize()).intersectObject(a.group,true).find(h=>h.object.visible);
+    assert.equal(hit?.object,pupil,`${kind} pupil obscured by ${hit?.object.name} facing ${facing}`);
+   }
+  }}finally{a.dispose();}
+ }
+});
 test('Chip and Dale have distinct recognizable accessories and actual articulated poses',async()=>{
  const {createAvatar}=await module('avatar');const chip=createAvatar('chip'),dale=createAvatar('dale');
  assert.ok(chip.group.getObjectByName('fedora'));assert.ok(dale.group.getObjectByName('floral-shirt'));
