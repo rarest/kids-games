@@ -94,7 +94,7 @@ deploy/        自动部署组件
 - 游戏 app 内双击不放大，长按和右键不打开网页菜单，操作不触发文字选择。
 - 自动画质根据实际帧耗时降低分辨率，最低为 0.5 倍，以减少慢设备上的绘制等待；完整场景和游戏规则保留。精细、流畅档仍可手动选择。
 - 独立联网服务为 `rescue/server.mjs`，同源 WebSocket 路径 `/rescue-ws`，默认监听 `127.0.0.1:8788`；与射击服务独立。原生双浏览器回归：`npm run test:rescue-online`；其中延迟专项使用真实街区、双向各 100ms 加有序 ±10ms 抖动，记录可信按键到实际绘制及连续 60 秒动态流量，可复用测试工具见 `tests/rescue-online-harness.mjs`。
-- 游戏厅目录和松鼠页面 CSS/bundle 版本统一为 `20261003rescue-online1`。源码在 `rescue/`；本地 Three.js 0.186.1，资源许可见 `rescue/THIRD-PARTY-NOTICES.txt`。修改源码后执行 `npm run build:rescue` 并提交原始 esbuild 产物 `rescue/bundle.js`。
+- 游戏厅目录和松鼠页面 CSS/bundle 版本统一为 `20261003rescue-online2`。源码在 `rescue/`；本地 Three.js 0.186.1，资源许可见 `rescue/THIRD-PARTY-NOTICES.txt`。修改源码后执行 `npm run build:rescue` 并提交原始 esbuild 产物 `rescue/bundle.js`。
 - 门禁：`npm run test:unit`、`npm run test:browser`。占满关卡回归在 `tests/rescue-occupied.test.mjs`；其 D 区使用正常双人独立输入，其余区域单人。浏览器原生 C 区通关检查在 `tests/rescue-browser.mjs`。
 - 公网入口与真实操作验收：`GAMES_TEST_ORIGIN=https://games.nblord.com RESCUE_EVIDENCE_DIR=/tmp/rescue-main node --test tests/rescue-integration-browser.mjs`；把域名换为 `https://games.596996.xyz` 可验收另一入口。测试启动独立 Chromium，截图和状态 JSON 保存到指定目录。
 
