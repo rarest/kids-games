@@ -90,6 +90,6 @@ deploy/        自动部署组件
 - 1P：A/D 移动，空格跳跃，E 举起/投掷，W+E 上投，举箱时按 S 蹲藏，S+空格下穿单向平台；2P：左右方向键移动，Enter 跳跃，右 Shift 举起/投掷，向上+右 Shift 上投，向下蹲藏，向下+Enter 下穿单向平台。Esc 暂停。可举起和扔出队友。
 - 手柄：方向键/左摇杆移动，A 跳跃，B 举起/投掷，Start 暂停；触屏使用方向盘与跳跃、举起按钮。
 - 进度保存到当前浏览器：继续游戏从区域起点恢复入口分数、收集物和生命；区域完成后保存分支解锁与下一站入口。最高分独立保留。
-- 游戏厅目录版本 `20261003rescue1`，松鼠页面 CSS/bundle 版本 `20261002rescue1`。源码在 `rescue/`；本地 Three.js 0.186.1，资源许可见 `rescue/THIRD-PARTY-NOTICES.txt`。修改源码后执行 `npm run build:rescue` 并提交原始 esbuild 产物 `rescue/bundle.js`。
+- 游戏厅目录版本 `20261003rescue1`，松鼠页面 CSS/bundle 版本 `20261003rescue2`。源码在 `rescue/`；本地 Three.js 0.186.1，资源许可见 `rescue/THIRD-PARTY-NOTICES.txt`。修改源码后执行 `npm run build:rescue` 并提交原始 esbuild 产物 `rescue/bundle.js`。
 - 门禁：`npm run test:unit`、`npm run test:browser`。占满关卡回归在 `tests/rescue-occupied.test.mjs`；其 D 区使用正常双人独立输入，其余区域单人。浏览器原生 C 区通关检查在 `tests/rescue-browser.mjs`。
 - 公网入口与真实操作验收：`GAMES_TEST_ORIGIN=https://games.nblord.com RESCUE_EVIDENCE_DIR=/tmp/rescue-main node --test tests/rescue-integration-browser.mjs`；把域名换为 `https://games.596996.xyz` 可验收另一入口。测试启动独立 Chromium，截图和状态 JSON 保存到指定目录。

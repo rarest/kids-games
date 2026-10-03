@@ -5,7 +5,13 @@ import { openBrowser, sleep } from "./game-browser-harness.mjs";
 const root = "/tmp/rescue-evidence/ui";
 const wait = async (b, e) => {
   for (let i = 0; i < 100; i++) {
-    if (await b.evaluate(e)) return;
+    try {
+      if (await b.evaluate(e)) return;
+    } catch (error) {
+      // A native navigation can replace the execution context between polls.
+      if (!/navigated|Execution context was destroyed/i.test(error.message))
+        throw error;
+    }
     await sleep(60);
   }
   assert.ok(await b.evaluate(e), e);
@@ -1188,3 +1194,88 @@ test(
     }
   },
 );
+
+// Additional playtest regressions use real native inputs and actual WebGL loss.
+test("native GPU context loss pauses physics and restores without replaying held movement", { timeout: 6e4 }, async () => {
+  const b = await openBrowser();
+  try {
+    await b.size(960, 640);
+    await b.navigate("games/rescue.html");
+    await click(b, "#start");
+    await wait(b, 'view.dataset.phase==="playing"');
+    await key(b, "KeyD");
+    await wait(b, "Number(view.dataset.x)>3.5");
+    await b.evaluate('window.__loss=view.getContext("webgl2").getExtension("WEBGL_lose_context");__loss.loseContext()');
+    await wait(b, "JSON.parse(view.dataset.graphics).contextLost===true");
+    assert.equal(await b.evaluate("view.dataset.phase"), "paused");
+    const frozen = await b.evaluate("({t:view.dataset.simTime,positions:JSON.parse(view.dataset.positions)})");
+    await sleep(350);
+    assert.deepEqual(await b.evaluate("({t:view.dataset.simTime,positions:JSON.parse(view.dataset.positions)})"), frozen);
+    // Resume and real page lifecycle changes must not bypass the lost-GPU pause.
+    await click(b, "#resume");
+    assert.equal(await b.evaluate("view.dataset.phase"), "paused");
+    await key(b, "Escape");
+    await key(b, "Escape", false);
+    assert.equal(await b.evaluate("view.dataset.phase"), "paused");
+    await b.call("Page.setWebLifecycleState", { state: "frozen" });
+    await b.call("Page.setWebLifecycleState", { state: "active" });
+    await b.call("Emulation.setFocusEmulationEnabled", { enabled: true });
+    await wait(b, "!document.hidden");
+    await click(b, "#resume");
+    await key(b, "KeyD", false);
+    await key(b, "KeyD");
+    await sleep(350);
+    assert.equal(await b.evaluate("view.dataset.phase"), "paused");
+    assert.deepEqual(await b.evaluate("({t:view.dataset.simTime,positions:JSON.parse(view.dataset.positions)})"), frozen);
+    assert.equal(await b.evaluate("JSON.parse(view.dataset.audio).active"), false);
+    assert.equal(await b.evaluate("JSON.parse(view.dataset.graphics).contextLost"), true);
+    await b.evaluate("__loss.restoreContext()");
+    await wait(b, "JSON.parse(view.dataset.graphics).webgl===true&&!JSON.parse(view.dataset.graphics).contextLost");
+    assert.equal(await b.evaluate("view.dataset.phase"), "paused");
+    await shot(b, "playtest-context-restored");
+    await click(b, "#resume");
+    await sleep(250);
+    assert.equal(Number(await b.evaluate("view.dataset.x")), frozen.positions[0].x);
+    await key(b, "KeyD", false);
+    await key(b, "KeyD");
+    await wait(b, `Number(view.dataset.x)>${frozen.positions[0].x + 0.4}`);
+    await key(b, "KeyD", false);
+    assert.deepEqual(b.errors, []);
+  } finally {
+    b.close();
+  }
+});
+test("native bonus teammate revival stays inside the reward room until its normal exit", { timeout: 6e5 }, async () => {
+  const b = await openBrowser();
+  try {
+    await b.size(568, 320);
+    await b.navigate("games/rescue.html");
+    await b.evaluate('(async()=>{const {createProfile}=await import("/rescue/profile.js");const p=createProfile(),v=p.load();v.campaign={completed:["0","A"],current:"C"};v.options.quality="low";v.options.music=false;v.options.players=2;v.run={areaId:"C",score:9000,flowers:48,stars:9,lives:[3,0],players:2,character:"chip"};if(!p.save(v).ok)throw Error("fixture rejected")})()');
+    await b.call("Page.reload");
+    await wait(b, 'view.dataset.phase==="home"');
+    await click(b, "#continue");
+    const route = await nativeCompleteC(b);
+    assert.equal(route.live.phase, "bonus");
+    assert.equal(Number(await b.evaluate("view.dataset.stars")), 9);
+    assert.equal(await b.evaluate("JSON.parse(view.dataset.positions)[1].lives"), 0);
+    await key(b, "KeyD");
+    await wait(b, "Number(view.dataset.stars)===10");
+    await key(b, "KeyD", false);
+    assert.equal(await b.evaluate("view.dataset.phase"), "bonus", "extra life must not prematurely complete the reward room");
+    const revived = await b.evaluate("JSON.parse(view.dataset.positions)[1]");
+    assert.equal(revived.lives, 1);
+    assert.equal(revived.hearts, 3);
+    assert.ok(revived.x >= 0 && revived.x < 24);
+    await sleep(150);
+    assert.equal(await b.evaluate("JSON.parse(view.dataset.positions)[1].groundId"), "bonus-floor");
+    await shot(b, "playtest-bonus-revived");
+    await key(b, "KeyD");
+    for (let i = 0; i < 400 && await b.evaluate("view.dataset.phase") !== "complete"; i++) await sleep(50);
+    await key(b, "KeyD", false);
+    assert.equal(await b.evaluate("view.dataset.phase"), "complete");
+    assert.ok(Number(await b.evaluate("view.dataset.flowers")) > 50);
+    assert.deepEqual(b.errors, []);
+  } finally {
+    b.close();
+  }
+});

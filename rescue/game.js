@@ -91,6 +91,10 @@ function runValues(areaId, source = state) {
   };
 }
 function activate(value, finishEffects = false) {
+  if (value && scene?.diagnostics().contextLost) {
+    openPanel("pause");
+    return;
+  }
   if (state) setPaused(state, !value);
   controls.clear();
   audio.setActive(value && !document.hidden, {
@@ -324,7 +328,14 @@ function frame(now) {
 let renderedLevel;
 function restartLoop() {
   last = 0;
-  if (scene && state && raf === null && !disposed && !document.hidden)
+  if (
+    scene &&
+    state &&
+    raf === null &&
+    !disposed &&
+    !document.hidden &&
+    !scene.diagnostics().contextLost
+  )
     raf = requestAnimationFrame(frame);
 }
 function suspend() {
@@ -430,6 +441,11 @@ window.addEventListener("pageshow", () => {
 });
 try {
   scene = createScene(canvas);
+  canvas.addEventListener("webglcontextlost", suspend);
+  canvas.addEventListener("webglcontextrestored", () => {
+    resize();
+    restartLoop();
+  });
   scene.setQuality(saved.options.quality);
   home();
   renderedLevel = state.level;
