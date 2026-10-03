@@ -1211,6 +1211,24 @@ test("native GPU context loss pauses physics and restores without replaying held
     const frozen = await b.evaluate("({t:view.dataset.simTime,positions:JSON.parse(view.dataset.positions)})");
     await sleep(350);
     assert.deepEqual(await b.evaluate("({t:view.dataset.simTime,positions:JSON.parse(view.dataset.positions)})"), frozen);
+    // Resume and real page lifecycle changes must not bypass the lost-GPU pause.
+    await click(b, "#resume");
+    assert.equal(await b.evaluate("view.dataset.phase"), "paused");
+    await key(b, "Escape");
+    await key(b, "Escape", false);
+    assert.equal(await b.evaluate("view.dataset.phase"), "paused");
+    await b.call("Page.setWebLifecycleState", { state: "frozen" });
+    await b.call("Page.setWebLifecycleState", { state: "active" });
+    await b.call("Emulation.setFocusEmulationEnabled", { enabled: true });
+    await wait(b, "!document.hidden");
+    await click(b, "#resume");
+    await key(b, "KeyD", false);
+    await key(b, "KeyD");
+    await sleep(350);
+    assert.equal(await b.evaluate("view.dataset.phase"), "paused");
+    assert.deepEqual(await b.evaluate("({t:view.dataset.simTime,positions:JSON.parse(view.dataset.positions)})"), frozen);
+    assert.equal(await b.evaluate("JSON.parse(view.dataset.audio).active"), false);
+    assert.equal(await b.evaluate("JSON.parse(view.dataset.graphics).contextLost"), true);
     await b.evaluate("__loss.restoreContext()");
     await wait(b, "JSON.parse(view.dataset.graphics).webgl===true&&!JSON.parse(view.dataset.graphics).contextLost");
     assert.equal(await b.evaluate("view.dataset.phase"), "paused");

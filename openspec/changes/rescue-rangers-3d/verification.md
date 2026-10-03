@@ -127,4 +127,6 @@
 
 修复最小范围为当前奖励房安全检查点及绘图丢失暂停/恢复渲染；资源版本升级 `20261003rescue2`。受影响单元90/90及完整带战斗11区回归1/1通过，合计91项。真实页面的键盘双人、六视口触控、GPU丢失恢复和实际C奖励复活四项通过。生命周期检查初次因 Chrome 导航期间 Runtime.evaluate 报“Inspected target navigated or closed”失败，等待函数仅重试导航/上下文替换瞬态错误，单独重跑冻结与 BFCache 原生返回1/1通过；没有修改游戏逻辑来处理该测试脚本竞争。日志 `/tmp/rescue-playtest-unit-green.log`、`/tmp/rescue-playtest-occupied-green.log`、`/tmp/rescue-playtest-browser-green.log`、`/tmp/rescue-playtest-navigation-green.log`。
 
-原始 esbuild 独立重建与提交 bundle 逐字节相同，SHA-256 `d68cd0b9f58ffcca21beb79a0675ba121ef16f270fffbb051fa232dd40adc479`；`git diff --check` 通过。此修复尚在发布前复核阶段。
+原始 esbuild 独立重建与提交 bundle 逐字节相同，SHA-256 `ba14929a3d257789be7784bb21998a084eb87317fc2779f881f7d31dd5faac8b`；`git diff --check` 通过。此修复尚在发布前复核阶段。
+
+独立复核发现一项 Important：GPU 丢失期间 frozen/active 返回后点 Resume，600ms 内模拟时间0.083→0.675、x2.881→7.141且音频恢复；证据 `/tmp/rescue-playtest-independent-gpu-race-review.json`。根代理补充 Resume、Esc、真实页面冻结/返回与按住D的回归，当前初修版本按预期1/1失败（`/tmp/rescue-playtest-gpu-race-red.log`）；以统一 activate 的暂停 guard 及 restartLoop 的真实 contextLost guard 修正，避免新区域开始和生命周期绕过。原生键盘双人、冻结/BFCache及加强GPU三项3/3通过（`/tmp/rescue-playtest-gpu-race-green.log`）。独立复审该 Important 为 ADDRESSED，无新增 Critical/Important/Minor；最终原始 esbuild 字节匹配已核对。尚待公网发布核验。
