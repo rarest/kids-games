@@ -44,9 +44,15 @@ export function createRescueClient({onState=()=>{},onStatus=()=>{},url=defaultUR
    }else if(packet.type==='state'){
     if(slot===null||!packet.room||!Number.isSafeInteger(packet.epoch)||!Number.isSafeInteger(packet.tick))return;
     if(epoch!==null&&(packet.epoch<epoch||(packet.epoch===epoch&&packet.tick<tick)))return;
+    const enteringPlaying=packet.epoch!==epoch&&packet.room.mode==='playing';
     try{authority=decodeFrame(packet,authority);}catch{lost();return;}
     epoch=packet.epoch;tick=packet.tick;room=packet.room;
     if(!suspended&&room.mode==='playing'&&['playing','bonus'].includes(authority.status))prediction.receive(authority,{epoch,ack:packet.acks[slot],inputs:packet.inputs});else resetPrediction();
+    // Start the epoch's normal input stream before rendering/UI can delay its first RAF.
+    // Sequence, replay and acknowledgement use the existing fixed-step path.
+    if(enteringPlaying&&!suspended&&room.members?.[slot]?.ready){
+     advance({},1/60);if(socket!==ws)return;
+    }
     onState(authority,packet);notify('connected');
    }else if(packet.type==='pong'){
     if(packet.at===pingAt){status.rtt=Math.max(0,clock.now()-packet.at);pingAt=null;notify();}

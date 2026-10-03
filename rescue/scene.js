@@ -69,7 +69,7 @@ export function createQualityController(deviceDpr = 1) {
     if (q.mode === "auto" && warmup > 30) {
       slow = ms > 28 ? slow + 1 : Math.max(0, slow - 2);
       if (slow >= 60) {
-        q.dpr = Math.max(0.75, q.dpr * 0.75);
+        q.dpr = Math.max(0.5, q.dpr * 0.75);
         q.shadows = false;
         slow = 0;
       }
@@ -413,7 +413,7 @@ export function createScene(canvas) {
   try {
     renderer = new THREE.WebGLRenderer({
       canvas,
-      antialias: true,
+      antialias: false,
       alpha: false,
       powerPreference: "high-performance",
     });

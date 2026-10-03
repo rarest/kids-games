@@ -60,7 +60,7 @@ test('one command per tick, acknowledgements, duplicates/old epoch, held input e
   assert.equal(a.state.events.filter(e=>e.type==='throw').length,1);
   assert.equal(h.last(a).inputs[0].action,false);
   await h.send(a,{type:'pause'});const paused=h.last(a);assert.ok(paused.epoch>epoch);
-  await h.commands(a,[{move:1}],epoch);assert.ok(h.last(a,'error'));
+  const errors=a.packets.filter(p=>p.type==='error').length;await h.commands(a,[{move:1}],epoch);assert.equal(a.packets.filter(p=>p.type==='error').length,errors);
   const x=a.state.players[0].x;await h.tick(3);assert.equal(a.state.players[0].x,x);
 });
 
@@ -207,4 +207,18 @@ test('a real slow reader skips congested snapshots and later receives complete c
   assert.ok(ticks.some((tick,i)=>i>0&&tick-ticks[i-1]>3),'slow consumer must omit old snapshots');
   assert.equal(h.last(a).tick,h.last(b).tick);assert.deepEqual(a.state,b.state);
   assert.equal(b.state.enemies.length,1000);assert.ok(b.state.enemies[0].timer>7.9);
+});
+
+test('late positive integer input epochs are quietly discarded without changing input, readiness or stale deadline',async t=>{
+ const h=await setup(t),[a,b]=await h.pair();await h.start(a,b);const old=h.last(a).epoch;
+ await h.send(a,{type:'pause'});await h.send(a,{type:'resume'});const current=h.last(a).epoch;
+ const errors=()=>a.packets.filter(p=>p.type==='error').length;
+ const before=errors(),position=a.state.players[0].x,ready=h.last(a).room.members.map(m=>m.ready);
+ await h.commands(a,[{move:1,jump:true,action:true}],old);await h.tick(3);
+ assert.equal(errors(),before,'normal late input should not become a player-visible protocol error');
+ assert.deepEqual(h.last(a).acks,[0,0]);assert.equal(a.state.players[0].x,position);assert.deepEqual(h.last(a).room.members.map(m=>m.ready),ready);
+ await h.commands(a,[{}],current);await h.commands(b,[{}],current);await h.tick(3);assert.deepEqual(h.last(a).acks,[1,1],'old seq did not alter received/queue');
+ await h.poll(300);await h.commands(a,[{move:1}],old);await h.commands(b,[{move:1}],old);await h.poll(60);
+ assert.equal(h.last(a).room.mode,'paused','late old packets do not refresh the stale deadline');assert.equal(errors(),before);
+ for(const epoch of [current+100,1.5,String(old),-1,0,null]){const count=errors();await h.commands(a,[{}],epoch);assert.equal(errors(),count+1,`invalid/future epoch ${epoch} stays rejected`);}
 });

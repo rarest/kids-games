@@ -110,6 +110,8 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
     send(member.ws,{type:'joined',code:room.code,slot,token:member.token});broadcast(room);
   }
   function acceptInputs(room,member,message) {
+    // A pause/transition can overtake inputs already travelling on the peer's socket.
+    if(Number.isSafeInteger(message.epoch)&&message.epoch>=1&&message.epoch<room.epoch)return;
     if(message.epoch!==room.epoch)throw Error('输入版本已过期');
     if(room.mode!=='playing')throw Error('游戏尚未运行');
     if(!Array.isArray(message.commands)||!message.commands.length||message.commands.length>MAX_QUEUE)throw Error('输入队列格式无效');
