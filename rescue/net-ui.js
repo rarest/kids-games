@@ -22,6 +22,8 @@ export function updateRoomUI(status,available) {
   $('pause-copy').textContent=!available?'本设备正在恢复，恢复后由房主继续。':!ready?'等待两位搭档连接并准备。':host?'两位搭档已准备，点击继续冒险。':'等待房主继续冒险。';
 }
 export function resetRoomUI(){
+  updateRoomUI({connection:'idle',message:'',rtt:null,code:null,slot:null,room:null,suspended:false},true);
+  $('online-input').value='';
   $('online-hud').hidden=true;
   $('online-leave').hidden=true;
   $('home').hidden=false;

@@ -90,6 +90,29 @@ test('native online settings stay temporary and leaving restores local options a
   await click(host,'#options-panel .close-panel');await click(host,'#online-leave');for(const b of [host,guest])await wait(b,'view.dataset.phase==="home"');
   assert.equal(await host.evaluate('localStorage.getItem("rescue-rangers-3d-v1")'),saved);
   await wait(host,'JSON.parse(view.dataset.audio).music&&JSON.parse(view.dataset.audio).sound&&JSON.parse(view.dataset.graphics).quality==="auto"');
+  await click(host,'#online-open');assert.deepEqual(await host.evaluate('({code:document.querySelector("#online-code").textContent,role:document.querySelector("#online-role").textContent,members:document.querySelector("#online-members").textContent,message:document.querySelector("#online-message").textContent,startHidden:document.querySelector("#online-start").hidden,startDisabled:document.querySelector("#online-start").disabled,entryHidden:document.querySelector("#online-entry").hidden})'),{code:'——',role:'你的角色：等待加入',members:'创建房间，把房间号发给搭档；也可以输入房间号加入。',message:'尚未连接',startHidden:true,startDisabled:true,entryHidden:false});
   assert.equal(await host.evaluate('document.querySelector("#players-two").getAttribute("aria-pressed")'),'true');assert.equal(await host.evaluate('document.querySelector("#dale").getAttribute("aria-pressed")'),'true');assert.deepEqual(host.errors,[]);assert.deepEqual(guest.errors,[]);
+ }finally{await pair.close();}
+});
+
+
+test('native pending input protection waits for actual paused authority before drawn readiness and manual resume',{timeout:120000},async()=>{
+ const pair=await openOnlinePair();const {host,guest}=pair;try{
+  await createRoom(pair);await observeOnlinePhases(host);await observeOnlinePhases(guest);
+  const before=(await snapshot(guest)).network,baseline=pair.networkTrace().find(p=>p.slot===1).trace.filter(e=>e.type==='ready'&&e.ready).length;
+  await guest.evaluate('window.__pendingObserved=0;new MutationObserver(()=>{__pendingObserved=Math.max(__pendingObserved,JSON.parse(view.dataset.network).pending??0)}).observe(view,{attributes:true,attributeFilter:["data-network"]});void 0');
+  pair.holdState(1);
+  await wait(guest,'JSON.parse(view.dataset.network).suspended&&JSON.parse(view.dataset.network).connection==="connected"');
+  await wait(host,'JSON.parse(view.dataset.network).room.mode==="paused"&&!JSON.parse(view.dataset.network).room.members[1].ready');
+  assert.equal(await guest.evaluate('__pendingObserved'),120,'actual pending limit triggered the native guard');
+  const suspended=await snapshot(guest);assert.equal(suspended.network.room.mode,'playing','withheld authority remains old playing');assert.equal(suspended.network.pending,0,'client guard clears command history');
+  assert.equal(JSON.parse(suspended.audio).active,false);assert.equal(suspended.phase,'paused');
+  const frames=JSON.parse(suspended.graphics).frames;await wait(guest,`JSON.parse(view.dataset.graphics).frames>${frames+2}`);
+  assert.equal(pair.networkTrace().find(p=>p.slot===1).trace.filter(e=>e.type==='ready'&&e.ready).length,baseline,'old playing authority cannot produce ready or a congestion loop');
+  const withheld=pair.releaseState(1);assert.ok(withheld>0);await wait(host,'!document.querySelector("#resume").disabled');await wait(guest,'!JSON.parse(view.dataset.network).suspended');
+  const recovered=await snapshot(guest);assert.equal(recovered.phase,'paused');assert.ok(recovered.network.epoch>before.epoch);assert.equal(recovered.network.room.run,before.room.run);assert.equal(recovered.network.slot,1);assert.equal(recovered.network.pending,0);
+  assert.equal(pair.networkTrace().find(p=>p.slot===1).trace.filter(e=>e.type==='ready'&&e.ready).length,baseline+1,'actual paused authority produces one readiness transition');
+  console.log('native congestion recovery',JSON.stringify({withheld,pendingPeak:await guest.evaluate('__pendingObserved'),epochBefore:before.epoch,epochAfter:recovered.network.epoch,slot:recovered.network.slot,framesBefore:frames,framesAfter:JSON.parse(recovered.graphics).frames}));
+  await resumeRecovery(pair);assert.deepEqual(host.errors,[]);assert.deepEqual(guest.errors,[]);
  }finally{await pair.close();}
 });

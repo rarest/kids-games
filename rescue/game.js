@@ -33,6 +33,7 @@ let online = null,
   onlineGeneration = 0,
   readySent = false,
   readyFrame = null,
+  congestionEpoch = null,
   onlineLayoutPrepared = false,
   lifecycleAvailable = true,
   cachedOnline = false,
@@ -155,6 +156,7 @@ function closePanel() {
   } else activate(false);
 }
 function home() {
+  congestionEpoch = null;
   if (onlineOriginalOptions) {
     saved.options = onlineOriginalOptions;
     onlineOriginalOptions = null;
@@ -377,11 +379,19 @@ function frame(now) {
   const beforeDraw = scene.diagnostics().frames;
   scene.update(visual, dt);
   const afterDraw = scene.diagnostics().frames;
-  if (online?.authority && !readySent && deviceAvailable() && onlineStatus?.connection === "connected" && afterDraw > beforeDraw) {
+  // A paused/unready update acknowledges ready:false on the same ordered socket.
+  // Until it arrives, withheld old playing authority cannot end congestion recovery.
+  const congestionCleared = congestionEpoch === null || (
+    online?.room?.mode === "paused" &&
+    online.room.members[online.slot]?.ready === false &&
+    online.diagnostics().epoch > congestionEpoch
+  );
+  if (online?.authority && !readySent && congestionCleared && deviceAvailable() && onlineStatus?.connection === "connected" && afterDraw > beforeDraw) {
     // Wait for another actual draw after layout/level preparation before advertising readiness.
     if (readyFrame === null) readyFrame = afterDraw;
     else if (afterDraw > readyFrame) {
       readySent = true;
+      congestionEpoch = null;
       online.setReady(true);
     }
   }
@@ -528,7 +538,7 @@ function recover() {
   restartLoop();
 }
 function refreshOnlineUI() {
-  if (onlineStatus) updateRoomUI(onlineStatus, deviceAvailable());
+  if (onlineStatus) updateRoomUI(onlineStatus, deviceAvailable() && congestionEpoch === null);
 }
 function receiveOnline(authority, packet) {
   state = authority;
@@ -553,8 +563,11 @@ function receiveOnline(authority, packet) {
     $("home-panel").hidden = true;
     $("hud").hidden = false;
     $("touch-controls").hidden = false;
-    if (newRun) { completed = false; returnPanel = null; hidePanels(); resize(); activate(packet.room.mode === "playing"); }
-    if (packet.room.mode === "paused") {
+    if (newRun) { completed = false; returnPanel = null; hidePanels(); resize(); activate(packet.room.mode === "playing" && congestionEpoch === null); }
+    if (congestionEpoch !== null && packet.room.mode === "playing") {
+      if (panel !== "pause") openPanel("pause");
+      activate(false);
+    } else if (packet.room.mode === "paused") {
       if (!panel || panel === "online") openPanel("pause");
       activate(false);
     } else if (packet.room.mode === "playing" && ["pause", "online"].includes(panel)) {
@@ -577,6 +590,7 @@ function enterOnline() {
   const generation = ++onlineGeneration;
   readySent = false;
   readyFrame = null;
+  congestionEpoch = null;
   onlineLayoutPrepared = false;
   onlineRun = null;
   controls.setPlayers(1);
@@ -589,8 +603,19 @@ function enterOnline() {
     onState(authority, packet) { if (generation === onlineGeneration) receiveOnline(authority, packet); },
     onStatus(status) {
       if (generation !== onlineGeneration) return;
+      // Explicit page/GPU suspension clears readySent before client.suspend().
+      // A new suspended status while ready is therefore the client's internal guard.
+      const internallySuspended = status.suspended && !onlineStatus?.suspended && readySent && deviceAvailable();
       onlineStatus = status;
-      if (status.connection === "reconnecting") { readySent = false; readyFrame = null; }
+      if (internallySuspended) {
+        congestionEpoch = online.diagnostics().epoch;
+        readySent = false;
+        readyFrame = null;
+        controls.clear();
+        audio.setActive(false);
+        if (screen === "game" && panel !== "pause") openPanel("pause");
+      }
+      if (status.connection === "reconnecting") { readySent = false; readyFrame = null; congestionEpoch = null; }
       if (["reconnecting", "closed", "error"].includes(status.connection)) {
         controls.clear();
         audio.setActive(false);
