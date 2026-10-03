@@ -6,6 +6,9 @@ import { createControls } from "./controls.js";
 import { presentCompletion } from "./completion.js";
 import { createProfile } from "./profile.js";
 import { createAudio } from "./audio.js";
+import { createRescueClient } from "./net-client.js";
+import { updateRoomUI, resetRoomUI } from "./net-ui.js";
+import { frameDurations } from "./frame-time.js";
 const $ = (id) => document.getElementById(id),
   canvas = $("view");
 // The save point is the beginning of a region; replaying never duplicates mid-region earnings.
@@ -24,6 +27,18 @@ let scene,
   entryRun = null,
   noticeTimer,
   lastSaveOk = !profile.error;
+let online = null,
+  onlineOriginalOptions = null,
+  onlineStatus = null,
+  onlineGeneration = 0,
+  readySent = false,
+  readyFrame = null,
+  onlineLayoutPrepared = false,
+  lifecycleAvailable = true,
+  cachedOnline = false,
+  renderedPositions = [];
+const deviceAvailable = () => lifecycleAvailable && !document.hidden && !!scene && !scene.diagnostics().contextLost;
+const teamReady = () => !!online?.room?.members.every(member => member?.connected && member.ready);
 const controls = createControls({
   players: saved.options.players,
   joystick: $("joystick"),
@@ -46,6 +61,7 @@ function notify(text, sticky = false) {
     }, 5000);
 }
 function save() {
+  if (online) return true;
   const result = profile.save(saved);
   lastSaveOk = result.ok;
   if (!result.ok) notify(result.error, true);
@@ -95,9 +111,9 @@ function activate(value, finishEffects = false) {
     openPanel("pause");
     return;
   }
-  if (state) setPaused(state, !value);
+  if (state && !online) setPaused(state, !value);
   controls.clear();
-  audio.setActive(value && !document.hidden, {
+  audio.setActive(value && !document.hidden && (!online || (online.room?.mode === "playing" && deviceAvailable())), {
     finishEffects: finishEffects && !document.hidden,
   });
   last = 0;
@@ -110,6 +126,8 @@ function hidePanels() {
 }
 function openPanel(name, finishEffects = false) {
   if (panel === name) return;
+  if (online && screen === "game" && online.room?.mode === "playing" && !["complete", "gameover"].includes(name))
+    online.command("pause");
   activate(false, finishEffects);
   hidePanels();
   panel = name;
@@ -119,6 +137,11 @@ function openPanel(name, finishEffects = false) {
   canvas.dataset.phase = name === "pause" ? "paused" : name;
 }
 function closePanel() {
+  if (online && panel === "pause") {
+    controls.clear();
+    if (online.slot === 0 && teamReady() && deviceAvailable()) online.command("resume");
+    return;
+  }
   const previous = returnPanel;
   returnPanel = null;
   hidePanels();
@@ -132,6 +155,23 @@ function closePanel() {
   } else activate(false);
 }
 function home() {
+  if (onlineOriginalOptions) {
+    saved.options = onlineOriginalOptions;
+    onlineOriginalOptions = null;
+    audio.setOptions(saved.options);
+    scene?.setQuality(saved.options.quality);
+  }
+  if (online) {
+    const old = online;
+    online = null;
+    onlineStatus = null;
+    onlineGeneration++;
+    old.leave();
+    old.dispose();
+  }
+  document.body.dataset.online = "false";
+  resetRoomUI();
+  controls.setPlayers(saved.options.players);
   returnPanel = null;
   hidePanels();
   screen = "home";
@@ -196,29 +236,38 @@ function startArea(id, { resume = false, reset = false, retry = false } = {}) {
   audio.unlock();
 }
 function renderMap() {
-  const allowed = availableAreas(saved.campaign);
+  const campaign = online ? state.campaign : saved.campaign;
+  const allowed = availableAreas(campaign);
   $("area-grid").replaceChildren();
   for (const level of LEVELS) {
     const b = document.createElement("button");
     b.dataset.area = level.id;
-    b.disabled = !allowed.includes(level.id);
+    b.disabled = !allowed.includes(level.id) || (!!online && (online.slot !== 0 || state.status !== "cleared" || !teamReady()));
     const title = document.createElement("b");
     title.textContent = level.id;
     const label = document.createElement("span");
     label.textContent = level.name;
     b.append(title, label);
-    if (saved.campaign.completed.includes(level.id)) {
+    if (campaign.completed.includes(level.id)) {
       b.setAttribute("aria-label", `${level.id} ${level.name}，已完成，可回玩`);
       b.append(document.createTextNode("✓ 已完成"));
     }
-    b.addEventListener("click", () => startArea(level.id));
+    b.addEventListener("click", () => online ? online.command("next", { areaId: level.id }) : startArea(level.id));
     $("area-grid").append(b);
   }
-  $("map-copy").textContent = saved.campaign.ending
+  $("map-copy").textContent = campaign.ending
     ? "朋友已获救！也可以回到喜欢的区域再冒险。"
     : "完成区域后，新的路线会亮起来。";
 }
 function complete() {
+  if (online) {
+    if (!completed) {
+      completed = true;
+      presentCompletion(state, document);
+      openPanel("complete", true);
+    }
+    return;
+  }
   if (completed) return;
   completed = true;
   const next = saved.campaign.current;
@@ -287,7 +336,9 @@ function diagnostics() {
     flowers: String(state.flowers),
     stars: String(state.stars),
     simTime: String(state.time),
-    completed: JSON.stringify(saved.campaign.completed),
+    completed: JSON.stringify(online ? state.completed : saved.campaign.completed),
+    renderPositions: JSON.stringify(renderedPositions),
+    network: JSON.stringify(online ? {...online.diagnostics(),room:online.room} : null),
     physics: JSON.stringify({
       platforms: state.platforms,
       objects: state.objects,
@@ -300,18 +351,19 @@ function diagnostics() {
 function frame(now) {
   raf = null;
   if (disposed || !scene || !state || document.hidden) return;
-  const dt = last ? Math.min(1 / 30, (now - last) / 1000) : 1 / 60;
+  const duration = frameDurations(now, last), dt = duration.local;
   last = now;
   if (screen === "game") {
     const wasPanel = panel,
       inputs = controls.sample();
-    if (!panel && !wasPanel) stepGame(state, inputs, dt);
+    if (online) online.advance(panel || wasPanel ? {} : inputs[0] ?? {}, duration.online);
+    else if (!panel && !wasPanel) stepGame(state, inputs, dt);
     if (state.level !== renderedLevel) {
       scene.setLevel(state.level);
       renderedLevel = state.level;
     }
     audio.consume(state);
-    if (state.score > saved.bestScore) {
+    if (!online && state.score > saved.bestScore) {
       saved.bestScore = state.score;
       save();
       optionsUI();
@@ -320,8 +372,20 @@ function frame(now) {
     else if (state.status === "gameover" && !panel) openPanel("gameover", true);
     hud();
   }
-  if (screen === "home" && !panel) state.time += dt;
-  scene.update(state, dt);
+  if (screen === "home" && !panel && !online) state.time += dt;
+  const visual = online?.render() ?? state;
+  const beforeDraw = scene.diagnostics().frames;
+  scene.update(visual, dt);
+  const afterDraw = scene.diagnostics().frames;
+  if (online?.authority && !readySent && deviceAvailable() && onlineStatus?.connection === "connected" && afterDraw > beforeDraw) {
+    // Wait for another actual draw after layout/level preparation before advertising readiness.
+    if (readyFrame === null) readyFrame = afterDraw;
+    else if (afterDraw > readyFrame) {
+      readySent = true;
+      online.setReady(true);
+    }
+  }
+  renderedPositions = visual.players.map(q => ({id:q.id,x:q.x,y:q.y}));
   diagnostics();
   raf = requestAnimationFrame(frame);
 }
@@ -339,6 +403,10 @@ function restartLoop() {
     raf = requestAnimationFrame(frame);
 }
 function suspend() {
+  lifecycleAvailable = false;
+  readySent = false;
+  readyFrame = null;
+  online?.suspend();
   controls.clear();
   audio.setActive(false);
   if (screen === "game" && !panel) openPanel("pause");
@@ -347,6 +415,7 @@ function suspend() {
   last = 0;
 }
 function retry() {
+  if (online) { online.command("retry"); return; }
   startArea(state.areaLevel.id, { retry: true });
 }
 for (const [id, fn] of Object.entries({
@@ -371,7 +440,8 @@ for (const [id, fn] of Object.entries({
     openPanel("options");
   },
   "bonus-finish": () => {
-    finishBonus(state);
+    if (online) online.command("finishBonus");
+    else finishBonus(state);
   },
 }))
   $(id).addEventListener("click", () => {
@@ -414,15 +484,18 @@ observer.observe($("stage"));
 window.addEventListener("blur", () => {
   controls.clear();
   audio.setActive(false);
-  if (screen === "game" && !panel) openPanel("pause");
+  if (online) suspend();
+  else if (screen === "game" && !panel) openPanel("pause");
 });
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) suspend();
-  else restartLoop();
+  else recover();
 });
+window.addEventListener("focus", () => { if (online) recover(); });
 document.addEventListener("freeze", suspend);
-document.addEventListener("resume", restartLoop);
+document.addEventListener("resume", recover);
 window.addEventListener("pagehide", (e) => {
+  cachedOnline = !!online && e.persisted;
   suspend();
   if (!e.persisted) {
     disposed = true;
@@ -435,20 +508,122 @@ window.addEventListener("pagehide", (e) => {
 });
 window.addEventListener("pageshow", () => {
   if (!disposed) {
+    if (cachedOnline) {
+      cachedOnline = false;
+      const previous = online;
+      online = null;
+      onlineGeneration++;
+      previous?.dispose();
+      enterOnline();
+    }
     resize();
-    restartLoop();
+    recover();
   }
 });
+function recover() {
+  lifecycleAvailable = true;
+  controls.clear();
+  if (online) { readySent = false; readyFrame = null; }
+  refreshOnlineUI();
+  restartLoop();
+}
+function refreshOnlineUI() {
+  if (onlineStatus) updateRoomUI(onlineStatus, deviceAvailable());
+}
+function receiveOnline(authority, packet) {
+  state = authority;
+  if (!scene) return;
+  if (!onlineLayoutPrepared) {
+    onlineLayoutPrepared = true;
+    document.body.dataset.screen = "game";
+    $("home-panel").hidden = true;
+    resize();
+  }
+  if (state.level !== renderedLevel) {
+    scene.setLevel(state.level);
+    renderedLevel = state.level;
+  }
+  if (packet.room.mode === "lobby") {
+    if (panel !== "online") openPanel("online");
+  } else {
+    const newRun = screen !== "game" || onlineRun !== packet.room.run;
+    onlineRun = packet.room.run;
+    screen = "game";
+    document.body.dataset.screen = "game";
+    $("home-panel").hidden = true;
+    $("hud").hidden = false;
+    $("touch-controls").hidden = false;
+    if (newRun) { completed = false; returnPanel = null; hidePanels(); resize(); activate(packet.room.mode === "playing"); }
+    if (packet.room.mode === "paused") {
+      if (!panel || panel === "online") openPanel("pause");
+      activate(false);
+    } else if (packet.room.mode === "playing" && ["pause", "online"].includes(panel)) {
+      hidePanels();
+      activate(true);
+      canvas.focus({preventScroll:true});
+    } else if (!panel && audio.diagnostics().active !== deviceAvailable()) audio.setActive(deviceAvailable());
+    if (state.status === "cleared") complete();
+    else if (state.status === "gameover" && !panel) openPanel("gameover", true);
+    hud();
+  }
+  diagnostics();
+  if (raf === null) restartLoop();
+}
+let onlineRun = null;
+function enterOnline() {
+  if (online) return online;
+  // Preserve the first snapshot across BFCache transport reconstruction.
+  onlineOriginalOptions ??= {...saved.options};
+  const generation = ++onlineGeneration;
+  readySent = false;
+  readyFrame = null;
+  onlineLayoutPrepared = false;
+  onlineRun = null;
+  controls.setPlayers(1);
+  document.body.dataset.online = "true";
+  $("online-leave").hidden = false;
+  $("home").hidden = true;
+  // Construction may synchronously report a saved-session reconnect. Callbacks do not
+  // dereference a not-yet-assigned client; accepted states arrive asynchronously.
+  online = createRescueClient({
+    onState(authority, packet) { if (generation === onlineGeneration) receiveOnline(authority, packet); },
+    onStatus(status) {
+      if (generation !== onlineGeneration) return;
+      onlineStatus = status;
+      if (status.connection === "reconnecting") { readySent = false; readyFrame = null; }
+      if (["reconnecting", "closed", "error"].includes(status.connection)) {
+        controls.clear();
+        audio.setActive(false);
+      }
+      refreshOnlineUI();
+      if (status.message && status.connection === "error") notify(status.message);
+      // dispose keeps authority for BFCache; a server-closed room clears it.
+      if (status.connection === "closed" && online && !online.authority && !cachedOnline) {
+        const message = status.message;
+        home();
+        notify(message);
+      } else if (status.connection === "reconnecting" && screen === "game" && !panel) openPanel("pause");
+    },
+  });
+  return online;
+}
+$("online-open").addEventListener("click", () => { openPanel("online"); $("online-hud").hidden = true; });
+$("online-create").addEventListener("click", () => { audio.unlock(); enterOnline().create(); });
+$("online-join").addEventListener("click", () => { audio.unlock(); enterOnline().join($("online-input").value); });
+$("online-start").addEventListener("click", () => { audio.unlock(); if (teamReady() && deviceAvailable()) online?.command("start"); });
+for (const b of document.querySelectorAll("[data-online-leave]")) b.addEventListener("click", home);
+for (const event of ["contextmenu", "selectstart"]) $("app").addEventListener(event, e => e.preventDefault());
 try {
   scene = createScene(canvas);
   canvas.addEventListener("webglcontextlost", suspend);
   canvas.addEventListener("webglcontextrestored", () => {
     resize();
-    restartLoop();
+    recover();
   });
   scene.setQuality(saved.options.quality);
   home();
   renderedLevel = state.level;
+  try { if (sessionStorage.getItem("rescue.online.session.v1")) { openPanel("online"); enterOnline(); } } catch { /* Session storage may be unavailable. */ }
   if (profile.error) notify(profile.error, true);
   restartLoop();
 } catch (error) {
