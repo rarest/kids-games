@@ -4,6 +4,37 @@ import { Box3, Vector3, Frustum, Matrix4, OrthographicCamera } from 'three';
 import { LEVELS } from '../rescue/levels.js';
 async function module(name) { const m=await import(`../rescue/${name}.js`).catch(()=>null); assert.ok(m,`${name} rendering module must exist`); return m; }
 const meshes=g=>{const a=[];g.traverse(o=>{if(o.isMesh)a.push(o)});return a};
+test('bird eye pairs are centered on their offset head rather than on the body',async()=>{
+ const {createEnemy}=await module('models');
+ for(const kind of ['bird','pelican']){
+  const a=createEnemy(kind);
+  try{
+   a.group.updateMatrixWorld(true);
+   const head=a.group.getObjectByName('bird-head').getWorldPosition(new Vector3()),eyes=meshes(a.group).filter(m=>m.name==='eye');
+   assert.equal(eyes.length,2);
+   const positions=eyes.map(m=>m.getWorldPosition(new Vector3()));
+   assert.ok(Math.abs((positions[0].x+positions[1].x)/2-head.x)<.005,`${kind} eyes are offset from their head`);
+  }finally{a.dispose();}
+ }
+});
+test('bird eyes meet the head surface and pupils meet the eye whites',async()=>{
+ const {createEnemy}=await module('models'),{Raycaster}=await import('three');
+ for(const kind of ['bird','pelican']){
+  const a=createEnemy(kind);
+  try{
+   a.group.updateMatrixWorld(true);const head=a.group.getObjectByName('bird-head');
+   const eyes=meshes(a.group).filter(m=>m.name==='eye'),pupils=meshes(a.group).filter(m=>m.name==='pupil');
+   assert.equal(eyes.length,2);assert.equal(pupils.length,2);
+   for(const [i,eye]of eyes.entries()){
+    const center=eye.getWorldPosition(new Vector3()),surface=new Raycaster(new Vector3(center.x,center.y,10),new Vector3(0,0,-1)).intersectObject(head)[0];
+    assert.ok(surface,`${kind} eye lies outside the head silhouette`);
+    const white=new Box3().setFromObject(eye),pupil=new Box3().setFromObject(pupils[i]);
+    assert.ok(white.min.z<=surface.point.z+.005&&white.max.z>surface.point.z,`${kind} eye floats in front of its head`);
+    assert.ok(pupil.min.z<=white.max.z&&pupil.max.z>white.max.z,`${kind} pupil floats in front of its eye white`);
+   }
+  }finally{a.dispose();}
+ }
+});
 test('enemy heads and beaks point in their patrol direction after a turn',async()=>{
  const {createEnemy}=await module('models');
  for(const [kind,front] of [['dog','muzzle'],['bird','beak'],['pelican','beak'],['caterpillar','segment-3'],['mouse','muzzle'],['kangaroo','muzzle'],['rhino','horn'],['lizard','head']]){

@@ -256,7 +256,8 @@ export function createEnemy(kind, pool) {
         );
         wing.rotation.z = s * 0.4;
       }
-      eyes(a, group, 0.83, 0.1, 0.085);
+      // Center the eyes on the offset head and seat them in its curved surface.
+      eyes(a, a.joint("bird-face", [0.12, 0, -0.024]), 0.845, 0.08, 0.115);
       legs(a, group, "#dfac52");
       break;
     case "caterpillar":
