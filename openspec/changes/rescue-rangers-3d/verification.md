@@ -127,6 +127,16 @@
 
 修复最小范围为当前奖励房安全检查点及绘图丢失暂停/恢复渲染；资源版本升级 `20261003rescue2`。受影响单元90/90及完整带战斗11区回归1/1通过，合计91项。真实页面的键盘双人、六视口触控、GPU丢失恢复和实际C奖励复活四项通过。生命周期检查初次因 Chrome 导航期间 Runtime.evaluate 报“Inspected target navigated or closed”失败，等待函数仅重试导航/上下文替换瞬态错误，单独重跑冻结与 BFCache 原生返回1/1通过；没有修改游戏逻辑来处理该测试脚本竞争。日志 `/tmp/rescue-playtest-unit-green.log`、`/tmp/rescue-playtest-occupied-green.log`、`/tmp/rescue-playtest-browser-green.log`、`/tmp/rescue-playtest-navigation-green.log`。
 
-原始 esbuild 独立重建与提交 bundle 逐字节相同，SHA-256 `ba14929a3d257789be7784bb21998a084eb87317fc2779f881f7d31dd5faac8b`；`git diff --check` 通过。此修复尚在发布前复核阶段。
+原始 esbuild 独立重建与提交 bundle 逐字节相同，SHA-256 `ba14929a3d257789be7784bb21998a084eb87317fc2779f881f7d31dd5faac8b`；`git diff --check` 通过。此处是发布前检查；最终发布核验见下文。
 
-独立复核发现一项 Important：GPU 丢失期间 frozen/active 返回后点 Resume，600ms 内模拟时间0.083→0.675、x2.881→7.141且音频恢复；证据 `/tmp/rescue-playtest-independent-gpu-race-review.json`。根代理补充 Resume、Esc、真实页面冻结/返回与按住D的回归，当前初修版本按预期1/1失败（`/tmp/rescue-playtest-gpu-race-red.log`）；以统一 activate 的暂停 guard 及 restartLoop 的真实 contextLost guard 修正，避免新区域开始和生命周期绕过。原生键盘双人、冻结/BFCache及加强GPU三项3/3通过（`/tmp/rescue-playtest-gpu-race-green.log`）。独立复审该 Important 为 ADDRESSED，无新增 Critical/Important/Minor；最终原始 esbuild 字节匹配已核对。尚待公网发布核验。
+独立复核发现一项 Important：GPU 丢失期间 frozen/active 返回后点 Resume，600ms 内模拟时间0.083→0.675、x2.881→7.141且音频恢复；证据 `/tmp/rescue-playtest-independent-gpu-race-review.json`。根代理补充 Resume、Esc、真实页面冻结/返回与按住D的回归，当前初修版本按预期1/1失败（`/tmp/rescue-playtest-gpu-race-red.log`）；以统一 activate 的暂停 guard 及 restartLoop 的真实 contextLost guard 修正，避免新区域开始和生命周期绕过。原生键盘双人、冻结/BFCache及加强GPU三项3/3通过（`/tmp/rescue-playtest-gpu-race-green.log`）。独立复审该 Important 为 ADDRESSED，无新增 Critical/Important/Minor；最终原始 esbuild 字节匹配已核对。公网发布核验已完成，见下文。
+
+
+### 试玩修复的公网验收
+
+- 修复 [PR #37](https://github.com/rarest/kids-games/pull/37) 于 `2026-10-03T02:42:07Z` 合并，main `c7673ebb9314f1fb5b2f923d49f368be6cb9a173`。沿用既有 webhook，无手工替换生产文件。
+- 实际服务器 `/home/ubuntu/games-site` HEAD 与合并提交一致；仓库和 docroot bundle SHA 均为 `ba14929a3d257789be7784bb21998a084eb87317fc2779f881f7d31dd5faac8b`；用户层 `games-webhook.service` 与 `shooter-coop.service` 均 active。
+- 两个公网域名各6资源全部 HTTP200且与当前源码字节一致，记录 `/tmp/rescue-playtest-public-hashes.log`、`/tmp/rescue-evidence/public-resource-hashes.json`。页面资源版本 `20261003rescue2`。
+- 主域名 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test --test-concurrency=1 --test-name-pattern='native GPU|native bonus teammate' tests/rescue-browser.mjs` 原生两项2/2通过，日志 `/tmp/rescue-playtest-public-main.log`。真实 GPU 丢失期间 Resume/Esc/冻结返回均保持暂停，渲染恢复后需玩家继续且不重放旧移动。合法双人入口48花/9星/[3,0]生命，经实际按键闯C、奖励花转第10星，队友在当前房间地板复活，奖励阶段保留并能继续收花至正常出口。实际恢复与奖励复活截图 `/tmp/rescue-evidence/ui/playtest-context-restored.png`、`/tmp/rescue-evidence/ui/playtest-bonus-revived.png`，根代理已查看。
+- 备用域名 `GAMES_TEST_ORIGIN=https://games.596996.xyz RESCUE_EVIDENCE_DIR=/tmp/rescue-evidence/playtest/public-secondary node --test tests/rescue-integration-browser.mjs` 2/2通过，日志 `/tmp/rescue-playtest-public-secondary.log`。真实游戏厅搜索/点击、举箱/扔出、入口保存与刷新继续、回到12游戏厅；实际占满J的完整物理输入结局交给生产DOM呈现器验证。本次没有将后者称作原生键盘闯完J。
+- 两域名原生检查异常列表为空。本轮没有实物手柄连接；未声称验证硬件。没有重跑未受影响的其他游戏全套门禁。
