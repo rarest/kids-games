@@ -12,7 +12,7 @@
 
 新增独立 Node WebSocket 服务，浏览器仍本地渲染3D，服务器只计算现有核心模拟。服务器60Hz推进、20Hz广播动态状态，不反复传输场景装饰和静态地图。输入固定1/60秒命令，按序号排队、消费和确认；跳跃/举投边沿只消费一次，不能因重传丢包或暂停连续触发。超量队列、失联输入和背压必须有界；不积累迟到状态包。
 
-本机移动/跳跃/举投基于真实 core 做预测，按服务器确认序号重放未确认输入。服务器决定伤害、收集、胜负和区域进度。队友/世界采用短缓冲插值，大纠正（复活、换区、被托举）立即切换，普通小位置纠正平滑。不能把无限回滚、所有画面等服务器回包或反复重建 Three.js 场景作为同步方法。关卡静态对象引用按区域稳定，动态快照不触发全景重建。预测期间 HUD 与持久化只使用权威状态。
+本机移动/跳跃/举投基于真实 core 做预测，按服务器确认序号重放未确认输入。服务器决定伤害、收集、胜负和区域进度。队友/世界采用短缓冲插值，大纠正（复活、换区、被托举）立即切换，普通小位置纠正平滑。不能把无限回滚、所有画面等服务器回包或反复重建 Three.js 场景作为同步方法。同一局的权威state对象引用保持稳定，避免现有音效/粒子按对象身份重放事件；只有真正start/retry/next创建新模拟才增加room.run并更换state对象。暂停epoch或奖励房转场不重置该局事件去重。关卡静态对象引用按区域稳定，动态快照不触发全景重建。预测期间 HUD 与持久化只使用权威状态。
 
 网络输入和输出都有固定上限，至少覆盖200ms RTT、额外抖动与重连；已确认的预测历史丢弃。断线清输入/声音并停止预测，不得猜测队友状态或自动续战。上下文丢失/隐藏/冻结同步暂停并标记本设备未准备；GPU恢复/页面返回后重新准备，但不得由另一人提前解除未恢复设备的暂停。
 
@@ -30,7 +30,7 @@
 
 ## 实施接口
 
-`rescue/net-codec.js`：`encodeFrame(state, metadata)`、`decodeFrame(packet, previous)`；metadata={epoch,tick,acks:[number,number],inputs:[input,input],room:{code,host,mode,members},includeStage:boolean}。packet.type为state，包含areaId/levelId、必要动态数据，includeStage时附静态level；decode返回可给core/scene消费的真实state，保留同区level引用。输入={move:number,up:boolean,down:boolean,jump:boolean,action:boolean}。
+`rescue/net-codec.js`：`encodeFrame(state, metadata)`、`decodeFrame(packet, previous)`；metadata={epoch,tick,acks:[number,number],inputs:[input,input],room:{code,host,mode,members,run},includeStage:boolean}。packet.type为state，包含areaId/levelId、必要动态数据，includeStage时附静态level；decode返回可给core/scene消费的真实state，保留同区level引用。输入={move:number,up:boolean,down:boolean,jump:boolean,action:boolean}。
 
 `rescue/server.mjs`：`createRescueServer({port=8788,host='127.0.0.1',origins, ...testOptions})` 返回{ready,address(),close()}；升级路径/rescue-ws。客户端协议：create；join{code,token?}；input{epoch,commands:[{seq,input}]}；ready{value}；start/pause/resume/retry；next{areaId}；finishBonus；leave；ping{at}。响应joined{code,slot,token}、state、error{message}、closed{message}、pong{at}。不允许客户端直接提交游戏状态。
 

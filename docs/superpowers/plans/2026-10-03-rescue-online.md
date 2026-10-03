@@ -11,6 +11,7 @@
 
 - Exactly 2 online players, creator Chip and guest Dale; each uses its device's 1P keys/touch/gamepad.
 - Server 60Hz simulation and 20Hz dynamic broadcasts; static stage sent only at join/epoch/level transition; same-stage level reference remains stable.
+- Same-run authority identity remains stable; room.run increments only genuine start/retry/next, preserving audio/particle event dedup across pause/reconnect/bonus.
 - Local prediction uses actual core, server owns damage/score/pickups/results; never persist predicted results.
 - Target native local response <100ms under200ms RTT; active street per-peer dynamic bandwidth <=80KiB/s; pending inputs <=120; interpolation history <=8.
 - Disconnect, hidden/freeze or WebGL loss clears input/audio and pauses the team; resume needs two connected and ready devices. Restore/reconnect stays paused until manual continue.
