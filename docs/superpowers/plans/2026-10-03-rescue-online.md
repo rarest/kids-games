@@ -11,7 +11,7 @@
 
 - Exactly 2 online players, creator Chip and guest Dale; each uses its device's 1P keys/touch/gamepad.
 - Server 60Hz simulation and 20Hz dynamic broadcasts; static stage sent only at join/epoch/level transition; same-stage level reference remains stable.
-- Same-run authority identity remains stable; room.run increments only genuine start/retry/next, preserving audio/particle event dedup across pause/reconnect/bonus.
+- Same-run authority and visual render state identity remain stable, visual events come from authority; room.run increments only genuine start/retry/next, preserving audio/particle event dedup across pause/reconnect/bonus.
 - Local prediction uses actual core, server owns damage/score/pickups/results; never persist predicted results.
 - Target native local response <100ms under200ms RTT; active street per-peer dynamic bandwidth <=80KiB/s; pending inputs <=120; interpolation history <=8.
 - Disconnect, hidden/freeze or WebGL loss clears input/audio and pauses the team; resume needs two connected and ready devices. Restore/reconnect stays paused until manual continue.
@@ -27,38 +27,38 @@
 **Files:** Create rescue/net-codec.js, rescue/server.mjs, tests/rescue-net-codec.test.mjs, tests/rescue-server.test.mjs. Consume core.js, campaign.js, levels.js unchanged.
 **Interfaces:** Produce encodeFrame/decodeFrame and createRescueServer APIs/protocol exactly as spec. No browser UI changes. Test-only clock/level injection may be constructor options, never a network command; do not ship client state setters.
 
-- [ ] **Step 1: Write RED tests.** Connect real ws clients using origin allowlist; create/join, reject third, isolated rooms, ownership of inputs, stale epoch/duplicate sequence, one-tick jump/action edges, unauthorized start/next, pause readiness, disconnect/token reclaim, explicit leave. Codec roundtrips actual createGame states including carry/throw, moving platforms, bonus and all Boss dynamic fields; unchanged stage identity must survive repeated decode.
+- [x] **Step 1: Write RED tests.** Connect real ws clients using origin allowlist; create/join, reject third, isolated rooms, ownership of inputs, stale epoch/duplicate sequence, one-tick jump/action edges, unauthorized start/next, pause readiness, disconnect/token reclaim, explicit leave. Codec roundtrips actual createGame states including carry/throw, moving platforms, bonus and all Boss dynamic fields; unchanged stage identity must survive repeated decode.
 ```js
 const app=createRescueServer({port:0});await app.ready;
 const host=new WebSocket(`ws://127.0.0.1:${app.address().port}/rescue-ws`,{origin:'https://games.nblord.com'});
 host.send(JSON.stringify({type:'create'}));
 // A second real connection joins its returned code; a third receives error.
 ```
-- [ ] **Step 2: Run node --test tests/rescue-net-codec.test.mjs tests/rescue-server.test.mjs and record expected failures before implementation.**
-- [ ] **Step 3: Implement.** Use real core, bounded input commands and acked consumed sequences. Reset inputs/epoch at lifecycle changes. Send fresh complete dynamic frames; skip congested snapshots instead of queueing them. Codec rebuilds static entity defaults from cached level and stores necessary dynamic fields compactly; serialize entire Boss dynamic object if omission would alter behavior.
+- [x] **Step 2: Run node --test tests/rescue-net-codec.test.mjs tests/rescue-server.test.mjs and record expected failures before implementation.**
+- [x] **Step 3: Implement.** Use real core, bounded input commands and acked consumed sequences. Reset inputs/epoch at lifecycle changes. Send fresh complete dynamic frames; skip congested snapshots instead of queueing them. Codec rebuilds static entity defaults from cached level and stores necessary dynamic fields compactly; serialize entire Boss dynamic object if omission would alter behavior.
 ```js
 const samples=members.map(m=>takeOneBoundedCommand(m));
 stepGame(room.game,samples.map(c=>c?.input??{}),1/60);
 for(let slot=0;slot<2;slot++)if(samples[slot])room.acks[slot]=samples[slot].seq;
 ```
 Report exact missing-command continuous-input policy and edge clearing so prediction tests can reproduce it. Validate command numbers/booleans, limits and epochs; snapshot metadata includes last inputs. Entry reset/next uses authoritative campaign, not client game state. Retain disconnect token for120seconds, stale inputs350ms pause, max16 rooms/max64 connections, max4096byte input payload, queues120 per peer.
-- [ ] **Step 4: Run meaningful covering tests and measure dynamic street bytes at20Hz over real active input.** Tests assert independent movement, native-core held/throw links and exact one-shot event counts, not just connected status. Full static setup may exceed dynamic packet budget and is measured separately.
-- [ ] **Step 5: Commit only owned files; report protocol examples, test logs, byte measurements, concerns.**
+- [x] **Step 4: Run meaningful covering tests and measure dynamic street bytes at20Hz over real active input.** Tests assert independent movement, native-core held/throw links and exact one-shot event counts, not just connected status. Full static setup may exceed dynamic packet budget and is measured separately.
+- [x] **Step 5: Commit only owned files; report protocol examples, test logs, byte measurements, concerns.**
 
 ### Task 2: Predictive network client and bounded interpolation
 
 **Files:** Create rescue/net-prediction.js, rescue/net-client.js, tests/rescue-net-prediction.test.mjs, tests/rescue-net-client.test.mjs.
 **Interfaces:** Consume Task1 codec/protocol; produce createPrediction and createRescueClient exactly as spec for Task3. URL defaults to same-origin /rescue-ws. Injected test transport/clock/storage belong to factory options and never production DOM/state APIs.
 
-- [ ] **Step 1: Write RED prediction and real-client tests.** Actual core state plus held input moves/jumps before any delayed authority message; ack removes only consumed commands; identity, epoch, teleport/respawn and held relations survive; action isn't duplicated by replay; no history grows past limits. Two clients use actual localhost ws service, join/start independent roles, delay frames through a test transport and reconnect retaining seat without leaking token.
+- [x] **Step 1: Write RED prediction and real-client tests.** Actual core state plus held input moves/jumps before any delayed authority message; ack removes only consumed commands; identity, epoch, teleport/respawn and held relations survive; action isn't duplicated by replay; no history grows past limits. Two clients use actual localhost ws service, join/start independent roles, delay frames through a test transport and reconnect retaining seat without leaking token.
 ```js
 const prediction=createPrediction({slot:1});prediction.receive(createGame(getLevel('0'),{players:2}),{epoch:1,ack:0,inputs:[{},{}]});
 const before=prediction.render().players[1].x;
 const result=prediction.advance({move:1},1/60);
 assert.ok(result.state.players[1].x>before);
 ```
-- [ ] **Step 2: Run task test files, record expected RED before implementation.**
-- [ ] **Step 3: Implement core-based local replay with bounded history, latest authoritative HUD state and visual-only own/held actor prediction.** Expose remote interpolation with <=8 snapshots, avoid allocating/rebuilding static stages on every frame. Commands are fixed step ordered, buffered only until ack; invalid/old epochs discarded. Handle errors, pong latency, retry/backoff reconnect, explicit leave cleanup, server closed/full/lost room and page teardown without creating timers per render frame.
+- [x] **Step 2: Run task test files, record expected RED before implementation.**
+- [x] **Step 3: Implement core-based local replay with bounded history, latest authoritative HUD state and visual-only own/held actor prediction.** Expose remote interpolation with <=8 snapshots, avoid allocating/rebuilding static stages on every frame. Commands are fixed step ordered, buffered only until ack; invalid/old epochs discarded. Handle errors, pong latency, retry/backoff reconnect, explicit leave cleanup, server closed/full/lost room and page teardown without creating timers per render frame.
 ```js
 for(const command of pending){
  const inputs=authorityInputs.map(i=>({...i}));inputs[slot]=command.input;
@@ -66,12 +66,12 @@ for(const command of pending){
 }
 ```
 Prediction is cleared on suspend/disconnect; while not playing no movement command stream or speculative progress. Return precise API/status shape for UI implementer. Avoid premature optimization that makes collision outcomes invented.
-- [ ] **Step 4: Run task tests and measured delayed input/settled reconciliation; record queue and bandwidth behavior.**
-- [ ] **Step 5: Commit owned files and write contract report with exact API.**
+- [x] **Step 4: Run task tests and measured delayed input/settled reconciliation; record queue and bandwidth behavior.**
+- [x] **Step 5: Commit owned files and write contract report with exact API.**
 
 ### Task 3: Room UI, game lifecycle integration and touch protection
 
-**Files:** Modify rescue/game.js, games/rescue.html, rescue/style.css, games.js, README.md; create a small rescue/net-ui.js if this keeps UI separate; add tests/rescue-online-browser.mjs and touch regressions; update tests/rescue-integration-browser.mjs catalog expectations if metadata changes. Build rescue/bundle.js after source changes. Consume Tasks1/2 only through agreed APIs.
+**Files:** Modify rescue/game.js, games/rescue.html, rescue/style.css, games.js, README.md; create a small rescue/net-ui.js if this keeps UI separate; add tests/rescue-online-browser.mjs and touch regressions, with tests/rescue-online-harness.mjs if needed for shared real-browser transport setup; update tests/rescue-integration-browser.mjs catalog expectations if metadata changes. Build rescue/bundle.js after source changes. Consume Tasks1/2 only through agreed APIs.
 **Interfaces:** Home online entry/create/join/lobby/start/leave; HUD and paused overlays for network state. Each device samples controls slot0 then sends to its assigned network slot. Authority drives hud/audio/results/map, visual prediction drives scene/camera. Keep local modes independent.
 
 - [ ] **Step 1: Add RED native two-browser and touch tests.** Real UI creating/joining/start, independent keyboard+touch, player2 cannot hijack player1, native carry/throw both observe consistent links, pause/resume/hidden/GPU-loss readiness, reconnect plus leave/error paths; doubletap scale unchanged and trusted contextmenu default prevented. Use isolated browsers, focus emulation for both, server from Task1 on free port; real ws forwarded through a test origin without production hardcoded localhost override.
