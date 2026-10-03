@@ -614,6 +614,7 @@ body[data-screen="home"] #notice {
 .room-join button { flex: none; }
 #online-code { letter-spacing: 3px; color: var(--green); }
 #online-hud { font-size: 10px; line-height: 1.4; color: #5f6c48; }
+#online-latency { font-size: 12px; line-height: 1.5; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; color: #405333; }
 body[data-online="true"][data-screen="game"] #stage { top: 96px; }
 body[data-online="true"] #bonus-bar { top: 99px; }
 @media (max-width: 700px) and (orientation: portrait) {
