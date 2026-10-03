@@ -198,3 +198,14 @@ Task1/2/3/4分别通过规格和代码审查；Task3复审确认内部拥堵后�
 一次临时 canonical 首项副本使用改后本地实际页面、真实 WebSocket 服务与200ms RTT、每方向±10ms有序抖动；保留共享工具默认 auto/320×568，没有强制 DPR、场景状态或开局自动恢复。无效入房退出前后客机 DPR0.75、阴影 false，首个实际移动事件到绘制9.4/35.6ms；开局无 stale 暂停。原 canonical 禁用方向键、各端1P键、队友/箱子托举投掷、触控、刷新原席和手动继续均走到。最后显式离房主机回 home，客机仍暂停并显示主机断开，整项1/1失败；未把该延迟转发器尾部失败改称完整通过，未扩大服务或转发器修复。日志 `/tmp/rescue-final-native-canonical.log`、临时驱动 `/tmp/rescue-final-native-canonical.mjs`。最终修复尚未发布，公网最终回读由控制器执行。
 
 受目录链接缓存版本影响的原生游戏厅专项1/1通过：搜索点击新链接、举箱投掷、保存入口、刷新继续和回到12游戏厅。日志 `/tmp/rescue-final-hall.log`。三个 canonical 原表达式验证 JSON null→false、真实已连接席位→true、损坏 JSON 仍抛异常，未放宽 gameplay 判断。最终差异/语法检查通过。
+
+
+### 同轮授权的延迟测试转发器关闭顺序修复
+
+最小实际原生 leave→graceful close RED 明确记录：relay 收到 leave25169.109ms，未记录 forwardedAt；downstream close25173.802ms时 upstream 已 CLOSING，upstream close25175.208ms。100ms入站延迟中的 leave 尚未转发，客机只收到主机断开并暂停；这是测试转发器关闭顺序缺陷。证据 `/tmp/rescue-final-relay-close-red.log`、对应 JSON。
+
+仅 `tests/rescue-online-harness.mjs` 调整正常关闭经同一入站有序队列排在已收到消息之后；异常1006或已 closing/closed仍立即关闭。peer 保留在清理集合直到 upstream 实际 close；结束清理先取消队列定时器，再终止仍被跟踪的两端连接。安全 trace只增加 close方向/时间/code，不输出joined重连凭据。生产 client/server、350ms保护、bundle和绘图规则均不再改动。
+
+唯一 corrected canonical200ms RTT完整原生流程的原断言全部执行通过：无效入房退出保持 DPR0.75/阴影关闭，首次移动19.7/32.3ms，无开局 stale；禁用方向键、各端1P、托举物体/队友与投掷、触控、暂停/手动继续、刷新原席、本机保存字节/选项、会话清除、双方退出 home及两端 errors[]通过。但末尾附加 close诊断误取了刷新前旧槽0连接关闭时间35129.662/35243.710ms，最终leave实际属于新槽0连接50081.246→forward50192.221ms，故整项记录仍1/1FAIL，不能称整体GREEN。完整安全room/input/frame trace保留 `/tmp/rescue-final-native-canonical-green.log`，执行驱动同名`.mjs`；按具体peer修正的诊断另存 `/tmp/rescue-final-native-canonical-diagnostics-fixed.mjs`，未重复整套运行。
+
+追加最小实际原生关闭顺序检查GREEN：leave26800.379→downstreamclose26804.676（upstream仍OPEN）→forward26894.681→upstreamclose26899.953ms，客机回home/networknull；退出码0。证据 `/tmp/rescue-final-relay-close-green.log`、对应 JSON。测试工具语法及diff检查通过；没有重复136单位或连续分钟套件。最终正式无附加诊断的公网canonical仍由控制器发布后执行。
