@@ -172,6 +172,19 @@ test('auto quality can reach half resolution on measured slow frames while expli
   assert.equal(q.dpr,dpr,`${mode} preserves its selected resolution`);assert.equal(q.shadows,shadows);
  }
 });
+test('restoring unchanged auto quality preserves measured adaptation and the ongoing observation window',async()=>{
+ const {createQualityController}=await module('scene'),q=createQualityController(2);
+ for(let i=0;i<1000;i++)q.observe(45);
+ const adapted={...q};q.set('auto');assert.deepEqual({...q},adapted,'same auto restores retain measured DPR, shadows and diagnostics');
+ const window=createQualityController(2);for(let i=0;i<89;i++)window.observe(45);
+ window.set('auto');window.observe(45);assert.equal(window.dpr,1.6*.75,'same auto restores preserve warmup and accumulated slow frames');assert.equal(window.shadows,false);
+ const fast=createQualityController(2);for(let i=0;i<100;i++)fast.observe(16);
+ fast.set('auto');assert.equal(fast.dpr,1.6);assert.equal(fast.shadows,true);
+ for(const mode of ['high','low']){
+  q.set(mode);q.set('auto');assert.equal(q.dpr,1.6,'changing into auto resets resolution');assert.equal(q.shadows,true);
+  for(let i=0;i<89;i++)q.observe(45);assert.equal(q.dpr,1.6,'changing modes starts a fresh measured window');q.observe(45);assert.equal(q.dpr,1.6*.75);
+ }
+});
 test('scenery disposal releases instance buffers without disposing borrowed texture resources',async()=>{
  const {createMaterials}=await module('materials'),{createScenery}=await module('scenery');const pool=createMaterials(),a=createScenery(LEVELS[1],pool);let instances=0,released=0;a.group.traverse(o=>{if(o.isInstancedMesh){instances++;o.addEventListener('dispose',()=>released++);}});a.dispose();assert.ok(instances>0);assert.equal(released,instances);assert.ok(pool.stats().textures>0);pool.dispose();
 });

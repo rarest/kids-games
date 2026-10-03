@@ -52,6 +52,7 @@ export function createQualityController(deviceDpr = 1) {
   q.set = (mode) => {
     if (!["auto", "high", "low"].includes(mode))
       throw new RangeError("画质必须为 high、auto 或 low");
+    if (mode === "auto" && q.mode === "auto") return;
     q.mode = mode;
     q.dpr =
       mode === "low"

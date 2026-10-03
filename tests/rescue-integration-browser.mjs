@@ -56,7 +56,7 @@ test(
       await b.navigate("index.html");
       assert.equal(
         await b.evaluate(
-          `document.querySelector('a[href="games/rescue.html"] .name')?.textContent`,
+          `document.querySelector('a[href="games/rescue.html?v=20261003rescue-online2"] .name')?.textContent`,
         ),
         "松鼠大作战",
         "hall contains the actual rescue card",
@@ -67,13 +67,13 @@ test(
       );
       assert.equal(
         await b.evaluate(
-          `document.querySelector('a[href="games/rescue.html"] .desc').textContent`,
+          `document.querySelector('a[href="games/rescue.html?v=20261003rescue-online2"] .desc').textContent`,
         ),
         "11个经典区域的3D横版重制，举箱子、扔队友，本机 / 联网双人救援",
       );
       assert.deepEqual(
         await b.evaluate(
-          `Array.from(document.querySelectorAll('a[href="games/rescue.html"] .tag'),e=>e.textContent)`,
+          `Array.from(document.querySelectorAll('a[href="games/rescue.html?v=20261003rescue-online2"] .tag'),e=>e.textContent)`,
         ),
         ["经典", "3D", "本机双人", "联网双人", "手柄", "闯关"],
       );
@@ -84,7 +84,7 @@ test(
         1,
       );
       await shot(b, "hall-search");
-      await click(b, 'a[href="games/rescue.html"]');
+      await click(b, 'a[href="games/rescue.html?v=20261003rescue-online2"]');
       await wait(
         b,
         'location.pathname.endsWith("/games/rescue.html") && document.querySelector("#view")?.dataset.phase === "home"',

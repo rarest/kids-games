@@ -163,9 +163,9 @@
 - 主站原生按键从起点正常举箱/投掷和跳跃，在 x49.164 触发箱子怪实际 lunge，怪位置x52.900，未损失生命，异常列表为空。日志 `/tmp/rescue-mimic-native-public.log`、状态和截图 `/tmp/rescue-evidence/mimic/public/`。根代理已查看原生接近与攻击截图，等待露眼、攻击张嘴露牙均可见；仅暂停截图遮罩临时隐藏，不改运行中游戏状态。
 
 
-## 两设备联网验收（本地通过，待审查发布）
+## 两设备联网验收（首次已发布，最终小修复待审查更新）
 
-房间 UI、两端独立原生键盘/触控、托举物体和队友、投掷、暂停/重连、GPU/页面生命周期与本机存档隔离已有专项通过记录。app 的可信右键被阻止，双击后 visualViewport.scale 保持不变。新增服务仅监听 `127.0.0.1:8788`，原射击服务保持 `8787`；线上部署由控制器在审查后执行，目前尚未发布。
+房间 UI、两端独立原生键盘/触控、托举物体和队友、投掷、暂停/重连、GPU/页面生命周期与本机存档隔离已有专项通过记录。app 的可信右键被阻止，双击后 visualViewport.scale 保持不变。新增服务仅监听 `127.0.0.1:8788`，原射击服务保持 `8787`；首次版本已由控制器沿原 webhook 发布 PR41（`20261003rescue-online1`）；下述为发布前验收记录，最终小修复状态见本节末。
 
 Task 4 在默认真实街区使用两台独立 320×568 Chromium、默认 auto 画质自然暖机（早期版本最低 DPR0.75，最终版本最低 DPR0.5），完整 Three.js/SwiftShader 绘制，relay 每方向100ms加±10ms有序抖动。可信 keydown 的 event.timeStamp、监听器收到及实际场景绘制后坐标变动均采用浏览器 performance 时钟，另记 CDP往返。原始版本开局约358ms触发350ms保护；一次显式手动恢复也再次暂停。新增每个有效 playing epoch 正常中性首包后，客户端/服务21项和附加准备状态、bonus、terminal、发送失败矩阵通过，预期旧输入不再产生技术提示，但软件绘制仍约100ms/帧，原生开局仍失败。该版本手动恢复后首样本120.10ms（其中输入排队113.80ms），未达到<100ms。
 
@@ -187,3 +187,57 @@ Task1/2/3/4分别通过规格和代码审查；Task3复审确认内部拥堵后�
 根代理独立重建bundle逐字节一致，最终SHA-256 `d314bc0bf46af64be47ed167e42cd71fdb143c567fc2d1ac5134f69474034ba5`。正式原生响应41.60/38.90ms、61.497墙钟秒、3693ticks、每端29.249KiB/s及取消预测351.70/395.80ms的同指标RED均核对原始日志；136项相关单位检查之后仅两行scene改动，受影响render22项和GPU/resize2项再次通过。实际条件为320×568双Chromium/SwiftShader、自动DPR0.5、200msRTT及有序抖动；约24fps及画面细节变软是该软件渲染样本的实际代价，手动high/low分辨率阴影规则保留。
 
 首次部署沿原webhook，在合并前将完全一致的已审查新deploy脚本放回原路径并保留模式775，防止旧Bash缓冲的无条件重启影响射击房间。部署后仍需实际生产HEAD、服务、双域资产和公网同源双设备检查；此处记录的是已完成发布前门槛。额外完整街区按键路线驱动已到达实验室后耗尽生命，随后对齐路线的另一尝试在前段触发一次输入超时暂停，原因正在核对；两者均未冒充完整通关或连续性通过。
+
+
+### 公网无效入房退出后的 auto 适配修复（2026-10-03）
+
+已发布 PR41 的备用站原生 canonical 检查在无效入房→退出→开局后停在 tick21/epoch3，证据 `/tmp/rescue-evidence/public-secondary-native.log`。源码质量控制器每次恢复同一 auto 选项都把实测低 DPR 和关闭阴影重置。最终局部修复只让已处于 auto 时再次设置 auto 提前返回，保留当前 DPR、阴影和观测窗口；切换档位、精细/流畅档、350ms 保护和场景规则不改。canonical 导航/重连三个等待条件仅增加 nullable JSON 诊断保护，实际 `null` 时继续等，不吞无效 JSON 和游戏异常。
+
+新增实际控制器回归先 RED（0.5→1.6/阴影 false→true），再 render23/23 GREEN；涵盖观测窗口、快速 auto 初始画质及 high/low→auto 重置规则。日志 `/tmp/rescue-final-quality-red.log`、`/tmp/rescue-final-render-green.log`。正式 esbuild 和独立重建逐字节一致；新 bundle SHA256 `a1544fec8965d46a56252557a0c87ca38e18768574bdeeaa7c6039a0dcb33de4`。缓存版本在游戏厅脚本、目录救援链接、页面 CSS/bundle 统一为 `20261003rescue-online2`。
+
+一次临时 canonical 首项副本使用改后本地实际页面、真实 WebSocket 服务与200ms RTT、每方向±10ms有序抖动；保留共享工具默认 auto/320×568，没有强制 DPR、场景状态或开局自动恢复。无效入房退出前后客机 DPR0.75、阴影 false，首个实际移动事件到绘制9.4/35.6ms；开局无 stale 暂停。原 canonical 禁用方向键、各端1P键、队友/箱子托举投掷、触控、刷新原席和手动继续均走到。最后显式离房主机回 home，客机仍暂停并显示主机断开，整项1/1失败；未把该延迟转发器尾部失败改称完整通过，未扩大服务或转发器修复。日志 `/tmp/rescue-final-native-canonical.log`、临时驱动 `/tmp/rescue-final-native-canonical.mjs`。最终修复尚未发布，公网最终回读由控制器执行。
+
+受目录链接缓存版本影响的原生游戏厅专项1/1通过：搜索点击新链接、举箱投掷、保存入口、刷新继续和回到12游戏厅。日志 `/tmp/rescue-final-hall.log`。三个 canonical 原表达式验证 JSON null→false、真实已连接席位→true、损坏 JSON 仍抛异常，未放宽 gameplay 判断。最终差异/语法检查通过。
+
+
+### 同轮授权的延迟测试转发器关闭顺序修复
+
+最小实际原生 leave→graceful close RED 明确记录：relay 收到 leave25169.109ms，未记录 forwardedAt；downstream close25173.802ms时 upstream 已 CLOSING，upstream close25175.208ms。100ms入站延迟中的 leave 尚未转发，客机只收到主机断开并暂停；这是测试转发器关闭顺序缺陷。证据 `/tmp/rescue-final-relay-close-red.log`、对应 JSON。
+
+仅 `tests/rescue-online-harness.mjs` 调整正常关闭经同一入站有序队列排在已收到消息之后；异常1006或已 closing/closed仍立即关闭。peer 保留在清理集合直到 upstream 实际 close；结束清理先取消队列定时器，再终止仍被跟踪的两端连接。安全 trace只增加 close方向/时间/code，不输出joined重连凭据。生产 client/server、350ms保护、bundle和绘图规则均不再改动。
+
+唯一 corrected canonical200ms RTT完整原生流程的原断言全部执行通过：无效入房退出保持 DPR0.75/阴影关闭，首次移动19.7/32.3ms，无开局 stale；禁用方向键、各端1P、托举物体/队友与投掷、触控、暂停/手动继续、刷新原席、本机保存字节/选项、会话清除、双方退出 home及两端 errors[]通过。但末尾附加 close诊断误取了刷新前旧槽0连接关闭时间35129.662/35243.710ms，最终leave实际属于新槽0连接50081.246→forward50192.221ms，故整项记录仍1/1FAIL，不能称整体GREEN。完整安全room/input/frame trace保留 `/tmp/rescue-final-native-canonical-green.log`，执行驱动同名`.mjs`；按具体peer修正的诊断另存 `/tmp/rescue-final-native-canonical-diagnostics-fixed.mjs`，未重复整套运行。
+
+追加最小实际原生关闭顺序检查GREEN：leave26800.379→downstreamclose26804.676（upstream仍OPEN）→forward26894.681→upstreamclose26899.953ms，客机回home/networknull；退出码0。证据 `/tmp/rescue-final-relay-close-green.log`、对应 JSON。测试工具语法及diff检查通过；没有重复136单位或连续分钟套件。最终正式无附加诊断的公网canonical仍由控制器发布后执行。
+
+
+### 首次联网公网回读与真实操作
+
+PR41 于2026-10-03T11:56:25Z合并，main `9889bdd808c752c73123dbecee650065d3a23309`；原 webhook 在19:56:29部署成功。生产仓库和docroot bundle SHA均为`d314bc0bf46af64be47ed167e42cd71fdb143c567fc2d1ac5134f69474034ba5`。救援服务PID147055、原射击PID143350、webhook PID1044正常；原射击PID未变化。新代理内容逐字节一致，两域名6项资源共12次HTTP200且SHA匹配；server入口和审查/git目录不在docroot，公网被403禁止访问。
+
+主站两个独立320×568 Chromium通过原生同源WSS创建/加入/房主开始、两端各自键盘、队友和真实箱子举起投掷、客机触控、刷新回原席准备后房主手动继续、暂停退出双方回首页，7项实际流程全部通过，异常列表为空；`/tmp/rescue-evidence/public-online.json`结束于2026-10-03T12:03:38.478Z。第一次null诊断等待、第二次点击隐藏退出按钮是私有驱动错误，失败记录分别保留；不列为产品修复。主站原生双击scale不变、可信右键菜单阻止、320宽有无存档按钮可点击专项1/1通过7.617秒。首次持续真实匿名射击WS会话在合并前加入，收到帧和pong并跨部署无异常断开，记录已另存shooter-preservation-pr41.json。
+
+完整街区通关至下一站的额外原生路线尚未通过：实际到实验室后正常耗尽生命；另一前段路线出现输入超时暂停；第三次进程被SIGTERM，未产出有效结果。上述不记为完整公网通关；联网campaign/八Boss/奖励房/下一站由真实服务和core专项覆盖，默认街区严格200msRTT连续61.497秒性能证据保持单独记录。
+
+### 关键实施裁决归档
+
+这些裁决保留原顺序，避免结束会话后只剩结论。相关代价：身份复用若错误会重复或漏播音效/粒子；实际绘制准备门槛若失效会在刚开始时暂停；auto低DPR令慢设备画面更软；部署脚本首次替换若错误可能影响已有房间。明确质量档位规则、350ms超时与场景几何/材质保留。
+
+Task 2: Ruling: same-run visual render state must also retain identity across pause/epoch/clear/reconnect and use authoritative events. scene.js receives visual state and its event dedup also keys on identity; authority-only identity stability cannot protect scene particles. Genuine run/room changes replace visual identity. Existing clear still stops prediction. Cover identity/authoritative-event regression inTask2, carry toTask3 andfinal review.
+
+Task3 buffertrace confirms8writes/start perclient (196→338 thensame338), setterdirect0–1.4ms; packet→firstinput14.6/16.6ms onthat trace. Native resizeGREEN andrender21GREEN afterminimalguard, butnativefunctional stillstale anddefaultautoexistingDPR0.75/shadowsfalse stillstartupstale. No claimedcausalperformancefix. Ruling:correctreadiness order, initiallobby preparesfinalgamecanvas/layout/level andactualdraw before ready; GPU/freeze/BFCache recoveryactualdraw before ready, manualresumeunchanged. Stopusingready beforelevel/layout/draw. Dedup/cancelreadywork on suspension/leave/generation andavoid20Hzreset. Same350ms/actualscene/no forcedstates. Existinggame.js scopecovers; nativefailureisRED, verifyGREENthenaffectedoldchecks.
+
+Deployment ruling: first-pull Bash may buffer the old deploy body including unconditional shooter restart. To preserve live unchanged shooter rooms, root stages exact reviewed new deploy script at existing production path just before main merge; same webhook/chain runs conditional logic. Verify staged SHA/mode, original service PID before/after, publicHEAD/proxy; fallback rerun only same checked-in script if needed. No parallel deploy or unreviewed source.
+
+Task 1: Ruling: refine packet with room.run and stable same-run decoded authority identity — existing audio/scene use object identity to reset event dedup, so fresh state per20Hz frame would repeat sounds/particles. True start/retry/next increments run; pause/bonus/reconnect does not. Cost if wrong: audio/particle events could be suppressed or replayed at transition; add identity/real-event regression. Spec and Task1 brief updated before downstream implementation.
+
+Task4 ruling after resume: authorize one measured temporary full-scene experiment combining the evidenced MSAA-off option with the existing auto-quality DPR floor lowered from0.75 to0.5. Preserve high/low modes, geometry, materials, native input, normal rendering,350ms stale and continuous real-wall gate. Capture playing-only RAF/input timing and unobscured scene screenshots. If strict first-event responses and continuous minute pass, worker may apply exactly these two production quality changes with render-quality regression, affected GPU/resize checks and a valid unpredicted RED. No test-only GPU vendor branch, forced quality, background flags or timeout changes. Cost: auto mode can trade edge smoothness/resolution for responsive control on measured slow devices; retain explicit high-quality mode. Prior no-MSAA20.39s failure is retained; paused overlay frame metrics are not causal evidence.
+
+Final combinedfix ruling fromactualpublicpost-reviewevidence: equal-auto restore must preserve actualadaptiveDPR/shadows/window. CanonicalsecondaryREDinitialstale tick21 afterinvalidjoin→leave(home scene.setQuality resets unchangedauto to1/shadowstrue), whileprimaryprivateactualpublicflow7checks GREEN. Source q.set unconditionally resets sameauto; userresponsivegoal supportsidempotentobservedauto. Explicitmodechangesunchanged; costsameauto clickno longerforceshigher resolution, high→auto stillresets. Alsofixcanonicalnonnull diagnosticwait guard consistentwithrootactualreloadnull driverfailure. ExactlyONEfinalfixworker+scopedreview, no blindCSS/timeout/devicechanges. Publictouch1/1GREEN7.617s main. SourcePR41alreadylive9889bdd; rootbranchdocs/rescue-online-public-verification fromactualmain readyfinalfix, no codechanges byroot.
+
+
+### 最终局部复审与失败诊断裁决
+
+最终代码范围9889bdd..7adfa09经唯一局部复审：相同auto保留、三处nullable等待、测试relay有序正常关闭及online2缓存一致四项均ADDRESSED，新Critical/Important/Minor均为0。根独立构建与bundle逐字节一致，SHA `a1544fec8965d46a56252557a0c87ca38e18768574bdeeaa7c6039a0dcb33de4`。
+
+修正relay后的唯一200msRTT canonical全部原行为和存档断言通过，首响应19.7/32.3ms，双方退出回home；其新增关闭时间诊断误取刷新前旧slot0连接，使整体1/1 FAIL，原始日志保留。最小同peer真实关闭专项GREEN明确收到26800.379→转发26894.681→关闭26899.953，客机home/null。裁决：不将附加诊断失败冒充整套GREEN，也不据此扩大生产网络修复或重复完整大套件；最终公网运行正式未附加诊断的canonical继续完成交付。该裁决若错误，影响退出顺序验证，因此同时保留最小顺序实证与后续公网双方退出检查。
