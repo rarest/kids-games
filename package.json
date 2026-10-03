@@ -9,7 +9,9 @@
     "build:racing": "esbuild racing/game.js --bundle --format=esm --minify --legal-comments=none --outfile=racing/bundle.js",
     "build:parkour": "esbuild parkour/game.js --bundle --format=esm --minify --legal-comments=none --outfile=parkour/bundle.js",
     "build:rescue": "esbuild rescue/game.js --bundle --format=esm --minify --legal-comments=none --outfile=rescue/bundle.js",
-    "test:rescue-online": "node --test tests/rescue-online-browser.mjs && node --test tests/rescue-online-latency-browser.mjs"
+    "test:rescue-online": "node --test tests/rescue-online-browser.mjs && node --test tests/rescue-online-latency-browser.mjs",
+    "build:english": "esbuild english/main.js --bundle --format=esm --minify --legal-comments=none --outfile=english/bundle.js",
+    "test:english": "node --test tests/english-core.test.mjs tests/english-curriculum.test.mjs tests/english-audio.test.mjs && node --test tests/english-browser.mjs && node --test tests/english-scenes-browser.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.12",

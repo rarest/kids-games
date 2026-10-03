@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#eff6ff"><title>珠珠学习乐园 · 英语探险</title><link rel="stylesheet" href="../english/style.css?v=20261003english1"></head>
+<body>
+<header class="topbar"><a class="brand" href="../index.html">✦ 小火箭游戏厅</a><button id="homeButton" class="text-button">学习首页</button><button id="shopButton" class="coin-pill" aria-label="打开皮肤商店">🪙 <span data-coins>0</span> <span class="shop-label">商店</span></button></header>
+<main id="home" class="view page">
+ <div class="hero"><span class="eyebrow">LEARN A LITTLE, PLAY A LOT</span><h1>珠珠<span>学习乐园</span></h1><p>跑一段，学一点。让每个新单词都成为小小冒险。</p><div class="hero-balls" aria-hidden="true"><i class="orb large">♛</i><i class="orb small">✦</i><i class="orbit"></i></div></div>
+ <div class="subjects"><button id="chinese" class="subject red"><span class="subject-icon">文</span><strong>语文</strong><small>故事和汉字，等你来设计</small><span class="coming">准备中</span></button><button id="math" class="subject gold"><span class="subject-icon">＋</span><strong>数学</strong><small>数字冒险，等你来设计</small><span class="coming">准备中</span></button><button id="englishButton" class="subject blue"><span class="subject-icon">Aa</span><strong>英语</strong><small>36关 · 4种3D小游戏</small><span class="go">开始探险 ↗</span></button></div>
+ <div class="home-notes"><div><strong>10道题，沿途遇见</strong><p>作答时大家一起暂停，想清楚再出发。</p></div><div><strong>答完卡片，奖励200金币</strong><p>换上喜欢的珠珠，带着彩虹尾光去旅行。</p></div><button id="reviewButton" class="review-button">📚 复习错题 <span id="wrongCount">0</span></button></div>
+ <footer>人教PEP · 三到六年级 · 美式发音 · 单元主题练习</footer>
+</main>
+<main id="english" class="view page" hidden>
+ <div class="section-heading"><div><span class="eyebrow">ENGLISH ADVENTURE</span><h1>选条路线，学会一点新英语</h1></div><button id="openStudy" class="secondary">📖 先看本单元</button></div>
+ <div class="book-panel"><label>年级<select id="grade"><option value="3">三年级</option><option value="4">四年级</option><option value="5">五年级</option><option value="6">六年级</option></select></label><label>册次<select id="term"><option value="上">上册</option><option value="下">下册</option></select></label><label class="unit-field">学习单元<select id="unit"></select></label><div id="edition" class="edition"></div></div>
+ <div id="modeFilters" class="modes"></div><div class="grid-heading"><h2>36条探险路线</h2><p>每局10题 · 答完再继续 · 任意选关</p></div><div id="levels" class="levels"></div>
+ <p class="source-note">题目按教材单元主题自行编写，单词配美式音标。<a id="sourceLink" target="_blank" rel="noopener">查看人教社资源 ↗</a></p>
+</main>
+<main id="shop" class="view page" hidden>
+ <div class="section-heading"><div><span class="eyebrow">PEARL COLLECTION</span><h1>给小珠珠一个新模样</h1><p>33款圆球 · 炫彩拖尾 · 立体小饰品</p></div><button id="shopBack" class="secondary">返回</button></div>
+ <div class="shop-layout"><div class="preview-panel"><div id="skinPreview" class="preview-canvas"></div><h2 id="previewName"></h2><p id="previewTier"></p><button id="buyPreview" class="primary"></button><small>金币和皮肤保存在当前浏览器。</small></div><div><div id="skinFilters" class="skin-filters"></div><div id="skins" class="skin-grid"></div></div></div>
+</main>
+<section id="play" class="view play" hidden>
+ <div id="gameCanvas" class="game-canvas"></div>
+ <div class="hud"><div class="hud-left"><strong id="courseName"></strong><span id="courseUnit"></span></div><div class="hud-stats"><span id="cardCount">题卡 0 / 10</span><span id="raceRank"></span><span id="timer">0:00</span><button id="pauseButton" class="secondary">Ⅱ 暂停</button><button id="leaveButton" class="secondary">退出</button></div></div>
+ <div class="progress-track"><div id="progressBar"></div></div>
+ <div id="playTip" class="play-tip">左右方向键 / A、D 转向，空格跳跃</div>
+ <div class="touch-controls"><div><button id="leftButton" aria-label="向左转">◀</button><button id="rightButton" aria-label="向右转">▶</button></div><button id="jumpButton" class="jump-button" aria-label="跳跃">跳跃 ↑</button></div>
+</section>
+<dialog id="quiz" class="quiz-dialog"><div class="quiz-top"><span id="quizKind"></span><span id="quizCount"></span></div><p class="pause-note" id="pauseNote">⏸ 全场已暂停，慢慢想。</p><h2 id="prompt"></h2><button id="listen" class="listen-button">🔊 听美式发音</button><div id="answerArea"></div><button id="hintButton" class="text-button">给我一个小提示</button><p id="hintText" class="hint" hidden></p><div id="feedback" class="feedback" hidden></div><div class="quiz-actions"><button id="checkSentence" class="primary" hidden>检查句子</button><button id="continueButton" class="primary" hidden>继续探险 · +200金币</button></div></dialog>
+<dialog id="pauseDialog" class="small-dialog"><h2>休息一下</h2><p>游戏和计时都已暂停。</p><button id="resumeButton" class="primary">继续玩</button><button id="quitButton" class="secondary">回到选关</button></dialog>
+<dialog id="result" class="result-dialog"><span class="eyebrow">ADVENTURE COMPLETE</span><h2>这一站，顺利到达！</h2><div class="result-orb" aria-hidden="true">✦</div><p id="resultStats"></p><div id="resultWrong"></div><div class="result-actions"><button id="nextLevel" class="primary">下一条路线</button><button id="resultShop" class="secondary">用金币换皮肤</button><button id="resultBack" class="text-button">回到选关</button></div></dialog>
+<dialog id="study" class="study-dialog"><div class="section-heading"><h2 id="studyTitle"></h2><button id="closeStudy" class="secondary">关闭</button></div><div id="studyContent"></div></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script type="module" src="../english/bundle.js?v=20261003english1"></script>
+</body></html>
