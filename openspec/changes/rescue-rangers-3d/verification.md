@@ -152,4 +152,12 @@
 - 真实模型 WebGL 对比 `/tmp/rescue-mimic-preview/after.png`，由源码构造普通箱、警觉箱子怪和攻击箱子怪；这是临时美术预览，不是新增生产界面，根代理已查看。
 - 开场正常键盘从起点举箱扔向机器狗、跳过台阶和缺口，到 x49.104 正常触发街区 mimic lunge，无运行时异常。日志 `/tmp/rescue-mimic-native-local-green.log`、截图及状态 `/tmp/rescue-evidence/mimic/local/`，根代理已查看。暂停截图仅暂时隐藏 DOM 暂停遮罩以观察实际渲染帧；没有改游戏状态、位置或生命。初次临时驱动未跳第一台阶，在 x11.124 停住而超时；补上正常跳跃后通过，没有把该驱动问题称为游戏缺陷。
 - 原生键盘、暂停、双人协作专项1/1通过（`/tmp/rescue-mimic-native-regression.log`）。未重跑不受影响的物理战役或其他游戏整套检查。
-- 原始 esbuild 独立重建与 bundle 逐字节相同，SHA-256 `40d40eaeb6c21578872505f4c220812a68fb55d7c81ded0774ab091858425e75`。`git diff --check`通过。当前等待独立复核和公网验收。
+- 原始 esbuild 独立重建与 bundle 逐字节相同，SHA-256 `40d40eaeb6c21578872505f4c220812a68fb55d7c81ded0774ab091858425e75`。`git diff --check`通过。此处是发布前检查，独立复核和公网验收见下文。
+
+
+### 箱子怪修复发布与实际遇敌
+
+- 独立复核无 Critical/Important/Minor；已核对木板前的眼睛、后铰链咬合和共享池生命周期，没有扩展到其他敌人或玩法。
+- [PR #39](https://github.com/rarest/kids-games/pull/39) 于 `2026-10-03T03:00:02Z` 合并，main `a389197024f4dd7079f8fd7ea8b4e57884283cf6`，原 webhook 正常部署。服务器仓库 HEAD 一致，docroot bundle SHA `40d40eaeb6c21578872505f4c220812a68fb55d7c81ded0774ab091858425e75`；两项用户层服务仍 active。
+- 两域名各6资源 HTTP200、与本地逐字节一致，日志 `/tmp/rescue-mimic-public-hashes.log`，记录 `/tmp/rescue-evidence/mimic/public-resource-hashes.json`；页面资源版本 `20261003rescue3`。
+- 主站原生按键从起点正常举箱/投掷和跳跃，在 x49.164 触发箱子怪实际 lunge，怪位置x52.900，未损失生命，异常列表为空。日志 `/tmp/rescue-mimic-native-public.log`、状态和截图 `/tmp/rescue-evidence/mimic/public/`。根代理已查看原生接近与攻击截图，等待露眼、攻击张嘴露牙均可见；仅暂停截图遮罩临时隐藏，不改运行中游戏状态。
