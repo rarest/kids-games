@@ -69,7 +69,7 @@ export function createQualityController(deviceDpr = 1) {
     if (q.mode === "auto" && warmup > 30) {
       slow = ms > 28 ? slow + 1 : Math.max(0, slow - 2);
       if (slow >= 60) {
-        q.dpr = Math.max(0.75, q.dpr * 0.75);
+        q.dpr = Math.max(0.5, q.dpr * 0.75);
         q.shadows = false;
         slow = 0;
       }
@@ -413,7 +413,7 @@ export function createScene(canvas) {
   try {
     renderer = new THREE.WebGLRenderer({
       canvas,
-      antialias: true,
+      antialias: false,
       alpha: false,
       powerPreference: "high-performance",
     });
@@ -457,21 +457,30 @@ export function createScene(canvas) {
     renderMs = 0,
     frames = 0,
     currentTheme = null,
-    lastRenderTime = null;
+    lastRenderTime = null,
+    bufferSize = null,
+    shadowEnabled = null;
   const lost = (e) => {
     e.preventDefault();
     contextLost = true;
   };
   const restored = () => {
     contextLost = false;
+    applyQuality(true);
   };
   canvas.addEventListener("webglcontextlost", lost);
   canvas.addEventListener("webglcontextrestored", restored);
-  function applyQuality() {
-    renderer.setPixelRatio(q.dpr);
-    renderer.setSize(width, height, false);
-    renderer.shadowMap.enabled = q.shadows;
-    renderer.shadowMap.needsUpdate = true;
+  function applyQuality(force = false) {
+    // setPixelRatio also calls setSize in Three; update the native buffer once.
+    if (force || !bufferSize || bufferSize.width !== width || bufferSize.height !== height || bufferSize.dpr !== q.dpr) {
+      renderer.setDrawingBufferSize(width, height, q.dpr);
+      bufferSize = {width, height, dpr:q.dpr};
+    }
+    if (force || shadowEnabled !== q.shadows) {
+      renderer.shadowMap.enabled = q.shadows;
+      renderer.shadowMap.needsUpdate = true;
+      shadowEnabled = q.shadows;
+    }
   }
   function resize(w, h) {
     width = Math.max(1, w);

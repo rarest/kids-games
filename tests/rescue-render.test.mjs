@@ -161,6 +161,17 @@ test('world resource counts plateau across level switches and particles stay bou
 test('quality uses observed slow-frame windows rather than an unmeasured device label',async()=>{
  const {createQualityController}=await module('scene');const q=createQualityController(2);assert.equal(q.mode,'auto');for(let i=0;i<150;i++)q.observe(45);assert.ok(q.dpr<2);assert.equal(q.shadows,false);q.set('high');assert.equal(q.shadows,true);q.set('low');assert.ok(q.dpr<=1);assert.throws(()=>q.set('ultra'));
 });
+test('auto quality can reach half resolution on measured slow frames while explicit modes stay fixed',async()=>{
+ const {createQualityController}=await module('scene'),q=createQualityController(2);
+ for(let i=0;i<1000;i++)q.observe(16);
+ assert.equal(q.dpr,1.6,'fast auto rendering keeps its normal resolution');assert.equal(q.shadows,true);
+ for(let i=0;i<1000;i++)q.observe(45);
+ assert.equal(q.dpr,0.5,'sustained slow frames reach the actual adaptive floor');assert.equal(q.shadows,false);
+ for(const [mode,dpr,shadows] of [['high',2,true],['low',1,false]]){
+  q.set(mode);for(let i=0;i<1000;i++)q.observe(80);
+  assert.equal(q.dpr,dpr,`${mode} preserves its selected resolution`);assert.equal(q.shadows,shadows);
+ }
+});
 test('scenery disposal releases instance buffers without disposing borrowed texture resources',async()=>{
  const {createMaterials}=await module('materials'),{createScenery}=await module('scenery');const pool=createMaterials(),a=createScenery(LEVELS[1],pool);let instances=0,released=0;a.group.traverse(o=>{if(o.isInstancedMesh){instances++;o.addEventListener('dispose',()=>released++);}});a.dispose();assert.ok(instances>0);assert.equal(released,instances);assert.ok(pool.stats().textures>0);pool.dispose();
 });

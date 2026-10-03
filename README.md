@@ -1,6 +1,6 @@
 # 🚀 小火箭游戏厅 (kids-games)
 
-给小朋友的趣味网页游戏合集，适应手机、平板和电脑，无广告。单人游戏在浏览器计算；联网射击使用合作服务，部分游戏资源需要本地打包。
+给小朋友的趣味网页游戏合集，适应手机、平板和电脑，无广告。单人游戏在浏览器计算；联网游戏使用各自的合作服务，部分游戏资源需要本地打包。
 
 在线访问：https://games.nblord.com
 
@@ -85,11 +85,23 @@ deploy/        自动部署组件
 
 ## 松鼠大作战（3D 横版合作救援）
 
-入口 `games/rescue.html`。11 个区域沿经典分支探索，举箱攻击、拾回 Boss 球、奖励房收集，最终救出朋友；已完成区域可回玩。支持单人奇奇/蒂蒂、本地双人键盘、两个标准手柄及手机单人触控。
+入口 `games/rescue.html`。11 个区域沿经典分支探索，举箱攻击、拾回 Boss 球、奖励房收集，最终救出朋友；已完成区域可回玩。支持单人奇奇/蒂蒂、本机双人键盘、两个标准手柄、手机触控及两台设备联网双人。
 
 - 1P：A/D 移动，空格跳跃，E 举起/投掷，W+E 上投，举箱时按 S 蹲藏，S+空格下穿单向平台；2P：左右方向键移动，Enter 跳跃，右 Shift 举起/投掷，向上+右 Shift 上投，向下蹲藏，向下+Enter 下穿单向平台。Esc 暂停。可举起和扔出队友。
 - 手柄：方向键/左摇杆移动，A 跳跃，B 举起/投掷，Start 暂停；触屏使用方向盘与跳跃、举起按钮。
 - 进度保存到当前浏览器：继续游戏从区域起点恢复入口分数、收集物和生命；区域完成后保存分支解锁与下一站入口。最高分独立保留。
-- 游戏厅目录版本 `20261003rescue1`，松鼠页面 CSS/bundle 版本 `20261003rescue3`。源码在 `rescue/`；本地 Three.js 0.186.1，资源许可见 `rescue/THIRD-PARTY-NOTICES.txt`。修改源码后执行 `npm run build:rescue` 并提交原始 esbuild 产物 `rescue/bundle.js`。
+- 联网双人：在首页创建或输入 6 位房间号加入，创建者控制奇奇、加入者控制蒂蒂。每台设备使用自己的 1P 键位、手柄或触屏。房主开始、重试和选择已解锁下一站；任一人暂停、断线、进入后台或 GPU 中断都会暂停队伍，恢复后由房主手动继续。短时重连保留原角色；退出结束房间。联网从 0 区开始，进度不覆盖本机存档；联网中的音乐、音效和画质设置只在本次房间生效，离房恢复本机选项。
+- 游戏 app 内双击不放大，长按和右键不打开网页菜单，操作不触发文字选择。
+- 自动画质根据实际帧耗时降低分辨率，最低为 0.5 倍，以减少慢设备上的绘制等待；完整场景和游戏规则保留。精细、流畅档仍可手动选择。
+- 独立联网服务为 `rescue/server.mjs`，同源 WebSocket 路径 `/rescue-ws`，默认监听 `127.0.0.1:8788`；与射击服务独立。原生双浏览器回归：`npm run test:rescue-online`；其中延迟专项使用真实街区、双向各 100ms 加有序 ±10ms 抖动，记录可信按键到实际绘制及连续 60 秒动态流量，可复用测试工具见 `tests/rescue-online-harness.mjs`。
+- 游戏厅目录和松鼠页面 CSS/bundle 版本统一为 `20261003rescue-online1`。源码在 `rescue/`；本地 Three.js 0.186.1，资源许可见 `rescue/THIRD-PARTY-NOTICES.txt`。修改源码后执行 `npm run build:rescue` 并提交原始 esbuild 产物 `rescue/bundle.js`。
 - 门禁：`npm run test:unit`、`npm run test:browser`。占满关卡回归在 `tests/rescue-occupied.test.mjs`；其 D 区使用正常双人独立输入，其余区域单人。浏览器原生 C 区通关检查在 `tests/rescue-browser.mjs`。
 - 公网入口与真实操作验收：`GAMES_TEST_ORIGIN=https://games.nblord.com RESCUE_EVIDENCE_DIR=/tmp/rescue-main node --test tests/rescue-integration-browser.mjs`；把域名换为 `https://games.596996.xyz` 可验收另一入口。测试启动独立 Chromium，截图和状态 JSON 保存到指定目录。
+
+### 联网服务部署与核验
+
+现有 webhook 继续执行 `deploy/deploy-local.sh`。脚本分别安装 `shooter-coop` 与 `rescue-coop` 用户服务和同源代理；仅各服务导入的运行文件、unit 或生产依赖变动时重启。浏览器资源、文档或测试命令更新保留现有房间；只有代理配置变动才验证并 reload OpenResty。生产依赖改变或缺少 `node_modules/ws` 才执行 `npm ci --omit=dev`。站点镜像排除两个 `server.mjs` 和 `.superpowers`。每个服务和生产依赖的成功指纹、待重载代理标记保存在仓库 `.git/games-deploy/`，失败后重跑原脚本只补齐未完成阶段，已成功重启的服务不会因后续代理失败再重启。
+
+首次接入前，需要把已审查的新 `deploy/deploy-local.sh` 原样放回生产仓库同一路径，核对 SHA 与执行模式，再让原 webhook 拉取 main。旧 Bash 进程可能已经缓冲原脚本，因此仅靠脚本内部 pull 无法确保第一次就使用条件重启。发布后核对生产 HEAD、8787/8788 监听、两服务、两个代理与静态资源；若新增 wiring 未执行，重新运行同一份已提交脚本。
+
+公网同源双人验证使用 `GAMES_TEST_ORIGIN=https://games.nblord.com RESCUE_PUBLIC_SAME_ORIGIN=1 node --test --test-name-pattern='native online room' tests/rescue-online-browser.mjs`；另一入口换为 `https://games.596996.xyz`。此模式直接连接公网 `/rescue-ws`，不会创建本地游戏服务器或重定向 WebSocket。延迟专项在本地专用 relay 上运行；公网功能和本地注入延迟结果分别记录。

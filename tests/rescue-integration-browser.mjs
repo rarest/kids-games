@@ -69,13 +69,13 @@ test(
         await b.evaluate(
           `document.querySelector('a[href="games/rescue.html"] .desc').textContent`,
         ),
-        "11个经典区域的3D横版重制，举箱子、扔队友，双人合作救援",
+        "11个经典区域的3D横版重制，举箱子、扔队友，本机 / 联网双人救援",
       );
       assert.deepEqual(
         await b.evaluate(
           `Array.from(document.querySelectorAll('a[href="games/rescue.html"] .tag'),e=>e.textContent)`,
         ),
-        ["经典", "3D", "双人", "手柄", "闯关"],
+        ["经典", "3D", "本机双人", "联网双人", "手柄", "闯关"],
       );
       await click(b, "#q");
       await b.call("Input.insertText", { text: "松鼠大作战" });

@@ -4,11 +4,11 @@ import {randomUUID} from 'node:crypto';
 const freePort=()=>new Promise((resolve,reject)=>{const server=createServer();server.on('error',reject);server.listen(0,'127.0.0.1',()=>{const port=server.address().port;server.close(()=>resolve(port))})});
 export const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function waitFor(url){for(let i=0;i<100;i++){try{const r=await fetch(url);if(r.ok)return r}catch{}await sleep(100)}throw new Error(`Browser/server unavailable: ${url}`)}
-export async function openBrowser(){
+export async function openBrowser({chromeFlags=[]}={}){
   const httpPort=await freePort(),debugPort=await freePort();
   const origin=process.env.GAMES_TEST_ORIGIN||`http://127.0.0.1:${httpPort}`;
   const server=process.env.GAMES_TEST_ORIGIN?null:spawn('python3',['-m','http.server',String(httpPort),'--bind','127.0.0.1'],{cwd:new URL('..',import.meta.url),stdio:'ignore'});
-  const chrome=spawn('chromium-browser',['--headless','--no-sandbox','--disable-gpu',`--remote-debugging-port=${debugPort}`,`--user-data-dir=/home/ubuntu/snap/chromium/common/games-adaptive-${process.pid}-${randomUUID()}`,'about:blank'],{stdio:'ignore'});
+  const chrome=spawn('chromium-browser',['--headless','--no-sandbox','--disable-gpu',`--remote-debugging-port=${debugPort}`,`--user-data-dir=/home/ubuntu/snap/chromium/common/games-adaptive-${process.pid}-${randomUUID()}`,'about:blank',...chromeFlags],{stdio:'ignore'});
   let socket;
   try{
     await waitFor(origin);const tabs=await(await waitFor(`http://127.0.0.1:${debugPort}/json`)).json();

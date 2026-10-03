@@ -8,7 +8,7 @@
     />
     <meta name="theme-color" content="#efe5cf" />
     <title>救援大冒险 · 奇奇与蒂蒂</title>
-    <link rel="stylesheet" href="../rescue/style.css?v=20261003rescue3" />
+    <link rel="stylesheet" href="../rescue/style.css?v=20261003rescue-online1" />
   </head>
   <body data-screen="home">
     <main id="app">
@@ -30,7 +30,7 @@
         </p>
         <div class="choice" aria-label="玩家人数">
           <button id="players-one" aria-pressed="true">单人冒险</button
-          ><button id="players-two" aria-pressed="false">双人合作</button>
+          ><button id="players-two" aria-pressed="false">本机双人</button>
         </div>
         <div class="choice" aria-label="一号玩家角色">
           <button id="chip" aria-pressed="true">奇奇 · 软帽</button
@@ -40,6 +40,7 @@
           <button id="start" class="primary">开始冒险 <span>→</span></button
           ><button id="continue" hidden>继续冒险</button>
         </div>
+        <button id="online-open">联网双人 · 创建 / 加入房间</button>
         <div class="home-links">
           <button id="map-open">区域地图</button
           ><button id="help-open">怎么玩</button
@@ -52,6 +53,7 @@
         <div>
           <strong id="area-name">街区与实验室</strong>
           <div id="hearts"></div>
+          <div id="online-hud" hidden></div>
         </div>
         <div class="totals">
           <span id="score">0 分</span><span id="collectibles">花 0 · 星 0</span>
@@ -84,14 +86,30 @@
       </div>
       <p id="notice" role="status" aria-live="polite"></p>
       <div id="overlay" hidden>
+        <section id="online-panel" class="panel" hidden aria-label="联网双人房间">
+          <div class="eyebrow">两台设备 · 一起冒险</div>
+          <h2>联网双人</h2>
+          <p>房间号 <strong id="online-code">——</strong></p>
+          <p id="online-role">你的角色：等待加入</p>
+          <p id="online-members"></p>
+          <p id="online-message" role="status" aria-live="polite"></p>
+          <div id="online-entry">
+            <button id="online-create" class="primary">创建房间 · 我是奇奇</button>
+            <label for="online-input">搭档的 6 位房间号</label>
+            <div class="room-join"><input id="online-input" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="例如 A12B34" /><button id="online-join">加入房间</button></div>
+          </div>
+          <p class="muted">各自使用 A / D、空格、E，或本设备摇杆与按钮；房主开始和继续。</p>
+          <button id="online-start" class="primary" hidden disabled>两人出发</button>
+          <button id="online-lobby-leave" data-online-leave>退出房间 / 返回首页</button>
+        </section>
         <section id="pause-panel" class="panel" hidden>
           <div class="eyebrow">歇一口气</div>
           <h2>冒险已暂停</h2>
-          <p>准备好了，就继续一起出发。</p>
+          <p id="pause-copy">准备好了，就继续一起出发。</p>
           <button id="resume" class="primary">继续冒险</button
           ><button id="retry">本区重新开始</button
           ><button id="paused-options">设置</button
-          ><button id="home">返回首页</button>
+          ><button id="home">返回首页</button><button id="online-leave" data-online-leave hidden>退出房间</button>
         </section>
         <section id="map-panel" class="panel" hidden>
           <div class="eyebrow">我们的路线</div>
@@ -149,6 +167,6 @@
         </section>
       </div>
     </main>
-    <script type="module" src="../rescue/bundle.js?v=20261003rescue3"></script>
+    <script type="module" src="../rescue/bundle.js?v=20261003rescue-online1"></script>
   </body>
 </html>

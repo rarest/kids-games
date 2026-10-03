@@ -161,3 +161,29 @@
 - [PR #39](https://github.com/rarest/kids-games/pull/39) 于 `2026-10-03T03:00:02Z` 合并，main `a389197024f4dd7079f8fd7ea8b4e57884283cf6`，原 webhook 正常部署。服务器仓库 HEAD 一致，docroot bundle SHA `40d40eaeb6c21578872505f4c220812a68fb55d7c81ded0774ab091858425e75`；两项用户层服务仍 active。
 - 两域名各6资源 HTTP200、与本地逐字节一致，日志 `/tmp/rescue-mimic-public-hashes.log`，记录 `/tmp/rescue-evidence/mimic/public-resource-hashes.json`；页面资源版本 `20261003rescue3`。
 - 主站原生按键从起点正常举箱/投掷和跳跃，在 x49.164 触发箱子怪实际 lunge，怪位置x52.900，未损失生命，异常列表为空。日志 `/tmp/rescue-mimic-native-public.log`、状态和截图 `/tmp/rescue-evidence/mimic/public/`。根代理已查看原生接近与攻击截图，等待露眼、攻击张嘴露牙均可见；仅暂停截图遮罩临时隐藏，不改运行中游戏状态。
+
+
+## 两设备联网验收（本地通过，待审查发布）
+
+房间 UI、两端独立原生键盘/触控、托举物体和队友、投掷、暂停/重连、GPU/页面生命周期与本机存档隔离已有专项通过记录。app 的可信右键被阻止，双击后 visualViewport.scale 保持不变。新增服务仅监听 `127.0.0.1:8788`，原射击服务保持 `8787`；线上部署由控制器在审查后执行，目前尚未发布。
+
+Task 4 在默认真实街区使用两台独立 320×568 Chromium、默认 auto 画质自然暖机（早期版本最低 DPR0.75，最终版本最低 DPR0.5），完整 Three.js/SwiftShader 绘制，relay 每方向100ms加±10ms有序抖动。可信 keydown 的 event.timeStamp、监听器收到及实际场景绘制后坐标变动均采用浏览器 performance 时钟，另记 CDP往返。原始版本开局约358ms触发350ms保护；一次显式手动恢复也再次暂停。新增每个有效 playing epoch 正常中性首包后，客户端/服务21项和附加准备状态、bonus、terminal、发送失败矩阵通过，预期旧输入不再产生技术提示，但软件绘制仍约100ms/帧，原生开局仍失败。该版本手动恢复后首样本120.10ms（其中输入排队113.80ms），未达到<100ms。
+
+临时副本仅关闭 MSAA 的单变量完整场景试验，实际 antialias=false/SAMPLES=0，首样本55.90/45.20ms，当时帧60.4/64.44ms、drawCalls152/triangles72940；约20.39秒又发生输入超时暂停，未完成连续一分钟。这个单变量副本不记为性能通过。之后经授权保留完整场景，仅关闭 MSAA 并降低 auto DPR 下限至0.5；精细与流畅档原分辨率和阴影规则不变。低分辨率细节变软，已查看完整街景截图确认角色、箱子仍可辨认。
+
+部署隔离检查2/2通过：真实临时git仓库运行原脚本，副作用工具路径在执行前逐个确认属于可执行 shim。正常文档、浏览器资源和dev依赖更新保留双服务；仅对应runtime/unit或生产依赖变化触发必要动作。失败注入先检出“runtime重启成功、proxy重载失败后重跑又重启”的RED，再使用 `.git/games-deploy` 内按成功阶段更新的指纹和pending标记达到GREEN；包括pull后rsync失败恢复、reload失败只重试proxy、npm失败不被已移动HEAD掩盖。没有生产SSH或服务部署操作。
+
+最终正式 bundle 的 `task-4-green-native-final.log`：两台320×568独立 Chromium、真实 SwiftShader，双向100ms加有序±10ms；两端实际autoDPR0.5、antialias=false/SAMPLES=0，完整默认街区152drawCalls/72940triangles。可信事件到实际绘制首样本41.60/38.90ms，其中监听器到绘制6.30/4.70ms；CDP往返176.60/204.61ms另计。额外自然适配耗时主机48.90ms、客机4984.12ms，客机从0.75适配到0.5，未强制质量值。连续61.497秒、36次原生输入、3693server ticks、每端1231动态帧/29.249KiB/s，无暂停或静态场景重发。两端实际绘制1492/1471帧（24.26/23.92fps）；playing RAF p95均50.1ms，最大116.7/116.6ms，主运行epoch最大input转发间隔114.87/108.61ms。分钟后的原生长按跳跃和队友投掷各产生一次权威事件，暂停、手动恢复、原席重连通过，技术notice为空。这里记录软件绘制实测，不将其称为实体手机或手柄测试。
+
+同样前置准备与测量顺序的真实负对照 `task-4-red-unpredicted-metric.log`，临时副本仅取消本地预测并重新构建，首响应351.70/395.80ms，明确在<100ms响应断言失败。早先负对照的startup360ms暂停、以及350.10/466.30ms读数后连续性失败均保留，未冒充响应断言RED。原始性能失败、实验、最终结果与未发布事项见本地 Task4报告；公网两域名的资源、服务与真实双人操作由控制器审查后继续执行。
+
+最终受影响检查：全部救援单位与射击联网检查136/136通过；两行scene改动后绘制单位22/22通过；原生GPU丢失/恢复、页面冻结/BFCache/重连与窗口buffer尺寸检查2/2通过。最终独立esbuild与已提交候选bundle逐字节一致，SHA256 `d314bc0bf46af64be47ed167e42cd71fdb143c567fc2d1ac5134f69474034ba5`，diff及shell/新测试语法检查通过。
+
+
+### 联网发布前审查与交付门槛
+
+Task1/2/3/4分别通过规格和代码审查；Task3复审确认内部拥堵后的准备恢复和离房状态清理已处理。Task4审查及整分支终审（abb63cb..a45e0c0）均为Critical0/Important0/Minor0，可合并。Task1单独codec bonus引用断言的可选细化，由已有真实客户端bonus及预测身份回归覆盖；Task3迟到旧epoch提示已由服务端仅静默丢弃正安全整数旧版本输入处理。
+
+根代理独立重建bundle逐字节一致，最终SHA-256 `d314bc0bf46af64be47ed167e42cd71fdb143c567fc2d1ac5134f69474034ba5`。正式原生响应41.60/38.90ms、61.497墙钟秒、3693ticks、每端29.249KiB/s及取消预测351.70/395.80ms的同指标RED均核对原始日志；136项相关单位检查之后仅两行scene改动，受影响render22项和GPU/resize2项再次通过。实际条件为320×568双Chromium/SwiftShader、自动DPR0.5、200msRTT及有序抖动；约24fps及画面细节变软是该软件渲染样本的实际代价，手动high/low分辨率阴影规则保留。
+
+首次部署沿原webhook，在合并前将完全一致的已审查新deploy脚本放回原路径并保留模式775，防止旧Bash缓冲的无条件重启影响射击房间。部署后仍需实际生产HEAD、服务、双域资产和公网同源双设备检查；此处记录的是已完成发布前门槛。额外完整街区按键路线驱动已到达实验室后耗尽生命，随后对齐路线的另一尝试在前段触发一次输入超时暂停，原因正在核对；两者均未冒充完整通关或连续性通过。

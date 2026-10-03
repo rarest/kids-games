@@ -603,3 +603,30 @@ body[data-screen="home"] #notice {
     display: none;
   }
 }
+
+/* Suppress browser gestures only inside the game app. */
+#app { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+#app button, #app a, #app input { touch-action: none; -webkit-touch-callout: none; }
+#online-input { min-width: 0; width: 100%; min-height: 48px; padding: 10px; font: inherit; font-size: 16px; border: 1px solid #cfceb6; border-radius: 13px; background: #fffef7; text-transform: uppercase; user-select: text; -webkit-user-select: text; }
+#online-entry { display: flex; flex-direction: column; gap: 12px; }
+#online-entry > label { font-size: 13px; }
+.room-join { display: flex; gap: 8px; }
+.room-join button { flex: none; }
+#online-code { letter-spacing: 3px; color: var(--green); }
+#online-hud { font-size: 10px; line-height: 1.4; color: #5f6c48; }
+body[data-online="true"][data-screen="game"] #stage { top: 96px; }
+body[data-online="true"] #bonus-bar { top: 99px; }
+@media (max-width: 700px) and (orientation: portrait) {
+  #home-panel { height: 372px; gap: 7px; padding: 12px 16px; }
+  #stage { bottom: 372px; }
+  #online-open { font-size: 13px; flex-shrink: 0; }
+  #online-hud { max-width: 215px; font-size: 9px; }
+  body[data-online="true"][data-screen="game"] #stage { top: 104px; }
+  body[data-online="true"] #bonus-bar { top: 107px; }
+}
+@media (orientation: landscape) and (max-height: 480px) {
+  body[data-online="true"][data-screen="game"] #stage { top: 0; }
+  #home-panel { gap: 5px; padding-top: 8px; padding-bottom: 8px; }
+  #online-open { font-size: 12px; flex-shrink: 0; }
+  body[data-online="true"] #bonus-bar { top: 86px; }
+}
