@@ -178,3 +178,39 @@ test('robot contact arms remain inside the actual side contact regions',async()=
 test('FatCat chair supports the authored raised body down to the real arena floor without moving Boss',async()=>{const {createBoss}=await module('models');const a=createBoss('fatCat'),b={x:119.887,y:35.8,w:6,h:6.5,arena:{y:34.6},anchors:{mouth:{x:118.927,y:40.87}}};a.update(b);a.group.updateMatrixWorld(true);const chair=a.group.getObjectByName('chair');assert.ok(chair);const bounds=new Box3().setFromObject(chair);assert.ok(Math.abs(bounds.min.y-34.6)<.001);assert.equal(a.group.position.y,35.8);assert.ok(bounds.max.y>35.8);a.dispose();});
 
 test('particles remain renderable after an empty frame and a distant player hit',async()=>{const {createWorld}=await module('scene'),{createGame}=await import('../rescue/core.js');const world=createWorld(),s=createGame(LEVELS[0]);world.update(s,1/60);const particle=world.group.getObjectByName('hit-particles'),camera=new OrthographicCamera(-5,5,5,-5,.1,100);camera.position.set(100,2,10);camera.lookAt(100,2,0);camera.updateMatrixWorld(true);const frustum=new Frustum().setFromProjectionMatrix(new Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));frustum.intersectsObject(particle);s.players[0].x=100;s.events=[{id:'event-1',type:'hit'}];world.update(s,1/60);world.group.updateMatrixWorld(true);assert.equal(particle.count,6);assert.ok(!particle.frustumCulled||frustum.intersectsObject(particle),'real in-view hit particles must survive the renderer frustum check');world.dispose();});
+
+test('mimic eyes are visible to the camera before and during its lunge rather than buried in wood', async () => {
+ const {createEnemy}=await module('models');
+ const {Raycaster}=await import('three');
+ const a=createEnemy('mimic');
+ try {
+  for(const animation of ['disguise','lunge'])for(const facing of [-1,1]){
+   a.update({x:0,y:0,w:1,h:1,facing,animation},.12);a.group.updateMatrixWorld(true);
+   const eyes=meshes(a.group).filter(m=>m.name==='eye');assert.equal(eyes.length,2);
+   for(const eye of eyes){
+    assert.equal(eye.visible,true,'a suspicious crate must retain visible eyes before contact');
+    const center=new Box3().setFromObject(eye).getCenter(new Vector3());
+    const origin=center.clone().add(new Vector3(0,3,34));
+    const hit=new Raycaster(origin,center.clone().sub(origin).normalize()).intersectObject(a.group,true).find(h=>h.object.visible);
+    assert.ok(hit&&['eye','pupil'].includes(hit.object.name),`wood obscures the ${animation} face: ${hit?.object.name}`);
+   }
+  }
+ } finally {a.dispose();}
+});
+test('mimic reveals an opening jaw and articulated bite, while a carryable crate has no face',async()=>{
+ const {createEnemy,createCrate}=await module('models');const a=createEnemy('mimic'),crate=createCrate();
+ try {
+  const e={x:0,y:0,w:1,h:1,facing:1,animation:'disguise'};
+  a.update(e,0);const mouth=a.group.getObjectByName('mouth');assert.ok(mouth);
+  const resting=new Box3().setFromObject(mouth).getSize(new Vector3()).y;
+  a.update({...e,animation:'lunge'},.1);
+  const opened=new Box3().setFromObject(mouth).getSize(new Vector3()).y;
+  assert.equal(mouth.visible,true);assert.ok(opened>resting*2,'attack must visibly open its jaw');
+  const teeth=meshes(a.group).filter(m=>m.name==='tooth'&&m.visible);assert.ok(teeth.length>=3);
+  const first=teeth.map(m=>m.getWorldPosition(new Vector3()).toArray());
+  a.update({...e,animation:'lunge'},.2);a.group.updateMatrixWorld(true);
+  assert.notDeepEqual(teeth.map(m=>m.getWorldPosition(new Vector3()).toArray()),first,'real teeth must move with the bite');
+  a.update(e,.3);assert.equal(mouth.visible,false);
+  assert.equal(crate.group.getObjectByName('eye'),undefined);assert.equal(crate.group.getObjectByName('mouth'),undefined);
+ }finally{a.dispose();crate.dispose();}
+});

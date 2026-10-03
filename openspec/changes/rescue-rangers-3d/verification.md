@@ -140,3 +140,16 @@
 - 主域名 `GAMES_TEST_ORIGIN=https://games.nblord.com node --test --test-concurrency=1 --test-name-pattern='native GPU|native bonus teammate' tests/rescue-browser.mjs` 原生两项2/2通过，日志 `/tmp/rescue-playtest-public-main.log`。真实 GPU 丢失期间 Resume/Esc/冻结返回均保持暂停，渲染恢复后需玩家继续且不重放旧移动。合法双人入口48花/9星/[3,0]生命，经实际按键闯C、奖励花转第10星，队友在当前房间地板复活，奖励阶段保留并能继续收花至正常出口。实际恢复与奖励复活截图 `/tmp/rescue-evidence/ui/playtest-context-restored.png`、`/tmp/rescue-evidence/ui/playtest-bonus-revived.png`，根代理已查看。
 - 备用域名 `GAMES_TEST_ORIGIN=https://games.596996.xyz RESCUE_EVIDENCE_DIR=/tmp/rescue-evidence/playtest/public-secondary node --test tests/rescue-integration-browser.mjs` 2/2通过，日志 `/tmp/rescue-playtest-public-secondary.log`。真实游戏厅搜索/点击、举箱/扔出、入口保存与刷新继续、回到12游戏厅；实际占满J的完整物理输入结局交给生产DOM呈现器验证。本次没有将后者称作原生键盘闯完J。
 - 两域名原生检查异常列表为空。本轮没有实物手柄连接；未声称验证硬件。没有重跑未受影响的其他游戏全套门禁。
+
+## 用户反馈的箱子怪辨识度（2026-10-03）
+
+用户反馈“开始就有个箱子会吃人，没看出是怪”。现有12类敌人中的 mimic 使用普通木箱加脸；真实摄像机方向射线表明眼睛中心前方先命中 wooden-box/diagonal-brace。旧伪装状态还隐藏眼睛，攻击嘴高0.13、没有开合，正常视角不容易认出。
+
+局部修复：独立箱体与后侧铰接箱盖，大眼前移到木板前；等待时保留警觉眼神，lunge 时箱盖咬合、张嘴露出上下牙和舌头。普通可举箱子沿用原模型。未改 core、伤害、追击距离、关卡布局或存档。资源版本 `20261003rescue3`。
+
+验证：
+- 新增实际摄像机方向射线（含双向朝向、等待/攻击状态）及开嘴/活动牙齿的真实几何回归，两项修复前按预期2/2失败（`/tmp/rescue-mimic-render-red.log`），完整渲染套件21/21通过（`/tmp/rescue-mimic-render-green.log`）。
+- 真实模型 WebGL 对比 `/tmp/rescue-mimic-preview/after.png`，由源码构造普通箱、警觉箱子怪和攻击箱子怪；这是临时美术预览，不是新增生产界面，根代理已查看。
+- 开场正常键盘从起点举箱扔向机器狗、跳过台阶和缺口，到 x49.104 正常触发街区 mimic lunge，无运行时异常。日志 `/tmp/rescue-mimic-native-local-green.log`、截图及状态 `/tmp/rescue-evidence/mimic/local/`，根代理已查看。暂停截图仅暂时隐藏 DOM 暂停遮罩以观察实际渲染帧；没有改游戏状态、位置或生命。初次临时驱动未跳第一台阶，在 x11.124 停住而超时；补上正常跳跃后通过，没有把该驱动问题称为游戏缺陷。
+- 原生键盘、暂停、双人协作专项1/1通过（`/tmp/rescue-mimic-native-regression.log`）。未重跑不受影响的物理战役或其他游戏整套检查。
+- 原始 esbuild 独立重建与 bundle 逐字节相同，SHA-256 `40d40eaeb6c21578872505f4c220812a68fb55d7c81ded0774ab091858425e75`。`git diff --check`通过。当前等待独立复核和公网验收。

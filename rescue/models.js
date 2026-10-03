@@ -181,7 +181,7 @@ export function createObject(kind, pool) {
 }
 
 export function createEnemy(kind, pool) {
-  const a = kind === "mimic" ? createCrate(pool) : createAsset(pool, kind),
+  const a = createAsset(pool, kind),
     { part, group } = a;
   group.userData.silhouette = kind;
   switch (kind) {
@@ -305,18 +305,35 @@ export function createEnemy(kind, pool) {
       tail.rotation.z = 0.4;
       break;
     }
-    case "mimic":
-      eyes(a, group, 0.63, 0.2, 0.13);
-      part("round", "#452a30", [0.53, 0.13, 0.08], [0, 0.31, 0.5], "mouth");
-      for (const x of [-0.18, 0, 0.18])
-        part(
-          "cone",
-          "#fff6df",
-          [0.08, 0.11, 0.06],
-          [x, 0.33, 0.55],
-          "tooth",
-        ).rotation.z = Math.PI;
+    case "mimic": {
+      // The lid hinges at the rear; its face sits in front of the wood.
+      part("round", "#936148", [0.96, 0.64, 0.88], [0, 0.36, 0],
+        "wooden-box", group, "wood");
+      const lid = a.joint("mimic-lid", [0, 0.72, -0.38]);
+      part("round", "#b47c4e", [0.98, 0.25, 0.91], [0, 0.125, 0.38],
+        "lid", lid, "wood");
+      part("box", "#623f48", [0.98, 0.05, 0.06], [0, 0.015, 0.86],
+        "lid-rim", lid);
+      for (const side of [-1, 1]) {
+        part("box", "#d7aa6b", [0.1, 0.61, 0.06], [side * 0.38, 0.36, 0.48],
+          "frame", group, "wood");
+        part("sphere", "#fff7cb", [0.22, 0.22, 0.1], [side * 0.21, 0.15, 0.93],
+          "eye", lid);
+        part("sphere", "#332438", [0.105, 0.15, 0.055], [side * 0.21, 0.15, 0.995],
+          "pupil", lid);
+        const brow = part("round", "#623f48", [0.25, 0.045, 0.05], [side * 0.21, 0.28, 0.965],
+          "eyebrow", lid);
+        brow.rotation.z = side * 0.25;
+      }
+      part("round", "#392331", [0.8, 0.08, 0.09], [0, 0.72, 0.53], "mouth");
+      part("sphere", "#d86b79", [0.31, 0.07, 0.07], [0, 0.71, 0.59], "tongue");
+      for (const x of [-0.25, 0, 0.25]) {
+        part("cone", "#fff6df", [0.14, 0.19, 0.12], [x, 0.71, 0.59], "tooth");
+        part("cone", "#fff6df", [0.14, 0.19, 0.12], [x, -0.05, 0.94],
+          "tooth", lid).rotation.z = Math.PI;
+      }
       break;
+    }
     case "toy":
       part(
         "round",
@@ -431,9 +448,20 @@ export function createEnemy(kind, pool) {
       if (wing) wing.rotation.z = s * (0.3 + Math.sin(t * 20) * 0.6);
     }
     if (kind === "mimic") {
-      for (const mesh of group.children)
-        if (["eye", "pupil", "mouth", "tooth"].includes(mesh.name))
-          mesh.visible = e.animation !== "disguise";
+      const biting = e.animation === "lunge";
+      const angle = biting
+        ? 0.44 + 0.14 * (0.5 + 0.5 * Math.sin(t * 22))
+        : 0.015;
+      group.getObjectByName("mimic-lid").rotation.x = -angle;
+      const mouth = group.getObjectByName("mouth");
+      const opening = 0.04 + Math.sin(angle) * 0.8;
+      mouth.scale.y = opening;
+      mouth.position.y = 0.68 + opening / 2;
+      group.traverse((mesh) => {
+        if (["mouth", "tooth", "tongue"].includes(mesh.name))
+          mesh.visible = biting;
+        if (mesh.name === "eye") mesh.scale.y = biting ? 0.22 : 0.16;
+      });
     }
   };
   return a;
