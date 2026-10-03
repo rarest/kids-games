@@ -16,7 +16,7 @@ export function createRescueClient({onState=()=>{},onStatus=()=>{},url=defaultUR
  function save(value){session=value;try{if(value)storage?.setItem(SESSION_KEY,JSON.stringify(value));else storage?.removeItem(SESSION_KEY);}catch{/* A blocked session store still permits this connection. */}}
  function read(){try{const saved=JSON.parse(storage?.getItem(SESSION_KEY)??'null');if(saved&&/^[A-F0-9]{6}$/.test(saved.code)&&typeof saved.token==='string'&&saved.token.length>=20)return {code:saved.code,token:saved.token};}catch{}return null;}
  function send(packet){if(socket?.readyState!==1)return false;const raw=JSON.stringify(packet);try{socket.send(raw);sentBytes+=new TextEncoder().encode(raw).length;return true;}catch{return false;}}
- function stopSocket(){const old=socket;socket=null;if(old)try{old.close();}catch{}}
+ function stopSocket(){const old=socket;socket=null;pingAt=null;status.rtt=null;if(old)try{old.close();}catch{}}
  function resetPrediction(){prediction?.clear();}
  function end(message,connection='closed'){
   intent=null;retryAt=0;retryStarted=null;save(null);resetPrediction();prediction=null;stopSocket();room=null;slot=null;authority=null;epoch=null;tick=-1;notify(connection,message);

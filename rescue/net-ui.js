@@ -4,7 +4,7 @@ export function updateRoomUI(status,available) {
   const room=status.room,host=status.slot===0;
   const ready=!!room?.members.every(member=>member?.connected&&member.ready);
   const role=status.slot===null?'等待加入':host?'奇奇 · 房主':'蒂蒂 · 队员';
-  const latency=status.rtt===null?'延迟测量中':`延迟 ${Math.round(status.rtt)} 毫秒`;
+  const latency=status.connection!=='connected'?connections[status.connection]:status.rtt===null?'延迟测量中':`延迟 ${Math.round(status.rtt)} ms`;
   $('online-code').textContent=status.code??'——';
   $('online-role').textContent=`你的角色：${role}`;
   $('online-message').textContent=status.message||connections[status.connection];
@@ -12,8 +12,10 @@ export function updateRoomUI(status,available) {
   $('online-entry').hidden=!!room;
   $('online-start').hidden=!room||room.mode!=='lobby'||!host;
   $('online-start').disabled=!ready||!available||status.connection!=='connected';
-  $('online-hud').textContent=`房间 ${status.code??'——'} · ${role} · ${connections[status.connection]} · ${latency}`;
+  $('online-hud').textContent=`房间 ${status.code??'——'} · ${role} · ${connections[status.connection]}`;
   $('online-hud').hidden=false;
+  $('online-latency').textContent=latency;
+  $('online-latency').hidden=false;
   $('resume').disabled=!host||!ready||!available||status.connection!=='connected';
   $('retry').disabled=!host||!ready||!available;
   $('gameover-retry').disabled=!host||!ready||!available;
@@ -25,6 +27,7 @@ export function resetRoomUI(){
   updateRoomUI({connection:'idle',message:'',rtt:null,code:null,slot:null,room:null,suspended:false},true);
   $('online-input').value='';
   $('online-hud').hidden=true;
+  $('online-latency').hidden=true;
   $('online-leave').hidden=true;
   $('home').hidden=false;
   $('online-entry').hidden=false;

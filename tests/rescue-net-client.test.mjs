@@ -38,6 +38,15 @@ test('real WS clients own separate roles, no lobby input, full room errors and e
  const before=b.c.authority.players[1].x;b.c.advance({move:1},1/60);assert.ok(b.c.render().players[1].x>before);
  b.c.leave();await until(()=>a.statuses.some(s=>s.connection==='closed'),'closed');assert.equal(b.store.values().length,0);assert.equal(b.c.render(),null);
 });
+test('a reconnect clears the old socket RTT until the new socket receives its own pong',async t=>{
+ const h=await setup(t,{delay:60}),[a]=await h.pair();
+ await until(()=>a.statuses.some(s=>s.rtt>=100),'measured initial socket RTT');
+ a.link.ws.terminate();await until(()=>a.statuses.at(-1).connection==='reconnecting','socket lost');
+ assert.equal(a.statuses.at(-1).rtt,null,'disconnected transport must not advertise its old latency');
+ await until(()=>a.statuses.at(-1).connection==='connected','reclaimed socket');
+ assert.equal(a.statuses.at(-1).rtt,null,'the replacement socket has no measured RTT yet');
+ await until(()=>a.statuses.at(-1).rtt>=100,'new socket pong');
+});
 test('200ms RTT predicts within 100ms and converges after ack with bounded history and queues',async t=>{
  const h=await setup(t,{delay:100}),[a,b]=await h.pair();await h.start(a,b);
  const original=b.c.authority,level=original.level,base=original.players[1].x,frameStart=b.frames.length,start=performance.now();
