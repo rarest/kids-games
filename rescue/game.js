@@ -430,6 +430,11 @@ window.addEventListener("pageshow", () => {
 });
 try {
   scene = createScene(canvas);
+  canvas.addEventListener("webglcontextlost", suspend);
+  canvas.addEventListener("webglcontextrestored", () => {
+    resize();
+    restartLoop();
+  });
   scene.setQuality(saved.options.quality);
   home();
   renderedLevel = state.level;

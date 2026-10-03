@@ -8,3 +8,9 @@
 
 设计：`docs/superpowers/specs/2026-10-02-rescue-rangers-3d-design.md`。
 实施：`docs/superpowers/plans/2026-10-02-rescue-rangers-3d.md`。
+
+## 上线后试玩复核
+
+- [x] 奖励房加命使用当前房间安全出生点，防止复活队友触发提前结算。
+- [x] GPU 上下文丢失时暂停游戏，恢复后由玩家继续，丢弃旧按键。
+- [ ] 真实页面与完整战役回归、独立复核、发布及公网修复核验。

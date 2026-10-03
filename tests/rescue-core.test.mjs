@@ -286,3 +286,22 @@ test('all eight authored Boss balls recover onto actual support after either los
   const platform=s.platforms.find(p=>p.id===ball.groundId);assert.ok(platform,`${l.id} invented recovery support`);assert.equal(ball.y,platform.y);
  }
 });
+
+// A stale main checkpoint must not revive a bonus player outside the reward room.
+for (const reward of ['flower', 'star']) test(`bonus ${reward} extra life revives a teammate on the current room floor`, () => {
+ const s=createGame(fixture({width:80,height:12,platforms:[{id:'first',x:0,y:1,w:8,h:1},{id:'second',x:10,y:1,w:60,h:1}],checkpoints:[{x:40,y:1}],exit:{x:50,y:1},pickups:[...Array.from({length:reward==='flower'?49:0},(_,i)=>({id:`flower-${i}`,kind:'flower',x:20,y:1.1})),...Array.from({length:9},(_,i)=>({id:`star-${i}`,kind:'star',x:20,y:1.1}))]}),{players:2});
+ for(let i=0;i<6000&&s.players[1].lives>0;i++)stepGame(s,[{}, {move:1}],1/60);
+ assert.equal(s.players[1].lives,0);assert.equal(s.status,'playing');
+ for(let i=0;i<1000&&s.status==='playing';i++)stepGame(s,[{move:1,jump:s.players[0].x>6.5&&s.players[0].x<8},{}],1/60);
+ assert.equal(s.status,'bonus');assert.equal(s.stars,9);
+ for(let i=0;i<1200&&s.status==='bonus'&&s.stars<10;i++){
+  const p=s.players[0],input={move:p.x<17?1:0};
+  if(reward==='star'&&p.grounded&&((p.groundId==='bonus-floor'&&p.x>4&&p.x<5.3)||(p.groundId==='bonus-low'&&p.x>10&&p.x<11)))input.jump=true;
+  stepGame(s,[input,{}],1/60);
+ }
+ assert.equal(s.stars,10,'the real room pickup grants an extra life');
+ assert.equal(s.status,'bonus','revival must not count as walking out of the room');
+ assert.equal(s.players[1].lives,1);assert.equal(s.players[1].hearts,3);
+ assert.ok(s.players[1].x>=0&&s.players[1].x<24,'revived teammate is within the actual room');
+ run(s,[{},{}],.25);assert.equal(s.players[1].groundId,'bonus-floor');assert.equal(s.status,'bonus');
+});

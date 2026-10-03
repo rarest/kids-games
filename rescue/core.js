@@ -200,7 +200,7 @@ export function finishBonus(s){if(s.status==='bonus')clearArea(s);}
 function enterBonus(s){
  if(s.areaLevel.id==='J'){clearArea(s);return;}
  for(const p of s.players)release(s,p);
- loadEntities(s,bonusLevel(s.areaLevel.id));s.status='bonus';s.bonus={areaId:s.areaLevel.id,remaining:20,collected:0};
+ loadEntities(s,bonusLevel(s.areaLevel.id));s.checkpoint=copy(s.level.spawn);s.status='bonus';s.bonus={areaId:s.areaLevel.id,remaining:20,collected:0};
  for(const [i,p] of s.players.entries())Object.assign(p,{x:2+i,y:1,vx:0,vy:0,heldBy:null,carrying:null,hidden:false,grounded:true,groundId:null,invulnerable:1});
  event(s,'bonus',{area:s.areaLevel.id});
 }

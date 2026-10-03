@@ -113,3 +113,18 @@
 - 最终 bundle 与独立原始 esbuild 重建逐字节一致，SHA `8a2a601e96d4be3655519fed584235251941cb3b56a2653e87fbeb9b67fa41fd`。Task4 全包门禁的旧 SHA59a8 和此处最终 SHA 区分记录。
 
 - 整分支 Important 及四项 Minor 的独立复审全部 ADDRESSED，没有新增 Critical/Important 或范围外问题；九个修复文件 SHA 与报告一致，格式前后字节等价由复审再次独立核对。已更新远端 main，仍为 `323c2a9`，没有需要调和的其他提交。
+
+## 用户请求的上线后试玩（2026-10-03）
+
+用户要求“你试玩下，看有没什么bug”。从实际主域名独立 Chromium 开始双人新局，原生操作托队友/上抛、举箱蹲藏、跳跃投掷、三轮画质和暂停操作、绘图上下文丢失/恢复、返回主页继续；记录 `/tmp/rescue-evidence/playtest/result.json` 与截图。基本交互无异常。
+
+发现两处新缺陷：
+
+1. 奖励房仍保存主关 checkpoint，加命复活队友时位置在房间外，被当作正常出口而提前结算。纯输入 fixture 中 P2 正常掉坑至0命，P1 正常收9星/49花、经过 x40检查点并进入奖励房，收下一朵花即 cleared。直接收奖励星的路径也复现；没有写入运行中的位置或生命。已加入两项回归，修复前2/2按预期失败。
+2. 真实 WebGL 失去上下文后，页面仍 playing；主站原生按住移动并调用正常 WEBGL_lose_context，3.5秒不可见期间 x3.841→11.124、三心→一心。恢复也不自动暂停。记录 `/tmp/rescue-evidence/playtest/context-probe.json`；运行时异常为空。
+
+线上两项新回归均按预期失败：GPU丢失后 phase为playing而非paused；实际双人C入口存档48花/9星、[3,0]生命，随后真实按键闯过C，奖励花加命使页面变成complete而非bonus。初次诊断使用49花，在C内先转换出第10星，没有触发奖励房边界；调整为48花后正确复现，不把初次未触发写成失败。日志 `/tmp/rescue-playtest-browser-red.log`。
+
+修复最小范围为当前奖励房安全检查点及绘图丢失暂停/恢复渲染；资源版本升级 `20261003rescue2`。受影响单元90/90及完整带战斗11区回归1/1通过，合计91项。真实页面的键盘双人、六视口触控、GPU丢失恢复和实际C奖励复活四项通过。生命周期检查初次因 Chrome 导航期间 Runtime.evaluate 报“Inspected target navigated or closed”失败，等待函数仅重试导航/上下文替换瞬态错误，单独重跑冻结与 BFCache 原生返回1/1通过；没有修改游戏逻辑来处理该测试脚本竞争。日志 `/tmp/rescue-playtest-unit-green.log`、`/tmp/rescue-playtest-occupied-green.log`、`/tmp/rescue-playtest-browser-green.log`、`/tmp/rescue-playtest-navigation-green.log`。
+
+原始 esbuild 独立重建与提交 bundle 逐字节相同，SHA-256 `d68cd0b9f58ffcca21beb79a0675ba121ef16f270fffbb051fa232dd40adc479`；`git diff --check` 通过。此修复尚在发布前复核阶段。
