@@ -1,7 +1,7 @@
 export const avatars={fox:'🦊',panda:'🐼',rabbit:'🐰',cat:'🐱',dog:'🐶',bird:'🐦'};
 export const selectedProfileKey=owner=>`family-selected-v1:${encodeURIComponent(owner)}`;
 export const verifiedOwnerKey='family-verified-owner-v1';
-export function browserStorage(){try{return globalThis.localStorage}catch{}const cache=new Map();return {getItem:key=>cache.get(key)??null,setItem:(key,value)=>cache.set(key,String(value)),removeItem:key=>cache.delete(key)}}
+export function browserStorage(){try{return globalThis.localStorage}catch{}const cache=new Map();return {getItem:key=>cache.get(key)??null,setItem:(key,value)=>cache.set(key,String(value)),removeItem:key=>cache.delete(key),get length(){return cache.size},key:index=>[...cache.keys()][index]??null}}
 export const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export async function familyRequest(path,{method='GET',body}={}){
  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);let response;
