@@ -1,3 +1,4 @@
+import {mountCourse} from './course-ui.js';
 import {WORDS,BOOKS} from './curriculum.js';
 import {LEVELS,SKINS,MODES,Run,makeQuestions,loadSave,completeCard,buySkin,answerMatches,snapshotRun,restoreRun} from './core.js';
 import {AdventureScene} from './scene.js';
@@ -24,7 +25,7 @@ $('continueSaved').onclick=continueSaved;$('continueEnglish').onclick=continueSa
 function toast(text){clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,3200);}
 function updateCoins(){document.querySelectorAll('[data-coins]').forEach(el=>el.textContent=save.coins.toLocaleString());$('wrongCount').textContent=save.wrong.length;updateContinuation();}
 function resetInput(){held.clear();touchLeft=touchRight=touchJump=false;input.steer=0;input.jump=false;}
-function setView(next){resetInput();view=next;document.querySelectorAll('.view').forEach(el=>el.hidden=el.id!==next);$('shopButton').disabled=next==='play';$('homeButton').disabled=next==='play';if(next!=='play')window.scrollTo({top:0});if(next==='play'){$('gameCanvas').append(canvas);scene?.resize();}if(next==='shop'){$('skinPreview').append(canvas);scene?.resize();}document.body.style.overflow=next==='play'?'hidden':'';}
+function setView(next){stopReading();resetInput();view=next;document.querySelectorAll('.view').forEach(el=>el.hidden=el.id!==next);$('shopButton').disabled=next==='play';$('homeButton').disabled=next==='play';if(next!=='play')window.scrollTo({top:0});if(next==='play'){$('gameCanvas').append(canvas);scene?.resize();}if(next==='shop'){$('skinPreview').append(canvas);scene?.resize();}document.body.style.overflow=next==='play'?'hidden':'';}
 function getScene(){if(!scene){try{scene=new AdventureScene(canvas,{onError:message=>toast(message?.message||message||'3D画面暂时不可用，请检查浏览器的图形加速。')});}catch(error){toast('3D画面没有启动。可先使用“本单元”听读练习。');console.error(error);return null;}}return scene;}
 const termLabel=term=>term==='upper'?'上':'下';
 function bookFor(grade,term){return BOOKS.find(b=>b.grade===Number(grade)&&b.term===({上:'upper',下:'lower'}[term]||term));}
@@ -38,8 +39,8 @@ function renderLevels(){$('modeFilters').innerHTML=[['all','全部路线','✦']
 $('modeFilters').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(b){modeFilter=b.dataset.mode;renderLevels();}});
 $('levels').addEventListener('click',e=>{const b=e.target.closest('[data-level]');if(b)start(LEVELS.find(l=>l.id===b.dataset.level));});
 $('grade').addEventListener('change',updateBook);$('term').addEventListener('change',updateBook);$('unit').addEventListener('change',updateSelection);
-$('englishButton').onclick=openEnglish;$('homeButton').onclick=()=>{if(run&&run.status==='playing')run.pause();setView('home');};
-$('chinese').onclick=()=>toast('语文玩法等你来设计，先去英语探险吧。');$('math').onclick=()=>toast('数学玩法等你来设计，先去英语探险吧。');
+$('englishButton').onclick=openEnglish;$('homeButton').onclick=()=>{if(run&&run.status==='playing')run.pause();course.home();setView('home');};
+
 function start(level){if(save.session?.run.levelId===level.id&&save.session.unitId===selectedUnit.id){continueSaved();return;}closeDialogs();reviewMode=false;run=new Run(level);roundId=crypto.randomUUID();questions=makeQuestions(selectedUnit,WORDS,level.seed+Math.floor(Math.random()*100000));correct=0;roundWrong=[];answered=false;lastAnswer=null;sentencePicked=[];enterRun();checkpoint();}
 function updateHUD(){if(!run)return;$('cardCount').textContent=`题卡 ${run.completed} / 10`;$('timer').textContent=`${Math.floor(run.elapsed/60)}:${String(Math.floor(run.elapsed)%60).padStart(2,'0')}`;$('raceRank').textContent=run.level.mode==='race'?`第 ${run.rank} / 10 名`:'';$('progressBar').style.width=`${run.progress*100}%`;const hit=run.lastHit!==null&&run.elapsed-run.lastHit<2.5;$('playTip').textContent=hit?'碰到路障会减速，试着转向或跳过去。':run.level.mode==='parkour'?'左右转向躲开路障，空格或“跳跃”越过障碍。':'方向键 / A、D 转向；沿途10张题卡，答题时全场暂停。';}
 function closeDialogs(){stopReading();for(const d of document.querySelectorAll('dialog[open]'))d.close();}
@@ -109,3 +110,8 @@ function frame(time){const dt=Math.min(.05,Math.max(0,(time-lastFrame)/1000));la
  requestAnimationFrame(frame);}
 try{const selection=JSON.parse(localStorage.getItem(SELECTION_KEY));const book=BOOKS.find(b=>b.id===selection?.book);if(book){selectedBook=book;selectedUnit=book.units.find(u=>u.id===selection.unit)||book.units[0];}}catch{}
 $('grade').value=selectedBook.grade;$('term').value=termLabel(selectedBook.term);const initialUnit=selectedUnit.id;updateBook();$('unit').value=initialUnit;updateSelection();updateCoins();renderSkins();requestAnimationFrame(frame);
+
+const course=mountCourse({root:$('courseRoot'),speak,read:lines=>reader.read(lines),stopAudio:stopReading,notice:toast,
+ onReward:id=>{if(completeCard(save,`course:${id}`)){persist();toast('这课首次完成，+200金币！');}},
+ openPages:(number,unitId)=>{stopReading();selectedBook=BOOKS.find(b=>b.id==='g3-upper');$('grade').value=3;$('term').value='上';updateBook();$('unit').value=unitId;updateSelection();openStudy();studyPages=selectedBook.textbookPages;const section=$('studyContent').querySelector('.textbook-section');section.outerHTML=textbookSection({textbookPages:studyPages},esc);$('textbookPage').value=String(number);$('textbookPage').dispatchEvent(new Event('change',{bubbles:true}));}
+});
