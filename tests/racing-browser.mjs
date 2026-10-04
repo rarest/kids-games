@@ -4,7 +4,9 @@ import { writeFile } from "node:fs/promises";
 import { openBrowser, sleep } from "./game-browser-harness.mjs";
 test(
   "3D racer renders, controls, pauses, changes tracks and fits rotating devices",
-  { timeout: 180000 },
+  // CPU-only SwiftShader can exceed three minutes for all six resizes and tracks.
+  // Keep every interaction assertion; allow the full visitor path to finish.
+  { timeout: 300000 },
   async () => {
     const b = await openBrowser();
     try {

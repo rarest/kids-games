@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#edf1e6"><title>记忆花园 · 200段小小记忆</title>
+  <link rel="stylesheet" href="../memory/style.css?v=20261004memory1">
+</head>
+<body data-mode="home">
+  <header><a class="brand" href="../index.html"><span class="brand-flower">✿</span><span>记忆花园<small>MEMORY GARDEN</small></span></a>
+    <div class="wallet"><span class="coin">◈</span><span id="coins">1000</span><button id="mute" aria-label="关闭声音" aria-pressed="false">♫</button></div>
+  </header>
+  <main id="stage">
+    <canvas id="view" tabindex="0" aria-label="3D配对牌桌，点击翻牌，拖动浏览。方向键移动选择，回车翻牌。"></canvas>
+    <section id="home">
+      <span class="eyebrow">A LITTLE MOMENT TO REMEMBER</span><h1>把美好，<br>记在心里。</h1>
+      <p>翻开一张小小的惊喜，<br>再找到它的另一半。</p>
+      <div class="home-buttons"><button id="start" class="primary">开始游戏 <span>→</span></button><button id="continue" hidden>继续上次牌局</button><button id="shop">装备商店</button><button id="help">怎么玩</button></div>
+      <div class="gift-note" id="gift-note">新手礼物已放好：1000金币 · 加两对×2 · 看一眼×1</div>
+      <div class="home-meta">真实3D <i>·</i> 200关 <i>·</i> 慢慢记，慢慢找</div>
+    </section>
+    <section id="hud" hidden><div><span id="theme-name"></span><h2 id="level-label"></h2></div><div class="score"><strong id="matched">0 / 2</strong><small id="moves">0次翻牌</small></div></section>
+    <div id="phase-banner" hidden></div>
+    <div id="board-tools" hidden><button id="overview" aria-label="切换牌桌总览">▦ 总览</button><button id="reset" aria-label="回到第一张牌">↺ 复位</button><button id="pause">Ⅱ 暂停</button><button id="play-shop">商店</button></div>
+    <div id="board-location" hidden></div>
+    <div id="error" hidden role="alert"><h2>3D画面未能启动</h2><p id="error-text"></p><a href="../index.html">返回游戏厅</a></div>
+  </main>
+  <nav id="inventory" hidden aria-label="消耗装备"><button id="use-peek"><span>◉ 看一眼</span><b id="peek-count">1</b></button><button id="use-bomb"><span>✦ 炸一对</span><b id="bomb-count">0</b></button><button id="use-add"><span>＋ 增加两对</span><b id="add-count">2</b></button></nav>
+  <footer id="home-footer">一张牌，一点专注，一座属于你的花园。<span>点选翻牌 · 拖动浏览</span></footer>
+  <div id="levels-dialog" class="overlay" hidden><section class="panel"><div class="panel-title"><div><span class="eyebrow">YOUR LITTLE JOURNEY</span><h2>200段记忆旅程</h2></div><button id="close-levels" aria-label="关闭关卡选择">×</button></div><p class="muted">通过一关开放下一关，也可以花100金币提前开放指定关卡。</p><div id="levels" class="level-grid"></div></section></div>
+  <div id="shop-dialog" class="overlay" hidden><section class="panel"><div class="panel-title"><div><span class="eyebrow">A LITTLE HELP</span><h2>装备商店</h2></div><button id="close-shop" aria-label="关闭商店">×</button></div><p class="muted">都是消耗品。每关首次通关奖励100金币，重玩不重复领。</p><div id="shop-list"></div><p id="shop-wallet" class="muted"></p></section></div>
+  <div id="unlock-dialog" class="overlay" hidden><section class="panel small-panel"><span class="eyebrow">OPEN A NEW CHAPTER</span><h2 id="unlock-title"></h2><p>花100金币只开放这一关，不会开放中间的关卡。</p><div class="dialog-actions"><button id="cancel-unlock">再想想</button><button id="confirm-unlock" class="primary">100金币 · 解锁并开始</button></div></section></div>
+  <div id="pause-dialog" class="overlay" hidden><section class="panel small-panel"><span class="eyebrow">TAKE YOUR TIME</span><h2>花园在等你</h2><p>牌局和装备已保留。回来时继续找就好。</p><div class="dialog-actions"><button id="leave">回主页</button><button id="resume" class="primary">继续游戏</button></div></section></div>
+  <div id="result-dialog" class="overlay" hidden><section class="panel small-panel"><span class="eyebrow">A BEAUTIFUL MEMORY</span><div class="result-flower">✿</div><h2>这一关，记住了！</h2><p id="result-stats"></p><strong id="result-reward"></strong><div class="dialog-actions"><button id="result-home">回主页</button><button id="replay">再玩一次</button><button id="next" class="primary">下一关 →</button></div></section></div>
+  <div id="help-dialog" class="overlay" hidden><section class="panel small-panel"><div class="panel-title"><h2>怎么玩</h2><button id="close-help" aria-label="关闭帮助">×</button></div><ol><li>开局看5秒，记住图案的位置。</li><li>每次点两张，相同的保持翻开；不同的1秒后盖回。</li><li>全部配对就通关，没有倒计时压力。</li><li>第1关2对、第2关4对，逐关加2对；第40关休息一下只有2对，第41关从80对接着往上。</li><li>牌多时拖动浏览，使用总览或复位；追加的牌放在最后，原牌位置不变。</li></ol><p class="muted">进度保存在当前浏览器。清除网站数据会清除进度。</p></section></div>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <script type="module" src="../memory/bundle.js?v=20261004memory1"></script>
+</body>
+</html>
