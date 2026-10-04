@@ -209,6 +209,14 @@ test('scene graph follows dynamic platforms, held objects and spawned pickups wi
  assert.equal(world.group.getObjectByName('object:s1').position.y,4);assert.ok(world.group.getObjectByName('pickup:new'));
  state.objects[0].active=false;state.pickups.at(-1).collected=true;world.update(state,1/60);assert.equal(world.group.getObjectByName('object:s1'),undefined);assert.equal(world.group.getObjectByName('pickup:new'),undefined);world.dispose();
 });
+test('actual avatar joints consume the render clock while authoritative events stay unchanged',async()=>{
+ const {createWorld}=await module('scene'),{createGame}=await import('../rescue/core.js');
+ const s=createGame(LEVELS[0]),world=createWorld();s.players[0].animation='run';s.players[0].vx=7.2;s.players[0].renderTime=.1;
+ try{
+  world.update(s,1/60);const leg=world.group.getObjectByName('player:p1').getObjectByName('left-leg'),before=leg.rotation.z;
+  s.players[0].renderTime=.25;world.update(s,1/60);assert.notEqual(leg.rotation.z,before,'walking joints cannot use a frozen snapshot clock');assert.equal(s.time,0);assert.deepEqual(s.events,[]);
+ }finally{world.dispose();}
+});
 test('world resource counts plateau across level switches and particles stay bounded',async()=>{
  const {createWorld}=await module('scene');const {createGame}=await import('../rescue/core.js');const world=createWorld();const counts=[];
  for(let cycle=0;cycle<3;cycle++){for(const l of LEVELS){world.setLevel(l);world.update(createGame(l),1/60);}counts.push(world.resources.stats());}

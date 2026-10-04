@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,stepGame} from '../rescue/core.js';
+import {createGame,stepGame,projectGeometry} from '../rescue/core.js';
 import {LEVELS} from '../rescue/levels.js';
+const awaitCore=await import('../rescue/core.js');
 const module=await import('../rescue/net-prediction.js').catch(()=>({}));
 const neutral=()=>({move:0,up:false,down:false,jump:false,action:false});
 const fixture=()=>({...LEVELS[0],width:100,spawn:{x:5,y:1},platforms:[{id:'floor',x:0,y:1,w:100,h:1}],objects:[],enemies:[],hazards:[],pickups:[],boss:null,exit:{x:98,y:1}});
@@ -18,11 +19,11 @@ function carrying(extra={}){
  assert.equal(h.s.players[0].carrying?.id,'box');return h;
 }
 test('walk and jump animation clocks advance with predicted motion between server snapshots',()=>{
- const {p,s}=setup();const first=p.advance({move:1,jump:true},1/60).state;
- const time=first.time,x=first.players[0].x,y=first.players[0].y;
+ const {p,s,time:clockTime}=setup();clockTime(1000/60);const first=p.advance({move:1,jump:true},1/60).state;
+ const time=first.players[0].renderTime,x=first.players[0].x,y=first.players[0].y;
  assert.ok(time>s.time,'the moving body must not use the stale server animation clock');
- const second=p.advance({move:1},1/60).state;
- assert.ok(second.time>time);assert.ok(second.players[0].x>x);assert.ok(second.players[0].y>y);
+ clockTime(2000/60);const second=p.advance({move:1},1/60).state;
+ assert.ok(second.players[0].renderTime>time);assert.ok(second.players[0].x>x);assert.ok(second.players[0].y>y);
  assert.equal(s.time,0);assert.equal(second.events,s.events);
 });
 test('acknowledging a local throw does not rewind the already flying crate',()=>{
@@ -34,16 +35,16 @@ test('acknowledging a local throw does not rewind the already flying crate',()=>
  const confirmed=p.render().objects[0];
  assert.ok(Math.abs(confirmed.x-before.x)<.01,`throw rewound from ${before.x} to ${confirmed.x}`);
  assert.equal(confirmed.heldBy,null);
- const continued=p.advance({},1/60).state.objects[0];assert.ok(continued.x>confirmed.x);
+ time(117);const continued=p.advance({},1/60).state.objects[0];assert.ok(continued.x>confirmed.x);
  for(const command of commands.slice(1))stepGame(s,[command.input,neutral()],1/60);
  assert.equal(s.events.filter(e=>e.type==='throw').length,1);
 });
-test('a predicted throw impact removes both crate and monster without claiming a server reward',()=>{
+test('a predicted impact keeps shared lifecycles authoritative until confirmed',()=>{
  const {p,s}=carrying({enemies:[{id:'target',kind:'mouse',x:9,y:1,min:8,max:10,speed:0}]}),original=structuredClone(s);
  p.advance({action:true},1/60);for(let i=0;i<25;i++)p.advance({},1/60);
  const view=p.render();
- assert.equal(view.objects[0].active,false,'spent crate must not keep flying through the target');
- assert.equal(view.enemies[0].alive,false,'the monster must react at the visible impact');
+ assert.equal(view.objects[0].active,true,'only the server can consume the shared crate');
+ assert.equal(view.enemies[0].alive,true,'only the server can kill the shared monster');
  assert.equal(view.score,s.score);assert.equal(view.events,s.events);assert.deepEqual(s,original);
 });
 test('predicted feet stay on the same moving platform that the scene displays',()=>{
@@ -74,13 +75,13 @@ test('ack consumes only acknowledged commands and replay converges with the real
 test('physical action and jump edges occur once across batches, gaps and replay',()=>{
  const {p,s,receive}=setup();
  const first=p.advance({action:true,jump:true},1/30);assert.equal(first.commands.filter(c=>c.input.action).length,1);
- assert.equal(first.commands.filter(c=>c.input.jump).length,1);assert.equal(first.state.players[1].heldBy,'p1');
+ assert.equal(first.commands.filter(c=>c.input.jump).length,1);assert.equal(first.state.players[1].heldBy,null,'an unconfirmed pickup cannot move the remote body');
  for(const c of first.commands)stepGame(s,[c.input,neutral()],1/60);
  stepGame(s,[neutral(),neutral()],1/60);receive(2);
  const next=p.advance({action:true,jump:true},1/30);assert.ok(next.commands.every(c=>!c.input.action&&!c.input.jump));
  assert.equal(next.state.players[0].carrying?.type,'player');
  p.advance({},1/60);const thrown=p.advance({action:true},1/60);
- assert.equal(thrown.state.players[0].carrying,null);assert.equal(thrown.state.players[1].heldBy,null);
+ assert.equal(thrown.state.players[0].carrying?.id,'p2');assert.equal(thrown.state.players[1].heldBy,'p1','remote ownership changes only after authority');
  assert.equal(s.events.filter(e=>e.type==='pickup').length,1);assert.equal(s.events.filter(e=>e.type==='throw').length,0);
 });
 test('sub-fixed-frame press is retained once and input/prediction memory stays bounded',()=>{
@@ -123,4 +124,76 @@ test('small local authority corrections smooth briefly and settle without modify
  s.players[0].x+=.4;time(50);receive(1);assert.equal(p.render().players[0].x,shown);
  time(100);assert.ok(p.render().players[0].x>shown);assert.ok(p.render().players[0].x<s.players[0].x);
  time(150);assert.equal(p.render().players[0].x,s.players[0].x);
+});
+test('shared geometry uses snapshot time rather than either local input queue',()=>{
+ const level={...fixture(),platforms:[...fixture().platforms,{id:'lift',kind:'moving',x:2,y:3,w:6,h:.65,axis:'x',range:2,speed:1}],enemies:[{id:'mouse',kind:'mouse',x:12,y:1,min:9,max:20,speed:2}]};
+ const a=setup(0,level),b=setup(1,level);
+ for(let i=0;i<12;i++)a.p.advance({},1/60);
+ for(let i=0;i<4;i++)b.p.advance({},1/60);
+ a.time(200);b.time(200);
+ const av=a.p.render(),bv=b.p.render();
+ assert.ok(Math.abs(av.enemies[0].x-bv.enemies[0].x)<1e-8,'same server state and wall time must show the same enemy');
+ assert.ok(Math.abs(av.platforms[1].x-bv.platforms[1].x)<1e-8);
+ assert.equal(av.time,bv.time);assert.ok(av.time>a.s.time);
+});
+test('remote fall cannot predict a respawn or release a confirmed held chain',()=>{
+ const {p,s,receive,time}=setup();s.players[1].y=-3.9;s.players[1].hearts=1;receive();
+ for(let i=0;i<5;i++)p.advance({},1/60);time(100);const v=p.render();
+ assert.ok(v.players[1].y< -3.9,'remote position must not jump to the checkpoint before confirmation');
+ assert.equal(v.players[1].lives,3);assert.equal(v.players[1].hearts,1);
+});
+test('confirmed competing ownership cancels a speculative crate pickup',()=>{
+ const {p,s,receive,time}=setup(0,{...fixture(),objects:[{id:'box',kind:'crate',x:5.4,y:1}]});
+ p.advance({action:true},1/60);assert.equal(p.render().players[0].carrying?.id,'box');
+ s.players[1].carrying={type:'object',id:'box'};s.objects[0].heldBy='p2';time(50);receive();
+ const v=p.render();assert.equal(v.players[0].carrying,null);assert.equal(v.objects[0].heldBy,'p2');assert.equal(v.objects[0].x,v.players[1].x);
+});
+test('geometry projection preserves lifecycle, attacks, held ownership and campaign decisions',()=>{
+ const s=createGame({...fixture(),enemies:[{id:'shot',kind:'toy',x:7,y:1,timer:2.79},{id:'bird',kind:'pelican',x:9,y:4,timer:2.39}],objects:[{id:'box',kind:'crate',x:7,y:1}],boss:{id:'boss',kind:'owl',x:10,y:4}},{players:2});
+ s.objects[0].thrown=true;s.objects[0].vx=11;
+ s.players[1].y=-3.9;s.players[1].hearts=1;
+ s.players[0].x=s.level.exit.x;s.boss.active=true;s.boss.phase='perch';s.boss.timer=.5;s.boss.attackTimer=1.79;
+ const before=structuredClone(s);projectGeometry(s,.2);
+ assert.equal(s.enemies[0].alive,true);assert.equal(s.objects[0].active,true);
+ assert.equal(s.players[1].hearts,1);assert.equal(s.players[1].lives,3);assert.ok(s.players[1].y< -4);
+ for(const key of ['score','stars','status','events','projectiles','pickups','campaign','completed','nextEntityId','nextEventId'])assert.deepEqual(s[key],before[key],key);
+ assert.equal(s.boss.phase,'perch');assert.equal(s.boss.hp,before.boss.hp);assert.ok(s.boss.x!==before.boss.x,'moving Boss geometry follows the shared clock without firing attacks');
+});
+test('acknowledged throws switch to advancing common geometry after bounded visual correction',()=>{
+ const {p,s,receive,time}=carrying({objects:[{id:'box',kind:'metal',x:5.4,y:1}]});
+ const result=p.advance({action:true},1/60);stepGame(s,[result.commands[0].input,neutral()],1/60);time(20);receive(result.commands[0].seq);
+ time(120);const first=p.render().objects[0].x;time(220);const second=p.render().objects[0].x;
+ assert.ok(second>first+.5,'confirmed box must keep moving between snapshots');
+ const b=module.createPrediction({slot:1,clock:{now:()=>20}});b.receive(s,{epoch:1,ack:0,inputs:[neutral(),neutral()]});
+ assert.ok(Math.abs(p.render(1020).objects[0].x-b.render(1020).objects[0].x)<.001,'expired own overlay must use the same public geometry');
+});
+test('rejected predicted damage cannot introduce a correction offset under the floor',()=>{
+ const {p,s,receive}=setup(0,{...fixture(),enemies:[{id:'target',kind:'mouse',x:5.8,y:1,speed:0,min:5.8,max:5.8}]});
+ for(let i=0;i<5;i++)p.advance({move:1},1/60);
+ receive();const v=p.render();assert.ok(v.players[0].x>=s.players[0].x,'local movement still responds');assert.equal(v.players[0].y,s.players[0].y,'speculative damage cannot pull feet below the floor');assert.equal(v.players[0].hearts,3);
+});
+test('Boss geometry agrees across snapshots on either side of a phase boundary',()=>{
+ const level={...fixture(),boss:{id:'ufo',kind:'ufo',x:10,y:5,arena:{x:0,y:1,w:20}}};
+ const a=createGame(level,{players:2}),b=structuredClone(a);Object.assign(a.boss,{active:true,timer:3.49,phase:'alienDrop'});Object.assign(b.boss,{active:true,timer:3.55,phase:'ram'});
+ projectGeometry(a,.16);projectGeometry(b,.10);
+ assert.ok(Math.hypot(a.boss.x-b.boss.x,a.boss.y-b.boss.y)<.001,'geometry uses common target time without changing confirmed phases');
+ assert.equal(a.boss.phase,'alienDrop');assert.equal(b.boss.phase,'ram');
+});
+test('a rejected pickup of a previously owned moving box cannot retain its prediction overlay',()=>{
+ const {p,s,receive,time}=setup(0,{...fixture(),objects:[{id:'box',kind:'metal',x:6.4,y:1.2,vx:5,owner:'p1'}]});
+ const result=p.advance({action:true},1/60);assert.equal(p.render().players[0].carrying?.id,'box');
+ for(let i=0;i<3;i++)stepGame(s,[neutral(),neutral()],1/60);
+ stepGame(s,[result.commands[0].input,neutral()],1/60);assert.notEqual(s.players[0].carrying?.id,'box','server box pickup is outside range');
+ time(20);receive(result.commands[0].seq);const other=module.createPrediction({slot:1,clock:{now:()=>20}});other.receive(s,{epoch:1,ack:0,inputs:[neutral(),neutral()]});
+ time(170);assert.ok(Math.abs(p.render().objects[0].x-other.render(170).objects[0].x)<.001,'old owner is not proof of the rejected pickup');
+});
+test('local replay advances only its player and acted box, without stepping remote AI or damage',()=>{
+ const s=createGame({...fixture(),objects:[{id:'box',kind:'crate',x:5.4,y:1},{id:'other',kind:'metal',x:20,y:4}],enemies:[{id:'enemy',kind:'mouse',x:6,y:1,speed:0}],boss:{id:'boss',kind:'owl',x:10,y:4}},{players:2});
+ const {stepLocal}=awaitCore;assert.equal(typeof stepLocal,'function','local-only prediction must exist');
+ const enemies=structuredClone(s.enemies),remote=structuredClone(s.players[1]),other=structuredClone(s.objects[1]);
+ stepLocal(s,0,{action:true},1/60);assert.equal(s.players[0].carrying?.id,'box');
+ stepLocal(s,0,{},1/60);stepLocal(s,0,{action:true},1/60);
+ const x=s.objects[0].x;for(let i=0;i<20;i++)stepLocal(s,0,{move:1},1/60);
+ assert.ok(s.objects[0].x>x);assert.ok(s.players[0].x>5);assert.equal(s.players[0].hearts,3);
+ assert.deepEqual(s.enemies,enemies);assert.deepEqual(s.players[1],remote);assert.deepEqual(s.objects[1],other);assert.equal(s.boss.active,false);assert.equal(s.score,0);
 });

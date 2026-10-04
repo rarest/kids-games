@@ -15,8 +15,8 @@ export function snapshot(browser){return browser.evaluate(`({...view.dataset,pos
 export async function shot(browser,name){const dir=process.env.RESCUE_EVIDENCE_DIR||'/tmp/rescue-evidence/online';await mkdir(dir,{recursive:true});const r=await browser.call('Page.captureScreenshot',{format:'png'});const path=`${dir}/${name}.png`;await writeFile(path,Buffer.from(r.data,'base64'));return path;}
 // Native sockets are rerouted only in the browser test environment. The production client stays same-origin.
 // Delay is in a real WS forwarder: each direction contributes latency/2 milliseconds.
-export async function openOnlinePair({latency=0,jitter=0,levelFor,chromeFlags=[],quality="auto",publicSameOrigin=process.env.RESCUE_PUBLIC_SAME_ORIGIN==='1'}={}){
- if(publicSameOrigin&&(latency||jitter||levelFor||!process.env.GAMES_TEST_ORIGIN))throw Error('Public same-origin verification requires GAMES_TEST_ORIGIN and no relay/fixture');
+export async function openOnlinePair({latency=0,jitter=0,peerLatencies,levelFor,chromeFlags=[],quality="auto",publicSameOrigin=process.env.RESCUE_PUBLIC_SAME_ORIGIN==='1'}={}){
+ if(publicSameOrigin&&(latency||jitter||peerLatencies||levelFor||!process.env.GAMES_TEST_ORIGIN))throw Error('Public same-origin verification requires GAMES_TEST_ORIGIN and no relay/fixture');
  const host=await openBrowser({chromeFlags});let guest,server,forwarder;const connections=new Set(),timers=new Set(),traffic=[];
  try{
   guest=await openBrowser({chromeFlags});for(const b of [host,guest])await b.call('Emulation.setFocusEmulationEnabled',{enabled:true});
@@ -30,9 +30,9 @@ export async function openOnlinePair({latency=0,jitter=0,levelFor,chromeFlags=[]
   let random=0x5eed;
   delayed=(direction,fn)=>{
    random=(Math.imul(random,1664525)+1013904223)>>>0;
-   const now=performance.now(),delay=Math.max(0,latency/2+jitter*(2*random/2**32-1));
+   const now=performance.now(),delay=Math.max(0,(direction.latency??latency)/2+jitter*(2*random/2**32-1));
    direction.due=Math.max(now+delay,direction.due??0);
-   if(!latency&&!jitter){fn();return;}
+   if(!(direction.latency??latency)&&!jitter){fn();return;}
    (direction.queue??=[]).push({due:direction.due,fn});
    if(direction.timer)return;
    const drain=()=>{
@@ -41,7 +41,7 @@ export async function openOnlinePair({latency=0,jitter=0,levelFor,chromeFlags=[]
     if(direction.queue.length){const timer=setTimeout(()=>{timers.delete(timer);drain();},Math.max(1,direction.queue[0].due-performance.now()));direction.timer=timer;timers.add(timer);}
    };drain();
   };
-  wss.on('connection',(socket,req)=>{const peer={socket,upstream:new WebSocket(upstream,{origin:req.headers.origin}),dynamicBytes:0,dynamicFrames:0,start:performance.now(),trace:[],lastMode:null,holdState:false,heldState:null,heldStage:null,withheldFrames:0,inbound:{},outbound:{},modes:[],events:new Map(),latest:null,staticFrames:0,inputTimings:new Map()};connections.add(peer);traffic.push(peer);const queue=[];
+  wss.on('connection',(socket,req)=>{const peer={socket,upstream:new WebSocket(upstream,{origin:req.headers.origin}),dynamicBytes:0,dynamicFrames:0,start:performance.now(),trace:[],lastMode:null,holdState:false,heldState:null,heldStage:null,withheldFrames:0,inbound:{latency:peerLatencies?.[traffic.length]},outbound:{latency:peerLatencies?.[traffic.length]},modes:[],events:new Map(),latest:null,staticFrames:0,inputTimings:new Map()};connections.add(peer);traffic.push(peer);const queue=[];
    socket.on('message',data=>{
     const message=JSON.parse(String(data)),entry={at:performance.now(),type:message.type,epoch:message.epoch,seq:message.commands?.at(-1)?.seq,ready:message.type==='ready'?message.value:undefined};
     peer.trace.push(entry);if(peer.trace.length>250)peer.trace.shift();

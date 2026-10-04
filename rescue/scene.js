@@ -282,7 +282,7 @@ export function createWorld() {
         entities.set(key, a);
         group.add(a.group);
       }
-      a.update?.(e, time);
+      a.update?.(e, e.renderTime ?? time);
     }
     for (const [key, a] of entities)
       if (key.startsWith(`${category}:`) && !seen.has(key)) {

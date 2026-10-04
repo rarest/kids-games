@@ -6,6 +6,8 @@ import {openOnlinePair,createRoom,click,key,point,touch,wait,snapshot,shot,sleep
 test('native online room uses each device 1P keys and touch, carry/throw, pause, reload reclaim and isolated local save',{timeout:180000},async()=>{
  const pair=await openOnlinePair();const {host,guest}=pair;
  try{
+  // Finish observed software-WebGL adaptation before measuring the full-height play viewport.
+  for(const b of [host,guest])await wait(b,'JSON.parse(view.dataset.graphics).dpr<=.5&&!JSON.parse(view.dataset.graphics).shadows',60000);
   // A real local entrance save precedes online play; online must leave its bytes and options intact.
   await click(host,'#players-two');await click(host,'#dale');await click(host,'#start');await click(host,'#pause');await click(host,'#home');
   const saved=await host.evaluate('localStorage.getItem("rescue-rangers-3d-v1")');
