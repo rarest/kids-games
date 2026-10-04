@@ -16,7 +16,7 @@ window.GAMES = [
     tags: ["英语", "学习", "3D", "皮肤", "手机"],
   },
   {
-    file: "games/rescue.html?v=20261004rescue-motion1",
+    file: "games/rescue.html?v=20261004rescue-online5",
     emoji: "🐿️",
     name: "松鼠大作战",
     desc: "11个经典区域的3D横版重制，举箱子、扔队友，本机 / 联网双人救援",
