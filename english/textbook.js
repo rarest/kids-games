@@ -1,0 +1,7 @@
+export function textbookSection(unit,esc,wholeBook=false){
+ const pages=unit.textbookPages;if(!pages?.length)return '';
+ return `<section class="textbook-section"><h3>课本逐页听读 · 第${pages[0].page}—${pages.at(-1).page}页</h3><p class="source-note">2024版 · 2026年7月印本。点击句子或单词听发音，也可朗读整页。</p><div class="textbook-controls"><label>课本页码<select id="textbookPage">${pages.map(p=>`<option value="${p.page}">第${p.page}页 · ${esc(p.title)}</option>`).join('')}</select></label>${wholeBook?'<button id="showBookPages" class="secondary">查看全册页码 · 含复习和附录</button>':''}<button id="readTextbookPage" class="listen-button">🔊 朗读本页</button><button id="stopTextbookReading" class="secondary">停止朗读</button></div><div id="textbookPageContent">${textbookPage(pages[0],esc)}</div></section>`;
+}
+export function textbookPage(page,esc){
+ return `${page.blocks.map((block,b)=>`<section class="textbook-block"><h4>${esc(block.title)}</h4>${block.lines.map((line,i)=>`<div class="textbook-line"><strong>${esc(line.en)}</strong><p>${esc(line.zh)}</p>${line.tip?`<small>${esc(line.tip)}</small>`:''}${/[A-Za-z0-9]/.test(line.en)?`<button class="listen-button" data-textbook-line="${b}:${i}" aria-label="朗读 ${esc(line.en)}">🔊 朗读</button>`:''}</div>`).join('')}</section>`).join('')}<h4>本页生词与用词 · ${page.words.length} 项</h4><div class="study-words textbook-words">${page.words.map(w=>`<button class="study-word" data-textbook-word="${esc(w.id)}"><strong>${esc(w.en)} 🔊</strong><span>${esc(w.ipa)}</span><small>${esc(w.zh)}</small></button>`).join('')}</div>`;
+}

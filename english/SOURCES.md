@@ -1,10 +1,20 @@
 # 英语珠珠乐园题库来源
 
-目录核查日期：2026-10-03；词表与表达复核日期：2026-10-04。题库包含 8 册、46 个单元。当前提供 990 个单元词条引用（911 个不同词条）、488 条双语例句和234道语法选择题，句子另提供88种自然替代语序。兼容词库共950 个不同词条，其中保留39个旧题库词条，供已有未完成局、错题与存档继续使用，不计入当前单元的词汇覆盖数。
+目录核查日期：2026-10-03；词表与表达复核日期：2026-10-04。题库包含 8 册、46 个单元。当前提供 990 个单元词条引用（911 个不同词条）、488 条双语例句和234道语法选择题，句子另提供88种自然替代语序。兼容词库共1285 个不同词条（含逐页学习词汇），其中保留39个旧题库词条，供已有未完成局、错题与存档继续使用，不计入当前单元的词汇覆盖数。
 
 三、四年级按人教社每单元词汇音频及教材扫描页的 Words in each unit 附录逐项核对；四下数字附录另归入第三单元。五、六年级按官方每单元词汇录音核对，并对照可取得的纸面词表。详细单元数量、直接来源、扫描页码与具体补证情况见[三、四年级来源记录](content-g34-sources.md)和[五、六年级来源记录](content-g56-sources.md)。新局使用核对后的本单元词表，不再混入按主题猜选的词。
 
-句式、中文提示、语法题和解释是**自编练习**，覆盖已核对的主要表达，保留适合该单元的原练习。它们不标成教材原文，不宣称囊括整册 C 阅读、歌曲、语音项目的每一句话。页面单独展示词汇、句式和语法的数量；词汇附录状态与整单元课时覆盖状态分别记录。
+原有题库的句式、中文提示、语法题和解释是**自编练习**，覆盖已核对的主要表达，保留适合该单元的原练习。它们单独显示为自编练习。三上新增的“课本逐页听读”按实物照片收录原文，其范围见下文；其他七册仍只核对单元词表和主要表达。页面单独展示词汇、句式和语法的数量；词汇附录状态与整单元课时覆盖状态分别记录。
+
+## 三上：实物课本第2—91页
+
+用户提供了整本教材照片。版权页为2024年7月第1版、2026年7月第1次印刷，ISBN 978-7-107-38250-5；第三单元印刷标题为 Our animal friends，覆盖此前公开资源入口的 Amazing animals。此册逐页内容以实物照片为准。
+
+收录90页：六个教学单元第2—73页、Being a good guest 复习第74—77页、歌曲与字母歌谣第78—82页、单元词表/字母索引词表/常用表达/完整字母表第83—91页。共1681条原文记录及中文释义、3208条逐页词汇记录；记录包含标题、指令、标签、图表、自评、项目和阅读故事，不只计句子。词条含重复出现的用词、功能词、屈折形式和专名。中文前言/后记及手写笔记不属于英语课文，没有上传原照片。
+
+每页可以逐条点读，也可依次朗读整页。音色沿用 en-US-AriaNeural，播放速率为1。印刷音素符号保持课本记法，词条音标采用美式IPA；含音素符号的歌谣用完整例词示范，提示明确说明。箭头拼词读拼出的单词；字母表读字母名称；测量值按单位展开朗读；省略号原样显示。`say` 示范改变时使用新的音频文件名，避免复用旧音频。
+
+原8册46单元的游戏题池、存档键、金币/皮肤/错题/未完成局以及原有1616段音频保留。全册页码可从三上任一单元的逐页听读中打开，复习与附录不增加游戏单元。
 
 ## 当前公开目录：七册
 
@@ -12,7 +22,7 @@
 
 | 册别 | 人教社直接来源 | 本题库采用的单元标题 |
 | --- | --- | --- |
-| 三上 | https://www.pep.com.cn/zslth/yyptzy/xypep/3s/ | Making friends；Different families；Amazing animals；Plants around us；The colourful world；Useful numbers |
+| 三上 | https://www.pep.com.cn/zslth/yyptzy/xypep/3s/ | Making friends；Different families；Our animal friends；Plants around us；The colourful world；Useful numbers |
 | 三下 | https://www.pep.com.cn/zslth/yyptzy/xypep/3x/ | Meeting new people；Expressing yourself；Learning better；Healthy food；Old toys；Numbers in life |
 | 四上 | https://www.pep.com.cn/zslth/yyptzy/xypep/4s/ | Helping at home；My friends；Places we live in；Helping in the community；The weather and us；Changing for the seasons |
 | 四下 | https://www.pep.com.cn/zslth/yyptzy/xypep/4x/ | Class rules；Family rules；Time for school；Going shopping；Farms and us；From farm to table |

@@ -2,6 +2,8 @@ import {WORDS,BOOKS} from './curriculum.js';
 import {LEVELS,SKINS,MODES,Run,makeQuestions,loadSave,completeCard,buySkin,answerMatches,snapshotRun,restoreRun} from './core.js';
 import {AdventureScene} from './scene.js';
 import AUDIO from './audio-manifest.json';
+import {AudioReader} from './audio-reader.js';
+import {textbookSection,textbookPage} from './textbook.js';
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const SAVE_KEY='pearl-english-v1',SELECTION_KEY='pearl-english-selection-v1';
 let raw;try{raw=localStorage.getItem(SAVE_KEY);}catch{}
@@ -40,7 +42,7 @@ $('englishButton').onclick=openEnglish;$('homeButton').onclick=()=>{if(run&&run.
 $('chinese').onclick=()=>toast('语文玩法等你来设计，先去英语探险吧。');$('math').onclick=()=>toast('数学玩法等你来设计，先去英语探险吧。');
 function start(level){if(save.session?.run.levelId===level.id&&save.session.unitId===selectedUnit.id){continueSaved();return;}closeDialogs();reviewMode=false;run=new Run(level);roundId=crypto.randomUUID();questions=makeQuestions(selectedUnit,WORDS,level.seed+Math.floor(Math.random()*100000));correct=0;roundWrong=[];answered=false;lastAnswer=null;sentencePicked=[];enterRun();checkpoint();}
 function updateHUD(){if(!run)return;$('cardCount').textContent=`题卡 ${run.completed} / 10`;$('timer').textContent=`${Math.floor(run.elapsed/60)}:${String(Math.floor(run.elapsed)%60).padStart(2,'0')}`;$('raceRank').textContent=run.level.mode==='race'?`第 ${run.rank} / 10 名`:'';$('progressBar').style.width=`${run.progress*100}%`;const hit=run.lastHit!==null&&run.elapsed-run.lastHit<2.5;$('playTip').textContent=hit?'碰到路障会减速，试着转向或跳过去。':run.level.mode==='parkour'?'左右转向躲开路障，空格或“跳跃”越过障碍。':'方向键 / A、D 转向；沿途10张题卡，答题时全场暂停。';}
-function closeDialogs(){for(const d of document.querySelectorAll('dialog[open]'))d.close();}
+function closeDialogs(){stopReading();for(const d of document.querySelectorAll('dialog[open]'))d.close();}
 function currentQuestion(){return questions[reviewMode?reviewIndex:run.card];}
 const kindNames={word:'单词识记',ipa:'美式音标',sentence:'句子拼装',grammar:'语法小挑战'};
 function showQuestion(restoring=false){resetInput();if(!restoring){answered=false;lastAnswer=null;sentencePicked=[];}const q=currentQuestion();$('quizKind').textContent=kindNames[q.kind];$('quizCount').textContent=reviewMode?`错题复习 ${reviewIndex+1} / ${questions.length}`:`第 ${run.card+1} / 10 张`;$('pauseNote').textContent=reviewMode?'先试着回答，再看解释。':'⏸ 玩家、对手和计时都已暂停，慢慢想。';$('prompt').textContent=q.prompt;$('listen').hidden=!q.say;$('feedback').hidden=true;$('feedback').className='feedback';$('hintText').hidden=true;$('hintButton').hidden=false;$('continueButton').hidden=true;$('checkSentence').hidden=q.kind!=='sentence';$('listen').disabled=false;
@@ -69,30 +71,35 @@ function renderSkins(){$('skinFilters').innerHTML=['all','普通','独特','隐�
 function selectSkin(id){previewSkin=id;const s=SKINS.find(s=>s.id===id);$('previewName').textContent=s.name;$('previewTier').textContent=s.price?`${s.tier} · ${s.price}金币`:'免费';$('buyPreview').textContent=save.skin===id?'正在使用':save.owned.includes(id)?'换上这颗珠珠':save.coins>=s.price?`购买并换上 · ${s.price}金币`:`还差${s.price-save.coins}金币`;$('buyPreview').disabled=save.skin===id||(!save.owned.includes(id)&&save.coins<s.price);scene?.preview(s);renderSkins();}
 $('skinFilters').addEventListener('click',e=>{const b=e.target.closest('[data-tier]');if(b){skinFilter=b.dataset.tier;renderSkins();}});$('skins').addEventListener('click',e=>{const b=e.target.closest('[data-skin]');if(b)selectSkin(b.dataset.skin);});
 $('buyPreview').onclick=()=>{if(save.owned.includes(previewSkin)){save.skin=previewSkin;persist();}else if(buySkin(save,previewSkin)){persist();toast('新皮肤已换上！下一局带着它出发。');}selectSkin(previewSkin);};
-function openStudy(){$('studyTitle').textContent=`Unit ${selectedUnit.number} · ${selectedUnit.title}`;
- $('studyContent').innerHTML=`<p>${esc(selectedUnit.zh)} · ${selectedUnit.words.length} 个单词/词组 · ${selectedUnit.sentences.length} 条句式 · ${selectedUnit.grammar.length} 个语法练习</p><h3>单词与词组 · 点击听美式发音</h3><div class="study-words">${selectedUnit.words.map(id=>{const w=WORDS[id];return `<button class="study-word" data-say-word="${esc(id)}"><strong>${esc(w.en)} 🔊</strong><span>${esc(w.ipa)}</span><small>${esc(w.zh)}</small></button>`;}).join('')}</div><h3>句式与用法 · ${selectedUnit.sentences.length} 条练习</h3>${selectedUnit.sentences.map((s,i)=>`<div class="study-sentence"><strong>${esc(s.en)}</strong><br>${esc(s.zh)}<br><small>${esc(s.tip)}</small><br><button class="listen-button" data-say-sentence="${i}">🔊 听句子</button></div>`).join('')}<h3>语法小练习 · ${selectedUnit.grammar.length} 题</h3>${selectedUnit.grammar.map((g,i)=>`<div class="study-grammar"><strong>${esc(g.prompt)}</strong>${g.context?`<p class="study-context">${esc(g.context)}</p>`:""}<div class="study-choices">${g.options.map((option,n)=>`<button class="secondary" data-study-grammar="${i}" data-study-option="${n}">${esc(option)}</button>`).join('')}</div><p class="study-explanation" hidden></p><button class="listen-button" data-say-grammar="${i}" hidden>🔊 听完整句子</button></div>`).join('')}<p class="source-note">句式例句与练习自行编写；ˈ 为重音。${vocabularyStatus(selectedUnit)}；句式练习覆盖主要表达。</p>`;$('study').showModal();}
-$('openStudy').onclick=openStudy;$('closeStudy').onclick=()=>$('study').close();$('studyContent').onclick=e=>{
+let studyPages=[];
+function openStudy(){studyPages=selectedUnit.textbookPages??[];$('studyTitle').textContent=`Unit ${selectedUnit.number} · ${selectedUnit.title}`;
+ $('studyContent').innerHTML=`<p>${esc(selectedUnit.zh)} · ${selectedUnit.words.length} 个单词/词组 · ${selectedUnit.sentences.length} 条句式 · ${selectedUnit.grammar.length} 个语法练习</p>${textbookSection(selectedUnit,esc,!!selectedBook.textbookPages)}<h3>单词与词组 · 点击听美式发音</h3><div class="study-words">${selectedUnit.words.map(id=>{const w=WORDS[id];return `<button class="study-word" data-say-word="${esc(id)}"><strong>${esc(w.en)} 🔊</strong><span>${esc(w.ipa)}</span><small>${esc(w.zh)}</small></button>`;}).join('')}</div><h3>句式与用法 · ${selectedUnit.sentences.length} 条练习</h3>${selectedUnit.sentences.map((s,i)=>`<div class="study-sentence"><strong>${esc(s.en)}</strong><br>${esc(s.zh)}<br><small>${esc(s.tip)}</small><br><button class="listen-button" data-say-sentence="${i}">🔊 听句子</button></div>`).join('')}<h3>语法小练习 · ${selectedUnit.grammar.length} 题</h3>${selectedUnit.grammar.map((g,i)=>`<div class="study-grammar"><strong>${esc(g.prompt)}</strong>${g.context?`<p class="study-context">${esc(g.context)}</p>`:""}<div class="study-choices">${g.options.map((option,n)=>`<button class="secondary" data-study-grammar="${i}" data-study-option="${n}">${esc(option)}</button>`).join('')}</div><p class="study-explanation" hidden></p><button class="listen-button" data-say-grammar="${i}" hidden>🔊 听完整句子</button></div>`).join('')}<p class="source-note">${selectedUnit.textbookPages?'课本逐页内容按实物照片整理。':''}句式例句与练习自行编写。ˈ 为重音。${vocabularyStatus(selectedUnit)}；句式练习覆盖主要表达。</p>`;$('study').showModal();}
+$('openStudy').onclick=openStudy;$('closeStudy').onclick=()=>{stopReading();$('study').close();};$('study').addEventListener('cancel',stopReading);
+function currentTextbookPage(){return studyPages.find(p=>String(p.page)===$('textbookPage')?.value);}
+$('studyContent').addEventListener('change',e=>{if(e.target.id==='textbookPage'){stopReading();$('textbookPageContent').innerHTML=textbookPage(currentTextbookPage(),esc);}});
+$('studyContent').onclick=async e=>{
+ const page=currentTextbookPage(),line=e.target.closest('[data-textbook-line]'),pageWord=e.target.closest('[data-textbook-word]');
+ if(line&&page){const [b,i]=line.dataset.textbookLine.split(':').map(Number);speak(page.blocks[b].lines[i]);return;}
+ if(pageWord&&page){const word=page.words.find(w=>w.id===pageWord.dataset.textbookWord);speak(word,word.id);return;}
+ if(e.target.closest('#showBookPages')){stopReading();studyPages=selectedBook.textbookPages;e.target.closest('.textbook-section').outerHTML=textbookSection({textbookPages:studyPages},esc);return;}
+ if(e.target.closest('#stopTextbookReading')){stopReading();return;}
+ if(e.target.closest('#readTextbookPage')&&page){stopReading();const token=pageReadToken,button=$('readTextbookPage');button.textContent='🔊 正在朗读本页…';await reader.read(page.blocks.flatMap(b=>b.lines).filter(l=>/[A-Za-z0-9]/.test(l.en)));if(token===pageReadToken)button.textContent='🔊 朗读本页';return;}
+
  const word=e.target.closest('[data-say-word]');if(word)speak(WORDS[word.dataset.sayWord].en,word.dataset.sayWord);
  const sentence=e.target.closest('[data-say-sentence]');if(sentence)speak(selectedUnit.sentences[Number(sentence.dataset.saySentence)].en);
  const choice=e.target.closest('[data-study-grammar]');if(choice){const g=selectedUnit.grammar[Number(choice.dataset.studyGrammar)],card=choice.closest('.study-grammar'),right=g.options[Number(choice.dataset.studyOption)]===g.answer,feedback=card.querySelector('.study-explanation');feedback.textContent=`${right?'答对了！':'再看一下：'}${g.prompt.replaceAll('___',g.answer)} ${g.explanation}`;feedback.hidden=false;card.querySelector('[data-say-grammar]').hidden=false;}
  const grammar=e.target.closest('[data-say-grammar]');if(grammar){const g=selectedUnit.grammar[Number(grammar.dataset.sayGrammar)];speak(g.prompt.replaceAll('___',g.answer));}
 };
-let audio=null;let audioSerial=0;
-async function speak(text,wordId){const serial=++audioSerial;if(audio){audio.pause();audio=null;}window.speechSynthesis?.cancel();
- const id=wordId&&AUDIO[wordId]?wordId:Object.keys(WORDS).find(id=>WORDS[id].en.toLowerCase()===text.toLowerCase());
- const file=AUDIO[id]||AUDIO[`sentence:${text}`];
- // All bundled words and sentences use the same US voice at its natural speed.
- if(file){const clip=new Audio(new URL(`audio/${file}`,import.meta.url));audio=clip;clip.volume=.85;clip.playbackRate=1;clip.preservesPitch=true;try{await clip.play();if(serial!==audioSerial)clip.pause();return;}catch{if(serial!==audioSerial)return;}}
- if(serial!==audioSerial)return;
- const synth=window.speechSynthesis,voice=synth?.getVoices().find(v=>/^en[-_]US$/i.test(v.lang));if(synth&&voice){const utterance=new SpeechSynthesisUtterance(text);utterance.voice=voice;utterance.lang='en-US';utterance.rate=1;synth.speak(utterance);return;}
- toast('这段发音暂时无法播放，请稍后再试。');}
+const reader=new AudioReader({manifest:AUDIO,words:WORDS,baseURL:import.meta.url,onError:toast});let pageReadToken=0;
+function stopReading(){pageReadToken++;reader.cancel();const button=$('readTextbookPage');if(button)button.textContent='🔊 朗读本页';}
+function speak(text,wordId){stopReading();return reader.speak(text,wordId);}
 $('listen').onclick=()=>{const q=currentQuestion();speak(q.say,q.wordId);};
 $('reviewButton').onclick=()=>{if(!save.wrong.length){toast('还没有错题。先去英语探险吧！');return;}reviewMode=true;reviewIndex=0;roundId=crypto.randomUUID();questions=save.wrong.slice(-10).map(q=>({...q}));correct=0;roundWrong=[];showQuestion();};
 function computeInput(){input.steer=(held.has('ArrowRight')||held.has('d')||touchRight?1:0)-(held.has('ArrowLeft')||held.has('a')||touchLeft?1:0);input.jump=held.has(' ')||held.has('ArrowUp')||held.has('w')||touchJump;}
 addEventListener('keydown',e=>{if(view!=='play'||run?.status!=='playing')return;if(['ArrowLeft','ArrowRight','ArrowUp',' ','a','d','w'].includes(e.key)){e.preventDefault();held.add(e.key);computeInput();}else if(e.key==='Escape'||e.key==='p'){e.preventDefault();pause();}});addEventListener('keyup',e=>{held.delete(e.key);computeInput();});
 function touchButton(id,set){const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);set(true);computeInput();});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>{set(false);computeInput();});}
 touchButton('leftButton',v=>touchLeft=v);touchButton('rightButton',v=>touchRight=v);touchButton('jumpButton',v=>touchJump=v);
-addEventListener('blur',()=>{resetInput();if(view==='play')pause();});document.addEventListener('visibilitychange',()=>{resetInput();if(document.hidden){hiddenPaused=!!run?.pause();checkpoint();if(audio)audio.pause();}else if(hiddenPaused){hiddenPaused=false;if(view==='play'&&!$('pauseDialog').open)$('pauseDialog').showModal();}});
+addEventListener('blur',()=>{resetInput();if(view==='play')pause();});document.addEventListener('visibilitychange',()=>{resetInput();if(document.hidden){hiddenPaused=!!run?.pause();checkpoint();stopReading();}else if(hiddenPaused){hiddenPaused=false;if(view==='play'&&!$('pauseDialog').open)$('pauseDialog').showModal();}});
 addEventListener('pagehide',checkpoint);setInterval(()=>{if(view==='play')checkpoint();},1000);
 let renderedRun=null,renderedStatus='',needsRender=true;
 addEventListener('resize',()=>{scene?.resize();needsRender=true;});
