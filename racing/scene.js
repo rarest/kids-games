@@ -1129,7 +1129,7 @@ export class RaceScene {
   setCars(race, skin) {
     this.clear(this.fleet);
     this.carMeshes = race.cars.map((c, i) => {
-      const car = makeCar(c.model, i === 0 ? skin : SKINS[i % SKINS.length]);
+      const car = makeCar(c.model, SKINS.find(s => s.id === c.skin) || (i === 0 ? skin : SKINS[i % SKINS.length]));
       this.fleet.add(car);
       return car;
     });
@@ -1143,7 +1143,7 @@ export class RaceScene {
       this.fleet,
       this.track,
       race.cars,
-      race.cars.map((c, i) => (i === 0 ? skin : SKINS[i % SKINS.length])),
+      race.cars.map((c, i) => SKINS.find(s => s.id === c.skin) || (i === 0 ? skin : SKINS[i % SKINS.length])),
     );
     this.setTextureQuality(
       qualitySettings(

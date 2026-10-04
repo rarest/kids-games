@@ -1,0 +1,16 @@
+[Unit]
+Description=Cooperative racing
+After=network.target
+[Service]
+Type=simple
+WorkingDirectory=%h/games-site
+ExecStart=/usr/bin/node %h/games-site/racing/server.mjs
+Environment=PORT=8789
+Environment=HOST=127.0.0.1
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+MemoryMax=512M
+[Install]
+WantedBy=default.target
