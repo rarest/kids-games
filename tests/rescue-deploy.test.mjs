@@ -94,6 +94,10 @@ test('game and platform deployment preserve unchanged rooms and retry failed pha
    for(const file of ['server.mjs','store.mjs','periods.mjs','migrations/001-activity.sql'])await writeFile(join(repo,'platform',file),'// initial platform\n');
    await writeFile(join(repo,'platform/package.json'),JSON.stringify({dependencies:{pg:'1'}}));
    await change('platform/package-lock.json',JSON.stringify({packages:{'':{dependencies:{pg:'1'}},'node_modules/pg':{version:'1'}}}));
+   for(const folder of ['platform','shooter','.well-known'])await mkdir(join(docroot,folder),{recursive:true});
+   await writeFile(join(docroot,'platform/server.mjs'),'old static backend copy');
+   await writeFile(join(docroot,'shooter/server.mjs'),'old static backend copy');
+   await writeFile(join(docroot,'.well-known/challenge'),'keep certificate challenge');
    await clear();execute();out=await calls();
    noGameRestart(out);noRootNpm(out);assert.match(out,/npm ci --prefix platform/);
    assert.match(out,/restart games-platform.service/);assert.match(out,/enable games-platform.service games-platform-backup.timer/);assert.match(out,/start games-platform-backup.timer/);
@@ -103,6 +107,8 @@ test('game and platform deployment preserve unchanged rooms and retry failed pha
    assert.equal(await readFile(config,'utf8'),'PLATFORM_CONFIG_SENTINEL=outside-docroot\n');
    await assert.rejects(access(join(docroot,'app.env')),{code:'ENOENT'});
    await assert.rejects(access(join(docroot,'platform')),{code:'ENOENT'});
+   await assert.rejects(access(join(docroot,'shooter/server.mjs')),{code:'ENOENT'});
+   assert.equal(await readFile(join(docroot,'.well-known/challenge'),'utf8'),'keep certificate challenge');
    await clear();execute();out=await calls();
    assert.doesNotMatch(out,/restart|npm ci|openresty/,'successful platform bootstrap is idempotent');
   });
