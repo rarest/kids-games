@@ -253,6 +253,7 @@
   <div id="fingerHint" class="fhint"></div>
   <div id="keyboard"></div>
 
+<script src="../shared/game-activity.js?v=20261004activity1" data-game-id="pinyin"></script>
 <script>
 (() => {
   // ---------- word banks ----------
@@ -753,6 +754,7 @@
 
   function startGame() {
     state.running = true;
+    window.GameActivity?.setPlaying(state.running);
     state.score = 0;
     state.level = 1;
     state.lives = 3;
@@ -775,6 +777,7 @@
 
   function gameOver() {
     state.running = false;
+    window.GameActivity?.finish();
     cancelAnimationFrame(state.raf);
     MUSIC.stop();
     Object.values(keyMap).forEach(k => k.classList.remove('next'));

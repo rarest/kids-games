@@ -69,6 +69,7 @@ sudo rsync -a --delete \
   --exclude '.git' --exclude 'deploy' --exclude 'README.md' --exclude '.gitignore' \
   --exclude '.agents' --exclude '.superpowers' --exclude 'openspec' --exclude 'node_modules' \
   --exclude 'shooter/server.mjs' --exclude 'rescue/server.mjs' --exclude 'racing/server.mjs' \
+  --exclude 'platform' --exclude '.env' --exclude '.env.*' \
   --exclude '.user.ini' --exclude '.well-known' \
   "$REPO_DIR"/ "$DOCROOT"/
 sudo chmod -R a+rX "$DOCROOT"
@@ -99,6 +100,39 @@ for GAME in shooter rescue racing; do
     PROXY_CHANGED=true
   fi
 done
+
+# Platform dependencies are isolated: a platform update must preserve game rooms.
+if [ -f deploy/games-platform.service ] && [ -f platform/package-lock.json ]; then
+  PLATFORM_CONFIG="${PLATFORM_DEPLOY_CONFIG:-$HOME/.config/games-platform/app.env}"
+  if [ ! -f "$PLATFORM_CONFIG" ]; then echo 'Platform configuration missing outside docroot' >&2; exit 1; fi
+  PLATFORM_DEPENDENCIES="$(sha256sum platform/package.json platform/package-lock.json | sha256sum | cut -d' ' -f1)"
+  if [ ! -f "$STATE_DIR/platform-dependencies" ] || [ "$(cat "$STATE_DIR/platform-dependencies")" != "$PLATFORM_DEPENDENCIES" ] || [ ! -d platform/node_modules/pg ]; then
+    npm ci --prefix platform --omit=dev --ignore-scripts --no-audit --no-fund
+    printf '%s\n' "$PLATFORM_DEPENDENCIES" > "$STATE_DIR/platform-dependencies"
+  fi
+  PLATFORM_RUNTIME="$(sha256sum deploy/games-platform.service platform/server.mjs platform/store.mjs platform/periods.mjs platform/migrations/*.sql | sha256sum | cut -d' ' -f1)"
+  PLATFORM_UNIT_CHANGED=false
+  for UNIT in games-platform.service games-platform-backup.service games-platform-backup.timer; do
+    if ! cmp -s "deploy/$UNIT" "$UNIT_DIR/$UNIT"; then
+      cp "deploy/$UNIT" "$UNIT_DIR/$UNIT"
+      systemctl --user daemon-reload
+      if [ "$UNIT" = games-platform.service ]; then PLATFORM_UNIT_CHANGED=true; fi
+    fi
+  done
+  systemctl --user enable games-platform.service games-platform-backup.timer
+  if ! systemctl --user is-active --quiet games-platform.service; then
+    systemctl --user start games-platform.service
+  elif $PLATFORM_UNIT_CHANGED || [ ! -f "$STATE_DIR/platform-runtime" ] || [ "$(cat "$STATE_DIR/platform-runtime")" != "$PLATFORM_RUNTIME:$PLATFORM_DEPENDENCIES" ]; then
+    systemctl --user restart games-platform.service
+  fi
+  printf '%s\n' "$PLATFORM_RUNTIME:$PLATFORM_DEPENDENCIES" > "$STATE_DIR/platform-runtime"
+  systemctl --user start games-platform-backup.timer
+  if ! cmp -s deploy/games-platform.conf "$PROXY_DIR/games-platform.conf"; then
+    touch "$STATE_DIR/proxy-pending"
+    sudo install -m 644 deploy/games-platform.conf "$PROXY_DIR/games-platform.conf"
+    PROXY_CHANGED=true
+  fi
+fi
 
 # Install all routes before validating; static-only deploys do not disrupt sockets.
 if $PROXY_CHANGED; then

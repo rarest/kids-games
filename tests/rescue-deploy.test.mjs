@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,readFile,writeFile,mkdir,copyFile,chmod,rm} from 'node:fs/promises';
+import {mkdtemp,readFile,writeFile,mkdir,copyFile,chmod,rm,access} from 'node:fs/promises';
 import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
 const source=new URL('../',import.meta.url);
@@ -16,7 +16,7 @@ test('deployment excludes private server/review files and uses valid shell and l
  }
 });
 
-test('three-game deployment preserves unchanged rooms and retries failed phases',{timeout:60000},async()=>{
+test('game and platform deployment preserve unchanged rooms and retry failed phases',{timeout:60000},async(t)=>{
  await mkdir(new URL('../.superpowers/',import.meta.url),{recursive:true});
  const dir=await mkdtemp(new URL('../.superpowers/rescue-deploy-',import.meta.url).pathname),repo=join(dir,'repo'),bin=join(dir,'bin'),units=join(dir,'units'),docroot=join(dir,'site/index'),log=join(dir,'calls');
  try {
@@ -29,7 +29,7 @@ test('three-game deployment preserves unchanged rooms and retries failed phases'
   await writeFile(join(repo,'.gitignore'),'node_modules\n');
   run('git',['add','.'],repo);run('git',['commit','-qm','initial'],repo);run('git',['clone','-q','--bare',repo,join(dir,'origin')],dir);run('git',['remote','add','origin',join(dir,'origin')],repo);
   // Test executables never call real sudo/systemctl/docker/npm/rsync.
-  const tools={sudo:'exec "$@"',rsync:'echo "rsync $*" >> "$DEPLOY_TEST_LOG"; [ "${DEPLOY_TEST_FAIL_RSYNC:-0}" != 1 ]',chmod:'exit 0',npm:'echo "npm $*" >> "$DEPLOY_TEST_LOG"; [ "${DEPLOY_TEST_FAIL_NPM:-0}" != 1 ]',docker:'echo "docker $*" >> "$DEPLOY_TEST_LOG"; if [ "$1" = ps ]; then echo openresty-test; fi; case "$*" in *reload*) [ "${DEPLOY_TEST_FAIL_RELOAD:-0}" != 1 ];; *) exit 0;; esac',systemctl:'echo "systemctl $*" >> "$DEPLOY_TEST_LOG"; case "$*" in *is-enabled*racing*|*is-active*racing*) [ "${DEPLOY_TEST_RACING_INACTIVE:-0}" != 1 ];; *is-enabled*rescue*|*is-active*rescue*) [ "${DEPLOY_TEST_RESCUE_INACTIVE:-0}" != 1 ];; *) exit 0;; esac'};
+  const tools={sudo:'exec "$@"',rsync:'echo "rsync $*" >> "$DEPLOY_TEST_LOG"; [ "${DEPLOY_TEST_FAIL_RSYNC:-0}" != 1 ]',chmod:'exit 0',npm:'echo "npm $*" >> "$DEPLOY_TEST_LOG"; [ "${DEPLOY_TEST_FAIL_NPM:-0}" != 1 ] || exit 1; case "$*" in *"--prefix platform"*) mkdir -p platform/node_modules/pg;; esac',docker:'echo "docker $*" >> "$DEPLOY_TEST_LOG"; if [ "$1" = ps ]; then echo openresty-test; fi; case "$*" in *reload*) [ "${DEPLOY_TEST_FAIL_RELOAD:-0}" != 1 ];; *) exit 0;; esac',systemctl:'echo "systemctl $*" >> "$DEPLOY_TEST_LOG"; case "$*" in *is-enabled*racing*|*is-active*racing*) [ "${DEPLOY_TEST_RACING_INACTIVE:-0}" != 1 ];; *is-enabled*rescue*|*is-active*rescue*) [ "${DEPLOY_TEST_RESCUE_INACTIVE:-0}" != 1 ];; *) exit 0;; esac'};
   for(const [name,body] of Object.entries(tools)){await writeFile(join(bin,name),`#!/bin/sh\n${body}\n`);await chmod(join(bin,name),0o755);}
   const env={PATH:`${bin}:${process.env.PATH}`,RESCUE_DEPLOY_DOCROOT:docroot,RESCUE_DEPLOY_UNIT_DIR:units,DEPLOY_TEST_LOG:log,DEPLOY_TEST_RESCUE_INACTIVE:'0',DEPLOY_TEST_RACING_INACTIVE:'1'};
   const isolated=run('bash',['-c','command -v sudo systemctl docker npm rsync chmod'],repo,env).trim().split('\n');
@@ -81,5 +81,60 @@ test('three-game deployment preserves unchanged rooms and retries failed phases'
   assert.notEqual(spawnSync('bash',['deploy/deploy-local.sh'],{cwd:repo,env:{...process.env,...env},encoding:'utf8'}).status,0);
   await mkdir(join(repo,'node_modules/ws'),{recursive:true});env.DEPLOY_TEST_FAIL_NPM='0';await clear();execute();out=await calls();assert.match(out,/npm ci/);
   await clear();execute();assert.doesNotMatch(await calls(),/restart|npm ci|openresty/,'completed retry is idempotent');
+  const state=join(repo,'.git/games-deploy'),config=join(dir,'private/app.env');
+  const noGameRestart=output=>assert.doesNotMatch(output,/(?:restart|start) (?:shooter|rescue|racing)-coop/,'platform changes preserve all existing game rooms');
+  const noRootNpm=output=>assert.doesNotMatch(output,/^npm (?![^\n]*--prefix platform)/m,'platform dependencies never install through root npm');
+  const failed=()=>spawnSync('bash',['deploy/deploy-local.sh'],{cwd:repo,env:{...process.env,...env},encoding:'utf8'});
+  await t.test('adding the independent platform preserves existing rooms and keeps configuration outside docroot',async()=>{
+   await mkdir(join(repo,'platform/migrations'),{recursive:true});
+   await mkdir(join(dir,'private'),{recursive:true});
+   await writeFile(config,'PLATFORM_CONFIG_SENTINEL=outside-docroot\n');
+   env.PLATFORM_DEPLOY_CONFIG=config;
+   for(const file of ['games-platform.service','games-platform-backup.service','games-platform-backup.timer','games-platform.conf'])await copyFile(new URL(`deploy/${file}`,source),join(repo,'deploy',file));
+   for(const file of ['server.mjs','store.mjs','periods.mjs','migrations/001-activity.sql'])await writeFile(join(repo,'platform',file),'// initial platform\n');
+   await writeFile(join(repo,'platform/package.json'),JSON.stringify({dependencies:{pg:'1'}}));
+   await change('platform/package-lock.json',JSON.stringify({packages:{'':{dependencies:{pg:'1'}},'node_modules/pg':{version:'1'}}}));
+   await clear();execute();out=await calls();
+   noGameRestart(out);noRootNpm(out);assert.match(out,/npm ci --prefix platform/);
+   assert.match(out,/restart games-platform.service/);assert.match(out,/enable games-platform.service games-platform-backup.timer/);assert.match(out,/start games-platform-backup.timer/);
+   assert.match(out,/openresty -t/);assert.match(out,/openresty -s reload/);
+   assert.match(out,/rsync [^\n]*--exclude platform[^\n]*--exclude \.env/);
+   assert.doesNotMatch(out,/PLATFORM_CONFIG_SENTINEL/);
+   assert.equal(await readFile(config,'utf8'),'PLATFORM_CONFIG_SENTINEL=outside-docroot\n');
+   await assert.rejects(access(join(docroot,'app.env')),{code:'ENOENT'});
+   await assert.rejects(access(join(docroot,'platform')),{code:'ENOENT'});
+   await clear();execute();out=await calls();
+   assert.doesNotMatch(out,/restart|npm ci|openresty/,'successful platform bootstrap is idempotent');
+  });
+  await t.test('platform runtime and dependency updates restart only the platform',async()=>{
+   await clear();await change('platform/store.mjs','// new platform runtime\n');execute();out=await calls();
+   assert.match(out,/restart games-platform.service/);noGameRestart(out);noRootNpm(out);assert.doesNotMatch(out,/npm ci|openresty/);
+   await clear();await change('platform/package-lock.json',JSON.stringify({packages:{'':{dependencies:{pg:'1'}},'node_modules/pg':{version:'2'}}}));execute();out=await calls();
+   assert.match(out,/npm ci --prefix platform/);assert.match(out,/restart games-platform.service/);noGameRestart(out);noRootNpm(out);assert.doesNotMatch(out,/openresty/);
+  });
+  await t.test('failed platform npm does not advance successful markers and the next deployment retries',async()=>{
+   const dependencies=await readFile(join(state,'platform-dependencies'),'utf8'),runtime=await readFile(join(state,'platform-runtime'),'utf8');
+   await clear();await change('platform/package-lock.json',JSON.stringify({packages:{'':{dependencies:{pg:'1'}},'node_modules/pg':{version:'3'}}}));env.DEPLOY_TEST_FAIL_NPM='1';
+   const result=failed();assert.notEqual(result.status,0);out=await calls();assert.match(out,/npm ci --prefix platform/);noGameRestart(out);noRootNpm(out);assert.doesNotMatch(out,/restart games-platform.service/);
+   assert.equal(await readFile(join(state,'platform-dependencies'),'utf8'),dependencies);assert.equal(await readFile(join(state,'platform-runtime'),'utf8'),runtime);
+   env.DEPLOY_TEST_FAIL_NPM='0';await clear();execute();out=await calls();assert.match(out,/npm ci --prefix platform/);assert.match(out,/restart games-platform.service/);noGameRestart(out);noRootNpm(out);
+   assert.notEqual(await readFile(join(state,'platform-dependencies'),'utf8'),dependencies);assert.notEqual(await readFile(join(state,'platform-runtime'),'utf8'),runtime);
+   await clear();execute();assert.doesNotMatch(await calls(),/restart|npm ci|openresty/,'successful dependency retry is idempotent');
+  });
+  await t.test('failed proxy reload retries without repeating an already successful platform restart',async()=>{
+   await writeFile(join(repo,'platform/server.mjs'),'// runtime with platform proxy\n');
+   await clear();await change('deploy/games-platform.conf',(await readFile(join(repo,'deploy/games-platform.conf'),'utf8'))+'# next platform proxy\n');env.DEPLOY_TEST_FAIL_RELOAD='1';
+   assert.notEqual(failed().status,0);out=await calls();assert.equal((out.match(/restart games-platform.service/g)||[]).length,1);assert.match(out,/openresty -s reload/);noGameRestart(out);noRootNpm(out);
+   const runtime=await readFile(join(state,'platform-runtime'),'utf8');await access(join(state,'proxy-pending'));
+   env.DEPLOY_TEST_FAIL_RELOAD='0';await clear();execute();out=await calls();assert.match(out,/openresty -t/);assert.match(out,/openresty -s reload/);assert.doesNotMatch(out,/restart|npm ci/,'successful platform runtime is not repeated');
+   assert.equal(await readFile(join(state,'platform-runtime'),'utf8'),runtime);await assert.rejects(access(join(state,'proxy-pending')),{code:'ENOENT'});
+  });
+  await t.test('missing external platform configuration blocks platform success until restored',async()=>{
+   const runtime=await readFile(join(state,'platform-runtime'),'utf8');
+   await clear();await change('platform/periods.mjs','// pending platform update\n');await rm(config);
+   const result=failed();assert.notEqual(result.status,0);assert.match(result.stderr,/Platform configuration missing outside docroot/);out=await calls();assert.doesNotMatch(out,/npm ci|restart games-platform.service/);noGameRestart(out);
+   assert.equal(await readFile(join(state,'platform-runtime'),'utf8'),runtime);
+   await writeFile(config,'PLATFORM_CONFIG_SENTINEL=outside-docroot\n');await clear();execute();out=await calls();assert.match(out,/restart games-platform.service/);assert.doesNotMatch(out,/npm ci/);noGameRestart(out);noRootNpm(out);
+  });
  } finally {await rm(dir,{recursive:true,force:true});}
 });

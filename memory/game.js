@@ -19,6 +19,7 @@ function save() {
 function closeDialogs() { document.querySelectorAll('.overlay').forEach(e => e.hidden = true); }
 function setMode(next) {
   mode = next; document.body.dataset.mode = next;
+  window.GameActivity?.setPlaying(next === 'playing' && !!game && !game.paused && game.phase !== 'won');
   document.body.dataset.night = String(next !== 'home' && game !== null && levelSpec(game.level).theme === 3);
   const home = next === 'home';
   for (const id of ['home', 'home-footer']) $(id).hidden = !home;
@@ -27,6 +28,7 @@ function setMode(next) {
   $('phase-banner').hidden = home || next !== 'playing';
 }
 function update() {
+  window.GameActivity?.setPlaying(mode === 'playing' && !!game && !game.paused && game.phase !== 'won');
   $('coins').textContent = profile.coins;
   $('mute').textContent = profile.muted ? '♪̸' : '♫'; $('mute').setAttribute('aria-pressed', String(profile.muted)); $('mute').setAttribute('aria-label', profile.muted ? '开启声音' : '关闭声音');
   if (!game) return;

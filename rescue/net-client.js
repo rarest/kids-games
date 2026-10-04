@@ -9,14 +9,14 @@ function defaultURL(){const base=new URL('/rescue-ws',globalThis.location.href);
 export function createRescueClient({onState=()=>{},onStatus=()=>{},url=defaultURL(),storage=defaultStorage(),transport=address=>new WebSocket(address),clock=runtimeClock}={}){
  let socket=null,authority=null,room=null,slot=null,prediction=null,session=null,intent=null,disposed=false,suspended=false;
  let epoch=null,tick=-1,retryAt=0,retries=0,retryStarted=null,lastMessage=0,lastPing=0,pingAt=null;
- let receivedBytes=0,sentBytes=0,status={connection:'idle',message:'',rtt:null,code:null,slot:null,room:null,suspended:false};
+ let lastStateAt=null,receivedBytes=0,sentBytes=0,status={connection:'idle',message:'',rtt:null,code:null,slot:null,room:null,suspended:false};
  function notify(connection=status.connection,message=''){
   status={connection,message,rtt:status.rtt,code:room?.code??session?.code??null,slot,room,suspended};onStatus({...status});
  }
  function save(value){session=value;try{if(value)storage?.setItem(SESSION_KEY,JSON.stringify(value));else storage?.removeItem(SESSION_KEY);}catch{/* A blocked session store still permits this connection. */}}
  function read(){try{const saved=JSON.parse(storage?.getItem(SESSION_KEY)??'null');if(saved&&/^[A-F0-9]{6}$/.test(saved.code)&&typeof saved.token==='string'&&saved.token.length>=20)return {code:saved.code,token:saved.token};}catch{}return null;}
  function send(packet){if(socket?.readyState!==1)return false;const raw=JSON.stringify(packet);try{socket.send(raw);sentBytes+=new TextEncoder().encode(raw).length;return true;}catch{return false;}}
- function stopSocket(){const old=socket;socket=null;pingAt=null;status.rtt=null;if(old)try{old.close();}catch{}}
+ function stopSocket(){const old=socket;socket=null;lastStateAt=null;pingAt=null;status.rtt=null;if(old)try{old.close();}catch{}}
  function resetPrediction(){prediction?.clear();}
  function end(message,connection='closed'){
   intent=null;retryAt=0;retryStarted=null;save(null);resetPrediction();prediction=null;stopSocket();room=null;slot=null;authority=null;epoch=null;tick=-1;notify(connection,message);
@@ -54,7 +54,7 @@ export function createRescueClient({onState=()=>{},onStatus=()=>{},url=defaultUR
     if(enteringPlaying&&!suspended&&room.members?.[slot]?.ready){
      advance({},1/60);if(socket!==ws)return;
     }
-    onState(authority,packet);notify('connected');
+    lastStateAt=clock.now();onState(authority,packet);notify('connected');
    }else if(packet.type==='pong'){
     if(packet.at===pingAt){const now=clock.now();status.rtt=Math.max(0,now-packet.at);pingAt=null;notify(status.connection,status.message);}
    }else if(packet.type==='closed')end(packet.message||'房间已结束');
@@ -98,6 +98,7 @@ export function createRescueClient({onState=()=>{},onStatus=()=>{},url=defaultUR
  globalThis.addEventListener?.('pagehide',pagehide);
  session=read();if(session)connect({type:'join',code:session.code,token:session.token});
  return {create,join,command,advance,render,suspend,setReady,leave,dispose,
+  get hasLiveState(){return socket?.readyState===1&&lastStateAt!==null&&clock.now()-lastStateAt<=2000&&!suspended;},
   get authority(){return authority;},get slot(){return slot;},get room(){return room;},
   diagnostics:()=>({...prediction?.diagnostics(),connection:status.connection,rtt:status.rtt,slot,code:room?.code??session?.code??null,epoch,tick,suspended,receivedBytes,sentBytes})};
 }

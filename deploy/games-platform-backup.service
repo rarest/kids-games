@@ -1,0 +1,7 @@
+[Unit]
+Description=Back up kids games platform database
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash %h/games-site/deploy/platform-backup.sh
+UMask=0077

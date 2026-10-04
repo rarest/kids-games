@@ -202,6 +202,7 @@
     <button class="iconbtn" id="muteBtn2">🔊</button>
   </div>
 
+<script src="../shared/game-activity.js?v=20261004activity1" data-game-id="fish"></script>
 <script>
 (() => {
   'use strict';
@@ -712,6 +713,7 @@
     Audio.sfx.die();
     burst(game.player.x, game.player.y, game.player.color, 26);
     game.state = 'over';
+    window.GameActivity?.finish();
     finishGame();
   }
 
@@ -852,6 +854,7 @@
   }
 
   function showOverlay(which) {
+    window.GameActivity?.setPlaying(game.state === 'playing');
     document.getElementById('startOverlay').classList.toggle('hidden', which !== 'menu');
     document.getElementById('overOverlay').classList.toggle('hidden', which !== 'over');
     document.getElementById('pauseOverlay').classList.toggle('hidden', which !== 'pause');

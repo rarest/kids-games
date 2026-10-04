@@ -10,7 +10,7 @@ const audio=createAudioController();
 let save=loadSave(),toolMode=null,comboTimer=null,autoDrawTimer=null,autoPaused=false;
 
 function persist(){saveGame(globalThis.localStorage,save)}
-function show(screen){for(const [name,node] of Object.entries(screens))node.hidden=name!==screen;document.body.dataset.screen=screen}
+function show(screen){window.GameActivity?.setPlaying(screen==='game'&&save.currentGame?.status==='playing');for(const [name,node] of Object.entries(screens))node.hidden=name!==screen;document.body.dataset.screen=screen}
 function cancelAutoDraw(){clearTimeout(autoDrawTimer);autoDrawTimer=null}
 function message(title,text){$('messageTitle').textContent=title;$('messageText').textContent=text;$('messageDialog').showModal()}
 function tileLevel(value){return Math.log2(value)}

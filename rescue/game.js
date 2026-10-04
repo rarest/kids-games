@@ -113,6 +113,7 @@ function activate(value, finishEffects = false) {
     return;
   }
   if (state && !online) setPaused(state, !value);
+  window.GameActivity?.setPlaying(value && screen === "game" && !panel && !!state && !state.paused && ["playing", "bonus"].includes(state.status) && (!online || (online.room?.mode === "playing" && online.hasLiveState)));
   controls.clear();
   audio.setActive(value && !document.hidden && (!online || (online.room?.mode === "playing" && deviceAvailable())), {
     finishEffects: finishEffects && !document.hidden,
@@ -351,6 +352,7 @@ function diagnostics() {
   });
 }
 function frame(now) {
+  window.GameActivity?.setPlaying(screen === "game" && !panel && !!state && !state.paused && ["playing", "bonus"].includes(state.status) && (!online || (online.room?.mode === "playing" && online.hasLiveState)));
   raf = null;
   if (disposed || !scene || !state || document.hidden) return;
   const duration = frameDurations(now, last), dt = duration.local;
@@ -622,6 +624,7 @@ function enterOnline() {
       // A new suspended status while ready is therefore the client's internal guard.
       const internallySuspended = status.suspended && !onlineStatus?.suspended && readySent && deviceAvailable();
       onlineStatus = status;
+      if(status.connection!=="connected"||status.suspended)window.GameActivity?.setPlaying(false);
       if (internallySuspended) {
         congestionEpoch = online.diagnostics().epoch;
         readySent = false;

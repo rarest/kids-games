@@ -1,0 +1,18 @@
+[Unit]
+Description=Kids games shared platform API
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/games-site/platform
+EnvironmentFile=%h/.config/games-platform/app.env
+Environment=HOST=127.0.0.1
+Environment=PORT=8790
+ExecStart=/usr/bin/node %h/games-site/platform/server.mjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+UMask=0077
+
+[Install]
+WantedBy=default.target

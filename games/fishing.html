@@ -163,6 +163,7 @@
   </div>
 </div>
 
+<script src="../shared/game-activity.js?v=20261004activity1" data-game-id="fishing"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -791,6 +792,7 @@ function enterGame(){
   document.getElementById('hud').classList.remove('hide');
   document.getElementById('bottombar').classList.remove('hide');
   state.running=true;
+  window.GameActivity?.setPlaying(state.running);
   ensurePopulation();
   updateHUD();
 }

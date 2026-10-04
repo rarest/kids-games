@@ -1,5 +1,5 @@
 import {decodeVolleys} from './snapshot.js?v=20261002boss20';
-import {connectTeam} from './online.js?v=20261002boss20';
+import {connectTeam} from './online.js?v=20261004activity1';
 import {createGame,startWave,stepGame,resizeGame,drawUpgrade,continueWave,pulse,laser,TIERS,stageNumber,substageNumber,checkpoint,restoreCheckpoint,pilots,SUBSTAGES} from './core.js?v=20261002boss20';
 import {createAudioController} from './audio.js?v=20261002-audio2';
 import {createSoundObserver} from './sound-events.js?v=20261002-audio2';
@@ -28,6 +28,7 @@ function resize(){
 }
 function text(id,value){const element=$(id),next=String(value);if(element.textContent!==next)element.textContent=next}
 function sync(){
+  window.GameActivity?.setPlaying(g.mode==='playing'&&(!online||online.hasLiveState));
   const p=me();
   text('score',g.score);text('wave',`${stageNumber(g)} · ${substageNumber(g)}`);text('health',p.hp);text('shield',p.shield);text('pulseCount',p.pulses);
   text('remainingBoss',g.plan.slice(g.spawnIndex).filter(k=>k!=='drone').length+g.enemies.filter(e=>e.kind!=='drone').length);
@@ -165,7 +166,7 @@ function joinOnline(code){
  if(online)return;void audio.unlock();
  networkStatus='连接中';g=createGame(720,960);g.mode='lobby';document.body.dataset.online='true';$('teamBar').hidden=false;previousMode='';
  const endpoint=location.hostname==='127.0.0.1'||location.hostname==='localhost'?`ws://${location.hostname}:${new URLSearchParams(location.search).get('coopPort')||localCoopPort}/shooter-ws`:`${location.protocol==='https:'?'wss:':'ws:'}//${location.host}/shooter-ws`;
- online=connectTeam({endpoint,onStatus:status=>{networkStatus=status;text('joinStatus',status);if(g.mode==='lobby')text('lobbyStatus',status)},onJoined:m=>{myId=m.id;history.replaceState(null,'',`${location.pathname}?team=${m.code}`);$('inviteLink').value=`${location.origin}${location.pathname}?team=${m.code}${location.hostname==='127.0.0.1'||location.hostname==='localhost'?'&coopPort='+new URL(endpoint).port:''}`},onState:m=>{
+ online=connectTeam({endpoint,onStatus:status=>{if(!online?.hasLiveState)window.GameActivity?.setPlaying(false);networkStatus=status;text('joinStatus',status);if(g.mode==='lobby')text('lobbyStatus',status)},onJoined:m=>{myId=m.id;history.replaceState(null,'',`${location.pathname}?team=${m.code}`);$('inviteLink').value=`${location.origin}${location.pathname}?team=${m.code}${location.hostname==='127.0.0.1'||location.hostname==='localhost'?'&coopPort='+new URL(endpoint).port:''}`},onState:m=>{
   soundObserver.before(g);const previous=g;g=m.game;for(const p of pilots(g)){const old=pilots(previous).find(v=>v.id===p.id);p.player.tx=p.player.x;p.player.ty=p.player.y;if(old){p.player.x=old.player.x;p.player.y=old.player.y}}g.bullets=g.volleys?decodeVolleys(g.volleys,bulletCache):g.bullets.map(([x,y,owner,vx,vy])=>({x,y,owner,vx,vy}));g.enemyBullets=g.enemyBullets.map(([x,y,color,vx,vy])=>({x,y,color,vx,vy,r:5}));const oldEnemies=new Map(previous.enemies.map(e=>[e.id,e]));for(const e of g.enemies){e.tx=e.x;e.ty=e.y;const old=oldEnemies.get(e.id);if(old){e.x=old.x;e.y=old.y}}snapshotAt=performance.now();team=m;soundObserver.after(g,n=>audio.playEffect(n));sync();
  },onLeft:leaveOnline});
  online.join(code?{type:'join',code:code.toUpperCase()}:{type:'create'});resize();sync();

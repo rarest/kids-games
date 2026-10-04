@@ -43,7 +43,7 @@ let onlineRoom = null, onlineSource = null, onlineReceived = 0,
 const online = new RacingClient({
   onState: receiveRoom,
   onJoined: () => { $("online-panel").hidden=onlineRoom?.mode==="racing"; $("online-message").textContent=""; },
-  onStatus: message => { $("online-message").textContent=message; $("online-connection").textContent=message; $("online-connection").hidden=!message||!online.session; },
+  onStatus: message => { if(!online.hasLiveState)window.GameActivity?.setPlaying(false); $("online-message").textContent=message; $("online-connection").textContent=message; $("online-connection").hidden=!message||!online.session; },
   onError: message => { $("online-message").textContent=message; toast(message); },
   onLeave: () => garage(),
 });
@@ -133,6 +133,7 @@ function start() {
   if (soundEnabled) startSound();
 }
 function garage() {
+  window.GameActivity?.finish();
   online.leave();onlineRoom=null;onlineSource=null;onlineRun=null;controlsPaused=false;roomStamp="";
   $("online-panel").hidden=true;
   $("online-connection").hidden=true;
@@ -151,6 +152,7 @@ function garage() {
 }
 function pause(value = true) {
   if (mode !== "racing") return;
+  if (value) window.GameActivity?.setPlaying(false);
   clearInput();
   if(onlineSource) {
     controlsPaused=value;online.input(null,performance.now(),true);
@@ -165,6 +167,7 @@ function pause(value = true) {
   last = performance.now();
 }
 function finish() {
+  window.GameActivity?.finish();
   clearInput();
   mode = "finished";
   const prize = settleRace(profile, race);
@@ -432,6 +435,7 @@ setInterval(() => {
   }
 }, 33);
 function loop(now) {
+  window.GameActivity?.setPlaying(mode === "racing" && !!race && !race.paused && !controlsPaused && race.countdown <= 0 && (!onlineSource || (onlineRoom?.mode === "racing" && online.hasLiveState)));
   const elapsed = (now - last) / 1000,
     dt = clamp(elapsed, 0, 0.25);
   last = now;

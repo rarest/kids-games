@@ -100,6 +100,7 @@ const panels = [
 ];
 function setMode(next) {
   mode = next;
+  window.GameActivity?.setPlaying(next === "playing");
   document.body.dataset.mode = next;
   controls?.clear();
   jumpRequested = false;
