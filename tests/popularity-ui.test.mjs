@@ -164,7 +164,7 @@ test('homepage mounts the ranking tabs while its existing search still filters t
     querySelectorAll: () => tabs,
     querySelector: selector => ({ '[data-popularity-panel]': panel, '[data-popularity-results]': results, '[data-popularity-status]': status })[selector],
   };
-  const nodes = { popularity: root, grid: element(), empty: element(), q: element() };
+  const nodes = { popularity: root, grid: element(), empty: element(), q: element(), 'load-error': element() };
   const requests = [];
   const context = {
     window: { GAMES: catalog, fetch: async url => {
