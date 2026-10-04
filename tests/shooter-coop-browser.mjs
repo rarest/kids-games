@@ -23,7 +23,7 @@ test('separate phone and computer join, see both aircraft, move, fire, pause and
   await until(a,`testState.game.partners.find(p=>p.id===${JSON.stringify(id)}).player.x>${before+40}`);
   const r=await b.evaluate('(()=>{const r=game.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height*.8}})()');
   await b.call('Input.dispatchMouseEvent',{type:'mousePressed',x:r.x,y:r.y,button:'left',clickCount:1});await b.call('Input.dispatchMouseEvent',{type:'mouseMoved',x:r.x+60,y:r.y,button:'left',buttons:1});await b.call('Input.dispatchMouseEvent',{type:'mouseReleased',x:r.x+60,y:r.y,button:'left',clickCount:1});await sleep(250);
-  const dragged=await b.evaluate('testState.game.partners[0].player.x');await b.call('Input.dispatchKeyEvent',{type:'keyDown',key:'ArrowLeft',code:'ArrowLeft'});await sleep(350);await b.call('Input.dispatchKeyEvent',{type:'keyUp',key:'ArrowLeft',code:'ArrowLeft'});assert.ok(await b.evaluate('testState.game.partners[0].player.x')<dragged-20);
+  const dragged=await b.evaluate('testState.game.partners[0].player.x');await b.call('Input.dispatchKeyEvent',{type:'keyDown',key:'ArrowLeft',code:'ArrowLeft'});await sleep(350);await b.call('Input.dispatchKeyEvent',{type:'keyUp',key:'ArrowLeft',code:'ArrowLeft'});await until(b,`testState.game.partners[0].player.x<${dragged-20}`);
   await b.evaluate('document.getElementById("laser").click()');await until(a,'testState.game.partners[0].lasers===9');assert.equal(await a.evaluate('testState.game.lasers'),10);
   await b.evaluate('document.getElementById("pause").click()');await until(a,'document.body.dataset.mode==="paused"');assert.equal(await b.evaluate('resume.disabled'),true);
   await a.evaluate('resume.click()');await until(b,'document.body.dataset.mode==="playing"');

@@ -87,6 +87,8 @@
   </label>
 
   <main class="grid" id="grid"></main>
+  <p class="empty" id="load-error" role="status">游戏列表未能加载，请检查网络后 <a href="" style="color:inherit">重新加载</a>。</p>
+  <noscript><p class="empty">请在浏览器设置中启用 JavaScript 后重新加载。</p></noscript>
   <p class="empty" id="empty" hidden>没有找到这个游戏，换个词试试 🙈</p>
 
   <footer>
@@ -100,6 +102,8 @@
   const empty = document.getElementById('empty');
   const q = document.getElementById('q');
   const games = Array.isArray(window.GAMES) ? window.GAMES : [];
+  const catalogLoaded = Array.isArray(window.GAMES);
+  document.getElementById('load-error').hidden = catalogLoaded;
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
@@ -119,7 +123,7 @@
         <div class="tags">${(g.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
       </a>
     `).join('');
-    empty.hidden = list.length > 0;
+    empty.hidden = !catalogLoaded || list.length > 0;
   }
 
   // 游戏较少时隐藏搜索框，不打扰

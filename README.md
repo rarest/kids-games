@@ -118,3 +118,13 @@ deploy/        自动部署组件
 首次接入前，需要把已审查的新 `deploy/deploy-local.sh` 原样放回生产仓库同一路径，核对 SHA 与执行模式，再让原 webhook 拉取 main。旧 Bash 进程可能已经缓冲原脚本，因此仅靠脚本内部 pull 无法确保第一次就使用条件重启。发布后核对生产 HEAD、8787/8788 监听、两服务、两个代理与静态资源；若新增 wiring 未执行，重新运行同一份已提交脚本。
 
 公网同源双人验证使用 `GAMES_TEST_ORIGIN=https://games.nblord.com RESCUE_PUBLIC_SAME_ORIGIN=1 node --test --test-name-pattern='native online room' tests/rescue-online-browser.mjs`；另一入口换为 `https://games.596996.xyz`。此模式直接连接公网 `/rescue-ws`，不会创建本地游戏服务器或重定向 WebSocket。延迟专项在本地专用 relay 上运行；公网功能和本地注入延迟结果分别记录。
+
+## 游戏目录与启动故障巡检
+
+`npm run test:catalog` 从游戏厅目录读取所有游戏，在隔离的平板浏览器中检查真实启动状态、脚本异常、资源失败和横向溢出。检查线上版本：
+
+```sh
+GAMES_TEST_ORIGIN=https://games.nblord.com GAMES_AUDIT_DIR=/tmp/games-audit npm run test:catalog
+```
+
+`npm run test:startup` 注入脚本请求失败、损坏成绩、禁止存储和存储已满，验证恢复提示、开始/暂停/结算以及原有成绩保留。测试使用独立浏览器数据目录，不清除用户存档。目录检查只覆盖启动；完整操作、多人同步和存档流程仍由 `npm run test:browser` 及各游戏专项测试覆盖。
