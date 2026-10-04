@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { createModelFactory, roundedSlab } from './models.js';
+import { COLORS, createModelFactory, editionSegments, roundedSlab } from './models.js';
 import { faceUp, levelSpec } from './core.js';
+import { CARD_STEP_X as X, CARD_STEP_Z as Z, CAMERA_SLOPE, fitBoard } from './layout.js';
 
 const THEMES = [
   { name: '阳光花园', sky: 0xe8f0dd, ground: 0xb5c4a0, leaf: 0x799f7d, blossom: 0xf3ceb4, back: 0x759a85, night: false },
@@ -10,7 +11,6 @@ const THEMES = [
   { name: '月光池塘', sky: 0x363e59, ground: 0x59697d, leaf: 0x768b9d, blossom: 0xc6bfdc, back: 0x777994, night: true },
   { name: '星云花园', sky: 0xa8afca, ground: 0x9a97b2, leaf: 0x9490b7, blossom: 0xd7c7e5, back: 0x9481b2, night: false },
 ];
-const X = 2.15, Z = 2.55;
 export const FEEDBACK_HEIGHT = .28;
 export function createScene(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'low-power' });
@@ -23,6 +23,7 @@ export function createScene(canvas) {
   Object.assign(sun.shadow.camera, { left: -15, right: 15, top: 15, bottom: -15, near: .1, far: 80 }); sun.shadow.normalBias = .045;
   scene.add(sun, sun.target);
   const factory = createModelFactory(), bodyGeo = roundedSlab(1.72, 2.13, .14), faceGeo = roundedSlab(1.6, 2.01, .012, .15);
+  const compactFactory = createModelFactory({ compact: true });
   const bodyMaterial = factory.material(0xdfcda9), frontMaterial = factory.material(0xfff8e9);
   const backMaterial = new THREE.MeshStandardMaterial({ color: THEMES[0].back, roughness: .7 });
   const emblemGeo = new THREE.TorusGeometry(.29, .025, 6, 20); emblemGeo.rotateX(Math.PI / 2);
@@ -32,9 +33,17 @@ export function createScene(canvas) {
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); mesh.frustumCulled = false; mesh.count = 0;
     mesh.castShadow = i === 0; mesh.receiveShadow = i < 3; scene.add(mesh); return mesh;
   });
+  const detailedCardGeometries = instances.map(mesh => mesh.geometry);
+  const compactEmblem = new THREE.TorusGeometry(.29, .025, 3, 8); compactEmblem.rotateX(Math.PI / 2);
+  const compactCardGeometries = [new THREE.BoxGeometry(1.72, .14, 2.13), new THREE.BoxGeometry(1.6, .012, 2.01), new THREE.BoxGeometry(1.6, .012, 2.01), compactEmblem, petalGeo];
   const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), vec = new THREE.Vector3(), dummy = new THREE.Object3D();
-  let game = null, theme = 0, center = { x: 0, z: 0 }, span = 7, overviewMode = false, home = true, frame = 0;
+  let game = null, theme = 0, center = { x: 0, z: 0 }, span = 7, overviewMode = false, home = true;
+  let renderDirty = true, lastFaces = '', animating = false;
   const active = new Map(), effects = [];
+  const symbolTemplates = new Map(), symbolBatches = new Map();
+  const modelMatrix = new THREE.Matrix4(), segmentMatrix = new THREE.Matrix4();
+  const accentMaterial = factory.material(0xffffff), accentColor = new THREE.Color();
+  let editionBatch = null;
   let decoration = new THREE.Group(); scene.add(decoration);
   function cardPosition(index) { return { x: ((index % game.columns) - (game.columns - 1) / 2) * X, z: Math.floor(index / game.columns) * Z }; }
   function addMesh(geo, color, x, y, z, sx = 1, sy = sx, sz = sx, rotation = null) {
@@ -87,29 +96,70 @@ export function createScene(canvas) {
     owned.forEach(g => g.dispose());
     renderer.shadowMap.needsUpdate = true;
   }
-  function clearObjects() { for (const { root } of active.values()) { scene.remove(root); factory.disposeObject(root); } active.clear(); }
+  function clearObjects() {
+    renderDirty = true;
+    active.clear();
+    for (const batch of symbolBatches.values()) for (const mesh of batch) { scene.remove(mesh); mesh.dispose(); }
+    symbolBatches.clear();
+    if (editionBatch) { scene.remove(editionBatch); editionBatch.dispose(); editionBatch = null; }
+  }
+  function symbolBatch(symbol, compact) {
+    const family = symbol % 16;
+    const key = `${compact ? 'compact' : 'detailed'}:${family}`, maker = compact ? compactFactory : factory;
+    if (!symbolTemplates.has(key)) symbolTemplates.set(key, maker.build(family, { edition: false }));
+    if (!symbolBatches.has(key)) {
+      const capacity = game.cards.filter(c => c.symbol % 16 === family).length;
+      const batch = symbolTemplates.get(key).children.map(part => {
+        const accent = part.material === maker.material(COLORS[0]);
+        const mesh = new THREE.InstancedMesh(part.geometry, accent ? accentMaterial : part.material, capacity);
+        mesh.userData.accent = accent;
+        mesh.count = 0; mesh.frustumCulled = false; mesh.castShadow = true; mesh.receiveShadow = true;
+        mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); scene.add(mesh); return mesh;
+      });
+      symbolBatches.set(key, batch);
+    }
+    return symbolBatches.get(key);
+  }
+  function drawSymbol(symbol, position, angle, compact) {
+    dummy.position.set(position.x, .12, position.z); dummy.rotation.set(angle, 0, 0); dummy.scale.setScalar(.9);
+    dummy.translateY(.04); dummy.updateMatrix(); modelMatrix.copy(dummy.matrix);
+    accentColor.setHex(COLORS[Math.floor(symbol / 16) % COLORS.length]);
+    for (const mesh of symbolBatch(symbol, compact)) {
+      if (mesh.userData.accent) mesh.setColorAt(mesh.count, accentColor);
+      mesh.setMatrixAt(mesh.count++, modelMatrix);
+    }
+    const segments = editionSegments(symbol);
+    if (segments.length && !editionBatch) {
+      editionBatch = new THREE.InstancedMesh(factory.box, factory.material(0x617356, true), game.cards.length * 21);
+      editionBatch.count = 0; editionBatch.frustumCulled = false; editionBatch.castShadow = true;
+      editionBatch.instanceMatrix.setUsage(THREE.DynamicDrawUsage); scene.add(editionBatch);
+    }
+    for (const [x, y, z, w, h] of segments) {
+      dummy.position.set(x, y, z); dummy.rotation.set(0, 0, 0); dummy.scale.set(w, .028, h); dummy.updateMatrix();
+      segmentMatrix.multiplyMatrices(modelMatrix, dummy.matrix); editionBatch.setMatrixAt(editionBatch.count++, segmentMatrix);
+    }
+  }
   function resize() {
     const width = canvas.clientWidth, height = canvas.clientHeight;
     if (width < 1 || height < 1) return;
     renderer.setSize(width, height, false);
-    if (!overviewMode) {
-      if (home) span = Math.min(game ? game.columns * X + 3 : 7, Math.max(6.4, width / 90 * X));
-      else {
-        // Gradually show more cards without shrinking touch targets below 56px.
-        const pixels = Math.max(56, 90 - 34 * Math.log2(game.cards.length / 4) / Math.log2(199));
-        span = width * 1.72 / pixels;
-      }
+    if (overviewMode && game) ({ span, center } = fitBoard({ count: game.cards.length, columns: game.columns, width, height }));
+    else if (home) span = Math.min(game ? game.columns * X + 3 : 7, Math.max(6.4, width / 90 * X));
+    else {
+      const pixels = Math.max(56, 90 - 34 * Math.log2(game.cards.length / 4) / Math.log2(199));
+      span = width * 1.72 / pixels;
     }
     updateCamera();
   }
   function updateCamera() {
+    renderDirty = true;
     const aspect = Math.max(.2, canvas.clientWidth / Math.max(1, canvas.clientHeight));
     camera.left = -span / 2; camera.right = span / 2; camera.top = span / aspect / 2; camera.bottom = -camera.top;
     // Overview frusta can be taller than 100 units. Keep every ray origin above
     // the table and extend the far plane instead of clipping the bottom rows.
     const altitude = Math.max(25, camera.top + 25);
     camera.far = altitude * 4 + 300;
-    camera.position.set(center.x, altitude, center.z + altitude * .44); camera.lookAt(center.x, 0, center.z); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
+    camera.position.set(center.x, altitude, center.z + altitude * CAMERA_SLOPE); camera.lookAt(center.x, 0, center.z); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
     sun.position.set(center.x - 8, 20, center.z - 9); sun.target.position.set(center.x, 0, center.z); sun.target.updateMatrixWorld(); renderer.shadowMap.needsUpdate = true;
   }
   function planePoint(nx, ny) { ray.setFromCamera(new THREE.Vector2(nx, ny), camera); return ray.ray.intersectPlane(plane, new THREE.Vector3()); }
@@ -119,23 +169,16 @@ export function createScene(canvas) {
   }
   function focus(index) { const p = cardPosition(index); center = { x: p.x, z: p.z }; overviewMode = false; resize(); }
   function setGame(next, isHome = false) {
-    clearObjects(); game = next; home = isHome; theme = levelSpec(next.level).theme; overviewMode = false;
+    clearObjects(); game = next; home = isHome; theme = levelSpec(next.level).theme; overviewMode = !home;
     const rows = Math.ceil(game.cards.length / game.columns);
     center = { x: 0, z: rows <= 5 ? (rows - 1) * Z / 2 : 2.2 };
     if (home && canvas.clientWidth > 700) center.x = -3.2;
     if (home && canvas.clientWidth <= 700) center.z = -2.2;
     environment(); resize();
-    if (!home && rows > 5) {
-      // Start row one just below the HUD rather than wasting half the view
-      // above the board as the default camera widens for later levels.
-      const height = canvas.clientHeight, halfCard = canvas.clientWidth / span * 2.13 * .92 / 2;
-      const firstRowY = Math.min(height / 2, 130 + halfCard);
-      center.z -= planePoint(0, 1 - 2 * firstRowY / height).z;
-      updateCamera();
-    }
   }
   function pan(dx, dy) {
     if (!game || home) return;
+    if (overviewMode) { overviewMode = false; resize(); }
     const rows = Math.ceil(game.cards.length / game.columns), scale = span / canvas.clientWidth;
     center.x = THREE.MathUtils.clamp(center.x - dx * scale, -game.columns * X / 2 + 1, game.columns * X / 2 - 1);
     center.z = THREE.MathUtils.clamp(center.z - dy * scale * 1.1, -1.8, (rows - 1) * Z + 1.8);
@@ -143,24 +186,20 @@ export function createScene(canvas) {
   }
   function overview() {
     overviewMode = !overviewMode;
-    const rows = Math.ceil(game.cards.length / game.columns);
-    if (overviewMode) { center = { x: 0, z: (rows - 1) * Z / 2 }; span = Math.max(game.columns * X + 3, rows * Z * canvas.clientWidth / canvas.clientHeight + 4); updateCamera(); }
+    if (overviewMode) resize();
     else focus(0);
   }
-  function reset() { overviewMode = false; focus(0); }
+  function reset() { overviewMode = true; resize(); }
   function pick(clientX, clientY) {
     if (!game || home) return null;
     const r = canvas.getBoundingClientRect(); ray.setFromCamera(new THREE.Vector2((clientX - r.left) / r.width * 2 - 1, -(clientY - r.top) / r.height * 2 + 1), camera);
     const p = ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), -.1), vec); if (!p) return null;
     const col = Math.round(p.x / X + (game.columns - 1) / 2), row = Math.round(p.z / Z), index = row * game.columns + col;
     if (col < 0 || col >= game.columns || row < 0 || !game.cards[index]) return null;
-    const location = cardPosition(index);
-    if (Math.abs(location.x - p.x) > .86 || Math.abs(location.z - p.z) > 1.07) return null;
-    // An overview tap locates the card; it never flips an unreadably small one.
-    if (overviewMode && canvas.clientWidth * 1.72 / span < 48) { focus(index); return null; }
-    return index;
+    const location = cardPosition(index); return Math.abs(location.x - p.x) <= .86 && Math.abs(location.z - p.z) <= 1.07 ? index : null;
   }
   function pulse(indexes) {
+    renderDirty = true;
     for (const index of indexes) {
       if (effects.length >= 6) break;
       const geo = new THREE.RingGeometry(.45, .5, 24); geo.rotateX(-Math.PI / 2);
@@ -170,24 +209,33 @@ export function createScene(canvas) {
   }
   function render(next, dt) {
     game = next; if (!game) return;
+    const faces = game.cards.map((_, index) => faceUp(game, index) ? '1' : '0').join('');
+    // The table is static between flips: keep the last frame instead of repeatedly
+    // drawing hundreds of unchanged sculptures during the preview or a pause.
+    if (!renderDirty && faces === lastFaces && (dt === 0 || (!animating && !effects.length))) return;
+    animating = false;
     const b = bounds(), visible = [], live = new Set(), rect = canvas.getBoundingClientRect();
     const small = canvas.clientWidth * 1.72 / span < 36;
+    const cardGeometries = small ? compactCardGeometries : detailedCardGeometries;
+    for (const [i, mesh] of instances.entries()) mesh.geometry = cardGeometries[i];
+    for (const batch of symbolBatches.values()) for (const mesh of batch) mesh.count = 0;
+    if (editionBatch) editionBatch.count = 0;
     let count = 0;
     for (let index = 0; index < game.cards.length; index++) {
       const p = cardPosition(index); if (p.x < b.minX || p.x > b.maxX || p.z < b.minZ || p.z > b.maxZ) continue;
       const up = faceUp(game, index);
       let item = active.get(index);
-      if (!item && !small) {
-        const root = new THREE.Group(); root.position.set(p.x, .12, p.z);
-        const object = factory.build(game.cards[index].symbol); object.scale.setScalar(.9); object.position.y = .04; root.add(object); scene.add(root);
-        item = { root, angle: up ? 0 : Math.PI }; active.set(index, item);
-      }
+      if (!item) { item = { angle: up ? 0 : Math.PI }; active.set(index, item); }
       let angle = up ? 0 : Math.PI;
       if (item) {
-        live.add(index); const step = Math.min(1, dt * 16); item.angle += (angle - item.angle) * step; angle = item.angle; item.root.rotation.x = angle;
+        live.add(index); const step = Math.min(1, dt * 16); item.angle += (angle - item.angle) * step;
+        if (Math.abs(angle - item.angle) < .002) item.angle = angle;
+        else animating = true;
+        angle = item.angle;
         const shown = angle < Math.PI / 2;
-        if (item.root.visible !== shown) renderer.shadowMap.needsUpdate = true;
-        item.root.visible = shown;
+        if (item.shown !== shown) renderer.shadowMap.needsUpdate = true;
+        item.shown = shown;
+        if (shown) drawSymbol(game.cards[index].symbol, p, angle, small);
       }
       for (let i = 0; i < instances.length; i++) {
         dummy.position.set(p.x, .13, p.z); dummy.rotation.set(angle, 0, 0); dummy.scale.set(1, 1, 1);
@@ -199,19 +247,25 @@ export function createScene(canvas) {
       const screen = new THREE.Vector3(p.x, .25, p.z).project(camera);
       visible.push({ index, x: rect.left + (screen.x + 1) / 2 * rect.width, y: rect.top + (1 - screen.y) / 2 * rect.height }); count++;
     }
-    for (const [index, item] of active) if (!live.has(index)) { scene.remove(item.root); factory.disposeObject(item.root); active.delete(index); }
+    for (const index of active.keys()) if (!live.has(index)) active.delete(index);
     for (const mesh of instances) { mesh.count = count; mesh.instanceMatrix.needsUpdate = true; }
+    for (const batch of symbolBatches.values()) for (const mesh of batch) {
+      mesh.instanceMatrix.needsUpdate = true;
+      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    }
+    if (editionBatch) editionBatch.instanceMatrix.needsUpdate = true;
+    // Dense overviews retain their raised symbols, with shadow work disabled at tiny sizes.
+    renderer.shadowMap.enabled = !small;
     for (let i = effects.length - 1; i >= 0; i--) {
       const e = effects[i]; e.life -= dt; e.ring.scale.setScalar(1 + (.7 - e.life) * 1.1); e.ring.material.opacity = Math.max(0, e.life / .7 * .6);
       if (e.life <= 0) { scene.remove(e.ring); e.ring.geometry.dispose(); e.ring.material.dispose(); effects.splice(i, 1); }
     }
-    if (++frame % 6 === 0) {
-      canvas.dataset.cards = JSON.stringify(visible); canvas.dataset.resources = JSON.stringify(stats()); canvas.dataset.center = `${center.x.toFixed(2)},${center.z.toFixed(2)}`;
-      canvas.dataset.overview = String(overviewMode); canvas.dataset.theme = THEMES[theme].name;
-    }
     renderer.render(scene, camera);
+    renderDirty = false; lastFaces = faces;
+    canvas.dataset.cards = JSON.stringify(visible); canvas.dataset.resources = JSON.stringify(stats()); canvas.dataset.center = `${center.x.toFixed(2)},${center.z.toFixed(2)}`;
+    canvas.dataset.overview = String(overviewMode); canvas.dataset.theme = THEMES[theme].name;
   }
   function stats() { return { geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, objects: active.size }; }
   new ResizeObserver(resize).observe(canvas);
-  return { setGame, render, pick, pan, reset, overview, focus, pulse, stats, themeName: () => THEMES[theme].name };
+  return { setGame, render, pick, pan, reset, overview, focus, pulse, stats, isOverview: () => overviewMode, themeName: () => THEMES[theme].name };
 }

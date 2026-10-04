@@ -41,7 +41,10 @@ function update() {
     $(`${kind}-count`).textContent = profile.items[kind];
     $(`use-${kind}`).disabled = mode !== 'playing' || game.phase !== 'playing' || !profile.items[kind] || (kind !== 'peek' && game.selected.length > 0) || (kind === 'add' && game.cards.length >= 2000);
   }
-  $('board-location').textContent = `${game.cards.length}张牌 · 拖动浏览`;
+  const fitted = scene.isOverview();
+  $('board-location').textContent = `${game.cards.length}张牌 · ${fitted ? '已自动缩放' : '拖动浏览'}`;
+  $('overview').textContent = fitted ? '⊕ 放大' : '▦ 全部卡片';
+  $('overview').setAttribute('aria-label', fitted ? '放大牌桌查看图案' : '自动缩小并显示全部卡片');
 }
 function start(level) {
   closeDialogs(); game = createGame(level); profile.session = game; focusIndex = 0;
@@ -100,13 +103,13 @@ $('help').onclick = () => $('help-dialog').hidden = false; $('close-help').oncli
 $('pause').onclick = () => paused(); $('resume').onclick = continued; $('leave').onclick = home;
 $('result-home').onclick = home; $('replay').onclick = () => start(game.level); $('next').onclick = () => start(game.level + 1);
 $('continue').onclick = () => { game = profile.session; closeDialogs(); scene.setGame(game); setMode('playing'); paused(); };
-$('overview').onclick = () => { scene.overview(); toast('总览中牌太小时，点牌放大到该区域，再点翻牌。'); };
+$('overview').onclick = () => { scene.overview(); update(); };
 $('reset').onclick = () => scene.reset();
 $('mute').onclick = () => { profile.muted = !profile.muted; audio.setMuted(profile.muted); if (!profile.muted && mode === 'playing') audio.start(); save(); update(); };
 for (const kind of ['peek', 'bomb', 'add']) $(`use-${kind}`).onclick = () => {
   const result = consume(profile, game, kind);
   if (!result.ok) return toast(result.reason);
-  if (kind === 'add') { scene.setGame(game); scene.focus(result.event.indexes[0]); }
+  if (kind === 'add') scene.setGame(game);
   event(result.event);
 };
 let pointer = null;

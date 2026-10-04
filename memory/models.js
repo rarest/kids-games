@@ -4,6 +4,17 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 export const COLORS = [0xf4a895, 0xa4c8b0, 0xcbb7de, 0xf0cc7d, 0x94c7d1, 0xe5a8bd, 0xb4c184, 0xaaaed5];
 export const NAMES = ['小兔', '花朵', '草莓', '星星', '月亮', '贝壳', '蘑菇', '樱桃', '苹果', '水晶', '蝴蝶', '小鸭', '星球', '四叶草', '蛋糕', '小鱼'];
 export function symbolName(symbol) { return `${NAMES[symbol % 16]}${symbol >= 16 ? ` · ${Math.floor(symbol / 16) + 1}` : ''}`; }
+export function editionSegments(symbol) {
+  if (symbol < 16) return [];
+  const segments = ['abcedf', 'bc', 'abged', 'abgcd', 'fgbc', 'afgcd', 'afgecd', 'abc', 'abcdefg', 'abfgcd'];
+  const digits = String(Math.floor(symbol / 16) + 1), result = [];
+  for (let i = 0; i < digits.length; i++) {
+    const x = (i - (digits.length - 1) / 2) * .22;
+    const slots = { a: [x, .18, .52, .16, .032], g: [x, .18, .68, .16, .032], d: [x, .18, .84, .16, .032], f: [x - .08, .18, .60, .032, .13], b: [x + .08, .18, .60, .032, .13], e: [x - .08, .18, .76, .032, .13], c: [x + .08, .18, .76, .032, .13] };
+    for (const key of segments[Number(digits[i])]) result.push(slots[key]);
+  }
+  return result;
+}
 export function roundedSlab(width, height, depth, radius = .18) {
   const s = new THREE.Shape(), x = -width / 2, y = -height / 2, r = Math.min(radius, width / 2, height / 2);
   s.moveTo(x + r, y); s.lineTo(x + width - r, y); s.quadraticCurveTo(x + width, y, x + width, y + r);
@@ -13,16 +24,16 @@ export function roundedSlab(width, height, depth, radius = .18) {
   const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: true, bevelThickness: .025, bevelSize: .025, bevelSegments: 2, curveSegments: 4, steps: 1 });
   g.rotateX(-Math.PI / 2); g.translate(0, -depth / 2, 0); return g;
 }
-export function createModelFactory() {
-  const sphere = new THREE.SphereGeometry(1, 12, 8), cylinder = new THREE.CylinderGeometry(1, 1, 1, 16), cone = new THREE.ConeGeometry(1, 1, 12);
-  const torus = new THREE.TorusGeometry(1, .13, 6, 24), box = new THREE.BoxGeometry(1, 1, 1), crystal = new THREE.OctahedronGeometry(1);
+export function createModelFactory({ compact = false } = {}) {
+  const sphere = new THREE.SphereGeometry(1, compact ? 6 : 12, compact ? 4 : 8), cylinder = new THREE.CylinderGeometry(1, 1, 1, compact ? 6 : 16), cone = new THREE.ConeGeometry(1, 1, compact ? 6 : 12);
+  const torus = new THREE.TorusGeometry(1, .13, compact ? 3 : 6, compact ? 8 : 24), box = new THREE.BoxGeometry(1, 1, 1), crystal = new THREE.OctahedronGeometry(1);
   const materials = new Map();
   function material(color, metal = false) {
     const key = `${color}:${metal}`;
     if (!materials.has(key)) materials.set(key, new THREE.MeshStandardMaterial({ color, roughness: metal ? .32 : .67, metalness: metal ? .5 : .02 }));
     return materials.get(key);
   }
-  function build(symbol) {
+  function build(symbol, { edition = true } = {}) {
     const group = new THREE.Group(), pieces = new Map();
     const accent = COLORS[Math.floor(symbol / 16) % COLORS.length], white = 0xfff4e1, green = 0x6c927d, dark = 0x46554e, gold = 0xdfb866;
     const part = (geo, color, position, scale = [1, 1, 1], rotation = [0, 0, 0], metal = false) => {
@@ -88,15 +99,7 @@ export function createModelFactory() {
         orb(accent, 0, .28, 0, .32, .15, .22); part(cone, accent, [-.34, .28, 0], [.17, .25, .14], [0, 0, Math.PI / 2]); orb(dark, .2, .37, .14, .03); break;
     }
     // Raised seven-segment edition number keeps late-game lookalikes unambiguous, without a flat image.
-    if (symbol >= 16) {
-      const segments = ['abcedf', 'bc', 'abged', 'abgcd', 'fgbc', 'afgcd', 'afgecd', 'abc', 'abcdefg', 'abfgcd'];
-      const digits = String(Math.floor(symbol / 16) + 1);
-      for (let i = 0; i < digits.length; i++) {
-        const x = (i - (digits.length - 1) / 2) * .22;
-        const slots = { a: [x, .18, .52, .16, .032], g: [x, .18, .68, .16, .032], d: [x, .18, .84, .16, .032], f: [x - .08, .18, .60, .032, .13], b: [x + .08, .18, .60, .032, .13], e: [x - .08, .18, .76, .032, .13], c: [x + .08, .18, .76, .032, .13] };
-        for (const k of segments[Number(digits[i])]) { const [a, b, c, w, h] = slots[k]; part(box, 0x617356, [a, b, c], [w, .028, h], [0, 0, 0], true); }
-      }
-    }
+    if (edition) for (const [x, y, z, w, h] of editionSegments(symbol)) part(box, 0x617356, [x, y, z], [w, .028, h], [0, 0, 0], true);
     for (const [mat, geometries] of pieces) {
       const merged = mergeGeometries(geometries); geometries.forEach(g => g.dispose());
       const mesh = new THREE.Mesh(merged, mat); mesh.castShadow = true; mesh.receiveShadow = true; group.add(mesh);

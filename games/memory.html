@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#edf1e6"><title>记忆花园 · 200段小小记忆</title>
-  <link rel="stylesheet" href="../memory/style.css?v=20261004memory2">
+  <link rel="stylesheet" href="../memory/style.css?v=20261004memory3">
 </head>
 <body data-mode="home">
   <header><a id="hall-link" class="brand" href="../index.html" aria-label="返回游戏厅"><span class="brand-flower">‹</span><span>返回游戏厅<small>记忆花园</small></span></a>
@@ -20,7 +20,7 @@
     </section>
     <section id="hud" hidden><div><span id="theme-name"></span><h2 id="level-label"></h2></div><div class="score"><strong id="matched">0 / 2</strong><small id="moves">0次翻牌</small></div></section>
     <div id="phase-banner" hidden></div>
-    <div id="board-tools" hidden><button id="overview" aria-label="切换牌桌总览">▦ 总览</button><button id="reset" aria-label="回到第一张牌">↺ 复位</button><button id="pause">Ⅱ 暂停</button><button id="play-shop">商店</button></div>
+    <div id="board-tools" hidden><button id="overview" aria-label="放大牌桌查看图案">⊕ 放大</button><button id="reset" aria-label="自动缩小并显示全部卡片">↺ 复位</button><button id="pause">Ⅱ 暂停</button><button id="play-shop">商店</button></div>
     <div id="board-location" hidden></div>
     <div id="error" hidden role="alert"><h2>3D画面未能启动</h2><p id="error-text"></p><a href="../index.html">返回游戏厅</a></div>
   </main>
@@ -31,8 +31,8 @@
   <div id="unlock-dialog" class="overlay" hidden><section class="panel small-panel"><span class="eyebrow">OPEN A NEW CHAPTER</span><h2 id="unlock-title"></h2><p>花100金币只开放这一关，不会开放中间的关卡。</p><div class="dialog-actions"><button id="cancel-unlock">再想想</button><button id="confirm-unlock" class="primary">100金币 · 解锁并开始</button></div></section></div>
   <div id="pause-dialog" class="overlay" hidden><section class="panel small-panel"><span class="eyebrow">TAKE YOUR TIME</span><h2>花园在等你</h2><p>牌局和装备已保留。回来时继续找就好。</p><div class="dialog-actions"><button id="leave">回主页</button><button id="resume" class="primary">继续游戏</button></div></section></div>
   <div id="result-dialog" class="overlay" hidden><section class="panel small-panel"><span class="eyebrow">A BEAUTIFUL MEMORY</span><div class="result-flower">✿</div><h2>这一关，记住了！</h2><p id="result-stats"></p><strong id="result-reward"></strong><div class="dialog-actions"><button id="result-home">回主页</button><button id="replay">再玩一次</button><button id="next" class="primary">下一关 →</button></div></section></div>
-  <div id="help-dialog" class="overlay" hidden><section class="panel small-panel"><div class="panel-title"><h2>怎么玩</h2><button id="close-help" aria-label="关闭帮助">×</button></div><ol><li>开局看5秒，记住图案的位置。</li><li>每次点两张，相同的保持翻开；不同的1秒后盖回。</li><li>全部配对就通关，没有倒计时压力。</li><li>第1关2对、第2关4对，逐关加2对；第40关休息一下只有2对，第41关从80对接着往上。</li><li>牌越多会逐步缩小，但保留可点击的大小。拖动浏览，或点总览里的小牌放大到该区域，再点翻牌；追加的牌放在最后，原牌位置不变。</li><li>顶部返回游戏厅会保留牌局，回来后点继续上次牌局。</li></ol><p class="muted">进度保存在当前浏览器。清除网站数据会清除进度。</p></section></div>
+  <div id="help-dialog" class="overlay" hidden><section class="panel small-panel"><div class="panel-title"><h2>怎么玩</h2><button id="close-help" aria-label="关闭帮助">×</button></div><ol><li>开局看5秒，记住图案的位置。</li><li>每次点两张，相同的保持翻开；不同的1秒后盖回。</li><li>全部配对就通关，没有倒计时压力。</li><li>第1关2对、第2关4对，逐关加2对；第40关休息一下只有2对，第41关从80对接着往上。</li><li>卡片越多会自动缩小，整副牌一起显示；点“放大”查看图案，再拖动浏览。点“全部卡片”或“复位”重新显示整副牌。</li><li>顶部返回游戏厅会保留牌局，回来后点继续上次牌局。</li></ol><p class="muted">进度保存在当前浏览器。清除网站数据会清除进度。</p></section></div>
   <div id="toast" role="status" aria-live="polite" hidden></div>
-  <script type="module" src="../memory/bundle.js?v=20261004memory2"></script>
+  <script type="module" src="../memory/bundle.js?v=20261004memory3"></script>
 </body>
 </html>
