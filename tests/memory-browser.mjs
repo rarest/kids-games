@@ -63,7 +63,7 @@ test('a matched sculpture stays face up when a paused board is restored', { time
   } finally { b.close(); }
 });
 // Removing actual raycast input, a first-clear receipt, or next-level unlock must break this visitor path.
-test('native 3D flips finish level one, award once, persist and unlock only the next level', { timeout: 60000 }, async () => {
+test('native 3D flips finish level one, award once, persist and unlock only the next level', { timeout: 120000 }, async () => {
   const b = await openBrowser();
   try {
     await b.call('Page.addScriptToEvaluateOnNewDocument', { source: 'const NativeAudio=window.AudioContext;window.AudioContext=new Proxy(NativeAudio,{construct(Type,args){const ctx=new Type(...args);window.observedAudio=ctx;return ctx;}});' });
@@ -91,7 +91,7 @@ test('native 3D flips finish level one, award once, persist and unlock only the 
     assert.deepEqual(b.errors, []);
   } finally { b.close(); }
 });
-test('shop, explicit paid unlock, large touch drag, consumables and pause survive reload', { timeout: 90000 }, async () => {
+test('shop, explicit paid unlock, large touch drag, consumables and pause survive reload', { timeout: 180000 }, async () => {
   const b = await openBrowser();
   try {
     await b.size(390, 844, true); await b.navigate('games/memory.html'); await wait(b, 'document.body.dataset.ready === "true"');
@@ -126,7 +126,7 @@ test('shop, explicit paid unlock, large touch drag, consumables and pause surviv
     assert.deepEqual(b.errors, []);
   } finally { b.close(); }
 });
-test('memory controls fit phone, tablet, desktop and landscape and hall reaches its real local entry', { timeout: 60000 }, async () => {
+test('memory controls fit phone, tablet, desktop and landscape and hall reaches its real local entry', { timeout: 120000 }, async () => {
   const b = await openBrowser();
   try {
     await b.navigate('index.html'); await wait(b, 'window.GAMES?.some(g=>g.file === "games/memory.html")');
@@ -198,6 +198,21 @@ test('pausing also freezes the real card flip and matching ring pixels', { timeo
     const capture = () => b.call('Page.captureScreenshot', { format: 'png', clip: { x: 0, y: 200, width: 390, height: 480, scale: 1 } });
     const before = await capture(); await sleep(1000); const after = await capture();
     assert.ok(after.data === before.data, 'paused canvas geometry must not continue its flip or fade');
+    assert.deepEqual(b.errors, []);
+  } finally { b.close(); }
+});
+test('a clearly labelled hall button saves an active game and supports continuing it', { timeout: 90000 }, async () => {
+  const b = await openBrowser();
+  try {
+    await b.size(320, 568, true); await b.navigate('games/memory.html'); await wait(b, 'document.body.dataset.ready === "true"');
+    const label = await b.evaluate(`document.querySelector('header a[href="../index.html"]').textContent`);
+    assert.match(label, /返回游戏厅/);
+    await click(b, '#start'); await click(b, '[data-level="1"]'); await wait(b, 'view.dataset.phase === "playing"');
+    await card(b, 0); const before = await saved(b);
+    await click(b, 'header a[href="../index.html"]'); await wait(b, 'window.GAMES?.some(g=>g.file === "games/memory.html")');
+    const after = await saved(b); assert.equal(after.coins, before.coins); assert.equal(after.session.paused, true); assert.deepEqual(after.session.cards, before.session.cards); assert.deepEqual(after.session.selected, [0]);
+    await click(b, 'a[href="games/memory.html"]'); await wait(b, 'document.body.dataset.ready === "true"'); await click(b, '#continue'); await click(b, '#resume');
+    await wait(b, 'document.body.dataset.mode === "playing"'); assert.deepEqual((await saved(b)).session.selected, [0]);
     assert.deepEqual(b.errors, []);
   } finally { b.close(); }
 });

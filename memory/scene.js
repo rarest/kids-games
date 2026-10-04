@@ -144,7 +144,11 @@ export function createScene(canvas) {
     if (width < 1 || height < 1) return;
     renderer.setSize(width, height, false);
     if (overviewMode && game) ({ span, center } = fitBoard({ count: game.cards.length, columns: game.columns, width, height }));
-    else span = Math.min(game ? game.columns * X + 3 : 7, Math.max(6.4, width / 90 * X));
+    else if (home) span = Math.min(game ? game.columns * X + 3 : 7, Math.max(6.4, width / 90 * X));
+    else {
+      const pixels = Math.max(56, 90 - 34 * Math.log2(game.cards.length / 4) / Math.log2(199));
+      span = width * 1.72 / pixels;
+    }
     updateCamera();
   }
   function updateCamera() {
