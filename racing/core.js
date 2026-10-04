@@ -360,6 +360,31 @@ export function standings(race) {
     (a, b) => a.finishTime - b.finishTime || b.s - a.s || a.id - b.id,
   );
 }
+export function newOnlineRace(trackId, members) {
+  if (!TRACKS.some((track) => track.id === trackId)) throw Error("赛道不存在");
+  if (!Array.isArray(members) || members.length < 2 || members.length > 8)
+    throw Error("联机比赛需要2到8位玩家");
+  const slots = new Set();
+  for (const member of members) {
+    if (!member || !Number.isInteger(member.id) || member.id < 0 || member.id > 7 || slots.has(member.id))
+      throw Error("玩家槽位无效");
+    if (!CARS.some((car) => car.id === member.car) || !SKINS.some((skin) => skin.id === member.skin))
+      throw Error("车辆或车漆不存在");
+    slots.add(member.id);
+  }
+  const race = newRace(trackId, members[0].car);
+  race.online = true;
+  for (const car of race.cars) {
+    const member = members.find((member) => member.id === car.id);
+    car.human = Boolean(member);
+    car.model = member ? CARS.find((model) => model.id === member.car) : CARS[car.id % CARS.length];
+    car.car = car.model.id;
+    car.skin = member ? member.skin : SKINS[car.id % SKINS.length].id;
+    if (member) car.name = member.name;
+    else car.name = `AI ${String(car.id + 1).padStart(2, "0")}`;
+  }
+  return race;
+}
 export function stepRace(r, input, delta) {
   if (r.paused || r.status !== "racing") return;
   const dt = clamp(delta, 0, 0.05);
@@ -383,17 +408,19 @@ export function stepRace(r, input, delta) {
     let accel,
       brake,
       boost = false;
-    if (c.id === 0) {
-      accel = input.throttle ? 1 : 0;
-      brake = !!input.brake;
-      boost = !!input.boost && c.nitro > 2 && !brake && accel > 0;
+    if (r.online ? c.human : c.id === 0) {
+      const controls = (r.online ? input?.[c.id] : input) || {};
+      const steer = Number.isFinite(controls.steer) ? clamp(controls.steer, -1, 1) : 0;
+      accel = controls.throttle ? 1 : 0;
+      brake = !!controls.brake;
+      boost = !!controls.boost && c.nitro > 2 && !brake && accel > 0;
       c.nitro = clamp(c.nitro + (boost ? -27 : 11) * dt, 0, 100);
       c.offset +=
-        clamp(input.steer || 0, -1, 1) *
+        steer *
         (2 + c.speed * 0.115) *
         c.model.handling *
         dt;
-      c.steer = clamp(input.steer || 0, -1, 1);
+      c.steer = steer;
       // Inertia pushes the car towards the outside of fast corners.
       c.offset -= road.curvature * c.speed * c.speed * 0.02 * dt;
       c.offset = clamp(c.offset, -16, 16);
@@ -476,11 +503,14 @@ export function stepRace(r, input, delta) {
     }
   }
   r.time += dt;
-  if (r.cars[0].finished && r.cars.filter((c) => c.finished).length >= 3)
+  if (r.online
+    ? r.cars.filter((car) => car.human).every((car) => car.finished)
+    : r.cars[0].finished && r.cars.filter((c) => c.finished).length >= 3)
     r.status = "finished";
 }
 // Finish the remaining podium competitors using the same rules, without making the player wait.
 export function completePodium(r) {
+  if (r.online) return;
   if (!r.cars[0].finished) return;
   for (let i = 0; i < 18000 && r.status === "racing"; i++)
     stepRace(r, {}, 1 / 60);

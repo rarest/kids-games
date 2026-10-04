@@ -8,7 +8,7 @@
     />
     <meta name="theme-color" content="#12252b" />
     <title>峰谷竞速 · 3D赛车</title>
-    <link rel="stylesheet" href="../racing/style.css?v=20261002race3" />
+    <link rel="stylesheet" href="../racing/style.css?v=20261004race4" />
   </head>
   <body>
     <canvas id="view" aria-label="三维赛车画面"></canvas>
@@ -41,7 +41,7 @@
       <section class="intro">
         <span class="eyebrow">THE ROAD IS YOURS</span>
         <h1>越过山海<br />驶向第一</h1>
-        <p>与你竞速的，是十位车手。<br />前方的风景，永远不止一条直道。</p>
+        <p>独自挑战，或叫上朋友一起竞速。<br />六位房间码，带你们驶上同一条赛道。</p>
       </section>
       <section class="menu" aria-label="赛事与车库">
         <div class="tabs">
@@ -70,6 +70,7 @@
           <label><input type="checkbox" id="auto" checked /> 自动油门</label
           ><button id="start" class="primary" disabled>准备赛道…</button>
         </div>
+        <button id="online-open" class="multiplayer-entry">和朋友一起玩 · 2—8人</button>
         <div class="controls-hint">
           ← → / A D 转向 · ↓ / S 刹车 · 空格 氮气<br />关闭自动油门后，↑ / W
           加速。手机使用下方按钮。
@@ -80,6 +81,28 @@
         ><small id="paint-name">流光极光 / 金属珠光车漆</small>
       </div>
     </main>
+    <section id="online-panel" class="veil" hidden aria-label="赛车多人房间">
+      <div class="dialog online-dialog">
+        <div class="online-heading"><div><span class="eyebrow">RACE TOGETHER</span><h2>和朋友一起竞速</h2></div><button id="online-close" aria-label="关闭房间面板">✕</button></div>
+        <div id="online-entry">
+          <label class="field">你的昵称<input id="online-name" maxlength="12" placeholder="例如：逐风小车手" autocomplete="nickname" /></label>
+          <button id="online-create" class="primary">创建房间 · 当小队长</button>
+          <p class="online-divider">朋友已经创建了房间？</p>
+          <div class="join-row"><label class="field">六位房间码<input id="online-input" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" placeholder="输入六位数字" autocomplete="off" /></label><button id="online-join">加入房间</button></div>
+          <p class="online-hint">每人用自己的手机或电脑打开游戏。小队长分享房间码，大家加入并准备后一起出发。</p>
+        </div>
+        <div id="online-room" hidden>
+          <div class="room-code"><span>房间码 · 发给朋友</span><strong id="online-code"></strong><button id="online-copy">复制房间码</button></div>
+          <label class="field">本场赛道<select id="online-track" aria-label="房间赛道"></select></label>
+          <p id="online-route-hint" class="online-hint"></p>
+          <ul id="online-members" aria-label="房间成员"></ul>
+          <p id="online-race-status" class="online-hint"></p>
+          <div class="online-actions"><button id="online-ready">我准备好了</button><button id="online-start" class="primary" disabled>小队长开始比赛</button><button id="online-lobby" class="primary" hidden>准备下一场</button></div>
+          <button id="online-leave" class="leave-room">退出房间</button>
+        </div>
+        <p id="online-message" role="status" aria-live="polite"></p>
+      </div>
+    </section>
     <section id="hud" hidden aria-label="比赛信息">
       <div class="hud-top">
         <div class="rank">
@@ -118,11 +141,12 @@
         </div>
       </div>
     </section>
+    <div id="online-connection" class="network-note" hidden role="status"></div>
     <div id="paused" class="veil" hidden>
       <section class="dialog">
         <span class="eyebrow">TAKE A BREATH</span>
-        <h2>比赛已暂停</h2>
-        <p>回来以后继续这场比赛。</p>
+        <h2 id="pause-title">比赛已暂停</h2>
+        <p id="pause-description">回来以后继续这场比赛。</p>
         <button id="resume" class="primary">继续比赛</button
         ><button id="quit">返回车库</button>
       </section>
@@ -139,6 +163,6 @@
       </section>
     </div>
     <div id="toast" role="status"></div>
-    <script type="module" src="../racing/bundle.js?v=20261002race3"></script>
+    <script type="module" src="../racing/bundle.js?v=20261004race4"></script>
   </body>
 </html>

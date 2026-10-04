@@ -31,11 +31,15 @@ import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 const [game,revision,dependencies]=process.argv.slice(2);
-const files=game==='shooter'?['server.mjs','core.js','snapshot.js']:['server.mjs','net-codec.js','core.js','bosses.js','campaign.js','levels.js'];
+const files={
+ shooter:['server.mjs','core.js','snapshot.js'],
+ rescue:['server.mjs','net-codec.js','core.js','bosses.js','campaign.js','levels.js'],
+ racing:['server.mjs','core.js','routes.js','contact.js','hazards.js'],
+}[game];
 const paths=[`deploy/${game}-coop.service`,...files.map(file=>`${game}/${file}`)];
 const contents=paths.map(path=>{
  if(revision==='WORKTREE')return [path,readFileSync(path,'utf8')];
- // Rescue did not have a service/server in the pre-online checkout.
+ // New games may not have a service/server in the pre-online checkout.
  const exists=execFileSync('git',['ls-tree','--name-only',revision,'--',path],{encoding:'utf8'}).trim();
  return [path,exists?execFileSync('git',['show',`${revision}:${path}`],{encoding:'utf8'}):null];
 });
@@ -48,7 +52,7 @@ JS
 PREVIOUS_HEAD="$(git rev-parse HEAD)"
 PREVIOUS_DEPENDENCIES="$(production_dependencies "$PREVIOUS_HEAD")"
 if [ ! -f "$STATE_DIR/dependencies" ]; then printf '%s\n' "$PREVIOUS_DEPENDENCIES" > "$STATE_DIR/dependencies"; fi
-for GAME in shooter rescue; do
+for GAME in shooter rescue racing; do
   if [ ! -f "$STATE_DIR/$GAME-runtime" ]; then runtime_fingerprint "$GAME" "$PREVIOUS_HEAD" "$PREVIOUS_DEPENDENCIES" > "$STATE_DIR/$GAME-runtime"; fi
 done
 git fetch --quiet origin main
@@ -64,7 +68,7 @@ fi
 sudo rsync -a --delete \
   --exclude '.git' --exclude 'deploy' --exclude 'README.md' --exclude '.gitignore' \
   --exclude '.agents' --exclude '.superpowers' --exclude 'openspec' --exclude 'node_modules' \
-  --exclude 'shooter/server.mjs' --exclude 'rescue/server.mjs' \
+  --exclude 'shooter/server.mjs' --exclude 'rescue/server.mjs' --exclude 'racing/server.mjs' \
   --exclude '.user.ini' --exclude '.well-known' \
   "$REPO_DIR"/ "$DOCROOT"/
 sudo chmod -R a+rX "$DOCROOT"
@@ -72,7 +76,7 @@ sudo mkdir -p "$PROXY_DIR"
 
 PROXY_CHANGED=false
 if [ -f "$STATE_DIR/proxy-pending" ]; then PROXY_CHANGED=true; fi
-for GAME in shooter rescue; do
+for GAME in shooter rescue racing; do
   UNIT_CHANGED=false
   if [ -f "$STATE_DIR/$GAME-unit-pending" ] || ! cmp -s "deploy/$GAME-coop.service" "$UNIT_DIR/$GAME-coop.service"; then
     touch "$STATE_DIR/$GAME-unit-pending"
@@ -96,7 +100,7 @@ for GAME in shooter rescue; do
   fi
 done
 
-# Install both routes before validating; static-only deploys do not disrupt sockets.
+# Install all routes before validating; static-only deploys do not disrupt sockets.
 if $PROXY_CHANGED; then
   CONTAINER=$(sudo docker ps --format '{{.Names}}' | awk 'tolower($0) ~ /openresty/ {print; exit}')
   if [ -z "$CONTAINER" ]; then echo 'OpenResty container unavailable' >&2; exit 1; fi
