@@ -47,7 +47,7 @@ const snapshot = (b) =>
 
 // Removing the card, breaking native pickup/throw, WebGL or the entrance save fails this visitor path.
 test(
-  "hall search, native rescue play, durable entrance continue and return to twelve-game hall",
+  "hall search, native rescue play, durable entrance continue and return to full game hall",
   { timeout: 90000 },
   async () => {
     const b = await openBrowser();
@@ -56,24 +56,24 @@ test(
       await b.navigate("index.html");
       assert.equal(
         await b.evaluate(
-          `document.querySelector('a[href="games/rescue.html?v=20261003rescue-online2"] .name')?.textContent`,
+          `document.querySelector('a[href^="games/rescue.html"] .name')?.textContent`,
         ),
         "松鼠大作战",
         "hall contains the actual rescue card",
       );
       assert.equal(
         await b.evaluate('document.querySelectorAll(".card").length'),
-        12,
+        await b.evaluate('window.GAMES.length'),
       );
       assert.equal(
         await b.evaluate(
-          `document.querySelector('a[href="games/rescue.html?v=20261003rescue-online2"] .desc').textContent`,
+          `document.querySelector('a[href^="games/rescue.html"] .desc').textContent`,
         ),
         "11个经典区域的3D横版重制，举箱子、扔队友，本机 / 联网双人救援",
       );
       assert.deepEqual(
         await b.evaluate(
-          `Array.from(document.querySelectorAll('a[href="games/rescue.html?v=20261003rescue-online2"] .tag'),e=>e.textContent)`,
+          `Array.from(document.querySelectorAll('a[href^="games/rescue.html"] .tag'),e=>e.textContent)`,
         ),
         ["经典", "3D", "本机双人", "联网双人", "手柄", "闯关"],
       );
@@ -84,7 +84,7 @@ test(
         1,
       );
       await shot(b, "hall-search");
-      await click(b, 'a[href="games/rescue.html?v=20261003rescue-online2"]');
+      await click(b, 'a[href^="games/rescue.html"]');
       await wait(
         b,
         'location.pathname.endsWith("/games/rescue.html") && document.querySelector("#view")?.dataset.phase === "home"',
@@ -148,7 +148,7 @@ test(
       await click(b, 'a[href="../index.html"]');
       await wait(
         b,
-        'location.pathname.endsWith("/index.html") && document.querySelectorAll(".card").length === 12',
+        'location.pathname.endsWith("/index.html") && window.GAMES?.length > 0 && document.querySelectorAll(".card").length === window.GAMES.length',
       );
       assert.deepEqual(b.errors, []);
       await mkdir(root, { recursive: true });

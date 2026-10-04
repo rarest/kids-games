@@ -2,6 +2,13 @@
    字段: file 路径 | emoji 图标 | name 名称 | desc 一句话 | tags 标签(用于搜索/分类) */
 window.GAMES = [
   {
+    file: "games/memory.html",
+    emoji: "🌼",
+    name: "记忆花园",
+    desc: "200关立体记忆配对，拖动大牌桌寻找小小惊喜，金币装备助你记住",
+    tags: ["记忆", "配对", "3D", "手机"],
+  },
+  {
     file: "games/english.html",
     emoji: "🔵",
     name: "珠珠学习乐园",
