@@ -39,7 +39,7 @@ test('350ms RTT direction reversals remain continuous in both actual browser dra
    await wait(b,'window.__firstMotion!==null');
    const {rows,response}=await b.evaluate('({rows:__motion,response:__firstMotion})');
    assert.ok(rows.length>30,'actual scene draws were observed');
-   assert.ok(response<150,`local native input waited ${response}ms for its first draw`);
+   assert.ok(response>=300&&response<750,`confirmed native input waited ${response}ms for its first draw`);
    let maxSpeed=0;
    for(let i=1;i<rows.length;i++){
     const seconds=(rows[i].at-rows[i-1].at)/1000;

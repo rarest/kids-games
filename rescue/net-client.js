@@ -1,5 +1,5 @@
 import {decodeFrame} from './net-codec.js';
-import {createPrediction} from './net-prediction.js';
+import {createConfirmedPresentation} from './net-confirmed.js';
 
 const SESSION_KEY='rescue.online.session.v1';
 const runtimeClock={now:()=>performance.now(),setInterval:(fn,ms)=>setInterval(fn,ms),clearInterval:id=>clearInterval(id)};
@@ -9,7 +9,6 @@ function defaultURL(){const base=new URL('/rescue-ws',globalThis.location.href);
 export function createRescueClient({onState=()=>{},onStatus=()=>{},url=defaultURL(),storage=defaultStorage(),transport=address=>new WebSocket(address),clock=runtimeClock}={}){
  let socket=null,authority=null,room=null,slot=null,prediction=null,session=null,intent=null,disposed=false,suspended=false;
  let epoch=null,tick=-1,retryAt=0,retries=0,retryStarted=null,lastMessage=0,lastPing=0,pingAt=null;
- let serverOffset=null,bestRTT=Infinity;
  let receivedBytes=0,sentBytes=0,status={connection:'idle',message:'',rtt:null,code:null,slot:null,room:null,suspended:false};
  function notify(connection=status.connection,message=''){
   status={connection,message,rtt:status.rtt,code:room?.code??session?.code??null,slot,room,suspended};onStatus({...status});
@@ -17,7 +16,7 @@ export function createRescueClient({onState=()=>{},onStatus=()=>{},url=defaultUR
  function save(value){session=value;try{if(value)storage?.setItem(SESSION_KEY,JSON.stringify(value));else storage?.removeItem(SESSION_KEY);}catch{/* A blocked session store still permits this connection. */}}
  function read(){try{const saved=JSON.parse(storage?.getItem(SESSION_KEY)??'null');if(saved&&/^[A-F0-9]{6}$/.test(saved.code)&&typeof saved.token==='string'&&saved.token.length>=20)return {code:saved.code,token:saved.token};}catch{}return null;}
  function send(packet){if(socket?.readyState!==1)return false;const raw=JSON.stringify(packet);try{socket.send(raw);sentBytes+=new TextEncoder().encode(raw).length;return true;}catch{return false;}}
- function stopSocket(){const old=socket;socket=null;pingAt=null;status.rtt=null;serverOffset=null;bestRTT=Infinity;if(old)try{old.close();}catch{}}
+ function stopSocket(){const old=socket;socket=null;pingAt=null;status.rtt=null;if(old)try{old.close();}catch{}}
  function resetPrediction(){prediction?.clear();}
  function end(message,connection='closed'){
   intent=null;retryAt=0;retryStarted=null;save(null);resetPrediction();prediction=null;stopSocket();room=null;slot=null;authority=null;epoch=null;tick=-1;notify(connection,message);
@@ -40,7 +39,7 @@ export function createRescueClient({onState=()=>{},onStatus=()=>{},url=defaultUR
    if(packet.type==='joined'){
     if((packet.slot!==0&&packet.slot!==1)||typeof packet.token!=='string'||typeof packet.code!=='string'){end('无效的房间响应','error');return;}
     const sameSeat=slot===packet.slot;slot=packet.slot;save({code:packet.code,token:packet.token});
-    if(!prediction||!sameSeat)prediction=createPrediction({slot,clock});else resetPrediction();
+    if(!prediction||!sameSeat)prediction=createConfirmedPresentation({slot,clock});else resetPrediction();
     retries=0;retryStarted=null;epoch=null;tick=-1;notify('connected');
    }else if(packet.type==='state'){
     if(slot===null||!packet.room||!Number.isSafeInteger(packet.epoch)||!Number.isSafeInteger(packet.tick))return;
@@ -48,15 +47,16 @@ export function createRescueClient({onState=()=>{},onStatus=()=>{},url=defaultUR
     const enteringPlaying=packet.epoch!==epoch&&packet.room.mode==='playing';
     try{authority=decodeFrame(packet,authority);}catch{lost();return;}
     epoch=packet.epoch;tick=packet.tick;room=packet.room;
-    if(!suspended&&room.mode==='playing'&&['playing','bonus'].includes(authority.status))prediction.receive(authority,{epoch,ack:packet.acks[slot],inputs:packet.inputs,at:Number.isFinite(packet.serverAt)&&serverOffset!==null?packet.serverAt-serverOffset:clock.now()-(status.rtt??0)/2});else resetPrediction();
+    prediction.receive(authority,{epoch,ack:packet.acks[slot]});
+    if(suspended||room.mode!=='playing'||!['playing','bonus'].includes(authority.status))resetPrediction();
     // Start the epoch's normal input stream before rendering/UI can delay its first RAF.
-    // Sequence, replay and acknowledgement use the existing fixed-step path.
+    // Sequence and acknowledgement use the fixed-step path without speculative physics.
     if(enteringPlaying&&!suspended&&room.members?.[slot]?.ready){
      advance({},1/60);if(socket!==ws)return;
     }
     onState(authority,packet);notify('connected');
    }else if(packet.type==='pong'){
-    if(packet.at===pingAt){const now=clock.now();status.rtt=Math.max(0,now-packet.at);if(Number.isFinite(packet.serverAt)&&status.rtt<=bestRTT){bestRTT=status.rtt;serverOffset=packet.serverAt-(packet.at+now)/2;}pingAt=null;notify(status.connection,status.message);}
+    if(packet.at===pingAt){const now=clock.now();status.rtt=Math.max(0,now-packet.at);pingAt=null;notify(status.connection,status.message);}
    }else if(packet.type==='closed')end(packet.message||'房间已结束');
    else if(packet.type==='error'){
     // A rejected reclaim cannot safely choose a different seat or keep retrying.

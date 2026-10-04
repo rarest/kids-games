@@ -10,7 +10,7 @@ export async function instrumentedSite(){
   b.onLoad({filter:/\/rescue\/scene\.js$/},async({path})=>{
    const text=await readFile(path,'utf8'),needle='renderer.render(scene, camera);';assert.equal(text.split(needle).length,2);
    // Observe the actual completed draw. The production simulation and renderer are unchanged.
-   const source=text.replace(needle,`${needle}\nglobalThis.__rescueDraw?.(state, world.group, renderer.getDrawingBufferSize(new THREE.Vector2()));`);
+   const source=text.replace(needle,`${needle}\nglobalThis.__rescueDraw?.(state, world.group, renderer.getDrawingBufferSize(new THREE.Vector2()), {...frame});`);
    return{contents:source,loader:'js'};
   });
   if(process.env.RESCUE_PREDICTION_REFERENCE==='main')b.onLoad({filter:/\/rescue\/net-prediction\.js$/},({path})=>({contents:execFileSync('git',['show','origin/main:rescue/net-prediction.js'],{cwd:root,encoding:'utf8'}),loader:'js'}));

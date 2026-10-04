@@ -358,7 +358,10 @@ function frame(now) {
   if (screen === "game") {
     const wasPanel = panel,
       inputs = controls.sample();
-    if (online) online.advance(panel || wasPanel ? {} : inputs[0] ?? {}, duration.online);
+    if (online) {
+      online.advance(panel || wasPanel ? {} : inputs[0] ?? {}, duration.online);
+      state = online.render() ?? state;
+    }
     else if (!panel && !wasPanel) stepGame(state, inputs, dt);
     if (state.level !== renderedLevel) {
       scene.setLevel(state.level);
@@ -553,7 +556,7 @@ function refreshOnlineUI() {
   if (onlineStatus) updateRoomUI(onlineStatus, deviceAvailable() && congestionEpoch === null);
 }
 function receiveOnline(authority, packet) {
-  state = authority;
+  state = online?.render() ?? authority;
   if (!scene) return;
   if (!onlineLayoutPrepared) {
     onlineLayoutPrepared = true;
