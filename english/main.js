@@ -126,7 +126,7 @@ courseCloud=createCourseCloud({course,onState:()=>renderCloudState(),onAuthLoss:
 window.englishCourseCloud=courseCloud;
 
 // Optional family learning: game coins and adventure reconnect state stay on this device.
-const familyStyle=document.createElement('link');familyStyle.rel='stylesheet';familyStyle.href=new URL('../shared/family.css',import.meta.url).href;document.head.append(familyStyle);
+const familyStyle=document.createElement('link');familyStyle.rel='stylesheet';familyStyle.href=new URL('../shared/family.css?v=20261005family1',import.meta.url).href;document.head.append(familyStyle);
 const familyBar=document.createElement('section');familyBar.className='family-toolbar';familyBar.setAttribute('aria-label','英语学习档案');$('courseRoot').before(familyBar);
 let familyUser=null,familyProfiles=[],familyLoading=false,familyImporting=false,familyEpoch=0;
 function familyMessage(text){toast(text)}

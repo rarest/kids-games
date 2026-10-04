@@ -11,7 +11,7 @@ window.GAMES = [
   },
   {
     id: "english",
-    file: "games/english.html",
+    file: "games/english.html?v=20261005family1",
     emoji: "🔵",
     name: "珠珠学习乐园",
     desc: "人教PEP三到六年级英语，36条3D路线、沿途10题、美式发音和33款珠珠皮肤",
