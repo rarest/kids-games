@@ -51,6 +51,27 @@ function validReviewCard(q){
  if(q.kind==='sentence')return Array.isArray(q.tokens)&&q.tokens.length>1&&q.tokens.every(x=>typeof x==='string')&&(!q.acceptedAnswers||Array.isArray(q.acceptedAnswers)&&q.acceptedAnswers.every(x=>typeof x==='string'));
  return Array.isArray(q.choices)&&q.choices.length>=2&&q.choices.every(x=>typeof x==='string')&&q.choices.includes(q.answer);
 }
+// Rehydrate only known gameplay fields; a damaged session must not reset the wallet.
+export function snapshotRun(run){return {levelId:run.level.id,progress:run.progress,elapsed:run.elapsed,lane:run.lane,jump:run.jump,jumpAge:run.jumpAge,fall:run.fall,fallAge:run.fallAge,status:run.status,card:run.card,completed:run.completed,slow:run.slow,lastHit:run.lastHit,rivals:run.rivals.map(r=>({...r})),hits:run.obstacles.map(o=>o.hit)};}
+export function restoreRun(data){
+ const level=LEVELS.find(l=>l.id===data?.levelId);if(!level)return null;
+ const within=(x,min,max)=>Number.isFinite(x)&&x>=min&&x<=max;
+ if(!['playing','paused','question'].includes(data.status)||!Number.isInteger(data.completed)||!within(data.completed,0,10)||!Number.isInteger(data.card)||!within(data.card,0,9))return null;
+ const lower=data.completed/11,upper=data.completed<10?(data.completed+1)/11:1;
+ if(!within(data.progress,lower,upper)||!within(data.elapsed,0,1000000)||!within(data.lane,-1,1)||!within(data.jump,0,1)||!within(data.jumpAge,-1,.85)||!within(data.fall,0,1)||!within(data.fallAge,-1,.65)||!within(data.slow,0,2)||!(data.lastHit===null||within(data.lastHit,0,data.elapsed)))return null;
+ if(data.status==='question'&&(data.completed===10||data.card!==data.completed||Math.abs(data.progress-upper)>1e-9))return null;
+ const run=new Run(level);
+ if(!Array.isArray(data.rivals)||data.rivals.length!==run.rivals.length||!data.rivals.every(r=>r&&within(r.progress,0,10000)&&within(r.lane,-1,1)&&within(r.speed,.82,1)&&within(r.finishTime,0,1000000)))return null;
+ if(!Array.isArray(data.hits)||data.hits.length!==run.obstacles.length||!data.hits.every(x=>typeof x==='boolean'))return null;
+ for(const key of ['progress','elapsed','lane','jump','jumpAge','fall','fallAge','status','card','completed','slow','lastHit'])run[key]=data[key];
+ run.rivals=data.rivals.map(({progress,lane,speed,finishTime})=>({progress,lane,speed,finishTime}));run.obstacles.forEach((o,i)=>o.hit=data.hits[i]);return run;
+}
+function loadSession(s){
+ if(!s||typeof s.roundId!=='string'||!s.roundId||typeof s.bookId!=='string'||typeof s.unitId!=='string'||!restoreRun(s.run)||!Array.isArray(s.questions)||s.questions.length!==10||!s.questions.every(q=>validReviewCard(q)&&q.unitId===s.unitId)||!Number.isInteger(s.correct)||s.correct<0||s.correct>10||!Array.isArray(s.wrong)||!s.wrong.every(validReviewCard))return null;
+ if(!(s.lastAnswer===null||typeof s.lastAnswer==='string')||(s.lastAnswer!==null&&s.run.status!=='question'))return null;
+ const q=s.questions[s.run.card];if(!Array.isArray(s.picked)||!s.picked.every(i=>Number.isInteger(i)&&i>=0&&i<(q.tokens?.length||0))||new Set(s.picked).size!==s.picked.length)return null;
+ return {roundId:s.roundId,bookId:s.bookId,unitId:s.unitId,run:snapshotRun(restoreRun(s.run)),questions:s.questions,correct:s.correct,wrong:s.wrong,lastAnswer:s.lastAnswer,picked:s.picked};
+}
 export function loadSave(raw){
  let value;try{value=typeof raw==='string'?JSON.parse(raw):raw;}catch{}
  value=value&&typeof value==='object'?value:{};
@@ -60,7 +81,7 @@ export function loadSave(raw){
  for(const [key,r] of Object.entries(value.records&&typeof value.records==='object'?value.records:{})){
   if(r&&Number.isInteger(r.correct)&&r.correct>=0&&r.correct<=10&&Number.isFinite(r.time)&&r.time>=0&&Number.isSafeInteger(r.plays)&&r.plays>0)records[key]={correct:r.correct,time:r.time,plays:r.plays};
  }
- return {version:1,coins:Number.isSafeInteger(value.coins)&&value.coins>=0?Math.min(value.coins,100000000):0,owned,skin:owned.includes(value.skin)?value.skin:'pearl',claimed:Array.isArray(value.claimed)?value.claimed.filter(x=>typeof x==='string').slice(-10000):[],records,wrong:Array.isArray(value.wrong)?value.wrong.filter(validReviewCard).slice(-100):[]};
+ return {version:1,session:loadSession(value.session),coins:Number.isSafeInteger(value.coins)&&value.coins>=0?Math.min(value.coins,100000000):0,owned,skin:owned.includes(value.skin)?value.skin:'pearl',claimed:Array.isArray(value.claimed)?value.claimed.filter(x=>typeof x==='string').slice(-10000):[],records,wrong:Array.isArray(value.wrong)?value.wrong.filter(validReviewCard).slice(-100):[]};
 }
 export function completeCard(save,id){if(save.claimed.includes(id))return false;save.coins+=200;save.claimed.push(id);if(save.claimed.length>10000)save.claimed.shift();return true;}
 export function buySkin(save,id){const skin=SKINS.find(s=>s.id===id);if(!skin||save.owned.includes(id)||save.coins<skin.price)return false;save.coins-=skin.price;save.owned.push(id);save.skin=id;return true;}
