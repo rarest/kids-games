@@ -377,7 +377,7 @@ function frame(now) {
   if (screen === "home" && !panel && !online) state.time += dt;
   const visual = online?.render() ?? state;
   const beforeDraw = scene.diagnostics().frames;
-  scene.update(visual, dt);
+  scene.update(visual, dt, online?.slot);
   const afterDraw = scene.diagnostics().frames;
   // A paused/unready update acknowledges ready:false on the same ordered socket.
   // Until it arrives, withheld old playing authority cannot end congestion recovery.
@@ -396,6 +396,18 @@ function frame(now) {
     }
   }
   renderedPositions = visual.players.map(q => ({id:q.id,x:q.x,y:q.y}));
+  const teammate = $("teammate-direction");
+  if(teammate){
+    const own=online&&visual.players[online.slot],other=online&&visual.players[1-online.slot],camera=scene.diagnostics().camera;
+    const offscreen=own&&other&&other.lives>0&&camera&&
+      (Math.abs(other.x-camera.x)>camera.width/2-1||Math.abs(other.y-camera.y)>camera.height/2-1);
+    teammate.hidden=!offscreen;
+    if(offscreen){const dx=other.x-own.x,dy=other.y-own.y;
+      const vertical=Math.abs(dy)>Math.abs(dx);
+      const text=vertical?(dy>0?'↑ 搭档':'↓ 搭档'):(dx>0?'搭档 →':'← 搭档');
+      if(teammate.textContent!==text){teammate.textContent=text;
+        teammate.setAttribute('aria-label',vertical?(dy>0?'搭档在上方':'搭档在下方'):(dx>0?'搭档在右边':'搭档在左边'));}}
+  }
   diagnostics();
   raf = requestAnimationFrame(frame);
 }

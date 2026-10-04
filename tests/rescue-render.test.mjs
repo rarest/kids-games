@@ -249,6 +249,12 @@ test('restoring unchanged auto quality preserves measured adaptation and the ong
   for(let i=0;i<89;i++)q.observe(45);assert.equal(q.dpr,1.6,'changing modes starts a fresh measured window');q.observe(45);assert.equal(q.dpr,1.6*.75);
  }
 });
+test('auto resolution recovers after a transient slow period without changing explicit modes',async()=>{
+ const {createQualityController}=await module('scene'),q=createQualityController(2);
+ for(let i=0;i<1000;i++)q.observe(45);assert.equal(q.dpr,.5);
+ for(let i=0;i<1600;i++)q.observe(16);assert.equal(q.dpr,1.6,'healthy frames restore normal resolution');
+ q.set('low');for(let i=0;i<1600;i++)q.observe(16);assert.equal(q.dpr,1);
+});
 test('scenery disposal releases instance buffers without disposing borrowed texture resources',async()=>{
  const {createMaterials}=await module('materials'),{createScenery}=await module('scenery');const pool=createMaterials(),a=createScenery(LEVELS[1],pool);let instances=0,released=0;a.group.traverse(o=>{if(o.isInstancedMesh){instances++;o.addEventListener('dispose',()=>released++);}});a.dispose();assert.ok(instances>0);assert.equal(released,instances);assert.ok(pool.stats().textures>0);pool.dispose();
 });
