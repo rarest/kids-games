@@ -44,7 +44,8 @@ test('every unit has six distinct resolvable thematic core-word references', () 
       used.add(id);
     }
   }
-  assert.deepEqual([...used].sort(), Object.keys(WORDS).sort(), 'unused vocabulary should not inflate coverage');
+  for(const id of used)assert.ok(WORDS[id],id);
+  // Historical words remain available to saved rounds, not in corrected unit pools.
   assert.ok(BOOKS[0].units[0].words.includes('friend'));
   assert.ok(!BOOKS[0].units[0].words.includes('eraser'));
 });
@@ -53,7 +54,7 @@ test('each word has a readable Chinese meaning and consistent American IPA', () 
   assert.ok(Object.keys(WORDS).length >= 160);
   for (const [id, word] of Object.entries(WORDS)) {
     assert.match(id, /^[a-z]+(?:-[a-z]+)*$/);
-    assert.equal(id, word.en.toLowerCase().replaceAll(' ', '-'));
+    assert.ok(word.en.length>0, id); // Distinct senses and contractions use stable safe IDs.
     assert.match(word.zh, /[\u4e00-\u9fff]/, id);
     assert.match(word.ipa, /^\/[^/]+\/$/, id);
     assert.doesNotMatch(word.ipa, /ɒ|əʊ/, `British IPA in ${id}`);
@@ -90,6 +91,7 @@ test('grammar choices have exactly one declared answer and child-readable reason
     assert.ok(unit.grammar.length >= 2, unit.id);
     for (const question of unit.grammar) {
       assert.ok(question.prompt.includes('___'), question.prompt);
+      assert.doesNotMatch(question.prompt, /[\u4e00-\u9fff]/, 'spoken grammar must not contain Chinese instructions');
       assert.ok(question.options.length >= 3);
       assert.equal(new Set(question.options).size, question.options.length);
       assert.equal(question.options.filter(o => o === question.answer).length, 1);
@@ -163,4 +165,22 @@ test('sentence-building accepts natural alternate positions using the same token
       assert.deepEqual(tokens(alternative), tokens(sentence.en), alternative);
     }
   }
+});
+
+test('every official unit vocabulary entry is available in study and question pools',async()=>{
+ const {readFile}=await import('node:fs/promises');
+ const inventories=await Promise.all(['g34','g56'].map(async group=>JSON.parse(await readFile(new URL(`../english/content-${group}.json`,import.meta.url),'utf8'))));
+ const entries=inventories.flatMap(i=>i.books).flatMap(b=>b.units);assert.equal(entries.length,46);
+ for(const entry of entries){const unit=BOOKS.flatMap(b=>b.units).find(u=>u.id===entry.id);assert.ok(unit,entry.id);assert.ok(entry.words.length>0,entry.id);assert.equal(unit.coverage.status,entry.coverage.status);assert.match(entry.coverage.source,/^https:\/\//);assert.ok(entry.coverage.basis);assert.deepEqual(unit.textbookWords,entry.words.map(w=>w.id));for(const w of entry.words){assert.ok(unit.words.includes(w.id),`${unit.id}: ${w.en} missing from quiz pool`);assert.equal(WORDS[w.id].en,w.en);assert.ok(WORDS[w.id].zh);assert.ok(WORDS[w.id].ipa);}assert.ok(unit.sentences.length>3,`${unit.id}: original three sentences are insufficient`);assert.ok(unit.grammar.length>2,`${unit.id}: multiple sentence patterns need grammar practice`);}
+});
+
+
+test('corrected Work and play uses weekdays while historical words remain loadable',()=>{
+ const unit=BOOKS.find(b=>b.id==='g5-upper').units[2];
+ for(const id of ['monday','tuesday','wednesday','usually'])assert.ok(unit.words.includes(id),id);
+ assert.ok(!unit.words.includes('doctor'));assert.ok(WORDS.doctor);
+ assert.ok(!unit.sentences.some(s=>/doctor|farmer|nurse/.test(s.en)));
+ assert.equal(WORDS['read-past'].ipa,'/rɛd/');assert.equal(WORDS.read.ipa,'/rid/');
+ assert.match(WORDS.dress.zh,/连衣裙/);assert.match(WORDS.dress.zh,/穿衣服/);
+ assert.match(WORDS.then.zh,/那时/);assert.match(WORDS.then.zh,/然后/);
 });

@@ -23,11 +23,13 @@ HERE = Path(__file__).resolve().parent
 VOICE = "en-US-AriaNeural"
 # Context selects the intended pronunciation of these homographs. Only the
 # target WordBoundary interval is exported, never the complete context sentence.
-CONTEXT_WORDS = {"read": "I read a book every day.", "use": "I use a book."}
+CONTEXT_WORDS = {"read": "I read a book every day.", "use": "I use a book.",
+                 "read-past": "I read a book yesterday."}
 
 
 async def save_context_word(word, destination):
     context = CONTEXT_WORDS[word]
+    target_word = "read" if word == "read-past" else word
     source = destination.with_suffix(".context.mp3")
     boundaries = []
     try:
@@ -37,7 +39,7 @@ async def save_context_word(word, destination):
             ).stream():
                 if chunk["type"] == "audio":
                     audio.write(chunk["data"])
-                elif chunk["type"] == "WordBoundary" and chunk["text"].lower() == word:
+                elif chunk["type"] == "WordBoundary" and chunk["text"].lower() == target_word:
                     boundaries.append(chunk)
         if len(boundaries) != 1:
             raise ValueError(f"Expected one boundary for {word}; got {len(boundaries)}")
@@ -74,7 +76,9 @@ console.log(JSON.stringify({words: WORDS, sentences: [...sentences, ...grammar]}
     for key, word in data["words"].items():
         safe_id = re.sub(r"[^a-zA-Z0-9_-]", "-", key)
         clips[key] = (word["en"], f"{safe_id}.mp3")
-    for sentence in data["sentences"]:
+    # Previous question snapshots and wrong-card reviews keep their original audio.
+    legacy = json.loads((HERE / "legacy-sentences.json").read_text())
+    for sentence in [*data["sentences"], *legacy]:
         # Chinese instructions are not spoken as English; only completed sentences.
         if re.search(r"[\u3400-\u9fff]", sentence) or "___" in sentence:
             continue
@@ -164,6 +168,10 @@ async def generate(args):
                         await asyncio.sleep(2 ** attempt)
 
     await asyncio.gather(*(produce(key, *value) for key, value in clips.items()))
+    if failures:
+        # Preserve the existing complete manifest when generation is incomplete.
+        print(json.dumps(failures, ensure_ascii=False), file=sys.stderr)
+        return 1
     temporary_manifest = manifest.with_suffix(".tmp.json")
     temporary_manifest.write_text(
         json.dumps(dict(sorted(completed.items())), ensure_ascii=False, indent=2) + "\n"

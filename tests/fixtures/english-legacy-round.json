@@ -1,0 +1,309 @@
+{
+  "version": 1,
+  "coins": 6500,
+  "owned": [
+    "pearl",
+    "skin-3-1"
+  ],
+  "skin": "skin-3-1",
+  "claimed": [
+    "legacy-round:0",
+    "legacy-round:1",
+    "legacy-round:2"
+  ],
+  "records": {
+    "previous": {
+      "correct": 8,
+      "time": 101,
+      "plays": 4
+    }
+  },
+  "wrong": [],
+  "session": {
+    "roundId": "legacy-round",
+    "bookId": "g5-upper",
+    "unitId": "g5-upper-u3",
+    "run": {
+      "levelId": "forest-race",
+      "progress": 0.36363636363636365,
+      "elapsed": 40.90909090909091,
+      "lane": 0,
+      "jump": 0,
+      "jumpAge": -1,
+      "fall": 0,
+      "fallAge": -1,
+      "status": "question",
+      "card": 3,
+      "completed": 3,
+      "slow": 2,
+      "lastHit": 40.90909090909091,
+      "rivals": [
+        {
+          "progress": 0.4079104029144245,
+          "lane": -0.85,
+          "speed": 0.8710028864117338,
+          "finishTime": 102.08921392479337
+        },
+        {
+          "progress": 0.41290760296549306,
+          "lane": 0,
+          "speed": 0.8819967265240848,
+          "finishTime": 100.8167007041288
+        },
+        {
+          "progress": 0.41368624426111233,
+          "lane": 0.85,
+          "speed": 0.8837097373744472,
+          "finishTime": 100.62127442907494
+        },
+        {
+          "progress": 0.41577065317315803,
+          "lane": -0.85,
+          "speed": 0.8530954369809478,
+          "finishTime": 102.54421276661182
+        },
+        {
+          "progress": 0.4574240669707174,
+          "lane": 0,
+          "speed": 0.9447329473355784,
+          "finishTime": 92.59759622729263
+        },
+        {
+          "progress": 0.46966181314397937,
+          "lane": 0.85,
+          "speed": 0.9716559889167546,
+          "finishTime": 90.03186415546783
+        },
+        {
+          "progress": 0.4928381346666508,
+          "lane": -0.85,
+          "speed": 0.9874438962666318,
+          "finishTime": 87.13406435069733
+        },
+        {
+          "progress": 0.4503297501722858,
+          "lane": 0,
+          "speed": 0.8939254503790288,
+          "finishTime": 96.24963688361105
+        },
+        {
+          "progress": 0.46344744919045744,
+          "lane": 0.85,
+          "speed": 0.9227843882190063,
+          "finishTime": 93.23954880300808
+        }
+      ],
+      "hits": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "questions": [
+      {
+        "id": "g5-upper-u3-42-6",
+        "unitId": "g5-upper-u3",
+        "kind": "sentence",
+        "prompt": "把单词拼成一句话：我的爸爸在医院工作。",
+        "answer": "My father works in a hospital.",
+        "acceptedAnswers": [
+          "In a hospital my father works."
+        ],
+        "tokens": [
+          "hospital",
+          "My",
+          "father",
+          "in",
+          "works",
+          "a"
+        ],
+        "explanation": "my father 指一个人，习惯性动作 work 要加 s。",
+        "solution": "My father works in a hospital.",
+        "say": "My father works in a hospital.",
+        "number": 1
+      },
+      {
+        "id": "g5-upper-u3-42-4",
+        "unitId": "g5-upper-u3",
+        "kind": "ipa",
+        "wordId": "work",
+        "say": "work",
+        "prompt": "听一听 work（工作），它的美式音标是哪一个？",
+        "answer": "/wɝk/",
+        "choices": [
+          "/wɝk/",
+          "/pleɪ/",
+          "/dʒɑb/",
+          "/nɝs/"
+        ],
+        "explanation": "work 的美式音标是 /wɝk/。ˈ 表示后面的音节重读；音标帮助我们读出单词。",
+        "solution": "/wɝk/",
+        "number": 2
+      },
+      {
+        "id": "g5-upper-u3-42-8",
+        "unitId": "g5-upper-u3",
+        "kind": "grammar",
+        "say": "My mother works in a school.",
+        "prompt": "选词填空：My mother ___ in a school.",
+        "answer": "works",
+        "choices": [
+          "works",
+          "working",
+          "work"
+        ],
+        "explanation": "my mother 指一个人，描述工作地点时用 works。",
+        "solution": "My mother works in a school.",
+        "number": 3
+      },
+      {
+        "id": "g5-upper-u3-42-1",
+        "unitId": "g5-upper-u3",
+        "kind": "word",
+        "wordId": "doctor",
+        "say": "doctor",
+        "prompt": "“医生”的英语是哪一个？",
+        "answer": "doctor",
+        "choices": [
+          "play",
+          "job",
+          "work",
+          "doctor"
+        ],
+        "explanation": "doctor 表示“医生”，美式音标是 /ˈdɑktɚ/。",
+        "solution": "doctor",
+        "number": 4
+      },
+      {
+        "id": "g5-upper-u3-42-3",
+        "unitId": "g5-upper-u3",
+        "kind": "ipa",
+        "wordId": "job",
+        "say": "job",
+        "prompt": "听一听 job（职业；工作），它的美式音标是哪一个？",
+        "answer": "/dʒɑb/",
+        "choices": [
+          "/pleɪ/",
+          "/ˈbɪzi/",
+          "/ˈdɑktɚ/",
+          "/dʒɑb/"
+        ],
+        "explanation": "job 的美式音标是 /dʒɑb/。ˈ 表示后面的音节重读；音标帮助我们读出单词。",
+        "solution": "/dʒɑb/",
+        "number": 5
+      },
+      {
+        "id": "g5-upper-u3-42-2",
+        "unitId": "g5-upper-u3",
+        "kind": "word",
+        "wordId": "nurse",
+        "say": "nurse",
+        "prompt": "“护士”的英语是哪一个？",
+        "answer": "nurse",
+        "choices": [
+          "nurse",
+          "work",
+          "play",
+          "doctor"
+        ],
+        "explanation": "nurse 表示“护士”，美式音标是 /nɝs/。",
+        "solution": "nurse",
+        "number": 6
+      },
+      {
+        "id": "g5-upper-u3-42-5",
+        "unitId": "g5-upper-u3",
+        "kind": "sentence",
+        "prompt": "把单词拼成一句话：我们放学后打篮球。",
+        "answer": "We play basketball after school.",
+        "acceptedAnswers": [
+          "After school we play basketball."
+        ],
+        "tokens": [
+          "basketball",
+          "after",
+          "play",
+          "school",
+          "We"
+        ],
+        "explanation": "play 后面接球类名称时，不加 the。",
+        "solution": "We play basketball after school.",
+        "say": "We play basketball after school.",
+        "number": 7
+      },
+      {
+        "id": "g5-upper-u3-42-7",
+        "unitId": "g5-upper-u3",
+        "kind": "sentence",
+        "prompt": "把单词拼成一句话：我想成为一名医生。",
+        "answer": "I want to be a doctor.",
+        "acceptedAnswers": [],
+        "tokens": [
+          "a",
+          "to",
+          "be",
+          "doctor",
+          "I",
+          "want"
+        ],
+        "explanation": "want to be 表示想成为，职业前通常用 a 或 an。",
+        "solution": "I want to be a doctor.",
+        "say": "I want to be a doctor.",
+        "number": 8
+      },
+      {
+        "id": "g5-upper-u3-42-0",
+        "unitId": "g5-upper-u3",
+        "kind": "word",
+        "wordId": "busy",
+        "say": "busy",
+        "prompt": "“忙碌的”的英语是哪一个？",
+        "answer": "busy",
+        "choices": [
+          "job",
+          "busy",
+          "doctor",
+          "nurse"
+        ],
+        "explanation": "busy 表示“忙碌的”，美式音标是 /ˈbɪzi/。",
+        "solution": "busy",
+        "number": 9
+      },
+      {
+        "id": "g5-upper-u3-42-9",
+        "unitId": "g5-upper-u3",
+        "kind": "grammar",
+        "say": "I want to be a nurse.",
+        "prompt": "选词填空：I want ___ a nurse.",
+        "answer": "to be",
+        "choices": [
+          "being",
+          "be",
+          "to be"
+        ],
+        "explanation": "want 后面接 to 加动词，所以想成为用 want to be。",
+        "solution": "I want to be a nurse.",
+        "number": 10
+      }
+    ],
+    "correct": 4,
+    "wrong": [],
+    "lastAnswer": "doctor",
+    "picked": []
+  }
+}
