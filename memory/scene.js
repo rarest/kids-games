@@ -92,7 +92,14 @@ export function createScene(canvas) {
     const width = canvas.clientWidth, height = canvas.clientHeight;
     if (width < 1 || height < 1) return;
     renderer.setSize(width, height, false);
-    if (!overviewMode) span = Math.min(game ? game.columns * X + 3 : 7, Math.max(6.4, width / 90 * X));
+    if (!overviewMode) {
+      if (home) span = Math.min(game ? game.columns * X + 3 : 7, Math.max(6.4, width / 90 * X));
+      else {
+        // Gradually show more cards without shrinking touch targets below 56px.
+        const pixels = Math.max(56, 90 - 34 * Math.log2(game.cards.length / 4) / Math.log2(199));
+        span = width * 1.72 / pixels;
+      }
+    }
     updateCamera();
   }
   function updateCamera() {
@@ -118,6 +125,14 @@ export function createScene(canvas) {
     if (home && canvas.clientWidth > 700) center.x = -3.2;
     if (home && canvas.clientWidth <= 700) center.z = -2.2;
     environment(); resize();
+    if (!home && rows > 5) {
+      // Start row one just below the HUD rather than wasting half the view
+      // above the board as the default camera widens for later levels.
+      const height = canvas.clientHeight, halfCard = canvas.clientWidth / span * 2.13 * .92 / 2;
+      const firstRowY = Math.min(height / 2, 130 + halfCard);
+      center.z -= planePoint(0, 1 - 2 * firstRowY / height).z;
+      updateCamera();
+    }
   }
   function pan(dx, dy) {
     if (!game || home) return;
@@ -134,12 +149,16 @@ export function createScene(canvas) {
   }
   function reset() { overviewMode = false; focus(0); }
   function pick(clientX, clientY) {
-    if (!game || home || (overviewMode && canvas.clientWidth * 1.72 / span < 48)) return null;
+    if (!game || home) return null;
     const r = canvas.getBoundingClientRect(); ray.setFromCamera(new THREE.Vector2((clientX - r.left) / r.width * 2 - 1, -(clientY - r.top) / r.height * 2 + 1), camera);
     const p = ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), -.1), vec); if (!p) return null;
     const col = Math.round(p.x / X + (game.columns - 1) / 2), row = Math.round(p.z / Z), index = row * game.columns + col;
     if (col < 0 || col >= game.columns || row < 0 || !game.cards[index]) return null;
-    const location = cardPosition(index); return Math.abs(location.x - p.x) <= .86 && Math.abs(location.z - p.z) <= 1.07 ? index : null;
+    const location = cardPosition(index);
+    if (Math.abs(location.x - p.x) > .86 || Math.abs(location.z - p.z) > 1.07) return null;
+    // An overview tap locates the card; it never flips an unreadably small one.
+    if (overviewMode && canvas.clientWidth * 1.72 / span < 48) { focus(index); return null; }
+    return index;
   }
   function pulse(indexes) {
     for (const index of indexes) {
