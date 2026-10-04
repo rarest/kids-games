@@ -100,7 +100,7 @@ $('help').onclick = () => $('help-dialog').hidden = false; $('close-help').oncli
 $('pause').onclick = () => paused(); $('resume').onclick = continued; $('leave').onclick = home;
 $('result-home').onclick = home; $('replay').onclick = () => start(game.level); $('next').onclick = () => start(game.level + 1);
 $('continue').onclick = () => { game = profile.session; closeDialogs(); scene.setGame(game); setMode('playing'); paused(); };
-$('overview').onclick = () => { scene.overview(); toast('总览中牌太小时，请关闭总览后翻牌。'); };
+$('overview').onclick = () => { scene.overview(); toast('总览中牌太小时，点牌放大到该区域，再点翻牌。'); };
 $('reset').onclick = () => scene.reset();
 $('mute').onclick = () => { profile.muted = !profile.muted; audio.setMuted(profile.muted); if (!profile.muted && mode === 'playing') audio.start(); save(); update(); };
 for (const kind of ['peek', 'bomb', 'add']) $(`use-${kind}`).onclick = () => {
