@@ -403,8 +403,10 @@ function frame(now) {
       (Math.abs(other.x-camera.x)>camera.width/2-1||Math.abs(other.y-camera.y)>camera.height/2-1);
     teammate.hidden=!offscreen;
     if(offscreen){const dx=other.x-own.x,dy=other.y-own.y;
-      const text=Math.abs(dy)>Math.abs(dx)?(dy>0?'↑ 搭档在上方':'↓ 搭档在下方'):(dx>0?'搭档在右边 →':'← 搭档在左边');
-      if(teammate.textContent!==text)teammate.textContent=text;}
+      const vertical=Math.abs(dy)>Math.abs(dx);
+      const text=vertical?(dy>0?'↑ 搭档':'↓ 搭档'):(dx>0?'搭档 →':'← 搭档');
+      if(teammate.textContent!==text){teammate.textContent=text;
+        teammate.setAttribute('aria-label',vertical?(dy>0?'搭档在上方':'搭档在下方'):(dx>0?'搭档在右边':'搭档在左边'));}}
   }
   diagnostics();
   raf = requestAnimationFrame(frame);

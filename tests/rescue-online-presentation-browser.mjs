@@ -17,7 +17,8 @@ test('native online cameras retain character scale when partners separate at 310
    assert.ok(graphics.camera.width<16,`own camera stays readable: ${graphics.camera.width}`);
    assert.ok(Math.abs(graphics.camera.x-own.x)<2,'camera follows its own player');
    assert.equal(await b.evaluate('document.querySelector("#teammate-direction").hidden'),false);
-   assert.match(await b.evaluate('document.querySelector("#teammate-direction").textContent'),slot===0?/左边/:/右边/);
+   assert.equal(await b.evaluate('document.querySelector("#teammate-direction").textContent'),slot===0?'← 搭档':'搭档 →');
+   assert.equal(await b.evaluate('document.querySelector("#teammate-direction").getAttribute("aria-label")'),slot===0?'搭档在左边':'搭档在右边');
    assert.deepEqual(b.errors,[]);
    await shot(b,`own-camera-${slot}`);
   }
