@@ -114,7 +114,20 @@ if [ -f deploy/games-platform.service ] && [ -f platform/package-lock.json ]; th
     npm ci --prefix platform --omit=dev --ignore-scripts --no-audit --no-fund
     printf '%s\n' "$PLATFORM_DEPENDENCIES" > "$STATE_DIR/platform-dependencies"
   fi
-  PLATFORM_RUNTIME="$(sha256sum deploy/games-platform.service platform/server.mjs platform/store.mjs platform/periods.mjs platform/migrations/*.sql | sha256sum | cut -d' ' -f1)"
+  PLATFORM_RUNTIME="$(node --input-type=module <<'JS'
+import {readFileSync,readdirSync,existsSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const paths=['deploy/games-platform.service',
+ ...readdirSync('platform').filter(name=>name.endsWith('.mjs')).map(name=>`platform/${name}`),
+ ...readdirSync('platform/migrations').filter(name=>name.endsWith('.sql')).map(name=>`platform/migrations/${name}`)];
+if(existsSync('english')){
+ for(const name of readdirSync('english')){
+  if(['core.js','curriculum.js','course-curriculum.js','course-engine.js'].includes(name)||/^(textbook-photo-|content-g).*\.json$/.test(name))paths.push(`english/${name}`);
+ }
+}
+console.log(createHash('sha256').update(JSON.stringify(paths.sort().map(name=>[name,readFileSync(name,'utf8')]))).digest('hex'));
+JS
+)"
   PLATFORM_UNIT_CHANGED=false
   for UNIT in games-platform.service games-platform-backup.service games-platform-backup.timer; do
     if ! cmp -s "deploy/$UNIT" "$UNIT_DIR/$UNIT"; then
