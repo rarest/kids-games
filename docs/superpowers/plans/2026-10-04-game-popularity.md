@@ -35,7 +35,7 @@ Files: `platform/package.json`, `platform/package-lock.json`, `platform/server.m
 - [x] First run failing tests for Shanghai midnight, Monday and month rollover, period validation; implement pure period functions.
 - [x] Provision isolated PostgreSQL credentials/data outside the repository and docroot; use a separate test schema.
 - [x] Run failing PostgreSQL/API tests for 15-second qualification, 30-minute sliding dedup including concurrency, idempotent duration, cookie ownership, rate/body limits and restart persistence; implement schema/store/server.
-- [ ] Extend independent deployment fingerprint and install platform routes; add a daily atomic database backup and test restoration to a separate database. Preserve existing rooms when their runtime did not change.
+- [x] Extend independent deployment fingerprint and install platform routes; add a daily atomic database backup and test restoration to a separate database. Preserve existing rooms when their runtime did not change.
 
 ## Task 2: Active-play client and hooks (independent worker)
 
@@ -59,6 +59,23 @@ Files: `index.html`, `games.js`, `shared/popularity.js`, `tests/popularity-ui.te
 ## Task 4: Integration, review and delivery (root)
 
 - [x] Run full required unit checks and targeted native-browser tests for the hall, all activity entry points, hidden/pause/refresh behavior and persistent API.
-- [ ] Review changes, resolve actual findings, commit and create a concrete PR; merge and deploy within existing authorization.
-- [ ] Verify public homepage and native gameplay on two independent browsers, sliding dedup and day/week/month responses. Verify unchanged multiplayer PIDs, static server/secret exclusions, database persistence and backup restoration.
-- [ ] Save deployment evidence and update this plan with actual completed checks and remaining account/cloud-save phase.
+- [x] Review changes, resolve actual findings, commit and create a concrete PR; merge and deploy within existing authorization.
+- [x] Verify public homepage and native gameplay on two independent browsers, sliding dedup and day/week/month responses. Verify unchanged multiplayer PIDs, static server/secret exclusions, database persistence and backup restoration.
+- [x] Save deployment evidence and update this plan with actual completed checks and remaining account/cloud-save phase.
+
+
+## Delivery evidence (2026-10-04)
+
+Stage 1 is live at https://games.nblord.com/?v=20261004popularity1. Feature PR: https://github.com/rarest/kids-games/pull/61, merged as `e746bbb`. The intervening startup/storage audit (#60) was integrated and its recovery behavior preserved.
+
+- Full unit run: 681 passed, 0 failed, 0 skipped, using real PostgreSQL. After integration, the 25 affected unit checks, 14 startup/storage browser checks and the 14-entry catalog browser check passed.
+- Native popularity test passed locally and against the public HTTPS site: all 14 real entry controls, game pause controls, two independent browsers, real qualification, pause duration, refresh dedup and mobile/landscape layout. Production contains actual memory and English play events, without seeded historical records.
+- Statistics service restart preserved all three period responses and the original statistics-start timestamp. Racing PID 173049, rescue PID 165363 and shooter PID 143350 remained active throughout deployment and the platform restart.
+- PostgreSQL binds to loopback port 5433; the API binds to loopback port 8790. Configuration directory is 0700; app/database environment files are 0600 and outside the repository/docroot.
+- Local daily backup produced an 8,854-byte 0600 dump. Restoration into a separate disposable database matched 28 sessions, 2 counters, 2 play events, 2 daily rows, total duration and statistics-start time. The temporary restore database was removed. Daily timer is active for approximately 03:15 Beijing time, with 7 daily and 4 weekly files retained.
+- Public readback found legacy backend copies protected from rsync deletion. Access was immediately blocked and the copies removed. Deployment now explicitly removes those exact private static copies while preserving certificate challenges; the 7 deployment checks passed. All platform, environment, deploy-unit and multiplayer-server private URL probes return 404.
+- Review finding resolved: retained online snapshots no longer count while disconnected or stale. Fetch deadlines cover response-body reads as well as the initial request.
+
+Evidence directory on the operator workspace: `/home/ubuntu/codex-work/output/game-popularity/`. Key files: `unit-final.log`, `native.log`, `public-native.log`, `rebased-unit.log`, `rebased-startup.log`, `rebased-catalog.log`, `private-cleanup-after.log`, `private-paths.json`, `persistence-before.json`, `persistence-after.json`, `restore-check.log`, and public screenshots/ranks under `public/`.
+
+Accounts, parent/child profiles, cross-device learning progress and off-host backups remain later phases. The database currently persists anonymous popularity only. This delivery does not claim those account/cloud-save features are available.

@@ -73,6 +73,10 @@ sudo rsync -a --delete \
   --exclude '.user.ini' --exclude '.well-known' \
   "$REPO_DIR"/ "$DOCROOT"/
 sudo chmod -R a+rX "$DOCROOT"
+# Exclusions protect old receiver files from rsync --delete. Remove only legacy
+# backend copies; live runtimes and database data live outside this docroot.
+sudo rm -rf -- "$DOCROOT/platform"
+sudo rm -f -- "$DOCROOT/shooter/server.mjs" "$DOCROOT/rescue/server.mjs" "$DOCROOT/racing/server.mjs"
 sudo mkdir -p "$PROXY_DIR"
 
 PROXY_CHANGED=false

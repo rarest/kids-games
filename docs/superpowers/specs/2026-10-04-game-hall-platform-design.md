@@ -169,3 +169,6 @@ JSONB 保存各游戏不同的进度结构；身份归属、版本号、游戏 I
 - [PocketBase 官方说明](https://pocketbase.io/docs/)：内置认证、后台及 1.0 前兼容性说明。
 - [PostgreSQL 备份与恢复](https://www.postgresql.org/docs/current/backup.html)：备份方式参考。
 - [MDN localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)：浏览器存储按来源隔离。
+
+
+2026-10-04 执行更新：阶段 1 的统计数据库、日周月热度榜及本机备份恢复已上线验证。账号、家长与孩子档案、云存档和异地备份仍按后续阶段实施，当前进度保存在各游戏原有的浏览器存储中。
