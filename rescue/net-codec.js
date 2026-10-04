@@ -94,6 +94,7 @@ export function encodeFrame(state, metadata) {
   data.events = encodeEvents(state.events);
   const packet = {type:'state',version:1,playerCount:state.players.length,areaId:state.areaLevel.id,levelId:state.level.id,
     epoch:metadata.epoch,tick:metadata.tick,acks:[...metadata.acks],inputs:clone(metadata.inputs),room:clone(metadata.room),data};
+  if (Number.isFinite(metadata.serverAt)) packet.serverAt = metadata.serverAt;
   if (metadata.includeStage) packet.stage = {area:state.areaLevel,level:state.level};
   return packet;
 }

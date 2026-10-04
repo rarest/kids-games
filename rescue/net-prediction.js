@@ -1,8 +1,7 @@
-import {stepGame} from './core.js';
+import {stepLocal,projectGeometry} from './core.js';
 
 const STEP=1/60, MAX_PENDING=120, MAX_HISTORY=8;
 const groups=['players','objects','enemies','platforms','projectiles','effects','hazards','pickups'];
-const collisionGroups=new Set(['players','objects','enemies','platforms','projectiles','hazards']);
 const visualKeys=['x','y','vx','vy','facing','grounded','groundId','animation','carrying','heldBy','hidden','thrown'];
 const neutral=()=>({move:0,up:false,down:false,jump:false,action:false});
 const active=s=>s&&!s.paused&&['playing','bonus'].includes(s.status);
@@ -14,13 +13,19 @@ function discontinuity(a,b){return !a||!b||a.heldBy!==b.heldBy||a.carrying!==b.c
 
 export function createPrediction({slot,clock={now:()=>performance.now()}}={}){
  if(slot!==0&&slot!==1)throw Error('Invalid player slot');
- let authority=null,replay=null,view=null,epoch=null,seq=0,ack=0,pending=[],history=[],inputs=[neutral(),neutral()];
+ let authority=null,replay=null,view=null,epoch=null,seq=0,ack=0,pending=[],history=[];
  let accumulator=0,held=neutral(),edges={jump:false,action:false},offset={x:0,y:0,at:0};
  let ownSample=null;
- function reset(){pending=[];history=[];seq=0;ack=0;accumulator=0;held=neutral();edges={jump:false,action:false};offset={x:0,y:0,at:0};ownSample=null;}
+ let snapshotAt=0,objectOverlay=null,geometry=null,geometryLead=0;
+ function reset(){pending=[];history=[];seq=0;ack=0;accumulator=0;held=neutral();edges={jump:false,action:false};offset={x:0,y:0,at:0};ownSample=null;objectOverlay=null;}
  function simulate(command){
-  const samples=inputs.map(i=>({...i,jump:false,action:false}));samples[slot]=command.input;
-  stepGame(replay,samples,STEP);
+  const previousLink=replay.players[slot].carrying;
+  stepLocal(replay,slot,command.input,STEP);
+  const own=replay.players[slot];
+  if(command.input.action&&(own.carrying?.type==='object'||previousLink?.type==='object')&&objectOverlay?.seq!==command.seq){
+   const id=own.carrying?.type==='object'?own.carrying.id:previousLink.id;
+   objectOverlay={id,seq:command.seq,released:!own.carrying,last:view?.objects?.find(o=>o.id===id)};
+  }
  }
  function receive(state,meta){
   if(!Number.isSafeInteger(meta?.epoch)||meta.epoch<0||!Number.isSafeInteger(meta?.ack)||meta.ack<0|| (epoch!==null&&meta.epoch<epoch))return false;
@@ -30,13 +35,15 @@ export function createPrediction({slot,clock={now:()=>performance.now()}}={}){
   const old=view?.players?.[slot],oldX=old?.x,oldY=old?.y;
   if(changed)reset();
   authority=state;epoch=meta.epoch;ack=meta.ack;seq=Math.max(seq,ack);
-  inputs=[0,1].map(i=>inputOf(meta.inputs?.[i]));pending=pending.filter(c=>c.seq>ack);
+  pending=pending.filter(c=>c.seq>ack);
   const now=clock.now(),sample=positions(state),hard=changed||discontinuity(ownSample,sample.players[slot]);
+  snapshotAt=Number.isFinite(meta.at)?Math.min(now,meta.at):now;
+  geometry=null;geometryLead=0;
   ownSample=sample.players[slot];history.push({at:now,positions:sample});if(history.length>MAX_HISTORY)history.shift();
-  replay=cloneDynamic(state);for(const command of pending)simulate(command);
+  replay=cloneDynamic(state);replay._localObjectIds=new Set(objectOverlay?[objectOverlay.id]:[]);for(const command of pending)simulate(command);
   if(!view||newRun)view={};
   const own=replay.players[slot],dx=oldX-own.x,dy=oldY-own.y;
-  offset=!hard&&Number.isFinite(dx)&&Math.hypot(dx,dy)<2?{x:dx,y:dy,at:now}:{x:0,y:0,at:now};
+  offset=!hard&&own.lives===state.players[slot].lives&&own.hearts===state.players[slot].hearts&&!state.players[slot].heldBy&&Number.isFinite(dx)&&Math.hypot(dx,dy)<2?{x:dx,y:dy,at:now}:{x:0,y:0,at:now};
   render(now);return true;
  }
  function advance(raw={},dt=0){
@@ -53,34 +60,54 @@ export function createPrediction({slot,clock={now:()=>performance.now()}}={}){
   if(!authority)return null;
   view??={};Object.assign(view,authority);
   const coherent=replay&&active(authority)&&replay.level===authority.level;
-  const physical=coherent?replay:authority;
-  const target=now-100;let left=history[0],right=left;
-  for(const entry of history){if(entry.at<=target)left=entry;if(entry.at>=target){right=entry;break;}right=entry;}
-  const alpha=left&&right&&right.at>left.at?Math.max(0,Math.min(1,(target-left.at)/(right.at-left.at))):1;
+  // Shared bodies advance by elapsed server time, never by this seat's input debt.
+  const lead=active(authority)?Math.min(.25,Math.max(0,(now-snapshotAt)/1000)):0;
+  if(coherent){
+   if(!geometry||lead<geometryLead){geometry=cloneDynamic(authority);geometryLead=0;}
+   projectGeometry(geometry,lead-geometryLead);geometryLead=lead;
+  }
+  const physical=coherent?geometry:authority;
   for(const group of groups){
-   // Collision bodies share the replay clock, including after a throw is acknowledged.
-   // Rendering a predicted player/box against delayed monsters or platforms causes false contacts.
-   if(collisionGroups.has(group)){
-    view[group]=(physical[group]??[]).map(e=>{
-     if(group!=='players')return {...e};
-     const row={...authority.players.find(p=>p.id===e.id)};
-     for(const field of visualKeys)if(field in e)row[field]=typeof e[field]==='object'?structuredClone(e[field]):e[field];
-     return row;
-    });continue;
-   }
-   view[group]=(authority[group]??[]).map(e=>{
-   const row={...e},a=left?.positions[group]?.find(v=>v.id===e.id),b=right?.positions[group]?.find(v=>v.id===e.id);
-   const current=history.at(-1)?.positions[group]?.find(v=>v.id===e.id);
-   if(!discontinuity(a,b)&&!discontinuity(b,current)){row.x=a.x+(b.x-a.x)*alpha;row.y=a.y+(b.y-a.y)*alpha;}
-   return row;
-  });}
-  if(authority.boss)view.boss={...physical.boss,hp:authority.boss.hp,defeated:authority.boss.defeated,invulnerable:authority.boss.invulnerable};
+   view[group]=(physical[group]??[]).map(e=>({...e}));
+  }
+  if(authority.boss)view.boss={...physical.boss};
   view.time=physical.time;
   if(coherent){
+   const confirmed=authority.players[slot],predicted=replay.players[slot];
+   // Damage/respawn and teammate ownership are server decisions, including their positions.
+   if(predicted.lives===confirmed.lives&&predicted.hearts===confirmed.hearts&&!confirmed.heldBy){
+    for(const field of visualKeys)if(field in predicted)view.players[slot][field]=typeof predicted[field]==='object'?structuredClone(predicted[field]):predicted[field];
+    view.players[slot].renderTime=physical.time;
+    if(predicted.carrying?.type==='player'||confirmed.carrying?.type==='player')view.players[slot].carrying=confirmed.carrying;
+    const link=view.players[slot].carrying;
+    if(link?.type==='object'){
+     const object=authority.objects.find(o=>o.id===link.id);
+     if(!object?.active||(object.heldBy&&object.heldBy!==confirmed.id))view.players[slot].carrying=null;
+    }
+    const ground=replay.platforms.find(m=>m.id===predicted.groundId),shown=view.platforms.find(m=>m.id===predicted.groundId);
+    if(predicted.grounded&&ground?.kind==='moving'&&shown){view.players[slot].x+=shown.x-ground.x;view.players[slot].y+=shown.y-ground.y;}
+   }
+   if(objectOverlay){
+    const object=authority.objects.find(o=>o.id===objectOverlay.id),predictedObject=replay.objects.find(o=>o.id===objectOverlay.id);
+    if(!object?.active||(object.heldBy&&object.heldBy!==confirmed.id)||!predictedObject||(!objectOverlay.released&&ack>=objectOverlay.seq&&object.heldBy!==confirmed.id))objectOverlay=null;
+    else {
+     const row=view.objects.find(o=>o.id===object.id);
+     // Copy geometry only. A speculative hit cannot remove an entity or create a reward.
+     if(objectOverlay.released&&ack>=objectOverlay.seq&&!object.heldBy){
+      objectOverlay.handoff??={at:now,x:(objectOverlay.last?.x??row.x)-row.x,y:(objectOverlay.last?.y??row.y)-row.y,duration:Math.min(1000,Math.max(100,Math.abs((objectOverlay.last?.x??row.x)-row.x)/Math.max(1,Math.abs(row.vx)*.5)*1000))};
+      const handoff=objectOverlay.handoff,weight=Math.max(0,1-(now-handoff.at)/handoff.duration);
+      row.x+=handoff.x*weight;row.y+=handoff.y*weight;
+      if(!weight)objectOverlay=null;
+     }else if(predicted.lives===confirmed.lives&&predicted.hearts===confirmed.hearts&&(predictedObject.heldBy===confirmed.id||(objectOverlay.released&&predictedObject.owner===confirmed.id))){
+      for(const key of ['x','y','vx','vy','heldBy','thrown'])row[key]=predictedObject[key];
+     }
+     if(objectOverlay)objectOverlay.last={...row};
+    }
+   }
    const own=view.players[slot],onMovingPlatform=own.grounded&&view.platforms.some(p=>p.id===own.groundId&&p.kind==='moving');
    // Smoothing must not slide feet away from a platform on the shared replay clock.
    const weight=onMovingPlatform?0:Math.max(0,1-(now-offset.at)/80);
-   own.x+=offset.x*weight;own.y+=offset.y*weight;
+   if(predicted.lives===confirmed.lives&&predicted.hearts===confirmed.hearts&&!confirmed.heldBy){own.x+=offset.x*weight;own.y+=offset.y*weight;}
   }
   // A carrier's visual correction also moves its held body, never a released projectile.
   for(const player of view.players){

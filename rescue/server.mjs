@@ -10,7 +10,7 @@ import { encodeFrame } from './net-codec.js';
 const neutral = () => ({move:0,up:false,down:false,jump:false,action:false});
 const runtimeClock = {now:()=>Date.now(),setInterval:(fn,ms)=>setInterval(fn,ms),clearInterval:id=>clearInterval(id)};
 const MAX_ROOMS = 16, MAX_CONNECTIONS = 64, MAX_QUEUE = 120;
-const RECLAIM_MS = 120_000, STALE_MS = 350;
+const RECLAIM_MS = 120_000, STALE_MS = 350, FIRST_INPUT_MS = 2000;
 
 export function createRescueServer({port=8788,host='127.0.0.1',origins=['https://games.nblord.com','https://games.596996.xyz'],clock=runtimeClock,levelFor=id=>LEVELS.find(level=>level.id===id)}={}) {
   const rooms = new Map(), connections = new Set();
@@ -26,11 +26,11 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
   }
   function broadcast(room) {
     const stageKey = `${room.epoch}:${room.game.areaLevel.id}:${room.game.level.id}`;
-    let small, full;
+    let small, full;const serverAt=clock.now();
     for (const member of room.members) {
       if (!member?.ws || member.ws.readyState!==WebSocket.OPEN || member.ws.bufferedAmount>0) continue;
       const includeStage = member.stageKey!==stageKey;
-      const encode = () => JSON.stringify(encodeFrame(room.game,{epoch:room.epoch,tick:room.tick,acks:room.acks,inputs:room.inputs,room:roomInfo(room),includeStage}));
+      const encode = () => JSON.stringify(encodeFrame(room.game,{serverAt,epoch:room.epoch,tick:room.tick,acks:room.acks,inputs:room.inputs,room:roomInfo(room),includeStage}));
       send(member.ws,includeStage?(full??=encode()):(small??=encode()));
       member.stageKey = stageKey;
     }
@@ -130,7 +130,7 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
   function act(connection,message) {
     if(message.type==='ping'){
       if(typeof message.at!=='number'||!Number.isFinite(message.at))throw Error('时间戳无效');
-      send(connection.ws,{type:'pong',at:message.at});return;
+      send(connection.ws,{type:'pong',at:message.at,serverAt:clock.now()});return;
     }
     if(message.type==='create'||message.type==='join'){join(connection,message);return;}
     const {room,member}=connection;
@@ -190,7 +190,9 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
     for(const room of rooms.values()){
       if(room.members.some(m=>m&&!m.ws&&now>=m.until)){closeRoom(room,'重连等待已超时');continue;}
       if(room.mode==='playing'&&['playing','bonus'].includes(room.game.status)){
-        if(room.members.some(m=>!m?.ws||now-m.lastInput>STALE_MS)){pause(room);broadcast(room);continue;}
+        // Before the first valid epoch command controls are neutral. The bounded
+        // RTT handshake grace ends immediately on that command; active streams retain 350ms.
+        if(room.members.some(m=>!m?.ws||now-m.lastInput>(m.received===0?FIRST_INPUT_MS:STALE_MS))){pause(room);broadcast(room);continue;}
         const samples=room.members.map(m=>m.queue.shift());
         room.inputs=samples.map((command,slot)=>command?.input??{...room.inputs[slot],jump:false,action:false});
         const levelId=room.game.level.id,status=room.game.status;

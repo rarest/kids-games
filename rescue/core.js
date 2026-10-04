@@ -1,4 +1,4 @@
-import { updateBoss } from './bosses.js';
+import { updateBoss, projectBoss } from './bosses.js';
 import { completeArea } from './campaign.js';
 const G=28,STEP=1/120;
 const copy=v=>structuredClone(v);
@@ -131,16 +131,17 @@ function recoverObject(s,o){
  Object.assign(o,{x:o.recover.x,y:o.recover.y,vx:0,vy:0,thrown:false,grounded:false,groundId:null,hitIds:[]});
  event(s,'recover',{kind:o.kind});
 }
-function updateObjects(s,dt){
+function updateObjects(s,dt,geometryOnly=false,onlyIds=null){
  // Lower boxes settle before upper boxes, independent of authored object order.
- for(const o of [...s.objects].sort((a,b)=>a.y-b.y)){
+ for(const o of s.objects.filter(o=>!onlyIds||onlyIds.has(o.id)).sort((a,b)=>a.y-b.y)){
   if(!o.active||o.heldBy)continue;
   const oldVX=o.vx;const land=integrate(s,o,dt,{sideWalls:!o.thrown});
-  if(o.kind==='ball'&&o.vy< -1)for(const p of s.players)if(!p.heldBy&&p.lives>0&&overlap(o,p)){
+  if(!geometryOnly&&o.kind==='ball'&&o.vy< -1)for(const p of s.players)if(!p.heldBy&&p.lives>0&&overlap(o,p)){
    p.stun=.5;o.vy=4;o.vx=(Math.sign(o.x-p.x)||1)*3;event(s,'stun',{player:p.id,kind:'ball'});
   }
   if(o.grounded){o.vx*=Math.max(0,1-dt*7);if(Math.abs(o.vx)<.2){o.vx=0;o.thrown=false;}}
   if(land&&o.thrown&&o.kind==='ball'){o.vy=3;o.grounded=false;o.vx=oldVX*.5;}
+  if(geometryOnly)continue;
   if(o.y< -4||o.x< -2||o.x>s.level.width+2){
    if(o.kind==='ball'||o.kind==='metal')recoverObject(s,o);
    else{o.active=false;}continue;
@@ -152,23 +153,24 @@ function updateObjects(s,dt){
   if(o.active&&s.boss&&!s.boss.defeated&&overlap(o,s.boss.weakpoint??s.boss))hitObject(s,o,s.boss);
  }
 }
-function updateEnemies(s,dt){
+function updateEnemies(s,dt,geometryOnly=false){
  for(const e of s.enemies){if(!e.alive)continue;
   const near=s.players.find(p=>p.lives>0&&Math.abs(p.x-e.x)<24&&Math.abs(p.y-e.y)<12);if(!near)continue;
   e.timer+=dt;
   if(['bird','bee','pelican'].includes(e.kind)){
    e.x+=e.facing*(e.speed??2)*dt;e.y=e.homeY+Math.sin(e.timer*(e.kind==='bee'?4:2))*1.1;
-   if(e.kind==='pelican'&&e.timer>2.4){e.timer=0;s.projectiles.push({id:`enemy-shot-${s.nextEntityId++}`,kind:'drop',owner:e.id,x:e.x,y:e.y,vx:0,vy:-2,w:.4,h:.5,ttl:4,gravity:10});}
+   if(e.kind==='pelican'&&e.timer>2.4){e.timer=0;if(!geometryOnly)s.projectiles.push({id:`enemy-shot-${s.nextEntityId++}`,kind:'drop',owner:e.id,x:e.x,y:e.y,vx:0,vy:-2,w:.4,h:.5,ttl:4,gravity:10});}
   }else{
    if(e.kind==='mimic'){e.animation=Math.abs(near.x-e.x)<4?'lunge':'disguise';e.vx=e.animation==='lunge'?Math.sign(near.x-e.x)*4:0;}
    else if(['rhino','dog'].includes(e.kind)&&Math.abs(near.x-e.x)<4){e.vx=e.speed===0?0:Math.sign(near.x-e.x)*(e.kind==='rhino'?4.4:2.8);e.animation='charge';}
    else e.vx=e.facing*(e.speed??1.7);
    if(e.kind==='kangaroo'&&e.grounded&&e.timer>.9){e.vy=9;e.timer=0;}
-   if(e.kind==='toy'&&e.timer>2.8){e.timer=0;s.projectiles.push({id:`enemy-shot-${s.nextEntityId++}`,kind:'gear',owner:e.id,x:e.x,y:e.y+.5,vx:e.facing*4,vy:3,w:.4,h:.4,ttl:4,gravity:10,bounce:true});}
+   if(e.kind==='toy'&&e.timer>2.8){e.timer=0;if(!geometryOnly)s.projectiles.push({id:`enemy-shot-${s.nextEntityId++}`,kind:'gear',owner:e.id,x:e.x,y:e.y+.5,vx:e.facing*4,vy:3,w:.4,h:.4,ttl:4,gravity:10,bounce:true});}
    integrate(s,e,dt,{objects:false});
-   if(e.y< -4)e.alive=false;
+   if(!geometryOnly&&e.y< -4)e.alive=false;
   }
   if(e.x<=e.min){e.x=e.min;e.facing=1;}if(e.x>=e.max){e.x=e.max;e.facing=-1;}
+  if(geometryOnly)continue;
   for(const p of s.players)if(p.lives>0&&!p.heldBy&&overlap(p,e)){
    if(p.hidden||p.zipper>0||p.throwTimer>0){e.alive=false;s.score+=200;event(s,'hit',{kind:e.kind});
     defend(s,p);
@@ -204,17 +206,15 @@ function enterBonus(s){
  for(const [i,p] of s.players.entries())Object.assign(p,{x:2+i,y:1,vx:0,vy:0,heldBy:null,carrying:null,hidden:false,grounded:true,groundId:null,invulnerable:1});
  event(s,'bonus',{area:s.areaLevel.id});
 }
-function substep(s,inputs,dt,pressed){
- s.time+=dt;
- for(const m of s.platforms){const ox=m.x,oy=m.y;if(m.kind==='moving'){const amount=Math.sin(s.time*(m.speed??1))*(m.range??2);if(m.axis==='y')m.y=m.homeY+amount;else m.x=m.homeX+amount;}m.dx=m.x-ox;m.dy=m.y-oy;
-  for(const p of s.players)if(p.grounded&&p.groundId===m.id){p.x+=m.dx;p.y+=m.dy;}
- }
- for(const [i,p] of s.players.entries()){
-  if(p.lives<=0)continue;const input=inputs[i]??{};for(const key of ['invulnerable','stun','zipper','dropTimer','throwTimer'])p[key]=Math.max(0,p[key]-dt);
-  if(p.heldBy)continue;
+function movePlayer(s,p,input,dt,pressed,localOnly=false){
+  if(p.lives<=0)return;for(const key of ['invulnerable','stun','zipper','dropTimer','throwTimer'])p[key]=Math.max(0,p[key]-dt);
+  if(p.heldBy)return;
   const held=p.carrying?.type==='object'?s.objects.find(o=>o.id===p.carrying.id):null;
   p.hidden=!!(input.down&&held&&['crate','metal'].includes(held.kind)&&p.grounded);
-  if(pressed&&input.action)act(s,p,input);
+  if(pressed&&input.action){
+   const before=p.carrying;act(s,p,input);
+   if(localOnly)for(const link of [before,p.carrying])if(link?.type==='object')s._localObjectIds.add(link.id);
+  }
   if(pressed&&input.jump&&p.grounded&&p.stun<=0){
    if(input.down){const ground=s.platforms.find(m=>m.id===p.groundId);if(ground?.oneWay){p.dropTimer=.3;p.y-=.12;p.grounded=false;}}
    else{p.vy=held?.kind==='apple'?11:14;p.grounded=false;event(s,'jump',{player:p.id});}
@@ -224,9 +224,15 @@ function substep(s,inputs,dt,pressed){
   if(move&&!p.hidden)p.facing=Math.sign(move);
   const landed=integrate(s,p,dt,{ignoreOneWay:p.dropTimer>0});p.x=clamp(p.x,p.w/2,s.level.width-p.w/2);
   if(landed)event(s,'land',{player:p.id});
-  if(p.y< -4)damage(s,p,{x:p.x},true);
+  if(!localOnly&&p.y< -4)damage(s,p,{x:p.x},true);
   p.animation=p.hidden?'hide':p.heldBy?'held':p.stun>0?'hurt':!p.grounded?'jump':p.carrying?'carry':Math.abs(p.vx)>.1?'run':'idle';
+}
+function substep(s,inputs,dt,pressed){
+ s.time+=dt;
+ for(const m of s.platforms){const ox=m.x,oy=m.y;if(m.kind==='moving'){const amount=Math.sin(s.time*(m.speed??1))*(m.range??2);if(m.axis==='y')m.y=m.homeY+amount;else m.x=m.homeX+amount;}m.dx=m.x-ox;m.dy=m.y-oy;
+  for(const p of s.players)if(p.grounded&&p.groundId===m.id){p.x+=m.dx;p.y+=m.dy;}
  }
+ for(const [i,p] of s.players.entries())movePlayer(s,p,inputs[i]??{},dt,pressed);
  updateBoss(s,dt);updateObjects(s,dt);updateEnemies(s,dt);updateProjectiles(s,dt);
  for(const p of s.players){if(p.lives<=0||p.heldBy)continue;
   if(s.boss?.active&&!s.boss.defeated&&(s.boss.contactRegions??[s.boss]).some(region=>overlap(p,region)))damage(s,p,s.boss);
@@ -241,14 +247,52 @@ function substep(s,inputs,dt,pressed){
  else if(s.status==='bonus'){s.bonus.remaining-=dt;if(s.bonus.remaining<=0||s.players.some(p=>p.x>s.level.exit.x-.8))finishBonus(s);}
  s.events=s.events.slice(-100);s.effects=s.effects.filter(e=>s.time-e.time<1.5);
 }
-export function stepGame(s,inputs=[],dt=1/60){
+export function stepGame(s,inputs=[],dt=1/60,localSlot=null){
  if(s.paused||!['playing','bonus'].includes(s.status))return s;
  for(const [i,input] of inputs.entries())s._pendingEdges[i]={action:!!(s._pendingEdges[i]?.action||(input.action&&!s.previousInputs[i]?.action)),jump:!!(s._pendingEdges[i]?.jump||(input.jump&&!s.previousInputs[i]?.jump))};
  s.previousInputs=inputs.map(i=>({...i}));s._accumulator+=clamp(Number(dt)||0,0,1/30);let first=true;
  while(s._accumulator+1e-9>=STEP&&['playing','bonus'].includes(s.status)){
   const sample=first?inputs.map((input,i)=>({...input,...s._pendingEdges[i]})):inputs;
-  substep(s,sample,STEP,first);s._accumulator=Math.max(0,s._accumulator-STEP);
+  if(localSlot===null)substep(s,sample,STEP,first);else localSubstep(s,localSlot,sample[localSlot]??{},STEP,first);s._accumulator=Math.max(0,s._accumulator-STEP);
   if(first)s._pendingEdges=[];first=false;
  }
  return s;
+}
+
+// Presentation advances geometry only. It cannot award, respawn, spawn/remove
+// entities, process actions or change campaign state. The caller owns this clone.
+export function projectGeometry(s,seconds=0){
+ let remaining=Math.min(.25,Math.max(0,seconds));
+ if(s.paused||!['playing','bonus'].includes(s.status))return s;
+ while(remaining>1e-9){const dt=Math.min(STEP,remaining);remaining-=dt;s.time+=dt;
+  for(const m of s.platforms){const ox=m.x,oy=m.y;if(m.kind==='moving'){const amount=Math.sin(s.time*(m.speed??1))*(m.range??2);if(m.axis==='y')m.y=m.homeY+amount;else m.x=m.homeX+amount;}m.dx=m.x-ox;m.dy=m.y-oy;
+   for(const p of s.players)if(p.grounded&&p.groundId===m.id){p.x+=m.dx;p.y+=m.dy;}
+  }
+  for(const p of s.players){if(p.lives<=0||p.heldBy)continue;
+   integrate(s,p,dt,{ignoreOneWay:p.dropTimer>0});p.x=clamp(p.x,p.w/2,s.level.width-p.w/2);
+  }
+  projectBoss(s.boss,dt);updateObjects(s,dt,true);updateEnemies(s,dt,true);
+  for(const q of s.projectiles){q.vy-=(q.gravity??0)*dt;q.x+=q.vx*dt;q.y+=q.vy*dt;
+   if(q.bounce)for(const p of s.platforms)if(q.vy<0&&q.y<p.y&&q.y>p.y-.4&&q.x>p.x&&q.x<p.x+p.w){q.y=p.y;q.vy=5;}
+  }
+ }
+ return s;
+}
+
+function localSubstep(s,slot,input,dt,pressed){
+ s.time+=dt;const p=s.players[slot];
+ for(const m of s.platforms){const ox=m.x,oy=m.y;if(m.kind==='moving'){const amount=Math.sin(s.time*(m.speed??1))*(m.range??2);if(m.axis==='y')m.y=m.homeY+amount;else m.x=m.homeX+amount;}m.dx=m.x-ox;m.dy=m.y-oy;
+  if(p.grounded&&p.groundId===m.id){p.x+=m.dx;p.y+=m.dy;}
+ }
+ movePlayer(s,p,input,dt,pressed,true);updateObjects(s,dt,true,s._localObjectIds);
+ for(const id of s._localObjectIds){const o=s.objects.find(o=>o.id===id);if(o?.heldBy===p.id){o.x=p.x;o.y=p.hidden?p.y:p.y+p.h+.15;o.vx=0;o.vy=0;o.grounded=false;}}
+ s.events=s.events.slice(-100);
+}
+// Input replay owns one seat and boxes involved in its actions. Public AI,
+// damage and phase transitions are projected separately from server snapshots.
+export function stepLocal(s,slot,input={},dt=1/60){
+ if(slot!==0&&slot!==1)throw Error('Invalid local slot');
+ s._localObjectIds??=new Set();if(s.players[slot].carrying?.type==='object')s._localObjectIds.add(s.players[slot].carrying.id);
+ const samples=s.players.map((_,i)=>({...s.previousInputs[i],jump:false,action:false}));samples[slot]=input;
+ return stepGame(s,samples,dt,slot);
 }

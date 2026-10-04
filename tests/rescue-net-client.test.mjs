@@ -44,7 +44,8 @@ test('a reconnect clears the old socket RTT until the new socket receives its ow
  a.link.ws.terminate();await until(()=>a.statuses.at(-1).connection==='reconnecting','socket lost');
  assert.equal(a.statuses.at(-1).rtt,null,'disconnected transport must not advertise its old latency');
  await until(()=>a.statuses.at(-1).connection==='connected','reclaimed socket');
- assert.equal(a.statuses.at(-1).rtt,null,'the replacement socket has no measured RTT yet');
+ const replacement=a.statuses.slice(a.statuses.findLastIndex(s=>s.connection==='reconnecting')).find(s=>s.connection==='connected');
+ assert.equal(replacement.rtt,null,'the replacement socket cannot inherit the old socket RTT');
  await until(()=>a.statuses.at(-1).rtt>=100,'new socket pong');
 });
 test('200ms RTT predicts within 100ms and converges after ack with bounded history and queues',async t=>{

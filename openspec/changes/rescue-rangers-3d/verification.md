@@ -296,3 +296,34 @@ TDD 回归投掷确认、命中消耗、移动平台、动画时钟和重连 RTT
 额外 OpenSpec 严格校验命令返回失败：此已交付目录当前仅历史 tasks/verification，无 specs delta；这是目录状态，不修改成虚假校验通过。原部署测试2/2及git diff --check通过。
 
 修正拾取测试门槛后，完整原生双人流程1/1通过45.86秒（`canonical-range.log`），native create/join/start、各端控制、搬队友/箱子、投掷、390×844触控、刷新原席重连和手动继续、退出及存档隔离完整检查成立；配合首轮其余五项通过，六类生命周期检查均有实际通过结果。
+
+
+## online4 公共场景同步（2026-10-04，发布前）
+
+online3全世界replay仍依赖各端pending：同快照、同时刻但12/4条待确认指令，使怪物/平台相差约0.267世界单位；真实WS100/300ms RTT、60/20Hz输入，最大公共时间差150ms、怪物0.300单位。预测throw还提前删除怪物/箱子、预测远端跌落能改变位置而保留旧生命数。RED证据 `/tmp/rescue-world-sync/`。
+
+online4增加可选serverAt快照/pong，最小RTT中点估计服务时钟；公共几何以墙钟推演最多250ms，复用已有integrate和对象/敌人/Boss纯几何分支，禁止奖惩、生命周期、攻击生成/移除和通关。自己的运动及当前pickup/throw箱子单独预览；箱子按动作seq和服务器ownership确认，确认飞行接管公共时钟并做最多1秒纠偏。拒绝拾取后不能借旧owner保留overlay。预测健康变化禁止位置纠偏，Boss坐标从目标timer选择运动公式但公开phase/HP/攻击保持服务器确认。实际avatar关节读取独立renderTime，新增真实腿部旋转RED/GREEN。公共投影每快照只克隆一次，后续render增量推进，避免每RAF两次全量模拟。
+
+首次154项Rescue单测全部通过，最终新增失败拾取回归以及同文件21项全部通过（覆盖合计155项）。原生200ms RTT实际投掷初轮通过20.15秒，两次可信E动作对应pickup/throw，双方各一次throw和hit，最大箱子回退0。最终实际异延迟WebGL81组同时绘制比较通过41.40秒：RTT120.8/326.3ms，最大公共时间差40.5ms、敌人mesh横坐标差0.081、移动平台0.052世界单位；两端原生暂停/退出正常。证据 `native-shared-final.log`、`native-shared-world.json`。此为实际绘图比较，不将模拟客户端约15ms误差当真实浏览器数据。
+
+保留失败：首次low软件渲染300ms RTT在tick21输入超时；默认auto第二次场景比较通过但驱动未等待服务器paused便点击不可见leave，整项FAIL，现已增加实际paused等待后通过。多浏览器文件运行Node报告pending promise且取消，未当通过。随后完整街区分钟在tick605输入超时，实测两端约12FPS、发送间隔超过350ms；发现本任务取消后遗留Rescue浏览器36257的GPU约196%CPU。已核对页title/本任务cwd及旧parent退出，只经CDP关闭此孤儿，保留认证9225及其他任务English浏览器；原条件分钟重新运行中。未扩大350ms保护、改变画质档位、放宽超时或修改游戏地图。
+
+独立复核最终通过；500ms RTT/30pending的metal落地仍可能发生约0.406单位终点位置纠偏（40pending约0.753），记录为高延迟预测修正，未宣称所有网络零位置校正。普通ack连续、失败pickup、预测伤害和Boss跨phase阻断均已确认修复。服务器目前rooms=0；本轮改动server/core/codec，需要原部署链更新Rescue运行时，射击/webhook预计保持原PID，发布后核对。
+
+
+### online4 后续计算缩减与最终默认场景连续性
+
+清除孤儿后，原条件第二轮仍在tick1126暂停：实际RAFs最长366.6ms、输入转发间隔362.2ms，保留`native-minute-clean.log`，不据第一次孤儿现象排除全部停顿。进一步用已有movePlayer/integrate抽出stepLocal，仅预测本机slot与实际action涉及的箱子，不再为每条pending推进整关敌人/Boss/其它物体；不预测伤害、奖励、复活或通关。关联id只存在client clone，部分ack继续关联已投掷物。此变更有真实RED和84项相关GREEN。独立复核将旧HEAD/current默认stepGame在真实0/A/J各600tick逐帧deepEqual，完全一致；确认原服务器规则、边沿、搬投、被队友抱起和authority隔离未变。
+
+默认完整街区、200ms RTT + 每方向10ms有序抖动，最终实际两软件WebGL窗口1/1通过104.14秒（`native-minute-local.log`）。可信按键到绘图78.4/39.0ms；连续60.080秒、35轮输入、3609 tick、1203动态快照/端，全程playing无暂停，29.81KiB/s/端；实际24.55/24.23FPS。之后真实暂停/重试、长按跳跃/托举投掷单事件、断线原席恢复并等待手动继续均通过。不能将软件绘图24FPS写成60FPS；350ms输入保护未修改。
+
+
+### online4 最终开局、绘图与生命周期回归
+
+异延迟实际WebGL最终一次曾在tick20暂停，慢端已有输入到relay但尚未转发给服务器（forwarded=0）；300ms RTT叠加浏览器调度使首包超过350ms。仅对当前epoch尚未接受有效输入的席位加入2秒首包等待上限；首个有效输入到达后立即恢复350ms期限。resetInputs中性化旧输入；无效、重复、旧epoch和ready消息不续期，断线/失焦仍暂停。准确RED后首包/活跃超时/重试3项通过，独立复核5项通过且无新阻断。
+
+修复后最终实际两WebGL异延迟1/1通过33.680秒：94组近同时实际绘图，实测RTT128.7/474.2ms，公共时间最大差46.300ms、怪物mesh最大差0.0926004、移动平台0.0670167世界单位；原生移动、跳跃、暂停和双方退出正常。证据`native-shared-startup-final.log`和`native-shared-world.json`。实际RTT包含软件浏览器调度，不能用配置100/300ms替代实测值。
+
+最终投掷/砸怪实际绘图1/1通过22.611秒（`native-collision-final.log`）：两次可信E键对应拾起/投掷，双方各一次throw和hit，最大向后回退0。既有生命周期首轮5/6通过，唯一完整流程在auto尚未完成适配时发生低帧输入保护；保留`native-lifecycle-final.log`。测试准备增加等待实际auto DPR<=0.5且关闭阴影，未强制画质/放宽超时或修改生产规则；完整原断言1/1通过52.568秒（`native-canonical-warm.log`），覆盖独立控制、搬人搬箱/投掷、触控、暂停重试、刷新原席恢复、双方退出和存档隔离。配合首轮其余5项，各6类均有通过证据，不写成同一次6/6。
+
+最终全部Rescue单测157/157通过（39.034秒，`all-unit-release.log`）；独立重建bundle SHA `31bed220b05d1390664b2570eca3d4a4312abf6ce88bf8680675538e589cb21d`，git diff --check通过。

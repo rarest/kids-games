@@ -45,6 +45,14 @@ test('two seats, host-only lifecycle, explicit leave, separate room isolation',a
   await h.send(b,{type:'leave'});await h.barrier(a);assert.ok(h.last(a,'closed'));
   await h.send(c,{type:'join',code:h.last(a,'joined').code});assert.ok(h.last(c,'error'));
 });
+test('high-RTT first input has a bounded startup grace, then normal 350ms protection applies',async t=>{
+ const h=await setup(t),[a,b]=await h.pair();await h.start(a,b);
+ const epoch=h.last(a).epoch;for(let seq=1;seq<=8;seq++){await h.send(a,{type:'input',epoch,commands:[{seq,input:input()}]});await h.tick(3);}
+ assert.equal(h.last(b).room.mode,'playing','the other seat has not yet received and returned its first frame');
+ await h.send(a,{type:'input',epoch,commands:[{seq:9,input:input()}]});await h.commands(b,[{}]);await h.tick(3);
+ await h.poll(351);assert.equal(h.last(a).room.mode,'paused','first-input grace cannot weaken active-input protection');
+ await h.send(a,{type:'resume'});await h.poll(2001);assert.equal(h.last(a).room.mode,'paused','no-first-input wait is bounded');
+});
 
 test('one command per tick, acknowledgements, duplicates/old epoch, held input edge clearing',async t=>{
   const h=await setup(t),[a,b]=await h.pair();await h.start(a,b);
@@ -68,7 +76,7 @@ test('ready false, stale input and disconnect pause; token reclaims original sea
   const h=await setup(t),[a,b]=await h.pair();await h.start(a,b);
   await h.send(b,{type:'ready',value:false});await h.barrier(a);assert.equal(h.last(a).room.mode,'paused');
   await h.send(a,{type:'resume'});assert.equal(h.last(a).room.mode,'paused');assert.ok(h.last(a,'error'));
-  await h.send(b,{type:'ready',value:true});await h.send(a,{type:'resume'});await h.tick(24);assert.equal(h.last(a).room.mode,'paused');
+  await h.send(b,{type:'ready',value:true});await h.send(a,{type:'resume'});await h.commands(a,[{}]);await h.commands(b,[{}]);await h.tick(24);assert.equal(h.last(a).room.mode,'paused');
   await h.send(a,{type:'resume'});
   const joined=h.last(b,'joined');b.ws.terminate();await once(b.ws,'close');await new Promise(r=>setTimeout(r,10));await h.barrier(a);
   assert.equal(h.last(a).room.mode,'paused');

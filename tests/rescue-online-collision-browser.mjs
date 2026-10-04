@@ -1,32 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createServer} from 'node:http';
-import {readFile,mkdir,writeFile} from 'node:fs/promises';
-import {execFileSync} from 'node:child_process';
-import {build} from 'esbuild';
+import {mkdir,writeFile} from 'node:fs/promises';
 import {openOnlinePair,createRoom,key,wait,snapshot,sleep,click,shot} from './rescue-online-harness.mjs';
 
-const root=new URL('../',import.meta.url);
+import {instrumentedSite} from './rescue-render-observer-harness.mjs';
 const level={id:'0',name:'collision regression',theme:'street',width:40,height:12,spawn:{x:5,y:1},platforms:[{id:'floor',x:0,y:1,w:40,h:.65}],objects:[{id:'box',kind:'crate',x:5.4,y:1}],enemies:[{id:'target',kind:'mouse',x:9,y:1,min:8,max:10,speed:0}],hazards:[],pickups:[],decor:[],boss:null,checkpoints:[],exit:{x:38,y:1}};
 
-async function instrumentedSite(){
- const output=await build({entryPoints:[new URL('rescue/game.js',root).pathname],bundle:true,format:'esm',write:false,plugins:[{name:'read-only-render-observer',setup(b){
-  b.onLoad({filter:/\/rescue\/scene\.js$/},async({path})=>{
-   const text=await readFile(path,'utf8'),needle='renderer.render(scene, camera);';assert.equal(text.split(needle).length,2);
-   // Observe the actual completed draw. The production simulation and renderer are unchanged.
-   const source=text.replace(needle,`${needle}\nglobalThis.__rescueDraw?.(state, world.group, renderer.getDrawingBufferSize(new THREE.Vector2()));`);
-   return{contents:source,loader:'js'};
-  });
-  if(process.env.RESCUE_PREDICTION_REFERENCE==='main')b.onLoad({filter:/\/rescue\/net-prediction\.js$/},({path})=>({contents:execFileSync('git',['show','origin/main:rescue/net-prediction.js'],{cwd:root,encoding:'utf8'}),loader:'js'}));
- }}]});
- const server=createServer(async(req,res)=>{try{
-  const pathname=new URL(req.url,'http://local').pathname;
-  if(pathname==='/rescue/bundle.js'){res.setHeader('content-type','text/javascript');res.end(output.outputFiles[0].contents);return;}
-  const path=pathname==='/'?'index.html':pathname.slice(1);assert.ok(!path.split('/').includes('..'));
-  res.setHeader('content-type',path.endsWith('.html')?'text/html':path.endsWith('.css')?'text/css':'text/javascript');res.end(await readFile(new URL(path,root)));
- }catch{res.statusCode=404;res.end('not found');}});
- await new Promise(r=>server.listen(0,'127.0.0.1',r));return{origin:`http://127.0.0.1:${server.address().port}`,close:()=>new Promise(r=>server.close(r))};
-}
 
 test('native 200ms RTT throw stays single and its visible impact agrees with real monster collision',{timeout:120000},async()=>{
  const site=await instrumentedSite(),previous=process.env.GAMES_TEST_ORIGIN;process.env.GAMES_TEST_ORIGIN=site.origin;
@@ -73,6 +52,6 @@ test('native 200ms RTT throw stays single and its visible impact agrees with rea
    assert.ok(badge.rtt>=150,'badge shows actual delayed WS measurement');assert.deepEqual(b.errors,[]);
   }
   await shot(host,'collision-and-latency-host');await shot(guest,'collision-and-latency-guest');
-  await click(host,'#pause');await click(host,'#online-leave');for(const b of [host,guest])await wait(b,'view.dataset.phase==="home"');
+  await click(host,'#pause');for(const b of [host,guest])await wait(b,'view.dataset.phase==="paused"');await click(host,'#online-leave');for(const b of [host,guest])await wait(b,'view.dataset.phase==="home"');
  }finally{await pair?.close();if(previous===undefined)delete process.env.GAMES_TEST_ORIGIN;else process.env.GAMES_TEST_ORIGIN=previous;await site.close();}
 });
