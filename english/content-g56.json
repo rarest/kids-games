@@ -1,0 +1,5398 @@
+{
+  "books": [
+    {
+      "id": "g5-upper",
+      "units": [
+        {
+          "id": "g5-upper-u1",
+          "title": "Different friends",
+          "words": [
+            {
+              "id": "team",
+              "en": "team",
+              "zh": "团队",
+              "ipa": "/tim/"
+            },
+            {
+              "id": "player",
+              "en": "player",
+              "zh": "队员；运动员",
+              "ipa": "/ˈpleɪɚ/"
+            },
+            {
+              "id": "him",
+              "en": "him",
+              "zh": "他（宾语形式）",
+              "ipa": "/hɪm/"
+            },
+            {
+              "id": "lovely",
+              "en": "lovely",
+              "zh": "可爱的",
+              "ipa": "/ˈlʌvli/"
+            },
+            {
+              "id": "clever",
+              "en": "clever",
+              "zh": "聪明的",
+              "ipa": "/ˈklɛvɚ/"
+            },
+            {
+              "id": "young",
+              "en": "young",
+              "zh": "年轻的",
+              "ipa": "/jʌŋ/"
+            },
+            {
+              "id": "hard-working",
+              "en": "hard-working",
+              "zh": "勤奋的",
+              "ipa": "/ˌhɑrdˈwɝkɪŋ/"
+            },
+            {
+              "id": "science",
+              "en": "science",
+              "zh": "科学",
+              "ipa": "/ˈsaɪəns/"
+            },
+            {
+              "id": "robot",
+              "en": "robot",
+              "zh": "机器人",
+              "ipa": "/ˈroʊbɑt/"
+            },
+            {
+              "id": "jump",
+              "en": "jump",
+              "zh": "跳",
+              "ipa": "/dʒʌmp/"
+            },
+            {
+              "id": "rope",
+              "en": "rope",
+              "zh": "绳子",
+              "ipa": "/roʊp/"
+            },
+            {
+              "id": "piano",
+              "en": "piano",
+              "zh": "钢琴",
+              "ipa": "/piˈænoʊ/"
+            },
+            {
+              "id": "chess",
+              "en": "chess",
+              "zh": "国际象棋",
+              "ipa": "/tʃɛs/"
+            },
+            {
+              "id": "front",
+              "en": "front",
+              "zh": "前面",
+              "ipa": "/frʌnt/"
+            },
+            {
+              "id": "easy",
+              "en": "easy",
+              "zh": "容易的",
+              "ipa": "/ˈizi/"
+            },
+            {
+              "id": "star",
+              "en": "star",
+              "zh": "星星；明星",
+              "ipa": "/stɑr/"
+            },
+            {
+              "id": "wonderful",
+              "en": "wonderful",
+              "zh": "精彩的；极好的",
+              "ipa": "/ˈwʌndɚfəl/"
+            },
+            {
+              "id": "australia",
+              "en": "Australia",
+              "zh": "澳大利亚",
+              "ipa": "/ɔˈstreɪljə/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "What is your new classmate like?",
+              "zh": "你的新同学是什么样的人？",
+              "tip": "What is…like 用来问一个人的特点。"
+            },
+            {
+              "en": "My classmate is clever and kind.",
+              "zh": "我的同学聪明又善良。",
+              "tip": "用 is 加性格词介绍一个人的特点。"
+            },
+            {
+              "en": "Is your brother good at chess?",
+              "zh": "你的哥哥擅长国际象棋吗？",
+              "tip": "be good at 表示擅长，问句把 is 放到前面。"
+            },
+            {
+              "en": "I can jump rope with my friends.",
+              "zh": "我会和朋友们一起跳绳。",
+              "tip": "can 后面接动词原形，jump rope 表示跳绳。"
+            },
+            {
+              "en": "Can you play the piano for our class?",
+              "zh": "你能为我们班弹钢琴吗？",
+              "tip": "询问能力时用 Can you 加动词原形。"
+            },
+            {
+              "en": "I cannot make a robot yet.",
+              "zh": "我还不会制作机器人。",
+              "tip": "cannot 表示不会，后面仍用动词原形。"
+            },
+            {
+              "en": "Would you like to help our team?",
+              "zh": "你愿意帮助我们的团队吗？",
+              "tip": "Would you like to 加动词原形，是礼貌的邀请。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "My new classmate ___ clever.",
+              "options": [
+                "is",
+                "are",
+                "am"
+              ],
+              "answer": "is",
+              "explanation": "classmate 是一个人，描述特点用 is。"
+            },
+            {
+              "prompt": "Can she ___ the piano?",
+              "options": [
+                "play",
+                "plays",
+                "playing"
+              ],
+              "answer": "play",
+              "explanation": "can 后面接动词原形 play。"
+            },
+            {
+              "prompt": "He is good ___ chess.",
+              "options": [
+                "at",
+                "on",
+                "to"
+              ],
+              "answer": "at",
+              "explanation": "be good at 表示擅长，固定搭配用 at。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/5s01Wordsineachunit1.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/5s02Unit1A.mp3",
+              "https://www.pep.com.cn/yyszptzy/5s06Unit1B.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。 Appendix 2 第三方公开预览的本单元书面词项逐一比对。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://yy.suyang123.com/xiaoxue/wunianji/rjbp_shangce_listen9.html"
+            ]
+          }
+        },
+        {
+          "id": "g5-upper-u2",
+          "title": "My feelings",
+          "words": [
+            {
+              "id": "sad",
+              "en": "sad",
+              "zh": "难过的",
+              "ipa": "/sæd/"
+            },
+            {
+              "id": "matter",
+              "en": "matter",
+              "zh": "事情；问题",
+              "ipa": "/ˈmætɚ/"
+            },
+            {
+              "id": "project",
+              "en": "project",
+              "zh": "项目；课题",
+              "ipa": "/ˈprɑdʒɛkt/"
+            },
+            {
+              "id": "centre",
+              "en": "centre",
+              "zh": "中心",
+              "ipa": "/ˈsɛntɚ/"
+            },
+            {
+              "id": "agree",
+              "en": "agree",
+              "zh": "同意",
+              "ipa": "/əˈɡri/"
+            },
+            {
+              "id": "finish",
+              "en": "finish",
+              "zh": "完成",
+              "ipa": "/ˈfɪnɪʃ/"
+            },
+            {
+              "id": "worried",
+              "en": "worried",
+              "zh": "担心的",
+              "ipa": "/ˈwɝid/"
+            },
+            {
+              "id": "both",
+              "en": "both",
+              "zh": "两者；两个都",
+              "ipa": "/boʊθ/"
+            },
+            {
+              "id": "excited",
+              "en": "excited",
+              "zh": "兴奋的",
+              "ipa": "/ɪkˈsaɪtɪd/"
+            },
+            {
+              "id": "wrong",
+              "en": "wrong",
+              "zh": "错误的",
+              "ipa": "/rɔŋ/"
+            },
+            {
+              "id": "angry",
+              "en": "angry",
+              "zh": "生气的",
+              "ipa": "/ˈæŋɡri/"
+            },
+            {
+              "id": "afraid",
+              "en": "afraid",
+              "zh": "害怕的",
+              "ipa": "/əˈfreɪd/"
+            },
+            {
+              "id": "parent",
+              "en": "parent",
+              "zh": "父亲或母亲",
+              "ipa": "/ˈpɛrənt/"
+            },
+            {
+              "id": "ask",
+              "en": "ask",
+              "zh": "问",
+              "ipa": "/æsk/"
+            },
+            {
+              "id": "monday",
+              "en": "Monday",
+              "zh": "星期一",
+              "ipa": "/ˈmʌndeɪ/"
+            },
+            {
+              "id": "laugh",
+              "en": "laugh",
+              "zh": "笑",
+              "ipa": "/læf/"
+            },
+            {
+              "id": "move",
+              "en": "move",
+              "zh": "移动；搬家",
+              "ipa": "/muv/"
+            },
+            {
+              "id": "yours",
+              "en": "yours",
+              "zh": "你的；你们的",
+              "ipa": "/jʊrz/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "You look excited about the project.",
+              "zh": "你看起来对这个项目很兴奋。",
+              "tip": "look 后面接描述感受的词，about 引出相关的事情。"
+            },
+            {
+              "en": "What is the matter with your friend?",
+              "zh": "你的朋友怎么了？",
+              "tip": "What is the matter with…用来询问某人怎么了。"
+            },
+            {
+              "en": "I am worried about our science project.",
+              "zh": "我担心我们的科学项目。",
+              "tip": "be worried about 表示担心某件事。"
+            },
+            {
+              "en": "Why not ask your parents for help?",
+              "zh": "为什么不向你的父母求助呢？",
+              "tip": "Why not 后面用动词原形，可以提出建议。"
+            },
+            {
+              "en": "We need to finish our work today.",
+              "zh": "我们需要今天完成工作。",
+              "tip": "need to 后面接动词原形，表示需要做什么。"
+            },
+            {
+              "en": "It is important to listen to others.",
+              "zh": "倾听别人很重要。",
+              "tip": "It is important to 加动词原形，表示做这件事很重要。"
+            },
+            {
+              "en": "I am afraid that he is angry with me.",
+              "zh": "我担心他在生我的气。",
+              "tip": "be afraid that 后面接一件担心的事；angry with 表示生某人的气。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "You look ___ about the project.",
+              "options": [
+                "worried",
+                "worry",
+                "worries"
+              ],
+              "answer": "worried",
+              "explanation": "look 后面接形容词，worried 表示担心的。"
+            },
+            {
+              "prompt": "Why not ___ your parents?",
+              "options": [
+                "ask",
+                "asks",
+                "asking"
+              ],
+              "answer": "ask",
+              "explanation": "Why not 后面接动词原形，用来提出建议。"
+            },
+            {
+              "prompt": "We need ___ our project today.",
+              "options": [
+                "to finish",
+                "finishes",
+                "finished"
+              ],
+              "answer": "to finish",
+              "explanation": "need to do 表示需要做，finish 用原形。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/5s02Wordsineachunit2.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/5s02Unit2A.mp3",
+              "https://www.pep.com.cn/yyszptzy/5s06Unit2B.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。 Appendix 2 第三方公开预览的本单元书面词项逐一比对。 录音列有 laugh，书面预览另列 Monday，两项均收录。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://yy.suyang123.com/xiaoxue/wunianji/rjbp_shangce_listen9.html"
+            ]
+          }
+        },
+        {
+          "id": "g5-upper-u3",
+          "title": "Work and play",
+          "words": [
+            {
+              "id": "wednesday",
+              "en": "Wednesday",
+              "zh": "星期三",
+              "ipa": "/ˈwɛnzdeɪ/"
+            },
+            {
+              "id": "subject",
+              "en": "subject",
+              "zh": "学科；科目",
+              "ipa": "/ˈsʌbdʒɪkt/"
+            },
+            {
+              "id": "tuesday",
+              "en": "Tuesday",
+              "zh": "星期二",
+              "ipa": "/ˈtuzdeɪ/"
+            },
+            {
+              "id": "friday",
+              "en": "Friday",
+              "zh": "星期五",
+              "ipa": "/ˈfraɪdeɪ/"
+            },
+            {
+              "id": "because",
+              "en": "because",
+              "zh": "因为",
+              "ipa": "/bɪˈkɔz/"
+            },
+            {
+              "id": "monday",
+              "en": "Monday",
+              "zh": "星期一",
+              "ipa": "/ˈmʌndeɪ/"
+            },
+            {
+              "id": "thursday",
+              "en": "Thursday",
+              "zh": "星期四",
+              "ipa": "/ˈθɝzdeɪ/"
+            },
+            {
+              "id": "start",
+              "en": "start",
+              "zh": "开始",
+              "ipa": "/stɑrt/"
+            },
+            {
+              "id": "usually",
+              "en": "usually",
+              "zh": "通常",
+              "ipa": "/ˈjuʒuəli/"
+            },
+            {
+              "id": "weekend",
+              "en": "weekend",
+              "zh": "周末",
+              "ipa": "/ˈwikɛnd/"
+            },
+            {
+              "id": "sometimes",
+              "en": "sometimes",
+              "zh": "有时",
+              "ipa": "/ˈsʌmtaɪmz/"
+            },
+            {
+              "id": "saturday",
+              "en": "Saturday",
+              "zh": "星期六",
+              "ipa": "/ˈsætɚdeɪ/"
+            },
+            {
+              "id": "sunday",
+              "en": "Sunday",
+              "zh": "星期日",
+              "ipa": "/ˈsʌndeɪ/"
+            },
+            {
+              "id": "lesson",
+              "en": "lesson",
+              "zh": "课",
+              "ipa": "/ˈlɛsən/"
+            },
+            {
+              "id": "evening",
+              "en": "evening",
+              "zh": "傍晚；晚上",
+              "ipa": "/ˈivnɪŋ/"
+            },
+            {
+              "id": "answer",
+              "en": "answer",
+              "zh": "回答",
+              "ipa": "/ˈænsɚ/"
+            },
+            {
+              "id": "ping-pong",
+              "en": "ping-pong",
+              "zh": "乒乓球",
+              "ipa": "/ˈpɪŋˌpɔŋ/"
+            },
+            {
+              "id": "night",
+              "en": "night",
+              "zh": "夜晚",
+              "ipa": "/naɪt/"
+            },
+            {
+              "id": "visit",
+              "en": "visit",
+              "zh": "拜访；参观",
+              "ipa": "/ˈvɪzɪt/"
+            },
+            {
+              "id": "grandparent",
+              "en": "grandparent",
+              "zh": "祖父母或外祖父母中的一人",
+              "ipa": "/ˈɡrænpɛrənt/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "What classes do you have on Thursdays?",
+              "zh": "你星期四有哪些课？",
+              "tip": "问课程用 What…do you have；星期前用 on。"
+            },
+            {
+              "en": "We have science and music on Mondays.",
+              "zh": "我们星期一有科学课和音乐课。",
+              "tip": "用 have 说有什么课，Mondays 表示每个星期一。",
+              "acceptedAnswers": [
+                "On Mondays we have science and music."
+              ]
+            },
+            {
+              "en": "Friday is my favourite school day.",
+              "zh": "星期五是我最喜欢的上学日。",
+              "tip": "my favourite 表示我最喜欢的，后面接名词。"
+            },
+            {
+              "en": "I like science because I enjoy making robots.",
+              "zh": "我喜欢科学，因为我喜欢制作机器人。",
+              "tip": "because 引出原因，enjoy 后面用 making 这样的形式。"
+            },
+            {
+              "en": "What do you usually do on Sundays?",
+              "zh": "你星期日通常做什么？",
+              "tip": "usually 表示通常，放在实义动词 do 前面。"
+            },
+            {
+              "en": "I sometimes play ping-pong after school.",
+              "zh": "放学后我有时打乒乓球。",
+              "tip": "sometimes 表示有时，after school 表示放学后。",
+              "acceptedAnswers": [
+                "After school I sometimes play ping-pong."
+              ]
+            },
+            {
+              "en": "Does your father work at the weekend?",
+              "zh": "你的爸爸周末工作吗？",
+              "tip": "Does 后面用动词原形 work，不加 s。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "We have science ___ Fridays.",
+              "options": [
+                "on",
+                "in",
+                "at"
+              ],
+              "answer": "on",
+              "explanation": "星期前用 on，Fridays 表示每个星期五。"
+            },
+            {
+              "prompt": "She usually ___ ping-pong after school.",
+              "options": [
+                "plays",
+                "play",
+                "playing"
+              ],
+              "answer": "plays",
+              "explanation": "she 后面说经常做的事，play 要加 s。"
+            },
+            {
+              "prompt": "Does he ___ on Sundays?",
+              "options": [
+                "work",
+                "works",
+                "working"
+              ],
+              "answer": "work",
+              "explanation": "does 后面的实义动词用原形 work。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/5s03Wordsineachunit3.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/5s02Unit3A.mp3",
+              "https://www.pep.com.cn/yyszptzy/5s06Unit3B.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。 Appendix 2 第三方公开预览的本单元书面词项逐一比对。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://yy.suyang123.com/xiaoxue/wunianji/rjbp_shangce_listen9.html"
+            ]
+          }
+        },
+        {
+          "id": "g5-upper-u4",
+          "title": "Healthy habits",
+          "words": [
+            {
+              "id": "stay",
+              "en": "stay",
+              "zh": "待；保持",
+              "ipa": "/steɪ/"
+            },
+            {
+              "id": "should",
+              "en": "should",
+              "zh": "应该",
+              "ipa": "/ʃʊd/"
+            },
+            {
+              "id": "flu",
+              "en": "flu",
+              "zh": "流感",
+              "ipa": "/flu/"
+            },
+            {
+              "id": "else",
+              "en": "else",
+              "zh": "其他的",
+              "ipa": "/ɛls/"
+            },
+            {
+              "id": "exercise",
+              "en": "exercise",
+              "zh": "锻炼",
+              "ipa": "/ˈɛksɚsaɪz/"
+            },
+            {
+              "id": "enough",
+              "en": "enough",
+              "zh": "足够的",
+              "ipa": "/ɪˈnʌf/"
+            },
+            {
+              "id": "if",
+              "en": "if",
+              "zh": "如果",
+              "ipa": "/ɪf/"
+            },
+            {
+              "id": "habit",
+              "en": "habit",
+              "zh": "习惯",
+              "ipa": "/ˈhæbɪt/"
+            },
+            {
+              "id": "house",
+              "en": "house",
+              "zh": "房子",
+              "ipa": "/haʊs/"
+            },
+            {
+              "id": "show",
+              "en": "show",
+              "zh": "节目；展示",
+              "ipa": "/ʃoʊ/"
+            },
+            {
+              "id": "phone",
+              "en": "phone",
+              "zh": "电话",
+              "ipa": "/foʊn/"
+            },
+            {
+              "id": "then",
+              "en": "then",
+              "zh": "然后",
+              "ipa": "/ðɛn/"
+            },
+            {
+              "id": "rest",
+              "en": "rest",
+              "zh": "休息",
+              "ipa": "/rɛst/"
+            },
+            {
+              "id": "take-care-of",
+              "en": "take care of",
+              "zh": "照顾",
+              "ipa": "/teɪk kɛr əv/"
+            },
+            {
+              "id": "check",
+              "en": "check",
+              "zh": "检查",
+              "ipa": "/tʃɛk/"
+            },
+            {
+              "id": "less",
+              "en": "less",
+              "zh": "更少的",
+              "ipa": "/lɛs/"
+            },
+            {
+              "id": "brush",
+              "en": "brush",
+              "zh": "刷",
+              "ipa": "/brʌʃ/"
+            },
+            {
+              "id": "tooth",
+              "en": "tooth",
+              "zh": "牙齿（单数）",
+              "ipa": "/tuθ/"
+            },
+            {
+              "id": "teeth",
+              "en": "teeth",
+              "zh": "牙齿（复数）",
+              "ipa": "/tiθ/"
+            },
+            {
+              "id": "twice",
+              "en": "twice",
+              "zh": "两次",
+              "ipa": "/twaɪs/"
+            },
+            {
+              "id": "hour",
+              "en": "hour",
+              "zh": "小时",
+              "ipa": "/ˈaʊɚ/"
+            },
+            {
+              "id": "free",
+              "en": "free",
+              "zh": "空闲的；免费的",
+              "ipa": "/fri/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "How can we build healthy habits?",
+              "zh": "我们怎样养成健康习惯？",
+              "tip": "How can we 加动词原形，用来询问可以怎样做。"
+            },
+            {
+              "en": "We should drink enough water after exercise.",
+              "zh": "运动后我们应该喝足够的水。",
+              "tip": "should 后面用动词原形，enough water 表示足够的水。"
+            },
+            {
+              "en": "You should not play on a phone all evening.",
+              "zh": "你不应该整个晚上都玩手机。",
+              "tip": "should not 表示不应该，后面用动词原形。"
+            },
+            {
+              "en": "Can I watch a show after dinner?",
+              "zh": "晚饭后我可以看一个节目吗？",
+              "tip": "Can I 加动词原形，是询问是否允许自己做某事。"
+            },
+            {
+              "en": "What should I do before bed?",
+              "zh": "睡前我应该做什么？",
+              "tip": "What should I do 用来请求建议。"
+            },
+            {
+              "en": "If you feel tired, you should rest.",
+              "zh": "如果你觉得累，就应该休息。",
+              "tip": "if 引出条件，should 后面接 rest 原形。"
+            },
+            {
+              "en": "I brush my teeth twice a day.",
+              "zh": "我每天刷牙两次。",
+              "tip": "tooth 的复数是 teeth，twice a day 表示每天两次。",
+              "acceptedAnswers": [
+                "Twice a day I brush my teeth."
+              ]
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "We should ___ enough water.",
+              "options": [
+                "drink",
+                "drinks",
+                "drinking"
+              ],
+              "answer": "drink",
+              "explanation": "should 后面接动词原形 drink。"
+            },
+            {
+              "prompt": "You should not ___ up late.",
+              "options": [
+                "stay",
+                "stays",
+                "staying"
+              ],
+              "answer": "stay",
+              "explanation": "should not 后面仍接动词原形。"
+            },
+            {
+              "prompt": "I brush my ___ twice a day.",
+              "options": [
+                "teeth",
+                "tooth",
+                "tooths"
+              ],
+              "answer": "teeth",
+              "explanation": "刷所有牙齿用 tooth 的复数 teeth。",
+              "context": "我每天给所有牙齿刷两遍。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/5s04Wordsineachunit4.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/5s02Unit4A.mp3",
+              "https://www.pep.com.cn/yyszptzy/5s06Unit4B.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。"
+          }
+        },
+        {
+          "id": "g5-upper-u5",
+          "title": "Food we eat",
+          "words": [
+            {
+              "id": "hungry",
+              "en": "hungry",
+              "zh": "饥饿的",
+              "ipa": "/ˈhʌŋɡri/"
+            },
+            {
+              "id": "beef",
+              "en": "beef",
+              "zh": "牛肉",
+              "ipa": "/bif/"
+            },
+            {
+              "id": "ice-cream",
+              "en": "ice cream",
+              "zh": "冰激凌",
+              "ipa": "/ˈaɪs krim/"
+            },
+            {
+              "id": "little",
+              "en": "little",
+              "zh": "少量的；小的",
+              "ipa": "/ˈlɪtəl/"
+            },
+            {
+              "id": "dumpling",
+              "en": "dumpling",
+              "zh": "饺子（单数）",
+              "ipa": "/ˈdʌmplɪŋ/"
+            },
+            {
+              "id": "tea",
+              "en": "tea",
+              "zh": "茶",
+              "ipa": "/ti/"
+            },
+            {
+              "id": "hamburger",
+              "en": "hamburger",
+              "zh": "汉堡包",
+              "ipa": "/ˈhæmbɚɡɚ/"
+            },
+            {
+              "id": "mrs",
+              "en": "Mrs",
+              "zh": "夫人；太太",
+              "ipa": "/ˈmɪsɪz/"
+            },
+            {
+              "id": "coconut",
+              "en": "coconut",
+              "zh": "椰子",
+              "ipa": "/ˈkoʊkənʌt/"
+            },
+            {
+              "id": "interesting",
+              "en": "interesting",
+              "zh": "有趣的",
+              "ipa": "/ˈɪntrəstɪŋ/"
+            },
+            {
+              "id": "seed",
+              "en": "seed",
+              "zh": "种子",
+              "ipa": "/sid/"
+            },
+            {
+              "id": "pull",
+              "en": "pull",
+              "zh": "拉",
+              "ipa": "/pʊl/"
+            },
+            {
+              "id": "pull-up",
+              "en": "pull up",
+              "zh": "拔起",
+              "ipa": "/pʊl ʌp/"
+            },
+            {
+              "id": "stem",
+              "en": "stem",
+              "zh": "茎",
+              "ipa": "/stɛm/"
+            },
+            {
+              "id": "root",
+              "en": "root",
+              "zh": "根",
+              "ipa": "/rut/"
+            },
+            {
+              "id": "lotus",
+              "en": "lotus",
+              "zh": "莲；荷花",
+              "ipa": "/ˈloʊtəs/"
+            },
+            {
+              "id": "lake",
+              "en": "lake",
+              "zh": "湖",
+              "ipa": "/leɪk/"
+            },
+            {
+              "id": "world",
+              "en": "world",
+              "zh": "世界",
+              "ipa": "/wɝld/"
+            },
+            {
+              "id": "round",
+              "en": "round",
+              "zh": "圆的",
+              "ipa": "/raʊnd/"
+            },
+            {
+              "id": "different",
+              "en": "different",
+              "zh": "不同的",
+              "ipa": "/ˈdɪfɚənt/"
+            },
+            {
+              "id": "way",
+              "en": "way",
+              "zh": "方式；道路",
+              "ipa": "/weɪ/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "What would you like to eat for lunch?",
+              "zh": "午餐你想吃什么？",
+              "tip": "What would you like to eat 用来礼貌地询问想吃什么。"
+            },
+            {
+              "en": "I would like some dumplings and tea.",
+              "zh": "我想要一些饺子和茶。",
+              "tip": "would like 表示想要，some 后面可接复数名词或不可数名词。"
+            },
+            {
+              "en": "Would you like a little ice cream?",
+              "zh": "你想吃一点冰激凌吗？",
+              "tip": "a little 后面接不可数名词，表示一点。"
+            },
+            {
+              "en": "What is your favourite fruit?",
+              "zh": "你最喜欢的水果是什么？",
+              "tip": "What is your favourite 加类别名词，询问最喜欢哪一种。"
+            },
+            {
+              "en": "I like coconuts because their water is sweet.",
+              "zh": "我喜欢椰子，因为椰子水很甜。",
+              "tip": "because 引出喜欢的原因，their 表示它们的。"
+            },
+            {
+              "en": "Where does this tea come from?",
+              "zh": "这种茶来自哪里？",
+              "tip": "does 后面用 come 原形，come from 表示来自。"
+            },
+            {
+              "en": "A carrot grows from a seed.",
+              "zh": "一根胡萝卜从种子长成。",
+              "tip": "a carrot 是单数，grow 要变成 grows。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "I would like ___ tea.",
+              "options": [
+                "some",
+                "a",
+                "an"
+              ],
+              "answer": "some",
+              "explanation": "tea 在这里不可数，some tea 表示一些茶。",
+              "context": "我想要一些茶。"
+            },
+            {
+              "prompt": "Where does this coconut ___ from?",
+              "options": [
+                "come",
+                "comes",
+                "coming"
+              ],
+              "answer": "come",
+              "explanation": "does 后面的实义动词用原形 come。"
+            },
+            {
+              "prompt": "A carrot ___ from a seed.",
+              "options": [
+                "grows",
+                "grow",
+                "growing"
+              ],
+              "answer": "grows",
+              "explanation": "a carrot 是单数，grow 要变成 grows。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/5s05Wordsineachunit5.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/5s02Unit5A.mp3",
+              "https://www.pep.com.cn/yyszptzy/5s06Unit5B.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。"
+          }
+        },
+        {
+          "id": "g5-upper-u6",
+          "title": "Nature and us",
+          "words": [
+            {
+              "id": "river",
+              "en": "river",
+              "zh": "河",
+              "ipa": "/ˈrɪvɚ/"
+            },
+            {
+              "id": "nature",
+              "en": "nature",
+              "zh": "自然",
+              "ipa": "/ˈneɪtʃɚ/"
+            },
+            {
+              "id": "waterfall",
+              "en": "waterfall",
+              "zh": "瀑布",
+              "ipa": "/ˈwɔtɚfɔl/"
+            },
+            {
+              "id": "forest",
+              "en": "forest",
+              "zh": "森林",
+              "ipa": "/ˈfɔrɪst/"
+            },
+            {
+              "id": "famous",
+              "en": "famous",
+              "zh": "著名的",
+              "ipa": "/ˈfeɪməs/"
+            },
+            {
+              "id": "mountain",
+              "en": "mountain",
+              "zh": "山",
+              "ipa": "/ˈmaʊntən/"
+            },
+            {
+              "id": "wind",
+              "en": "wind",
+              "zh": "风（名词）",
+              "ipa": "/wɪnd/"
+            },
+            {
+              "id": "trip",
+              "en": "trip",
+              "zh": "短途旅行；绊倒",
+              "ipa": "/trɪp/"
+            },
+            {
+              "id": "dangerous",
+              "en": "dangerous",
+              "zh": "危险的",
+              "ipa": "/ˈdeɪndʒɚəs/"
+            },
+            {
+              "id": "heavy",
+              "en": "heavy",
+              "zh": "（雨等）猛烈的；重的",
+              "ipa": "/ˈhɛvi/"
+            },
+            {
+              "id": "hotel",
+              "en": "hotel",
+              "zh": "旅馆",
+              "ipa": "/hoʊˈtɛl/"
+            },
+            {
+              "id": "close",
+              "en": "close",
+              "zh": "关闭（动词）",
+              "ipa": "/kloʊz/"
+            },
+            {
+              "id": "umbrella",
+              "en": "umbrella",
+              "zh": "雨伞",
+              "ipa": "/ʌmˈbrɛlə/"
+            },
+            {
+              "id": "raincoat",
+              "en": "raincoat",
+              "zh": "雨衣",
+              "ipa": "/ˈreɪnkoʊt/"
+            },
+            {
+              "id": "worry",
+              "en": "worry",
+              "zh": "担心",
+              "ipa": "/ˈwɝi/"
+            },
+            {
+              "id": "fine",
+              "en": "fine",
+              "zh": "晴朗的；好的",
+              "ipa": "/faɪn/"
+            },
+            {
+              "id": "fog",
+              "en": "fog",
+              "zh": "雾",
+              "ipa": "/fɔɡ/"
+            },
+            {
+              "id": "flood",
+              "en": "flood",
+              "zh": "洪水",
+              "ipa": "/flʌd/"
+            },
+            {
+              "id": "fire",
+              "en": "fire",
+              "zh": "火",
+              "ipa": "/ˈfaɪɚ/"
+            },
+            {
+              "id": "know",
+              "en": "know",
+              "zh": "知道",
+              "ipa": "/noʊ/"
+            },
+            {
+              "id": "before",
+              "en": "before",
+              "zh": "在……之前",
+              "ipa": "/bɪˈfɔr/"
+            },
+            {
+              "id": "go-hiking",
+              "en": "go hiking",
+              "zh": "去远足",
+              "ipa": "/ɡoʊ ˈhaɪkɪŋ/"
+            },
+            {
+              "id": "bring",
+              "en": "bring",
+              "zh": "带来",
+              "ipa": "/brɪŋ/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "There is a waterfall near our hotel.",
+              "zh": "我们旅馆附近有一道瀑布。",
+              "tip": "一个瀑布用 There is；near 表示在附近。"
+            },
+            {
+              "en": "There are many rivers in the forest.",
+              "zh": "森林里有许多河流。",
+              "tip": "rivers 是复数，前面用 There are。"
+            },
+            {
+              "en": "Are there any mountains behind the lake?",
+              "zh": "湖的后面有山吗？",
+              "tip": "问有没有多个事物，用 Are there any 加复数名词。"
+            },
+            {
+              "en": "Is there a shop inside the hotel?",
+              "zh": "旅馆里面有商店吗？",
+              "tip": "问有没有一个事物，用 Is there a 加单数名词。"
+            },
+            {
+              "en": "There will be strong winds tonight.",
+              "zh": "今晚将有强风。",
+              "tip": "There will be 表示将会有，will 后面用 be 原形。"
+            },
+            {
+              "en": "We cannot go hiking in heavy rain.",
+              "zh": "大雨时我们不能去远足。",
+              "tip": "cannot 后面用动词原形；heavy rain 表示大雨。"
+            },
+            {
+              "en": "It will be a fine day tomorrow.",
+              "zh": "明天将是晴朗的一天。",
+              "tip": "will be 表示将来的状态，tomorrow 表示明天。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "There ___ a waterfall in the forest.",
+              "options": [
+                "is",
+                "are",
+                "am"
+              ],
+              "answer": "is",
+              "explanation": "a waterfall 是单数，用 There is。"
+            },
+            {
+              "prompt": "___ there any rivers near the hotel?",
+              "options": [
+                "Are",
+                "Is",
+                "Am"
+              ],
+              "answer": "Are",
+              "explanation": "rivers 是复数，问有没有用 Are there。"
+            },
+            {
+              "prompt": "There will ___ heavy rain tonight.",
+              "options": [
+                "be",
+                "is",
+                "are"
+              ],
+              "answer": "be",
+              "explanation": "will 后面接 be 原形，不用 is 或 are。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/5s06Wordsineachunit6.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/5s02Unit6A.mp3",
+              "https://www.pep.com.cn/yyszptzy/5s06Unit6B.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-lower",
+      "units": [
+        {
+          "id": "g5-lower-u1",
+          "title": "Following the rules",
+          "words": [
+            {
+              "id": "must",
+              "en": "must",
+              "zh": "必须",
+              "ipa": "/mʌst/"
+            },
+            {
+              "id": "sir",
+              "en": "sir",
+              "zh": "先生",
+              "ipa": "/sɝ/"
+            },
+            {
+              "id": "inside",
+              "en": "inside",
+              "zh": "在……里面",
+              "ipa": "/ɪnˈsaɪd/"
+            },
+            {
+              "id": "scare",
+              "en": "scare",
+              "zh": "使害怕",
+              "ipa": "/skɛr/"
+            },
+            {
+              "id": "password",
+              "en": "password",
+              "zh": "密码",
+              "ipa": "/ˈpæswɝd/"
+            },
+            {
+              "id": "line",
+              "en": "line",
+              "zh": "队伍；线",
+              "ipa": "/laɪn/"
+            },
+            {
+              "id": "wait",
+              "en": "wait",
+              "zh": "等待",
+              "ipa": "/weɪt/"
+            },
+            {
+              "id": "guard",
+              "en": "guard",
+              "zh": "警卫",
+              "ipa": "/ɡɑrd/"
+            },
+            {
+              "id": "stand",
+              "en": "stand",
+              "zh": "站立",
+              "ipa": "/stænd/"
+            },
+            {
+              "id": "shout",
+              "en": "shout",
+              "zh": "喊叫",
+              "ipa": "/ʃaʊt/"
+            },
+            {
+              "id": "smoke",
+              "en": "smoke",
+              "zh": "吸烟；烟",
+              "ipa": "/smoʊk/"
+            },
+            {
+              "id": "flash",
+              "en": "flash",
+              "zh": "闪光灯；闪光",
+              "ipa": "/flæʃ/"
+            },
+            {
+              "id": "open",
+              "en": "open",
+              "zh": "打开",
+              "ipa": "/ˈoʊpən/"
+            },
+            {
+              "id": "return",
+              "en": "return",
+              "zh": "归还；返回",
+              "ipa": "/rɪˈtɝn/"
+            },
+            {
+              "id": "borrow",
+              "en": "borrow",
+              "zh": "借入",
+              "ipa": "/ˈbɑroʊ/"
+            },
+            {
+              "id": "write",
+              "en": "write",
+              "zh": "写",
+              "ipa": "/raɪt/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "You must stand behind the line.",
+              "zh": "你必须站在线后面。",
+              "tip": "must 表示必须，后面用 stand 原形。"
+            },
+            {
+              "en": "Do not shout inside the museum.",
+              "zh": "不要在博物馆里喊叫。",
+              "tip": "Do not 加动词原形，表示不要做某事。"
+            },
+            {
+              "en": "Can we borrow these books today?",
+              "zh": "我们今天可以借这些书吗？",
+              "tip": "Can we 加动词原形，询问我们是否可以做某事。"
+            },
+            {
+              "en": "You should return the books on time.",
+              "zh": "你应该按时归还这些书。",
+              "tip": "should 后面用 return 原形，on time 表示按时。"
+            },
+            {
+              "en": "Please wait for the guard.",
+              "zh": "请等待警卫。",
+              "tip": "Please 加动词原形提出请求，wait for 表示等待。"
+            },
+            {
+              "en": "No smoking in this room.",
+              "zh": "这个房间里禁止吸烟。",
+              "tip": "No 加 smoking 这样的形式，常见于禁止做某事的标志。"
+            },
+            {
+              "en": "Why must we keep quiet here?",
+              "zh": "我们为什么必须在这里保持安静？",
+              "tip": "Why 用来问原因，must 后面接 keep 原形。"
+            },
+            {
+              "en": "What is the guard doing near the gate?",
+              "zh": "警卫正在门旁边做什么？",
+              "tip": "What is…doing 用来问一个人正在做什么。"
+            },
+            {
+              "en": "He is telling visitors to stand in line.",
+              "zh": "他正在告诉游客排队。",
+              "tip": "is telling 表示正在告诉，tell someone to do 表示告诉某人做某事。"
+            },
+            {
+              "en": "Is your friend coming to the museum?",
+              "zh": "你的朋友正来博物馆吗？",
+              "tip": "Is…coming 用来问一个人是否正在过来。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "You must ___ in line.",
+              "options": [
+                "stand",
+                "stands",
+                "standing"
+              ],
+              "answer": "stand",
+              "explanation": "must 后面接动词原形 stand。"
+            },
+            {
+              "prompt": "Do not ___ inside the library.",
+              "options": [
+                "shout",
+                "shouts",
+                "shouting"
+              ],
+              "answer": "shout",
+              "explanation": "Do not 后面用动词原形，表示不要做某事。"
+            },
+            {
+              "prompt": "No ___ in this room.",
+              "options": [
+                "smoking",
+                "smoke",
+                "smokes"
+              ],
+              "answer": "smoking",
+              "explanation": "标志中的 No 后面常用动词的 ing 形式。"
+            },
+            {
+              "prompt": "What is the guard ___ near the gate?",
+              "options": [
+                "doing",
+                "do",
+                "does"
+              ],
+              "answer": "doing",
+              "explanation": "is 后面用 doing，询问一个人正在做什么。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep-5x01Word1.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep-5x01Unit1-2.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep-5x01Unit1-5.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。 第三方附录正文16词与官方音频逐项对应，末词明确为 write。 Appendix 2 第三方公开预览的本单元书面词项逐一比对。 末词书面明确为 write，消除 /raɪt/ 同音拼写疑问。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "writtenSources": [
+              "https://yy.suyang123.com/xiaoxue/wunianji/rjbp_xiace_listen9.html"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。"
+          }
+        },
+        {
+          "id": "g5-lower-u2",
+          "title": "Our community",
+          "words": [
+            {
+              "id": "along",
+              "en": "along",
+              "zh": "沿着",
+              "ipa": "/əˈlɔŋ/"
+            },
+            {
+              "id": "street",
+              "en": "street",
+              "zh": "街道",
+              "ipa": "/strit/"
+            },
+            {
+              "id": "station",
+              "en": "station",
+              "zh": "车站",
+              "ipa": "/ˈsteɪʃən/"
+            },
+            {
+              "id": "next",
+              "en": "next",
+              "zh": "下一个；接下来的",
+              "ipa": "/nɛkst/"
+            },
+            {
+              "id": "far",
+              "en": "far",
+              "zh": "远的",
+              "ipa": "/fɑr/"
+            },
+            {
+              "id": "cinema",
+              "en": "cinema",
+              "zh": "电影院",
+              "ipa": "/ˈsɪnəmə/"
+            },
+            {
+              "id": "between",
+              "en": "between",
+              "zh": "在……之间",
+              "ipa": "/bɪˈtwin/"
+            },
+            {
+              "id": "city",
+              "en": "city",
+              "zh": "城市",
+              "ipa": "/ˈsɪti/"
+            },
+            {
+              "id": "behind",
+              "en": "behind",
+              "zh": "在……后面",
+              "ipa": "/bɪˈhaɪnd/"
+            },
+            {
+              "id": "left",
+              "en": "left",
+              "zh": "左边",
+              "ipa": "/lɛft/"
+            },
+            {
+              "id": "teach",
+              "en": "teach",
+              "zh": "教",
+              "ipa": "/titʃ/"
+            },
+            {
+              "id": "litter",
+              "en": "litter",
+              "zh": "乱扔垃圾；垃圾",
+              "ipa": "/ˈlɪtɚ/"
+            },
+            {
+              "id": "recycle",
+              "en": "recycle",
+              "zh": "回收利用",
+              "ipa": "/ˌriˈsaɪkəl/"
+            },
+            {
+              "id": "taxi",
+              "en": "taxi",
+              "zh": "出租车",
+              "ipa": "/ˈtæksi/"
+            },
+            {
+              "id": "traffic",
+              "en": "traffic",
+              "zh": "交通",
+              "ipa": "/ˈtræfɪk/"
+            },
+            {
+              "id": "direct",
+              "en": "direct",
+              "zh": "指挥；指路（动词）",
+              "ipa": "/dɪˈrɛkt/"
+            },
+            {
+              "id": "artist",
+              "en": "artist",
+              "zh": "艺术家",
+              "ipa": "/ˈɑrtɪst/"
+            },
+            {
+              "id": "ms",
+              "en": "Ms",
+              "zh": "女士（不指明婚否）",
+              "ipa": "/mɪz/"
+            },
+            {
+              "id": "scientist",
+              "en": "scientist",
+              "zh": "科学家",
+              "ipa": "/ˈsaɪəntɪst/"
+            },
+            {
+              "id": "volunteer",
+              "en": "volunteer",
+              "zh": "志愿者",
+              "ipa": "/ˌvɑlənˈtɪr/"
+            },
+            {
+              "id": "live",
+              "en": "live",
+              "zh": "居住（动词）",
+              "ipa": "/lɪv/"
+            },
+            {
+              "id": "train",
+              "en": "train",
+              "zh": "训练（动词）；火车",
+              "ipa": "/treɪn/"
+            },
+            {
+              "id": "lost",
+              "en": "lost",
+              "zh": "迷路的；丢失的",
+              "ipa": "/lɔst/"
+            },
+            {
+              "id": "sign",
+              "en": "sign",
+              "zh": "标志",
+              "ipa": "/saɪn/"
+            },
+            {
+              "id": "note",
+              "en": "note",
+              "zh": "便条；笔记",
+              "ipa": "/noʊt/"
+            },
+            {
+              "id": "foreign",
+              "en": "foreign",
+              "zh": "外国的",
+              "ipa": "/ˈfɔrən/"
+            },
+            {
+              "id": "visitor",
+              "en": "visitor",
+              "zh": "游客；来访者",
+              "ipa": "/ˈvɪzɪtɚ/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "How can I get to the train station?",
+              "zh": "我怎样才能到火车站？",
+              "tip": "How can I get to 加地点，用来问路。"
+            },
+            {
+              "en": "Go along this street and turn left.",
+              "zh": "沿着这条街走，然后左转。",
+              "tip": "指路时用动词原形，turn left 表示左转。"
+            },
+            {
+              "en": "The cinema is between the park and the school.",
+              "zh": "电影院在公园和学校之间。",
+              "tip": "between A and B 表示在 A 和 B 之间。"
+            },
+            {
+              "en": "Is the station far from our school?",
+              "zh": "车站离我们学校远吗？",
+              "tip": "be far from 表示离……远，问句把 is 放到前面。"
+            },
+            {
+              "en": "What does your aunt do in the community?",
+              "zh": "你的姑姑在社区做什么工作？",
+              "tip": "What does…do 用来问某人的工作，does 后面用原形。"
+            },
+            {
+              "en": "She is an artist and teaches children to paint.",
+              "zh": "她是一位艺术家，并教孩子们画画。",
+              "tip": "artist 前用 an；she 后的 teach 要变成 teaches。"
+            },
+            {
+              "en": "Volunteers help visitors find their way.",
+              "zh": "志愿者帮助游客找到路。",
+              "tip": "help someone do 表示帮助某人做某事。"
+            },
+            {
+              "en": "What is the volunteer doing by the road?",
+              "zh": "志愿者正在路边做什么？",
+              "tip": "What is…doing 用来问一个人正在做什么。"
+            },
+            {
+              "en": "She is picking up litter.",
+              "zh": "她正在捡垃圾。",
+              "tip": "is picking up 表示正在捡起某物。"
+            },
+            {
+              "en": "What does your teacher teach?",
+              "zh": "你的老师教什么？",
+              "tip": "does 后面接 teach 原形，用来问教什么学科。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "Turn ___ at the station.",
+              "options": [
+                "left",
+                "leave",
+                "leaving"
+              ],
+              "answer": "left",
+              "explanation": "turn left 表示左转，left 在这里是方向。"
+            },
+            {
+              "prompt": "The cinema is ___ the park and the school.",
+              "options": [
+                "between",
+                "behind",
+                "along"
+              ],
+              "answer": "between",
+              "explanation": "between A and B 表示在 A 和 B 之间。",
+              "context": "电影院在公园和学校之间。"
+            },
+            {
+              "prompt": "What does she ___ in the community?",
+              "options": [
+                "do",
+                "does",
+                "doing"
+              ],
+              "answer": "do",
+              "explanation": "does 后面接 do 原形，用来问工作。"
+            },
+            {
+              "prompt": "The volunteer is ___ up litter.",
+              "options": [
+                "picking",
+                "pick",
+                "picks"
+              ],
+              "answer": "picking",
+              "explanation": "is picking up 表示正在捡起，pick 要加 ing。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep-5x02Word2.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep-5x01Unit2-2.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep-5x01Unit2-5.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。 Appendix 2 第三方公开预览的本单元书面词项逐一比对。 称谓按书面词表修正为 Ms（/mɪz/），不沿用误识别的 Miss。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://yy.suyang123.com/xiaoxue/wunianji/rjbp_xiace_listen9.html"
+            ]
+          }
+        },
+        {
+          "id": "g5-lower-u3",
+          "title": "Life in different seasons",
+          "words": [
+            {
+              "id": "january",
+              "en": "January",
+              "zh": "一月",
+              "ipa": "/ˈdʒænjuɛri/"
+            },
+            {
+              "id": "february",
+              "en": "February",
+              "zh": "二月",
+              "ipa": "/ˈfɛbruɛri/"
+            },
+            {
+              "id": "skate",
+              "en": "skate",
+              "zh": "滑冰",
+              "ipa": "/skeɪt/"
+            },
+            {
+              "id": "holiday",
+              "en": "holiday",
+              "zh": "假日",
+              "ipa": "/ˈhɑlədeɪ/"
+            },
+            {
+              "id": "march",
+              "en": "March",
+              "zh": "三月",
+              "ipa": "/mɑrtʃ/"
+            },
+            {
+              "id": "april",
+              "en": "April",
+              "zh": "四月",
+              "ipa": "/ˈeɪprəl/"
+            },
+            {
+              "id": "may",
+              "en": "may",
+              "zh": "可能；可以",
+              "ipa": "/meɪ/"
+            },
+            {
+              "id": "june",
+              "en": "June",
+              "zh": "六月",
+              "ipa": "/dʒun/"
+            },
+            {
+              "id": "party",
+              "en": "party",
+              "zh": "聚会",
+              "ipa": "/ˈpɑrti/"
+            },
+            {
+              "id": "celebrate",
+              "en": "celebrate",
+              "zh": "庆祝",
+              "ipa": "/ˈsɛləbreɪt/"
+            },
+            {
+              "id": "december",
+              "en": "December",
+              "zh": "十二月",
+              "ipa": "/dɪˈsɛmbɚ/"
+            },
+            {
+              "id": "christmas",
+              "en": "Christmas",
+              "zh": "圣诞节",
+              "ipa": "/ˈkrɪsməs/"
+            },
+            {
+              "id": "turkey",
+              "en": "turkey",
+              "zh": "火鸡",
+              "ipa": "/ˈtɚki/"
+            },
+            {
+              "id": "july",
+              "en": "July",
+              "zh": "七月",
+              "ipa": "/dʒuˈlaɪ/"
+            },
+            {
+              "id": "august",
+              "en": "August",
+              "zh": "八月",
+              "ipa": "/ˈɔɡəst/"
+            },
+            {
+              "id": "september",
+              "en": "September",
+              "zh": "九月",
+              "ipa": "/sɛpˈtɛmbɚ/"
+            },
+            {
+              "id": "october",
+              "en": "October",
+              "zh": "十月",
+              "ipa": "/ɑkˈtoʊbɚ/"
+            },
+            {
+              "id": "november",
+              "en": "November",
+              "zh": "十一月",
+              "ipa": "/noʊˈvɛmbɚ/"
+            },
+            {
+              "id": "country",
+              "en": "country",
+              "zh": "国家",
+              "ipa": "/ˈkʌntri/"
+            },
+            {
+              "id": "sit",
+              "en": "sit",
+              "zh": "坐",
+              "ipa": "/sɪt/"
+            },
+            {
+              "id": "beside",
+              "en": "beside",
+              "zh": "在……旁边",
+              "ipa": "/bɪˈsaɪd/"
+            },
+            {
+              "id": "west",
+              "en": "west",
+              "zh": "西方；西部",
+              "ipa": "/wɛst/"
+            },
+            {
+              "id": "cup",
+              "en": "cup",
+              "zh": "杯子",
+              "ipa": "/kʌp/"
+            },
+            {
+              "id": "sunshine",
+              "en": "sunshine",
+              "zh": "阳光",
+              "ipa": "/ˈsʌnʃaɪn/"
+            },
+            {
+              "id": "catch",
+              "en": "catch",
+              "zh": "抓住",
+              "ipa": "/kætʃ/"
+            },
+            {
+              "id": "ago",
+              "en": "ago",
+              "zh": "以前",
+              "ipa": "/əˈɡoʊ/"
+            },
+            {
+              "id": "ice",
+              "en": "ice",
+              "zh": "冰",
+              "ipa": "/aɪs/"
+            },
+            {
+              "id": "labour-day",
+              "en": "Labour Day",
+              "zh": "劳动节",
+              "ipa": "/ˈleɪbɚ deɪ/"
+            },
+            {
+              "id": "dragon-boat-festival",
+              "en": "Dragon Boat Festival",
+              "zh": "端午节",
+              "ipa": "/ˈdræɡən boʊt ˈfɛstɪvəl/"
+            },
+            {
+              "id": "cpc-founding-day",
+              "en": "CPC Founding Day",
+              "zh": "中国共产党成立纪念日",
+              "ipa": "/ˌsi pi ˈsi ˈfaʊndɪŋ deɪ/"
+            },
+            {
+              "id": "pla-day",
+              "en": "PLA Day",
+              "zh": "中国人民解放军建军节",
+              "ipa": "/ˌpi ɛl ˈeɪ deɪ/"
+            },
+            {
+              "id": "national-day",
+              "en": "National Day",
+              "zh": "国庆节",
+              "ipa": "/ˈnæʃənəl deɪ/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "Which season do you like best?",
+              "zh": "你最喜欢哪个季节？",
+              "tip": "Which 用来问哪一个，like best 表示最喜欢。"
+            },
+            {
+              "en": "I like winter because I can skate.",
+              "zh": "我喜欢冬天，因为我可以滑冰。",
+              "tip": "because 引出原因，can 后面用 skate 原形。"
+            },
+            {
+              "en": "When is your birthday party?",
+              "zh": "你的生日聚会是什么时候？",
+              "tip": "When is 加活动，用来问活动时间。"
+            },
+            {
+              "en": "Our party is in September.",
+              "zh": "我们的聚会在九月。",
+              "tip": "月份前用 in，月份名称首字母大写。"
+            },
+            {
+              "en": "What do you do to celebrate National Day?",
+              "zh": "你做什么来庆祝国庆节？",
+              "tip": "to celebrate 表示为了庆祝，do 后面用动词原形。"
+            },
+            {
+              "en": "We sit beside the lake in summer.",
+              "zh": "夏天我们坐在湖边。",
+              "tip": "beside 表示在旁边，季节前用 in。",
+              "acceptedAnswers": [
+                "In summer we sit beside the lake."
+              ]
+            },
+            {
+              "en": "The seasons are different in the two countries.",
+              "zh": "这两个国家的季节不同。",
+              "tip": "seasons 是复数，后面用 are，different 表示不同的。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "Our party is ___ September.",
+              "options": [
+                "in",
+                "on",
+                "at"
+              ],
+              "answer": "in",
+              "explanation": "月份前用 in，in September 表示在九月。"
+            },
+            {
+              "prompt": "I like winter because I can ___.",
+              "options": [
+                "skate",
+                "skates",
+                "skating"
+              ],
+              "answer": "skate",
+              "explanation": "can 后面接动词原形 skate。"
+            },
+            {
+              "prompt": "___ is your birthday party? It is in June.",
+              "options": [
+                "When",
+                "Where",
+                "Who"
+              ],
+              "answer": "When",
+              "explanation": "答句给出月份，问时间用 When。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep-5x03Word3.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep-5x01Unit3-2.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep-5x01Unit3-5.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。 Appendix 2 第三方公开预览的本单元书面词项逐一比对。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://yy.suyang123.com/xiaoxue/wunianji/rjbp_xiace_listen9.html"
+            ]
+          }
+        },
+        {
+          "id": "g5-lower-u4",
+          "title": "My hometown",
+          "words": [
+            {
+              "id": "hometown",
+              "en": "hometown",
+              "zh": "家乡",
+              "ipa": "/ˈhoʊmtaʊn/"
+            },
+            {
+              "id": "its",
+              "en": "its",
+              "zh": "它的",
+              "ipa": "/ɪts/"
+            },
+            {
+              "id": "common",
+              "en": "common",
+              "zh": "常见的；共同的",
+              "ipa": "/ˈkɑmən/"
+            },
+            {
+              "id": "beach",
+              "en": "beach",
+              "zh": "海滩",
+              "ipa": "/bitʃ/"
+            },
+            {
+              "id": "desert",
+              "en": "desert",
+              "zh": "沙漠（名词）",
+              "ipa": "/ˈdɛzɚt/"
+            },
+            {
+              "id": "grassland",
+              "en": "grassland",
+              "zh": "草原",
+              "ipa": "/ˈɡræslænd/"
+            },
+            {
+              "id": "special",
+              "en": "special",
+              "zh": "特别的",
+              "ipa": "/ˈspɛʃəl/"
+            },
+            {
+              "id": "wild",
+              "en": "wild",
+              "zh": "野生的",
+              "ipa": "/waɪld/"
+            },
+            {
+              "id": "kangaroo",
+              "en": "kangaroo",
+              "zh": "袋鼠",
+              "ipa": "/ˌkæŋɡəˈru/"
+            },
+            {
+              "id": "koala",
+              "en": "koala",
+              "zh": "考拉",
+              "ipa": "/koʊˈɑlə/"
+            },
+            {
+              "id": "wish",
+              "en": "wish",
+              "zh": "希望",
+              "ipa": "/wɪʃ/"
+            },
+            {
+              "id": "could",
+              "en": "could",
+              "zh": "能；可以（can 的过去式）",
+              "ipa": "/kʊd/"
+            },
+            {
+              "id": "high",
+              "en": "high",
+              "zh": "高的",
+              "ipa": "/haɪ/"
+            },
+            {
+              "id": "island",
+              "en": "island",
+              "zh": "岛",
+              "ipa": "/ˈaɪlənd/"
+            },
+            {
+              "id": "travel",
+              "en": "travel",
+              "zh": "旅行",
+              "ipa": "/ˈtrævəl/"
+            },
+            {
+              "id": "feel-like",
+              "en": "feel like",
+              "zh": "感觉像；想要",
+              "ipa": "/fil laɪk/"
+            },
+            {
+              "id": "middle",
+              "en": "middle",
+              "zh": "中间",
+              "ipa": "/ˈmɪdəl/"
+            },
+            {
+              "id": "painting",
+              "en": "painting",
+              "zh": "绘画；画作",
+              "ipa": "/ˈpeɪntɪŋ/"
+            },
+            {
+              "id": "pyramid",
+              "en": "pyramid",
+              "zh": "金字塔",
+              "ipa": "/ˈpɪrəmɪd/"
+            },
+            {
+              "id": "ride",
+              "en": "ride",
+              "zh": "骑；乘坐",
+              "ipa": "/raɪd/"
+            },
+            {
+              "id": "camel",
+              "en": "camel",
+              "zh": "骆驼",
+              "ipa": "/ˈkæməl/"
+            },
+            {
+              "id": "even",
+              "en": "even",
+              "zh": "甚至",
+              "ipa": "/ˈivən/"
+            },
+            {
+              "id": "confucius",
+              "en": "Confucius",
+              "zh": "孔子",
+              "ipa": "/kənˈfjuʃəs/"
+            },
+            {
+              "id": "beijing-opera",
+              "en": "Beijing Opera",
+              "zh": "京剧",
+              "ipa": "/ˌbeɪˈdʒɪŋ ˈɑpərə/"
+            },
+            {
+              "id": "mount-taishan",
+              "en": "Mount Taishan",
+              "zh": "泰山",
+              "ipa": "/maʊnt ˌtaɪˈʃɑn/"
+            },
+            {
+              "id": "india",
+              "en": "India",
+              "zh": "印度",
+              "ipa": "/ˈɪndiə/"
+            },
+            {
+              "id": "italy",
+              "en": "Italy",
+              "zh": "意大利",
+              "ipa": "/ˈɪtəli/"
+            },
+            {
+              "id": "britain",
+              "en": "Britain",
+              "zh": "英国",
+              "ipa": "/ˈbrɪtən/"
+            },
+            {
+              "id": "cairo",
+              "en": "Cairo",
+              "zh": "开罗",
+              "ipa": "/ˈkaɪroʊ/"
+            },
+            {
+              "id": "hawaii",
+              "en": "Hawaii",
+              "zh": "夏威夷",
+              "ipa": "/həˈwaɪi/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "What is special about your hometown?",
+              "zh": "你的家乡有什么特别的地方？",
+              "tip": "What is special about 加地点，询问它特别在哪里。"
+            },
+            {
+              "en": "My hometown is famous for its paintings.",
+              "zh": "我的家乡以它的画作闻名。",
+              "tip": "be famous for 表示因……闻名，its 表示它的。"
+            },
+            {
+              "en": "Are there any wild animals on the grassland?",
+              "zh": "草原上有野生动物吗？",
+              "tip": "Are there any 加复数名词，询问有没有。"
+            },
+            {
+              "en": "I wish I could visit the pyramids.",
+              "zh": "我希望自己能参观金字塔。",
+              "tip": "I wish I could 加动词原形，表达愿望。"
+            },
+            {
+              "en": "It feels like a quiet island.",
+              "zh": "这里感觉像一座安静的小岛。",
+              "tip": "feel like 后接名词，it 后面的 feel 要加 s。"
+            },
+            {
+              "en": "You can ride a camel in the desert.",
+              "zh": "你可以在沙漠里骑骆驼。",
+              "tip": "can 后面用 ride 原形，in the desert 表示在沙漠里。"
+            },
+            {
+              "en": "How high is that mountain?",
+              "zh": "那座山有多高？",
+              "tip": "How high 用来询问高度。"
+            },
+            {
+              "en": "What makes your hometown special?",
+              "zh": "什么让你的家乡与众不同？",
+              "tip": "What makes…special 用来问某地有哪些特别之处。"
+            },
+            {
+              "en": "Its rivers and old buildings make it special.",
+              "zh": "它的河流和古老的建筑让它很特别。",
+              "tip": "make it special 表示让它特别，its 表示它的。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "My hometown is famous ___ its beaches.",
+              "options": [
+                "for",
+                "at",
+                "to"
+              ],
+              "answer": "for",
+              "explanation": "be famous for 表示因某物或某事闻名。"
+            },
+            {
+              "prompt": "I wish I could ___ India.",
+              "options": [
+                "visit",
+                "visits",
+                "visiting"
+              ],
+              "answer": "visit",
+              "explanation": "could 后面接动词原形 visit。"
+            },
+            {
+              "prompt": "This island ___ like a quiet garden.",
+              "options": [
+                "feels",
+                "feel",
+                "feeling"
+              ],
+              "answer": "feels",
+              "explanation": "This island 是单数，feel 要加 s。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep-5x04Word4.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep-5x01Unit4-2.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep-5x01Unit4-4.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。"
+          }
+        },
+        {
+          "id": "g5-lower-u5",
+          "title": "Travelling around",
+          "words": [
+            {
+              "id": "early",
+              "en": "early",
+              "zh": "早；提前",
+              "ipa": "/ˈɝli/"
+            },
+            {
+              "id": "underground",
+              "en": "underground",
+              "zh": "地铁；在地下",
+              "ipa": "/ˈʌndɚɡraʊnd/"
+            },
+            {
+              "id": "bike",
+              "en": "bike",
+              "zh": "自行车",
+              "ipa": "/baɪk/"
+            },
+            {
+              "id": "foot",
+              "en": "foot",
+              "zh": "脚（单数）",
+              "ipa": "/fʊt/"
+            },
+            {
+              "id": "feet",
+              "en": "feet",
+              "zh": "脚（复数）",
+              "ipa": "/fit/"
+            },
+            {
+              "id": "on-foot",
+              "en": "on foot",
+              "zh": "步行",
+              "ipa": "/ɑn fʊt/"
+            },
+            {
+              "id": "plane",
+              "en": "plane",
+              "zh": "飞机",
+              "ipa": "/pleɪn/"
+            },
+            {
+              "id": "ship",
+              "en": "ship",
+              "zh": "船",
+              "ipa": "/ʃɪp/"
+            },
+            {
+              "id": "hurt",
+              "en": "hurt",
+              "zh": "伤害；疼痛",
+              "ipa": "/hɚt/"
+            },
+            {
+              "id": "environment",
+              "en": "environment",
+              "zh": "环境",
+              "ipa": "/ɪnˈvaɪrənmənt/"
+            },
+            {
+              "id": "tip",
+              "en": "tip",
+              "zh": "提示；小建议",
+              "ipa": "/tɪp/"
+            },
+            {
+              "id": "health",
+              "en": "health",
+              "zh": "健康",
+              "ipa": "/hɛlθ/"
+            },
+            {
+              "id": "carry",
+              "en": "carry",
+              "zh": "携带",
+              "ipa": "/ˈkæri/"
+            },
+            {
+              "id": "finally",
+              "en": "finally",
+              "zh": "最后",
+              "ipa": "/ˈfaɪnəli/"
+            },
+            {
+              "id": "suggest",
+              "en": "suggest",
+              "zh": "建议",
+              "ipa": "/səˈdʒɛst/"
+            },
+            {
+              "id": "every-day",
+              "en": "every day",
+              "zh": "每天",
+              "ipa": "/ˈɛvɚi deɪ/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "How do you usually travel to school?",
+              "zh": "你通常怎样去学校？",
+              "tip": "How do you 加动词原形，询问通常采用什么方式。"
+            },
+            {
+              "en": "I go to school by underground.",
+              "zh": "我乘地铁去学校。",
+              "tip": "by 加交通工具，不加 a 或 the。"
+            },
+            {
+              "en": "My sister goes to school on foot.",
+              "zh": "我的姐姐步行去学校。",
+              "tip": "on foot 表示步行，my sister 后面用 goes。"
+            },
+            {
+              "en": "Why do you travel by bike?",
+              "zh": "你为什么骑自行车出行？",
+              "tip": "Why 用来问原因，by bike 表示骑自行车。"
+            },
+            {
+              "en": "Walking is good for our health.",
+              "zh": "步行对我们的健康有益。",
+              "tip": "动名词 Walking 可以作主语，be good for 表示对……有益。"
+            },
+            {
+              "en": "We should carry our own water bottles.",
+              "zh": "我们应该带上自己的水瓶。",
+              "tip": "should 后面用 carry 原形，our own 表示我们自己的。"
+            },
+            {
+              "en": "I suggest going by train this time.",
+              "zh": "我建议这次坐火车去。",
+              "tip": "suggest 后面用 going 这样的形式提出建议。"
+            },
+            {
+              "en": "Where are you going after school?",
+              "zh": "放学后你准备去哪里？",
+              "tip": "Where are you going 用来询问接下来要去的地方。"
+            },
+            {
+              "en": "Are you going to the cinema by bus?",
+              "zh": "你准备乘公交车去电影院吗？",
+              "tip": "Are you going 用来询问计划，by bus 表示乘公交车。"
+            },
+            {
+              "en": "I am going to watch a film with my grandparents.",
+              "zh": "我打算和祖父母一起看电影。",
+              "tip": "am going to 后面接 watch 原形，表示计划。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "My sister goes to school ___ foot.",
+              "options": [
+                "on",
+                "by",
+                "in"
+              ],
+              "answer": "on",
+              "explanation": "步行用 on foot，不用 by foot。"
+            },
+            {
+              "prompt": "We travel ___ train.",
+              "options": [
+                "by",
+                "with",
+                "at"
+              ],
+              "answer": "by",
+              "explanation": "by train 表示乘火车，by 后直接接交通工具。"
+            },
+            {
+              "prompt": "Walking is good ___ our health.",
+              "options": [
+                "for",
+                "to",
+                "at"
+              ],
+              "answer": "for",
+              "explanation": "be good for 表示对……有益。"
+            },
+            {
+              "prompt": "She is going to ___ a film.",
+              "options": [
+                "watch",
+                "watches",
+                "watching"
+              ],
+              "answer": "watch",
+              "explanation": "is going to 后面接动词原形，表示接下来的计划。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep-5x05Word5.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep-5x01Unit5-2.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep-5x01Unit5-5.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。"
+          }
+        },
+        {
+          "id": "g5-lower-u6",
+          "title": "Making a travel plan",
+          "words": [
+            {
+              "id": "internet",
+              "en": "Internet",
+              "zh": "互联网",
+              "ipa": "/ˈɪntɚnɛt/"
+            },
+            {
+              "id": "seafood",
+              "en": "seafood",
+              "zh": "海鲜",
+              "ipa": "/ˈsiˌfud/"
+            },
+            {
+              "id": "maybe",
+              "en": "maybe",
+              "zh": "也许",
+              "ipa": "/ˈmeɪbi/"
+            },
+            {
+              "id": "join",
+              "en": "join",
+              "zh": "加入",
+              "ipa": "/dʒɔɪn/"
+            },
+            {
+              "id": "hill",
+              "en": "hill",
+              "zh": "小山",
+              "ipa": "/hɪl/"
+            },
+            {
+              "id": "explore",
+              "en": "explore",
+              "zh": "探索",
+              "ipa": "/ɪkˈsplɔr/"
+            },
+            {
+              "id": "culture",
+              "en": "culture",
+              "zh": "文化",
+              "ipa": "/ˈkʌltʃɚ/"
+            },
+            {
+              "id": "hotpot",
+              "en": "hotpot",
+              "zh": "火锅",
+              "ipa": "/ˈhɑtpɑt/"
+            },
+            {
+              "id": "tour",
+              "en": "tour",
+              "zh": "游览；旅行",
+              "ipa": "/tʊr/"
+            },
+            {
+              "id": "local",
+              "en": "local",
+              "zh": "当地的",
+              "ipa": "/ˈloʊkəl/"
+            },
+            {
+              "id": "history",
+              "en": "history",
+              "zh": "历史",
+              "ipa": "/ˈhɪstɚi/"
+            },
+            {
+              "id": "plan",
+              "en": "plan",
+              "zh": "计划",
+              "ipa": "/plæn/"
+            },
+            {
+              "id": "app",
+              "en": "app",
+              "zh": "应用程序",
+              "ipa": "/æp/"
+            },
+            {
+              "id": "information",
+              "en": "information",
+              "zh": "信息",
+              "ipa": "/ˌɪnfɚˈmeɪʃən/"
+            },
+            {
+              "id": "blog",
+              "en": "blog",
+              "zh": "博客",
+              "ipa": "/blɔɡ/"
+            },
+            {
+              "id": "magazine",
+              "en": "magazine",
+              "zh": "杂志",
+              "ipa": "/ˈmæɡəzin/"
+            },
+            {
+              "id": "northeast",
+              "en": "northeast",
+              "zh": "东北",
+              "ipa": "/ˌnɔrθˈist/"
+            },
+            {
+              "id": "building",
+              "en": "building",
+              "zh": "建筑物",
+              "ipa": "/ˈbɪldɪŋ/"
+            },
+            {
+              "id": "palace",
+              "en": "palace",
+              "zh": "宫殿",
+              "ipa": "/ˈpæləs/"
+            },
+            {
+              "id": "stone",
+              "en": "stone",
+              "zh": "石头",
+              "ipa": "/stoʊn/"
+            },
+            {
+              "id": "last",
+              "en": "last",
+              "zh": "持续（动词）；上一个",
+              "ipa": "/læst/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "Where are you going for your holiday?",
+              "zh": "你准备去哪里度假？",
+              "tip": "be going to 可以表达计划，这里的 going 表示准备去。"
+            },
+            {
+              "en": "We are going to explore the hills.",
+              "zh": "我们打算探索那些小山。",
+              "tip": "be going to 后面接动词原形，表示计划做什么。"
+            },
+            {
+              "en": "How long are you going to stay there?",
+              "zh": "你打算在那里待多久？",
+              "tip": "How long 用来问时长，stay 表示停留。"
+            },
+            {
+              "en": "We are going to stay for five days.",
+              "zh": "我们打算待五天。",
+              "tip": "for five days 表示持续五天，数字后用 days 复数。"
+            },
+            {
+              "en": "What are you going to do on the tour?",
+              "zh": "你打算在游览时做什么？",
+              "tip": "What are you going to do 用来询问活动计划。"
+            },
+            {
+              "en": "I will use an app to find local information.",
+              "zh": "我会用应用程序查找当地的信息。",
+              "tip": "will 后面用 use 原形，to find 表示查找的目的。"
+            },
+            {
+              "en": "We can learn about local history in the palace.",
+              "zh": "我们可以在宫殿里了解当地的历史。",
+              "tip": "learn about 表示了解，can 后面用原形。"
+            },
+            {
+              "en": "First, we need to choose a place to visit.",
+              "zh": "首先，我们需要选择一个要游览的地方。",
+              "tip": "First 表示首先，need to 后面接 choose 原形。"
+            },
+            {
+              "en": "Then we should find out how to get there.",
+              "zh": "然后我们应该了解怎样到那里。",
+              "tip": "Then 表示然后，how to get there 表示如何到那里。"
+            },
+            {
+              "en": "Next, I will look for a hotel online.",
+              "zh": "接着，我会在网上找旅馆。",
+              "tip": "Next 表示接着，look for 表示寻找。"
+            },
+            {
+              "en": "Finally, we should check the weather.",
+              "zh": "最后，我们应该查看天气。",
+              "tip": "Finally 表示最后，should 后面接 check 原形。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "We are going to ___ the hills.",
+              "options": [
+                "explore",
+                "explores",
+                "exploring"
+              ],
+              "answer": "explore",
+              "explanation": "be going to 后面接动词原形，表示计划。"
+            },
+            {
+              "prompt": "We will stay there ___ five days.",
+              "options": [
+                "for",
+                "on",
+                "at"
+              ],
+              "answer": "for",
+              "explanation": "for 加一段时间，表示持续多久。"
+            },
+            {
+              "prompt": "She ___ going to visit the palace.",
+              "options": [
+                "is",
+                "are",
+                "am"
+              ],
+              "answer": "is",
+              "explanation": "she 与 is 搭配，is going to 表示她打算。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep-5x06Word6.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep-5x02Unit6-2.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep-5x04Unit6-4.mp3"
+            ],
+            "basis": "官方 Words in each unit 整段词表音频逐项核对；动词原形、过去式和不规则复数分项练习。A/B Let’s talk 或 Useful expressions 的重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "g6-upper",
+      "units": [
+        {
+          "id": "g6-upper-u1",
+          "title": "Amazing places",
+          "words": [
+            {
+              "id": "was",
+              "en": "was",
+              "zh": "是；处于（am/is 的过去式）",
+              "ipa": "/wʌz/"
+            },
+            {
+              "id": "climb",
+              "en": "climb",
+              "zh": "攀登",
+              "ipa": "/klaɪm/"
+            },
+            {
+              "id": "kilometre",
+              "en": "kilometre",
+              "zh": "千米；公里",
+              "ipa": "/kɪˈlɑmətɚ/"
+            },
+            {
+              "id": "gingerbread-house",
+              "en": "gingerbread house",
+              "zh": "姜饼屋",
+              "ipa": "/ˈdʒɪndʒɚbrɛd haʊs/"
+            },
+            {
+              "id": "send",
+              "en": "send",
+              "zh": "发送",
+              "ipa": "/sɛnd/"
+            },
+            {
+              "id": "go",
+              "en": "go",
+              "zh": "去（原形）",
+              "ipa": "/ɡoʊ/"
+            },
+            {
+              "id": "went",
+              "en": "went",
+              "zh": "去（go 的过去式）",
+              "ipa": "/wɛnt/"
+            },
+            {
+              "id": "thousand",
+              "en": "thousand",
+              "zh": "一千",
+              "ipa": "/ˈθaʊzənd/"
+            },
+            {
+              "id": "clay",
+              "en": "clay",
+              "zh": "黏土",
+              "ipa": "/kleɪ/"
+            },
+            {
+              "id": "see",
+              "en": "see",
+              "zh": "看见（原形）",
+              "ipa": "/si/"
+            },
+            {
+              "id": "saw",
+              "en": "saw",
+              "zh": "看见（see 的过去式）",
+              "ipa": "/sɔ/"
+            },
+            {
+              "id": "village",
+              "en": "village",
+              "zh": "村庄",
+              "ipa": "/ˈvɪlɪdʒ/"
+            },
+            {
+              "id": "eat",
+              "en": "eat",
+              "zh": "吃（原形）",
+              "ipa": "/it/"
+            },
+            {
+              "id": "ate",
+              "en": "ate",
+              "zh": "吃（eat 的过去式）",
+              "ipa": "/eɪt/"
+            },
+            {
+              "id": "dry",
+              "en": "dry",
+              "zh": "干的",
+              "ipa": "/draɪ/"
+            },
+            {
+              "id": "take",
+              "en": "take",
+              "zh": "拿；进行（原形）",
+              "ipa": "/teɪk/"
+            },
+            {
+              "id": "took",
+              "en": "took",
+              "zh": "拿；进行（take 的过去式）",
+              "ipa": "/tʊk/"
+            },
+            {
+              "id": "view",
+              "en": "view",
+              "zh": "景色",
+              "ipa": "/vju/"
+            },
+            {
+              "id": "inspiring",
+              "en": "inspiring",
+              "zh": "鼓舞人心的",
+              "ipa": "/ɪnˈspaɪrɪŋ/"
+            },
+            {
+              "id": "bamboo",
+              "en": "bamboo",
+              "zh": "竹子",
+              "ipa": "/bæmˈbu/"
+            },
+            {
+              "id": "pumpkin",
+              "en": "pumpkin",
+              "zh": "南瓜",
+              "ipa": "/ˈpʌmpkɪn/"
+            },
+            {
+              "id": "restaurant",
+              "en": "restaurant",
+              "zh": "餐馆",
+              "ipa": "/ˈrɛstərɑnt/"
+            },
+            {
+              "id": "airport",
+              "en": "airport",
+              "zh": "机场",
+              "ipa": "/ˈɛrpɔrt/"
+            },
+            {
+              "id": "new-zealand",
+              "en": "New Zealand",
+              "zh": "新西兰",
+              "ipa": "/nu ˈzilənd/"
+            },
+            {
+              "id": "hong-kong-zhuhai-macao-bridge",
+              "en": "Hong Kong-Zhuhai-Macao Bridge",
+              "zh": "港珠澳大桥",
+              "ipa": "/ˌhɑŋ ˈkɑŋ ˌdʒuˈhaɪ məˈkaʊ brɪdʒ/"
+            },
+            {
+              "id": "paris",
+              "en": "Paris",
+              "zh": "巴黎",
+              "ipa": "/ˈpɛrɪs/"
+            },
+            {
+              "id": "eiffel-tower",
+              "en": "Eiffel Tower",
+              "zh": "埃菲尔铁塔",
+              "ipa": "/ˈaɪfəl taʊɚ/"
+            },
+            {
+              "id": "terracotta-warriors",
+              "en": "Terracotta Warriors",
+              "zh": "兵马俑",
+              "ipa": "/ˌtɛrəˈkɑtə ˈwɔriɚz/"
+            },
+            {
+              "id": "jinggangshan-revolution-museum",
+              "en": "Jinggangshan Revolution Museum",
+              "zh": "井冈山革命博物馆",
+              "ipa": "/ˌdʒɪŋˌɡɑŋˈʃɑn ˌrɛvəˈluʃən mjuˈziəm/"
+            },
+            {
+              "id": "the-red-army",
+              "en": "the Red Army",
+              "zh": "红军",
+              "ipa": "/ðə rɛd ˈɑrmi/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "How was your trip to the village?",
+              "zh": "你的村庄之旅怎么样？",
+              "tip": "询问过去的旅行用 How was，was 是 is 的过去式。"
+            },
+            {
+              "en": "I climbed a mountain last Saturday.",
+              "zh": "我上星期六爬了一座山。",
+              "tip": "last Saturday 表示过去，climb 要变成 climbed。",
+              "acceptedAnswers": [
+                "Last Saturday I climbed a mountain."
+              ]
+            },
+            {
+              "en": "What did you see at the museum?",
+              "zh": "你在博物馆里看到了什么？",
+              "tip": "did 后面接 see 原形，不用 saw。"
+            },
+            {
+              "en": "We saw clay warriors and took pictures.",
+              "zh": "我们看到了陶制武士，还拍了照。",
+              "tip": "过去发生的事用 saw 和 took，分别来自 see 和 take。"
+            },
+            {
+              "en": "Where did you go over the holiday?",
+              "zh": "假期里你去了哪里？",
+              "tip": "Where did you go 用来问过去去了哪里。"
+            },
+            {
+              "en": "I went to a village and ate pumpkin soup.",
+              "zh": "我去了一个村庄，还喝了南瓜汤。",
+              "tip": "went 是 go 的过去式，ate 是 eat 的过去式。"
+            },
+            {
+              "en": "That building looks like a gingerbread house.",
+              "zh": "那栋建筑看起来像一座姜饼屋。",
+              "tip": "look like 表示看起来像，单数 building 后用 looks。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "I ___ to the village last Sunday.",
+              "options": [
+                "went",
+                "go",
+                "goes"
+              ],
+              "answer": "went",
+              "explanation": "last Sunday 是过去时间，go 要用过去式 went。"
+            },
+            {
+              "prompt": "What did you ___ at the museum?",
+              "options": [
+                "see",
+                "saw",
+                "seeing"
+              ],
+              "answer": "see",
+              "explanation": "did 后面接 see 原形，不用 saw。"
+            },
+            {
+              "prompt": "My trip ___ wonderful.",
+              "options": [
+                "was",
+                "were",
+                "am"
+              ],
+              "answer": "was",
+              "explanation": "trip 是单数，说过去的状态用 was。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep6s01WordsUnit1.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep6s02Unit1ALet'stalk.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep6s04Unit1BLet'stalk.mp3"
+            ],
+            "basis": "官方 Words in each unit 完整音频逐项核对，并与同版六单元书面词表共147个基础词逐项比对；书面表中的过去式和 fewer 分项练习。A/B Let’s talk 重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://zy.21cnjy.com/26251268",
+              "https://zy.21cnjy.com/26146921?f=beikeyi"
+            ]
+          }
+        },
+        {
+          "id": "g6-upper-u2",
+          "title": "Getting together",
+          "words": [
+            {
+              "id": "paste",
+              "en": "paste",
+              "zh": "粘贴",
+              "ipa": "/peɪst/"
+            },
+            {
+              "id": "dress",
+              "en": "dress",
+              "zh": "穿衣服",
+              "ipa": "/drɛs/"
+            },
+            {
+              "id": "gala",
+              "en": "gala",
+              "zh": "庆典；演出",
+              "ipa": "/ˈɡælə/"
+            },
+            {
+              "id": "count-down",
+              "en": "count down",
+              "zh": "倒计时",
+              "ipa": "/kaʊnt daʊn/"
+            },
+            {
+              "id": "marathon",
+              "en": "marathon",
+              "zh": "马拉松赛跑",
+              "ipa": "/ˈmærəθɑn/"
+            },
+            {
+              "id": "as",
+              "en": "as",
+              "zh": "作为",
+              "ipa": "/æz/"
+            },
+            {
+              "id": "race",
+              "en": "race",
+              "zh": "赛跑",
+              "ipa": "/reɪs/"
+            },
+            {
+              "id": "run",
+              "en": "run",
+              "zh": "跑；使运行",
+              "ipa": "/rʌn/"
+            },
+            {
+              "id": "ran",
+              "en": "ran",
+              "zh": "跑（run 的过去式）",
+              "ipa": "/ræn/"
+            },
+            {
+              "id": "cheer",
+              "en": "cheer",
+              "zh": "欢呼；加油",
+              "ipa": "/tʃɪr/"
+            },
+            {
+              "id": "book-fair",
+              "en": "book fair",
+              "zh": "书市",
+              "ipa": "/bʊk fɛr/"
+            },
+            {
+              "id": "writer",
+              "en": "writer",
+              "zh": "作家",
+              "ipa": "/ˈraɪtɚ/"
+            },
+            {
+              "id": "read",
+              "en": "read",
+              "zh": "阅读（原形）",
+              "ipa": "/rid/"
+            },
+            {
+              "id": "read-past",
+              "en": "read",
+              "zh": "阅读（read 的过去式）",
+              "ipa": "/rɛd/"
+            },
+            {
+              "id": "make",
+              "en": "make",
+              "zh": "制作",
+              "ipa": "/meɪk/"
+            },
+            {
+              "id": "made",
+              "en": "made",
+              "zh": "制作（make 的过去式）",
+              "ipa": "/meɪd/"
+            },
+            {
+              "id": "sing",
+              "en": "sing",
+              "zh": "唱歌",
+              "ipa": "/sɪŋ/"
+            },
+            {
+              "id": "sang",
+              "en": "sang",
+              "zh": "唱歌（sing 的过去式）",
+              "ipa": "/sæŋ/"
+            },
+            {
+              "id": "wear",
+              "en": "wear",
+              "zh": "穿；戴",
+              "ipa": "/wɛr/"
+            },
+            {
+              "id": "wore",
+              "en": "wore",
+              "zh": "穿；戴（wear 的过去式）",
+              "ipa": "/wɔr/"
+            },
+            {
+              "id": "yesterday",
+              "en": "yesterday",
+              "zh": "昨天",
+              "ipa": "/ˈjɛstɚdeɪ/"
+            },
+            {
+              "id": "notice",
+              "en": "notice",
+              "zh": "通知",
+              "ipa": "/ˈnoʊtɪs/"
+            },
+            {
+              "id": "wake",
+              "en": "wake",
+              "zh": "醒来",
+              "ipa": "/weɪk/"
+            },
+            {
+              "id": "woke",
+              "en": "woke",
+              "zh": "醒来（wake 的过去式）",
+              "ipa": "/woʊk/"
+            },
+            {
+              "id": "later",
+              "en": "later",
+              "zh": "后来",
+              "ipa": "/ˈleɪtɚ/"
+            },
+            {
+              "id": "judge",
+              "en": "judge",
+              "zh": "裁判",
+              "ipa": "/dʒʌdʒ/"
+            },
+            {
+              "id": "begin",
+              "en": "begin",
+              "zh": "开始",
+              "ipa": "/bɪˈɡɪn/"
+            },
+            {
+              "id": "began",
+              "en": "began",
+              "zh": "开始（begin 的过去式）",
+              "ipa": "/bɪˈɡæn/"
+            },
+            {
+              "id": "win",
+              "en": "win",
+              "zh": "赢",
+              "ipa": "/wɪn/"
+            },
+            {
+              "id": "won",
+              "en": "won",
+              "zh": "赢（win 的过去式）",
+              "ipa": "/wʌn/"
+            },
+            {
+              "id": "winner",
+              "en": "winner",
+              "zh": "获胜者",
+              "ipa": "/ˈwɪnɚ/"
+            },
+            {
+              "id": "ever",
+              "en": "ever",
+              "zh": "以往任何时候",
+              "ipa": "/ˈɛvɚ/"
+            },
+            {
+              "id": "exciting",
+              "en": "exciting",
+              "zh": "令人兴奋的",
+              "ipa": "/ɪkˈsaɪtɪŋ/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "What did you do at the school gala?",
+              "zh": "你在学校庆典上做了什么？",
+              "tip": "What did you do 用来问过去做了什么。"
+            },
+            {
+              "en": "We sang songs and made robots.",
+              "zh": "我们唱了歌，还制作了机器人。",
+              "tip": "sing 和 make 的过去式分别是 sang 和 made。"
+            },
+            {
+              "en": "What did you like about the book fair?",
+              "zh": "你喜欢书市的哪些地方？",
+              "tip": "What did you like about 加活动，询问对活动的喜好。"
+            },
+            {
+              "en": "I liked meeting the writers at the fair.",
+              "zh": "我喜欢在书市上见到那些作家。",
+              "tip": "liked 后面的 meeting 表示见面这件事。"
+            },
+            {
+              "en": "Did your team win the race yesterday?",
+              "zh": "你的团队昨天赢得比赛了吗？",
+              "tip": "Did 后面用 win 原形，yesterday 表示昨天。"
+            },
+            {
+              "en": "My brother ran a marathon last month.",
+              "zh": "我的哥哥上个月跑了马拉松。",
+              "tip": "ran 是 run 的过去式，last month 表示上个月。",
+              "acceptedAnswers": [
+                "Last month my brother ran a marathon."
+              ]
+            },
+            {
+              "en": "She wore a blue dress at the gala.",
+              "zh": "她在庆典上穿了一条蓝色连衣裙。",
+              "tip": "wore 是 wear 的过去式，用来描述过去穿了什么。",
+              "acceptedAnswers": [
+                "At the gala she wore a blue dress."
+              ]
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "We ___ songs at the gala yesterday.",
+              "options": [
+                "sang",
+                "sing",
+                "sings"
+              ],
+              "answer": "sang",
+              "explanation": "yesterday 表示过去，sing 的过去式是 sang。"
+            },
+            {
+              "prompt": "Did your team ___ the race?",
+              "options": [
+                "win",
+                "won",
+                "wins"
+              ],
+              "answer": "win",
+              "explanation": "Did 后面接 win 原形。"
+            },
+            {
+              "prompt": "She ___ a blue dress last night.",
+              "options": [
+                "wore",
+                "wear",
+                "wears"
+              ],
+              "answer": "wore",
+              "explanation": "last night 是过去时间，wear 的过去式是 wore。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep6s02WordsUnit2.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep6s02Unit2ALet'stalk.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep6s04Unit2BLet'stalk.mp3"
+            ],
+            "basis": "官方 Words in each unit 完整音频逐项核对，并与同版六单元书面词表共147个基础词逐项比对；书面表中的过去式和 fewer 分项练习。A/B Let’s talk 重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://zy.21cnjy.com/26251268",
+              "https://zy.21cnjy.com/26146921?f=beikeyi"
+            ]
+          }
+        },
+        {
+          "id": "g6-upper-u3",
+          "title": "Healthy life",
+          "words": [
+            {
+              "id": "cold",
+              "en": "cold",
+              "zh": "感冒；冷的",
+              "ipa": "/koʊld/"
+            },
+            {
+              "id": "ill",
+              "en": "ill",
+              "zh": "生病的",
+              "ipa": "/ɪl/"
+            },
+            {
+              "id": "head",
+              "en": "head",
+              "zh": "头",
+              "ipa": "/hɛd/"
+            },
+            {
+              "id": "runny-nose",
+              "en": "runny nose",
+              "zh": "流鼻涕",
+              "ipa": "/ˈrʌni noʊz/"
+            },
+            {
+              "id": "soon",
+              "en": "soon",
+              "zh": "很快",
+              "ipa": "/sun/"
+            },
+            {
+              "id": "fever",
+              "en": "fever",
+              "zh": "发烧",
+              "ipa": "/ˈfivɚ/"
+            },
+            {
+              "id": "cough",
+              "en": "cough",
+              "zh": "咳嗽",
+              "ipa": "/kɔf/"
+            },
+            {
+              "id": "discuss",
+              "en": "discuss",
+              "zh": "讨论",
+              "ipa": "/dɪˈskʌs/"
+            },
+            {
+              "id": "diet",
+              "en": "diet",
+              "zh": "日常饮食",
+              "ipa": "/ˈdaɪət/"
+            },
+            {
+              "id": "stay-up",
+              "en": "stay up",
+              "zh": "熬夜",
+              "ipa": "/steɪ ʌp/"
+            },
+            {
+              "id": "cry",
+              "en": "cry",
+              "zh": "哭",
+              "ipa": "/kraɪ/"
+            },
+            {
+              "id": "another",
+              "en": "another",
+              "zh": "另一个",
+              "ipa": "/əˈnʌðɚ/"
+            },
+            {
+              "id": "call",
+              "en": "call",
+              "zh": "打电话",
+              "ipa": "/kɔl/"
+            },
+            {
+              "id": "email",
+              "en": "email",
+              "zh": "电子邮件",
+              "ipa": "/ˈimeɪl/"
+            },
+            {
+              "id": "unhappy",
+              "en": "unhappy",
+              "zh": "不开心的",
+              "ipa": "/ʌnˈhæpi/"
+            },
+            {
+              "id": "glass",
+              "en": "glass",
+              "zh": "玻璃杯；一杯的量",
+              "ipa": "/ɡlæs/"
+            },
+            {
+              "id": "may",
+              "en": "may",
+              "zh": "可能；可以",
+              "ipa": "/meɪ/"
+            },
+            {
+              "id": "add",
+              "en": "add",
+              "zh": "增加；补充说",
+              "ipa": "/æd/"
+            },
+            {
+              "id": "video",
+              "en": "video",
+              "zh": "视频",
+              "ipa": "/ˈvɪdioʊ/"
+            },
+            {
+              "id": "better",
+              "en": "better",
+              "zh": "更好的；好转的",
+              "ipa": "/ˈbɛtɚ/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "What is wrong with your brother?",
+              "zh": "你的弟弟怎么了？",
+              "tip": "What is wrong with 加人，询问某人哪里不舒服。"
+            },
+            {
+              "en": "He has a fever and a runny nose.",
+              "zh": "他发烧了，还流鼻涕。",
+              "tip": "he 后用 has，a fever 和 a runny nose 表示症状。"
+            },
+            {
+              "en": "You should not stay up so late.",
+              "zh": "你不应该熬夜到这么晚。",
+              "tip": "should not 后面用 stay 原形，stay up 表示熬夜。"
+            },
+            {
+              "en": "What should we do when a friend feels unhappy?",
+              "zh": "朋友感到不开心时，我们应该做什么？",
+              "tip": "What should we do 用来求建议，when 引出出现这种情况的时候。"
+            },
+            {
+              "en": "We can call her and listen to her.",
+              "zh": "我们可以给她打电话，并听她倾诉。",
+              "tip": "can 后面用 call 和 listen 原形；listen to 不要漏掉 to。"
+            },
+            {
+              "en": "A kind message may make him feel better.",
+              "zh": "一句友善的话可能让他感觉好些。",
+              "tip": "may 表示可能，make someone feel 表示让某人感觉。"
+            },
+            {
+              "en": "I hope you get well soon.",
+              "zh": "我希望你很快康复。",
+              "tip": "I hope 后面接一个愿望，get well 表示恢复健康。"
+            },
+            {
+              "en": "How do you feel after the long walk?",
+              "zh": "走了很长一段路后，你感觉怎么样？",
+              "tip": "How do you feel 用来询问感受或身体情况。"
+            },
+            {
+              "en": "My head hurts and I feel ill.",
+              "zh": "我的头疼，感觉不舒服。",
+              "tip": "head 是单数，hurt 要加 s；feel ill 表示感觉不舒服。"
+            },
+            {
+              "en": "What do you think about a healthy life?",
+              "zh": "你怎样看待健康的生活？",
+              "tip": "What do you think about 用来询问想法。"
+            },
+            {
+              "en": "It is good to talk to our family and friends.",
+              "zh": "和家人及朋友交流很好。",
+              "tip": "It is good to 加动词原形，表示做这件事是好的。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "My brother ___ a fever today.",
+              "options": [
+                "has",
+                "have",
+                "having"
+              ],
+              "answer": "has",
+              "explanation": "My brother 是一个人，用 has 表示他有某个症状。"
+            },
+            {
+              "prompt": "You should not ___ up late.",
+              "options": [
+                "stay",
+                "stays",
+                "staying"
+              ],
+              "answer": "stay",
+              "explanation": "should not 后面接动词原形 stay。"
+            },
+            {
+              "prompt": "A kind message may ___ him feel better.",
+              "options": [
+                "make",
+                "makes",
+                "making"
+              ],
+              "answer": "make",
+              "explanation": "may 后面接动词原形 make。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep6s03WordsUnit3.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep6s02Unit3ALetstalk.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep6s04Unit3BLetstalk.mp3"
+            ],
+            "basis": "官方 Words in each unit 完整音频逐项核对，并与同版六单元书面词表共147个基础词逐项比对；书面表中的过去式和 fewer 分项练习。A/B Let’s talk 重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://zy.21cnjy.com/26251268",
+              "https://zy.21cnjy.com/26146921?f=beikeyi"
+            ]
+          }
+        },
+        {
+          "id": "g6-upper-u4",
+          "title": "Managing money well",
+          "words": [
+            {
+              "id": "money",
+              "en": "money",
+              "zh": "钱",
+              "ipa": "/ˈmʌni/"
+            },
+            {
+              "id": "pocket-money",
+              "en": "pocket money",
+              "zh": "零花钱",
+              "ipa": "/ˈpɑkət ˈmʌni/"
+            },
+            {
+              "id": "schoolbag",
+              "en": "schoolbag",
+              "zh": "书包",
+              "ipa": "/ˈskulbæɡ/"
+            },
+            {
+              "id": "goods",
+              "en": "goods",
+              "zh": "商品",
+              "ipa": "/ɡʊdz/"
+            },
+            {
+              "id": "drink",
+              "en": "drink",
+              "zh": "饮料；喝",
+              "ipa": "/drɪŋk/"
+            },
+            {
+              "id": "service",
+              "en": "service",
+              "zh": "服务",
+              "ipa": "/ˈsɝvɪs/"
+            },
+            {
+              "id": "haircut",
+              "en": "haircut",
+              "zh": "理发；发型",
+              "ipa": "/ˈhɛrkʌt/"
+            },
+            {
+              "id": "microscope",
+              "en": "microscope",
+              "zh": "显微镜",
+              "ipa": "/ˈmaɪkrəskoʊp/"
+            },
+            {
+              "id": "lucky",
+              "en": "lucky",
+              "zh": "幸运的",
+              "ipa": "/ˈlʌki/"
+            },
+            {
+              "id": "half",
+              "en": "half",
+              "zh": "一半",
+              "ipa": "/hæf/"
+            },
+            {
+              "id": "save-up",
+              "en": "save up",
+              "zh": "攒钱",
+              "ipa": "/seɪv ʌp/"
+            },
+            {
+              "id": "sale",
+              "en": "sale",
+              "zh": "特价销售",
+              "ipa": "/seɪl/"
+            },
+            {
+              "id": "ticket",
+              "en": "ticket",
+              "zh": "票",
+              "ipa": "/ˈtɪkɪt/"
+            },
+            {
+              "id": "manage",
+              "en": "manage",
+              "zh": "管理",
+              "ipa": "/ˈmænɪdʒ/"
+            },
+            {
+              "id": "difficult",
+              "en": "difficult",
+              "zh": "困难的",
+              "ipa": "/ˈdɪfəkəlt/"
+            },
+            {
+              "id": "sell",
+              "en": "sell",
+              "zh": "出售",
+              "ipa": "/sɛl/"
+            },
+            {
+              "id": "jar",
+              "en": "jar",
+              "zh": "罐子",
+              "ipa": "/dʒɑr/"
+            },
+            {
+              "id": "for-example",
+              "en": "for example",
+              "zh": "例如",
+              "ipa": "/fɚ ɪɡˈzæmpəl/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "What do you spend your pocket money on?",
+              "zh": "你把零花钱花在什么上？",
+              "tip": "spend money on something 表示把钱花在某物上。"
+            },
+            {
+              "en": "I spend some money on books.",
+              "zh": "我把一些钱花在书上。",
+              "tip": "spend 后面接钱数，on 后面接购买的东西。"
+            },
+            {
+              "en": "How much does this schoolbag cost?",
+              "zh": "这个书包多少钱？",
+              "tip": "How much does…cost 询问价格，does 后面用 cost 原形。"
+            },
+            {
+              "en": "It costs forty yuan in the sale.",
+              "zh": "特价时它卖四十元。",
+              "tip": "主语 it 是单数，cost 后面要加 s。"
+            },
+            {
+              "en": "I am saving up for a microscope.",
+              "zh": "我正在攒钱买显微镜。",
+              "tip": "am saving up 表示正在攒钱，for 引出目标。"
+            },
+            {
+              "en": "I need to make a spending plan.",
+              "zh": "我需要制定一个支出计划。",
+              "tip": "need to 后面接 make 原形，spending plan 表示支出计划。"
+            },
+            {
+              "en": "We can sell old books to save some money.",
+              "zh": "我们可以卖旧书来存下一些钱。",
+              "tip": "can 后面接 sell 原形，to save 表示这样做的目的。"
+            },
+            {
+              "en": "How are you going to spend your pocket money?",
+              "zh": "你打算怎样花你的零花钱？",
+              "tip": "How are you going to 加动词原形，询问计划采用的方式。"
+            },
+            {
+              "en": "I am going to buy a book about space.",
+              "zh": "我打算买一本关于太空的书。",
+              "tip": "am going to 表示计划，about space 表示关于太空。"
+            },
+            {
+              "en": "How much pocket money do you have now?",
+              "zh": "你现在有多少零花钱？",
+              "tip": "money 不可数，询问多少用 How much。"
+            },
+            {
+              "en": "What else are you going to buy?",
+              "zh": "你还打算买什么？",
+              "tip": "What else 表示还有什么，are going to 表示计划。"
+            },
+            {
+              "en": "Can I have a look at your spending plan?",
+              "zh": "我可以看一下你的支出计划吗？",
+              "tip": "Can I have a look at 加物品，是请求看一看的表达。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "How much does this schoolbag ___?",
+              "options": [
+                "cost",
+                "costs",
+                "costing"
+              ],
+              "answer": "cost",
+              "explanation": "does 后面接 cost 原形。"
+            },
+            {
+              "prompt": "I spend my pocket money ___ books.",
+              "options": [
+                "on",
+                "at",
+                "for"
+              ],
+              "answer": "on",
+              "explanation": "spend money on something 表示把钱花在某物上。"
+            },
+            {
+              "prompt": "She is ___ up for a microscope.",
+              "options": [
+                "saving",
+                "save",
+                "saves"
+              ],
+              "answer": "saving",
+              "explanation": "is 后面接 saving，表示正在攒钱。"
+            },
+            {
+              "prompt": "How are you going to ___ your pocket money?",
+              "options": [
+                "spend",
+                "spends",
+                "spending"
+              ],
+              "answer": "spend",
+              "explanation": "are going to 后面接 spend 原形，询问花钱计划。"
+            },
+            {
+              "prompt": "What else are you going to ___?",
+              "options": [
+                "buy",
+                "buys",
+                "buying"
+              ],
+              "answer": "buy",
+              "explanation": "are going to 后面接 buy 原形，What else 表示还有什么。"
+            },
+            {
+              "prompt": "How ___ pocket money do you have?",
+              "options": [
+                "much",
+                "many",
+                "few"
+              ],
+              "answer": "much",
+              "explanation": "money 不可数，询问有多少钱用 How much。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep6s04WordsUnit4.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep6s02Unit4ALetstalk.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep6s04Unit4BLetstalk.mp3"
+            ],
+            "basis": "官方 Words in each unit 完整音频逐项核对，并与同版六单元书面词表共147个基础词逐项比对；书面表中的过去式和 fewer 分项练习。A/B Let’s talk 重点结构用于自编例句。 difficult 为两份同版书面表一致的录音外补充项。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://zy.21cnjy.com/26251268",
+              "https://zy.21cnjy.com/26146921?f=beikeyi"
+            ]
+          }
+        },
+        {
+          "id": "g6-upper-u5",
+          "title": "Exploring space",
+          "words": [
+            {
+              "id": "planet",
+              "en": "planet",
+              "zh": "行星",
+              "ipa": "/ˈplænɪt/"
+            },
+            {
+              "id": "earth",
+              "en": "earth",
+              "zh": "地球",
+              "ipa": "/ɝθ/"
+            },
+            {
+              "id": "sky",
+              "en": "sky",
+              "zh": "天空",
+              "ipa": "/skaɪ/"
+            },
+            {
+              "id": "daytime",
+              "en": "daytime",
+              "zh": "白天",
+              "ipa": "/ˈdeɪtaɪm/"
+            },
+            {
+              "id": "cloud",
+              "en": "cloud",
+              "zh": "云",
+              "ipa": "/klaʊd/"
+            },
+            {
+              "id": "moon",
+              "en": "moon",
+              "zh": "月亮",
+              "ipa": "/mun/"
+            },
+            {
+              "id": "star",
+              "en": "star",
+              "zh": "星星；明星",
+              "ipa": "/stɑr/"
+            },
+            {
+              "id": "space",
+              "en": "space",
+              "zh": "太空",
+              "ipa": "/speɪs/"
+            },
+            {
+              "id": "outer-space",
+              "en": "outer space",
+              "zh": "外层空间；外太空",
+              "ipa": "/ˈaʊtɚ speɪs/"
+            },
+            {
+              "id": "space-station",
+              "en": "space station",
+              "zh": "空间站",
+              "ipa": "/speɪs ˈsteɪʃən/"
+            },
+            {
+              "id": "ocean",
+              "en": "ocean",
+              "zh": "海洋",
+              "ipa": "/ˈoʊʃən/"
+            },
+            {
+              "id": "marble",
+              "en": "marble",
+              "zh": "玻璃弹珠",
+              "ipa": "/ˈmɑrbəl/"
+            },
+            {
+              "id": "satellite",
+              "en": "satellite",
+              "zh": "人造卫星",
+              "ipa": "/ˈsætəlaɪt/"
+            },
+            {
+              "id": "soil",
+              "en": "soil",
+              "zh": "土壤",
+              "ipa": "/sɔɪl/"
+            },
+            {
+              "id": "alien",
+              "en": "alien",
+              "zh": "外星生物",
+              "ipa": "/ˈeɪliən/"
+            },
+            {
+              "id": "sunrise",
+              "en": "sunrise",
+              "zh": "日出",
+              "ipa": "/ˈsʌnraɪz/"
+            },
+            {
+              "id": "rover",
+              "en": "rover",
+              "zh": "探测车",
+              "ipa": "/ˈroʊvɚ/"
+            },
+            {
+              "id": "into",
+              "en": "into",
+              "zh": "进入……里面",
+              "ipa": "/ˈɪntu/"
+            },
+            {
+              "id": "telescope",
+              "en": "telescope",
+              "zh": "望远镜",
+              "ipa": "/ˈtɛləskoʊp/"
+            },
+            {
+              "id": "astronaut",
+              "en": "astronaut",
+              "zh": "航天员",
+              "ipa": "/ˈæstrənɑt/"
+            },
+            {
+              "id": "spaceship",
+              "en": "spaceship",
+              "zh": "宇宙飞船",
+              "ipa": "/ˈspeɪsˌʃɪp/"
+            },
+            {
+              "id": "month",
+              "en": "month",
+              "zh": "月份",
+              "ipa": "/mʌnθ/"
+            },
+            {
+              "id": "taikonaut",
+              "en": "taikonaut",
+              "zh": "中国航天员",
+              "ipa": "/ˈtaɪkənɑt/"
+            },
+            {
+              "id": "cloth",
+              "en": "cloth",
+              "zh": "布",
+              "ipa": "/klɔθ/"
+            },
+            {
+              "id": "toothpaste",
+              "en": "toothpaste",
+              "zh": "牙膏",
+              "ipa": "/ˈtuθpeɪst/"
+            },
+            {
+              "id": "question",
+              "en": "question",
+              "zh": "问题",
+              "ipa": "/ˈkwɛstʃən/"
+            },
+            {
+              "id": "sunset",
+              "en": "sunset",
+              "zh": "日落",
+              "ipa": "/ˈsʌnsɛt/"
+            },
+            {
+              "id": "time",
+              "en": "time",
+              "zh": "次；回；时间",
+              "ipa": "/taɪm/"
+            },
+            {
+              "id": "mars",
+              "en": "Mars",
+              "zh": "火星",
+              "ipa": "/mɑrz/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "What can you see in the night sky?",
+              "zh": "你在夜空中能看见什么？",
+              "tip": "What can you see 用来问能看见什么。"
+            },
+            {
+              "en": "I can see the Moon and many stars.",
+              "zh": "我能看见月亮和许多星星。",
+              "tip": "can 后面用 see 原形，many 后面接 stars 复数。"
+            },
+            {
+              "en": "Is there any water on that planet?",
+              "zh": "那颗行星上有水吗？",
+              "tip": "water 不可数，询问有没有水用 Is there any water。"
+            },
+            {
+              "en": "Are there any living things on Mars?",
+              "zh": "火星上有生物吗？",
+              "tip": "living things 是复数，前面用 Are there any。"
+            },
+            {
+              "en": "We can explore space with telescopes.",
+              "zh": "我们可以用望远镜探索太空。",
+              "tip": "with 表示用某种工具，can 后面用 explore 原形。"
+            },
+            {
+              "en": "Astronauts live and work in a space station.",
+              "zh": "航天员在空间站里生活和工作。",
+              "tip": "主语 astronauts 是复数，live 和 work 用原形。",
+              "acceptedAnswers": [
+                "In a space station astronauts live and work."
+              ]
+            },
+            {
+              "en": "Earth travels around the Sun.",
+              "zh": "地球围绕太阳运行。",
+              "tip": "Earth 是单数，travel 要加 s；around 表示围绕。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "Earth ___ around the Sun.",
+              "options": [
+                "travels",
+                "travel",
+                "travelling"
+              ],
+              "answer": "travels",
+              "explanation": "Earth 是单数，描述规律时 travel 加 s。"
+            },
+            {
+              "prompt": "___ there any water on that planet?",
+              "options": [
+                "Is",
+                "Are",
+                "Am"
+              ],
+              "answer": "Is",
+              "explanation": "water 不可数，用 Is there any water。"
+            },
+            {
+              "prompt": "We can ___ space with telescopes.",
+              "options": [
+                "explore",
+                "explores",
+                "exploring"
+              ],
+              "answer": "explore",
+              "explanation": "can 后面接动词原形 explore。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep6s05WordsUnit5.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep6s02Unit5ALetstalk.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep6s04Unit5BLetstalk.mp3"
+            ],
+            "basis": "官方 Words in each unit 完整音频逐项核对，并与同版六单元书面词表共147个基础词逐项比对；书面表中的过去式和 fewer 分项练习。A/B Let’s talk 重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://zy.21cnjy.com/26251268",
+              "https://zy.21cnjy.com/26146921?f=beikeyi"
+            ]
+          }
+        },
+        {
+          "id": "g6-upper-u6",
+          "title": "Energy, nature and us",
+          "words": [
+            {
+              "id": "power",
+              "en": "power",
+              "zh": "能量；动力",
+              "ipa": "/ˈpaʊɚ/"
+            },
+            {
+              "id": "electricity",
+              "en": "electricity",
+              "zh": "电",
+              "ipa": "/ɪˌlɛkˈtrɪsəti/"
+            },
+            {
+              "id": "solar",
+              "en": "solar",
+              "zh": "太阳的",
+              "ipa": "/ˈsoʊlɚ/"
+            },
+            {
+              "id": "type",
+              "en": "type",
+              "zh": "类型",
+              "ipa": "/taɪp/"
+            },
+            {
+              "id": "energy",
+              "en": "energy",
+              "zh": "能源",
+              "ipa": "/ˈɛnɚdʒi/"
+            },
+            {
+              "id": "source",
+              "en": "source",
+              "zh": "来源",
+              "ipa": "/sɔrs/"
+            },
+            {
+              "id": "light",
+              "en": "light",
+              "zh": "照亮；光",
+              "ipa": "/laɪt/"
+            },
+            {
+              "id": "heat",
+              "en": "heat",
+              "zh": "加热；热",
+              "ipa": "/hit/"
+            },
+            {
+              "id": "cool",
+              "en": "cool",
+              "zh": "使变凉；凉爽的",
+              "ipa": "/kul/"
+            },
+            {
+              "id": "run",
+              "en": "run",
+              "zh": "跑；使运行",
+              "ipa": "/rʌn/"
+            },
+            {
+              "id": "resource",
+              "en": "resource",
+              "zh": "资源",
+              "ipa": "/ˈrisɔrs/"
+            },
+            {
+              "id": "run-out",
+              "en": "run out",
+              "zh": "用完",
+              "ipa": "/rʌn aʊt/"
+            },
+            {
+              "id": "few",
+              "en": "few",
+              "zh": "很少的；不多的",
+              "ipa": "/fju/"
+            },
+            {
+              "id": "fewer",
+              "en": "fewer",
+              "zh": "更少的（few 的比较级）",
+              "ipa": "/ˈfjuɚ/"
+            },
+            {
+              "id": "change",
+              "en": "change",
+              "zh": "改变",
+              "ipa": "/tʃeɪndʒ/"
+            },
+            {
+              "id": "quick",
+              "en": "quick",
+              "zh": "快的",
+              "ipa": "/kwɪk/"
+            },
+            {
+              "id": "shower",
+              "en": "shower",
+              "zh": "淋浴",
+              "ipa": "/ˈʃaʊɚ/"
+            },
+            {
+              "id": "unplug",
+              "en": "unplug",
+              "zh": "拔掉……的电源插头",
+              "ipa": "/ʌnˈplʌɡ/"
+            },
+            {
+              "id": "difference",
+              "en": "difference",
+              "zh": "不同；差别",
+              "ipa": "/ˈdɪfɚəns/"
+            },
+            {
+              "id": "reduce",
+              "en": "reduce",
+              "zh": "减少",
+              "ipa": "/rɪˈdus/"
+            },
+            {
+              "id": "air-conditioner",
+              "en": "air conditioner",
+              "zh": "空调机",
+              "ipa": "/ɛr kənˈdɪʃənɚ/"
+            },
+            {
+              "id": "drive",
+              "en": "drive",
+              "zh": "驾驶",
+              "ipa": "/draɪv/"
+            },
+            {
+              "id": "reuse",
+              "en": "reuse",
+              "zh": "再次使用",
+              "ipa": "/ˌriˈjuz/"
+            },
+            {
+              "id": "own",
+              "en": "own",
+              "zh": "自己的",
+              "ipa": "/oʊn/"
+            },
+            {
+              "id": "market",
+              "en": "market",
+              "zh": "集市",
+              "ipa": "/ˈmɑrkɪt/"
+            },
+            {
+              "id": "bottle",
+              "en": "bottle",
+              "zh": "瓶子",
+              "ipa": "/ˈbɑtəl/"
+            },
+            {
+              "id": "top",
+              "en": "top",
+              "zh": "最高的；顶端",
+              "ipa": "/tɑp/"
+            },
+            {
+              "id": "useful",
+              "en": "useful",
+              "zh": "有用的",
+              "ipa": "/ˈjusfəl/"
+            },
+            {
+              "id": "dirty",
+              "en": "dirty",
+              "zh": "脏的",
+              "ipa": "/ˈdɝti/"
+            },
+            {
+              "id": "side",
+              "en": "side",
+              "zh": "一面；一边",
+              "ipa": "/saɪd/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "Where does our electricity come from?",
+              "zh": "我们的电来自哪里？",
+              "tip": "Where does…come from 询问来源，does 后面用 come 原形。"
+            },
+            {
+              "en": "We use electricity to light our homes.",
+              "zh": "我们用电照亮家里的房间。",
+              "tip": "use something to do 表示用某物来做某事。"
+            },
+            {
+              "en": "Solar power comes from the Sun.",
+              "zh": "太阳能来自太阳。",
+              "tip": "solar power 是单数概念，come 要变成 comes。"
+            },
+            {
+              "en": "Some energy resources can run out.",
+              "zh": "有些能源资源会用完。",
+              "tip": "can 后面接 run 原形，run out 表示用完。"
+            },
+            {
+              "en": "How can we reduce energy use at home?",
+              "zh": "我们怎样减少家里的能源使用？",
+              "tip": "How can we 用来询问可以怎样做，reduce 表示减少。"
+            },
+            {
+              "en": "We should unplug the charger after use.",
+              "zh": "使用后我们应该拔掉充电器的插头。",
+              "tip": "should 后面用 unplug 原形，after use 表示用完后。"
+            },
+            {
+              "en": "I reuse bottles to make useful things.",
+              "zh": "我再次利用瓶子制作有用的东西。",
+              "tip": "reuse 表示再次使用，to make 表示这样做的目的。"
+            },
+            {
+              "en": "What else do you want to know about solar power?",
+              "zh": "你还想了解太阳能的哪些方面？",
+              "tip": "What else 表示还有什么，want to know 表示想了解。"
+            },
+            {
+              "en": "Can you give us an example of saving energy?",
+              "zh": "你能给我们举一个节能的例子吗？",
+              "tip": "give someone an example 表示给某人举例，can 后用 give 原形。"
+            },
+            {
+              "en": "Our town is getting warmer and warmer.",
+              "zh": "我们的城镇正变得越来越暖。",
+              "tip": "warmer and warmer 表示越来越暖，is getting 表示正在变得。"
+            },
+            {
+              "en": "Small changes can make a big difference.",
+              "zh": "小小的改变能带来很大的不同。",
+              "tip": "make a difference 表示产生影响，can 后面用 make 原形。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "We use electricity ___ our homes.",
+              "options": [
+                "to light",
+                "lights",
+                "lighted"
+              ],
+              "answer": "to light",
+              "explanation": "use something to do 表示用某物来做某事。"
+            },
+            {
+              "prompt": "Solar power ___ from the Sun.",
+              "options": [
+                "comes",
+                "come",
+                "coming"
+              ],
+              "answer": "comes",
+              "explanation": "Solar power 是单数概念，come 加 s。"
+            },
+            {
+              "prompt": "We should ___ the charger after use.",
+              "options": [
+                "unplug",
+                "unplugs",
+                "unplugging"
+              ],
+              "answer": "unplug",
+              "explanation": "should 后面接 unplug 原形。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyszptzy/pep6s06WordsUnit6.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyszptzy/pep6s02Unit6ALetstalk.mp3",
+              "https://www.pep.com.cn/yyszptzy/pep6s04Unit6BLetstalk.mp3"
+            ],
+            "basis": "官方 Words in each unit 完整音频逐项核对，并与同版六单元书面词表共147个基础词逐项比对；书面表中的过去式和 fewer 分项练习。A/B Let’s talk 重点结构用于自编例句。 source、few 和 fewer 为同版书面表一致的录音外补充项。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://zy.21cnjy.com/26251268",
+              "https://zy.21cnjy.com/26146921?f=beikeyi"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g6-lower",
+      "units": [
+        {
+          "id": "g6-lower-u1",
+          "title": "How tall are you?",
+          "words": [
+            {
+              "id": "younger",
+              "en": "younger",
+              "zh": "更年轻的",
+              "ipa": "/ˈjʌŋɡɚ/"
+            },
+            {
+              "id": "older",
+              "en": "older",
+              "zh": "年龄更大的",
+              "ipa": "/ˈoʊldɚ/"
+            },
+            {
+              "id": "taller",
+              "en": "taller",
+              "zh": "更高的",
+              "ipa": "/ˈtɔlɚ/"
+            },
+            {
+              "id": "shorter",
+              "en": "shorter",
+              "zh": "更矮的；更短的",
+              "ipa": "/ˈʃɔrtɚ/"
+            },
+            {
+              "id": "longer",
+              "en": "longer",
+              "zh": "更长的",
+              "ipa": "/ˈlɔŋɡɚ/"
+            },
+            {
+              "id": "thinner",
+              "en": "thinner",
+              "zh": "更瘦的",
+              "ipa": "/ˈθɪnɚ/"
+            },
+            {
+              "id": "heavier",
+              "en": "heavier",
+              "zh": "更重的",
+              "ipa": "/ˈhɛviɚ/"
+            },
+            {
+              "id": "bigger",
+              "en": "bigger",
+              "zh": "更大的",
+              "ipa": "/ˈbɪɡɚ/"
+            },
+            {
+              "id": "smaller",
+              "en": "smaller",
+              "zh": "更小的",
+              "ipa": "/ˈsmɔlɚ/"
+            },
+            {
+              "id": "stronger",
+              "en": "stronger",
+              "zh": "更强壮的",
+              "ipa": "/ˈstrɔŋɡɚ/"
+            },
+            {
+              "id": "dinosaur",
+              "en": "dinosaur",
+              "zh": "恐龙",
+              "ipa": "/ˈdaɪnəsɔr/"
+            },
+            {
+              "id": "hall",
+              "en": "hall",
+              "zh": "大厅",
+              "ipa": "/hɔl/"
+            },
+            {
+              "id": "metre",
+              "en": "metre",
+              "zh": "米",
+              "ipa": "/ˈmitɚ/"
+            },
+            {
+              "id": "than",
+              "en": "than",
+              "zh": "比",
+              "ipa": "/ðæn/"
+            },
+            {
+              "id": "both",
+              "en": "both",
+              "zh": "两者；两个都",
+              "ipa": "/boʊθ/"
+            },
+            {
+              "id": "kilogram",
+              "en": "kilogram",
+              "zh": "千克",
+              "ipa": "/ˈkɪləɡræm/"
+            },
+            {
+              "id": "countryside",
+              "en": "countryside",
+              "zh": "乡村",
+              "ipa": "/ˈkʌntrisaɪd/"
+            },
+            {
+              "id": "lower",
+              "en": "lower",
+              "zh": "更低的",
+              "ipa": "/ˈloʊɚ/"
+            },
+            {
+              "id": "shadow",
+              "en": "shadow",
+              "zh": "影子",
+              "ipa": "/ˈʃædoʊ/"
+            },
+            {
+              "id": "smarter",
+              "en": "smarter",
+              "zh": "更聪明的",
+              "ipa": "/ˈsmɑrtɚ/"
+            },
+            {
+              "id": "become",
+              "en": "become",
+              "zh": "变成",
+              "ipa": "/bɪˈkʌm/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "How tall is your younger sister?",
+              "zh": "你的妹妹有多高？",
+              "tip": "How tall 用来询问身高，单数 sister 后用 is。"
+            },
+            {
+              "en": "My sister is taller than me now.",
+              "zh": "我的妹妹现在比我高。",
+              "tip": "taller 是 tall 的比较级，than 后接比较的对象。"
+            },
+            {
+              "en": "How heavy is your schoolbag?",
+              "zh": "你的书包有多重？",
+              "tip": "How heavy 用来询问重量。"
+            },
+            {
+              "en": "My schoolbag is heavier than yours.",
+              "zh": "我的书包比你的重。",
+              "tip": "heavy 的比较级是 heavier，yours 表示你的书包。"
+            },
+            {
+              "en": "What size are your shoes?",
+              "zh": "你的鞋是多少码的？",
+              "tip": "What size 用来问尺码，shoes 是复数，后用 are。"
+            },
+            {
+              "en": "This dinosaur is bigger than that one.",
+              "zh": "这只恐龙比那只大。",
+              "tip": "big 的比较级是 bigger，one 代替前面的 dinosaur。"
+            },
+            {
+              "en": "The shadows become longer in the afternoon.",
+              "zh": "下午影子变得更长。",
+              "tip": "shadows 是复数，后用 become；longer 表示更长。",
+              "acceptedAnswers": [
+                "In the afternoon the shadows become longer."
+              ]
+            },
+            {
+              "en": "This is the tallest tree in our school.",
+              "zh": "这是我们学校里最高的树。",
+              "tip": "比较三者或更多事物中的最高一个，用 the tallest。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "My bag is ___ than yours.",
+              "options": [
+                "heavier",
+                "heavy",
+                "heaviest"
+              ],
+              "answer": "heavier",
+              "explanation": "than 表示比较，heavy 的比较级是 heavier。"
+            },
+            {
+              "prompt": "This dinosaur is ___ than that one.",
+              "options": [
+                "bigger",
+                "big",
+                "biggest"
+              ],
+              "answer": "bigger",
+              "explanation": "比较两只恐龙用 bigger，big 要双写 g 再加 er。"
+            },
+            {
+              "prompt": "How ___ is your sister? She is 1.5 metres.",
+              "options": [
+                "tall",
+                "heavy",
+                "old"
+              ],
+              "answer": "tall",
+              "explanation": "答句给出身高，询问身高用 How tall。"
+            },
+            {
+              "prompt": "This is the ___ tree in our school.",
+              "options": [
+                "tallest",
+                "taller",
+                "tall"
+              ],
+              "answer": "tallest",
+              "explanation": "在学校所有树中选出最高一棵，用最高级 the tallest。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyptypzj/pep-6x-13-Words-in-Unit-1.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyptypzj/pep-6x-14-Unit-1-Useful-expressions.mp3"
+            ],
+            "basis": "官方在用版 Words in each unit 完整音频，与同版四单元书面词表逐项比对；Unit 3 另补书面表明确列出的 Labour Day。Useful expressions 重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://www.sohu.com/a/627904679_500680",
+              "https://www.wanwords.com/phrases/pep-grade6-lower-course-001"
+            ]
+          }
+        },
+        {
+          "id": "g6-lower-u2",
+          "title": "Last weekend",
+          "words": [
+            {
+              "id": "cleaned",
+              "en": "cleaned",
+              "zh": "打扫（clean 的过去式）",
+              "ipa": "/klind/"
+            },
+            {
+              "id": "stayed",
+              "en": "stayed",
+              "zh": "待；停留（stay 的过去式）",
+              "ipa": "/steɪd/"
+            },
+            {
+              "id": "washed",
+              "en": "washed",
+              "zh": "洗（wash 的过去式）",
+              "ipa": "/wɑʃt/"
+            },
+            {
+              "id": "watched",
+              "en": "watched",
+              "zh": "观看（watch 的过去式）",
+              "ipa": "/wɑtʃt/"
+            },
+            {
+              "id": "had",
+              "en": "had",
+              "zh": "有；吃（have 的过去式）",
+              "ipa": "/hæd/"
+            },
+            {
+              "id": "had-a-cold",
+              "en": "had a cold",
+              "zh": "感冒了",
+              "ipa": "/hæd ə koʊld/"
+            },
+            {
+              "id": "slept",
+              "en": "slept",
+              "zh": "睡觉（sleep 的过去式）",
+              "ipa": "/slɛpt/"
+            },
+            {
+              "id": "read-past",
+              "en": "read",
+              "zh": "阅读（read 的过去式）",
+              "ipa": "/rɛd/"
+            },
+            {
+              "id": "saw",
+              "en": "saw",
+              "zh": "看见（see 的过去式）",
+              "ipa": "/sɔ/"
+            },
+            {
+              "id": "last",
+              "en": "last",
+              "zh": "持续（动词）；上一个",
+              "ipa": "/læst/"
+            },
+            {
+              "id": "yesterday",
+              "en": "yesterday",
+              "zh": "昨天",
+              "ipa": "/ˈjɛstɚdeɪ/"
+            },
+            {
+              "id": "before",
+              "en": "before",
+              "zh": "在……之前",
+              "ipa": "/bɪˈfɔr/"
+            },
+            {
+              "id": "drank",
+              "en": "drank",
+              "zh": "喝（drink 的过去式）",
+              "ipa": "/dræŋk/"
+            },
+            {
+              "id": "show",
+              "en": "show",
+              "zh": "节目；展示",
+              "ipa": "/ʃoʊ/"
+            },
+            {
+              "id": "magazine",
+              "en": "magazine",
+              "zh": "杂志",
+              "ipa": "/ˈmæɡəzin/"
+            },
+            {
+              "id": "better",
+              "en": "better",
+              "zh": "更好的；好转的",
+              "ipa": "/ˈbɛtɚ/"
+            },
+            {
+              "id": "faster",
+              "en": "faster",
+              "zh": "更快的",
+              "ipa": "/ˈfæstɚ/"
+            },
+            {
+              "id": "hotel",
+              "en": "hotel",
+              "zh": "旅馆",
+              "ipa": "/hoʊˈtɛl/"
+            },
+            {
+              "id": "fixed",
+              "en": "fixed",
+              "zh": "修理（fix 的过去式）",
+              "ipa": "/fɪkst/"
+            },
+            {
+              "id": "broken",
+              "en": "broken",
+              "zh": "坏了的；破损的",
+              "ipa": "/ˈbroʊkən/"
+            },
+            {
+              "id": "lamp",
+              "en": "lamp",
+              "zh": "灯",
+              "ipa": "/læmp/"
+            },
+            {
+              "id": "loud",
+              "en": "loud",
+              "zh": "响亮的",
+              "ipa": "/laʊd/"
+            },
+            {
+              "id": "enjoy",
+              "en": "enjoy",
+              "zh": "享受；喜欢",
+              "ipa": "/ɪnˈdʒɔɪ/"
+            },
+            {
+              "id": "stay",
+              "en": "stay",
+              "zh": "待；保持",
+              "ipa": "/steɪ/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "How was your weekend at the hotel?",
+              "zh": "你在旅馆度过的周末怎么样？",
+              "tip": "How was 用来询问过去怎么样。"
+            },
+            {
+              "en": "I stayed at home and cleaned my room.",
+              "zh": "我待在家里，还打扫了自己的房间。",
+              "tip": "stay 和 clean 的过去式分别是 stayed 和 cleaned。"
+            },
+            {
+              "en": "What did you do before dinner yesterday?",
+              "zh": "你昨天晚饭前做了什么？",
+              "tip": "did 后面接 do 原形，yesterday 表示过去。"
+            },
+            {
+              "en": "I read a magazine and watched a show.",
+              "zh": "我读了一本杂志，还看了一个节目。",
+              "tip": "这里的 read 是过去式，读 /rɛd/，watched 也是过去式。"
+            },
+            {
+              "en": "Did you wash your shoes last night?",
+              "zh": "你昨晚洗鞋了吗？",
+              "tip": "Did 后面用 wash 原形，不用 washed。"
+            },
+            {
+              "en": "I had a cold, so I slept early.",
+              "zh": "我感冒了，所以很早就睡了。",
+              "tip": "had 和 slept 分别是 have 和 sleep 的过去式。"
+            },
+            {
+              "en": "The bus was faster than walking.",
+              "zh": "坐公交车比步行快。",
+              "tip": "过去的状态用 was；faster than 表示比……更快。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "I ___ my room yesterday.",
+              "options": [
+                "cleaned",
+                "clean",
+                "cleans"
+              ],
+              "answer": "cleaned",
+              "explanation": "yesterday 是过去时间，clean 用 cleaned。"
+            },
+            {
+              "prompt": "Did you ___ a magazine last night?",
+              "options": [
+                "read",
+                "reads",
+                "reading"
+              ],
+              "answer": "read",
+              "explanation": "did 后面用 read 原形，这里读 /rid/。"
+            },
+            {
+              "prompt": "I had a cold, so I ___ early.",
+              "options": [
+                "slept",
+                "sleep",
+                "sleeps"
+              ],
+              "answer": "slept",
+              "explanation": "说已经发生的事，sleep 用过去式 slept。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyptypzj/pep-6x-13-Words-in-Unit-2.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyptypzj/pep-6x-14-Unit-2-Useful-expressions.mp3"
+            ],
+            "basis": "官方在用版 Words in each unit 完整音频，与同版四单元书面词表逐项比对；Unit 3 另补书面表明确列出的 Labour Day。Useful expressions 重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://www.sohu.com/a/627904679_500680",
+              "https://www.wanwords.com/phrases/pep-grade6-lower-course-007"
+            ]
+          }
+        },
+        {
+          "id": "g6-lower-u3",
+          "title": "Where did you go?",
+          "words": [
+            {
+              "id": "went",
+              "en": "went",
+              "zh": "去（go 的过去式）",
+              "ipa": "/wɛnt/"
+            },
+            {
+              "id": "camp",
+              "en": "camp",
+              "zh": "野营",
+              "ipa": "/kæmp/"
+            },
+            {
+              "id": "went-camping",
+              "en": "went camping",
+              "zh": "去野营了",
+              "ipa": "/wɛnt ˈkæmpɪŋ/"
+            },
+            {
+              "id": "fish",
+              "en": "fish",
+              "zh": "钓鱼；鱼",
+              "ipa": "/fɪʃ/"
+            },
+            {
+              "id": "went-fishing",
+              "en": "went fishing",
+              "zh": "去钓鱼了",
+              "ipa": "/wɛnt ˈfɪʃɪŋ/"
+            },
+            {
+              "id": "rode",
+              "en": "rode",
+              "zh": "骑；乘坐（ride 的过去式）",
+              "ipa": "/roʊd/"
+            },
+            {
+              "id": "hurt",
+              "en": "hurt",
+              "zh": "伤害；疼痛",
+              "ipa": "/hɚt/"
+            },
+            {
+              "id": "ate",
+              "en": "ate",
+              "zh": "吃（eat 的过去式）",
+              "ipa": "/eɪt/"
+            },
+            {
+              "id": "took",
+              "en": "took",
+              "zh": "拿；进行（take 的过去式）",
+              "ipa": "/tʊk/"
+            },
+            {
+              "id": "took-pictures",
+              "en": "took pictures",
+              "zh": "拍照了",
+              "ipa": "/tʊk ˈpɪktʃɚz/"
+            },
+            {
+              "id": "bought",
+              "en": "bought",
+              "zh": "买（buy 的过去式）",
+              "ipa": "/bɔt/"
+            },
+            {
+              "id": "gift",
+              "en": "gift",
+              "zh": "礼物",
+              "ipa": "/ɡɪft/"
+            },
+            {
+              "id": "fell",
+              "en": "fell",
+              "zh": "掉落（fall 的过去式）",
+              "ipa": "/fɛl/"
+            },
+            {
+              "id": "off",
+              "en": "off",
+              "zh": "从……离开；落下",
+              "ipa": "/ɔf/"
+            },
+            {
+              "id": "labour-day",
+              "en": "Labour Day",
+              "zh": "劳动节",
+              "ipa": "/ˈleɪbɚ deɪ/"
+            },
+            {
+              "id": "mule",
+              "en": "mule",
+              "zh": "骡子",
+              "ipa": "/mjul/"
+            },
+            {
+              "id": "turpan",
+              "en": "Turpan",
+              "zh": "吐鲁番",
+              "ipa": "/ˈtʊrpɑn/"
+            },
+            {
+              "id": "could",
+              "en": "could",
+              "zh": "能；可以（can 的过去式）",
+              "ipa": "/kʊd/"
+            },
+            {
+              "id": "till",
+              "en": "till",
+              "zh": "直到",
+              "ipa": "/tɪl/"
+            },
+            {
+              "id": "beach",
+              "en": "beach",
+              "zh": "海滩",
+              "ipa": "/bitʃ/"
+            },
+            {
+              "id": "basket",
+              "en": "basket",
+              "zh": "篮子",
+              "ipa": "/ˈbæskət/"
+            },
+            {
+              "id": "part",
+              "en": "part",
+              "zh": "角色；部分",
+              "ipa": "/pɑrt/"
+            },
+            {
+              "id": "licked",
+              "en": "licked",
+              "zh": "舔（lick 的过去式）",
+              "ipa": "/lɪkt/"
+            },
+            {
+              "id": "laughed",
+              "en": "laughed",
+              "zh": "笑（laugh 的过去式）",
+              "ipa": "/læft/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "Where did you go last Sunday?",
+              "zh": "你上星期日去了哪里？",
+              "tip": "Where did you go 用来问过去去了哪里。"
+            },
+            {
+              "en": "I went camping beside a lake.",
+              "zh": "我去湖边野营了。",
+              "tip": "went camping 是 go camping 的过去表达。"
+            },
+            {
+              "en": "Did you ride a bike on the trip?",
+              "zh": "你在旅行时骑自行车了吗？",
+              "tip": "Did 后面用 ride 原形，不能用 rode。"
+            },
+            {
+              "en": "I rode a bike and took pictures.",
+              "zh": "我骑了自行车，还拍了照。",
+              "tip": "rode 和 took 分别是 ride 和 take 的过去式。"
+            },
+            {
+              "en": "How did you get to the beach?",
+              "zh": "你是怎么到海滩的？",
+              "tip": "How did 用来问过去采用的方式，get 用原形。"
+            },
+            {
+              "en": "We went there by bus.",
+              "zh": "我们乘公交车去了那里。",
+              "tip": "went 是 go 的过去式，by bus 表示乘公交车。"
+            },
+            {
+              "en": "I bought a gift for my grandfather.",
+              "zh": "我给爷爷买了一件礼物。",
+              "tip": "bought 是 buy 的过去式，for 引出礼物送给谁。"
+            },
+            {
+              "en": "What happened on your camping trip?",
+              "zh": "你的野营旅行中发生了什么？",
+              "tip": "What happened 用来询问已经发生的事情。"
+            },
+            {
+              "en": "Are you all right after the bike ride?",
+              "zh": "骑车之后你还好吗？",
+              "tip": "Are you all right 用来关心对方是否安好。"
+            },
+            {
+              "en": "That animal looks like a small horse.",
+              "zh": "那只动物看起来像一匹小马。",
+              "tip": "look like 表示看起来像，单数 animal 后用 looks。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "Where did you ___ last Sunday?",
+              "options": [
+                "go",
+                "went",
+                "goes"
+              ],
+              "answer": "go",
+              "explanation": "did 后面接 go 原形，不能再用过去式。"
+            },
+            {
+              "prompt": "I ___ a bike on the trip.",
+              "options": [
+                "rode",
+                "ride",
+                "rides"
+              ],
+              "answer": "rode",
+              "explanation": "过去的旅行中骑车，ride 用过去式 rode。",
+              "context": "描述已经结束的旅行。"
+            },
+            {
+              "prompt": "We ___ pictures at the beach yesterday.",
+              "options": [
+                "took",
+                "take",
+                "takes"
+              ],
+              "answer": "took",
+              "explanation": "yesterday 是过去，take 的过去式是 took。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyptypzj/pep-6x-14-Words-in-Unit-3.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyptypzj/pep-6x-15-Unit-3-Useful-expressions.mp3"
+            ],
+            "basis": "官方在用版 Words in each unit 完整音频，与同版四单元书面词表逐项比对；Unit 3 另补书面表明确列出的 Labour Day。Useful expressions 重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://www.sohu.com/a/627904679_500680",
+              "https://www.wanwords.com/phrases/pep-grade6-lower-course-011"
+            ]
+          }
+        },
+        {
+          "id": "g6-lower-u4",
+          "title": "Then and now",
+          "words": [
+            {
+              "id": "dining-hall",
+              "en": "dining hall",
+              "zh": "饭厅",
+              "ipa": "/ˈdaɪnɪŋ hɔl/"
+            },
+            {
+              "id": "grass",
+              "en": "grass",
+              "zh": "草",
+              "ipa": "/ɡræs/"
+            },
+            {
+              "id": "gym",
+              "en": "gym",
+              "zh": "体育馆",
+              "ipa": "/dʒɪm/"
+            },
+            {
+              "id": "ago",
+              "en": "ago",
+              "zh": "以前",
+              "ipa": "/əˈɡoʊ/"
+            },
+            {
+              "id": "cycling",
+              "en": "cycling",
+              "zh": "骑自行车",
+              "ipa": "/ˈsaɪklɪŋ/"
+            },
+            {
+              "id": "go-cycling",
+              "en": "go cycling",
+              "zh": "去骑自行车",
+              "ipa": "/ɡoʊ ˈsaɪkəlɪŋ/"
+            },
+            {
+              "id": "ice-skate",
+              "en": "ice-skate",
+              "zh": "滑冰",
+              "ipa": "/ˈaɪs skeɪt/"
+            },
+            {
+              "id": "badminton",
+              "en": "badminton",
+              "zh": "羽毛球",
+              "ipa": "/ˈbædmɪntən/"
+            },
+            {
+              "id": "star",
+              "en": "star",
+              "zh": "星星；明星",
+              "ipa": "/stɑr/"
+            },
+            {
+              "id": "easy",
+              "en": "easy",
+              "zh": "容易的",
+              "ipa": "/ˈizi/"
+            },
+            {
+              "id": "look-up",
+              "en": "look up",
+              "zh": "查阅",
+              "ipa": "/lʊk ʌp/"
+            },
+            {
+              "id": "internet",
+              "en": "Internet",
+              "zh": "互联网",
+              "ipa": "/ˈɪntɚnɛt/"
+            },
+            {
+              "id": "different",
+              "en": "different",
+              "zh": "不同的",
+              "ipa": "/ˈdɪfɚənt/"
+            },
+            {
+              "id": "active",
+              "en": "active",
+              "zh": "活跃的",
+              "ipa": "/ˈæktɪv/"
+            },
+            {
+              "id": "race",
+              "en": "race",
+              "zh": "赛跑",
+              "ipa": "/reɪs/"
+            },
+            {
+              "id": "nothing",
+              "en": "nothing",
+              "zh": "没有任何东西",
+              "ipa": "/ˈnʌθɪŋ/"
+            },
+            {
+              "id": "thought",
+              "en": "thought",
+              "zh": "想；认为（think 的过去式）",
+              "ipa": "/θɔt/"
+            },
+            {
+              "id": "felt",
+              "en": "felt",
+              "zh": "感觉（feel 的过去式）",
+              "ipa": "/fɛlt/"
+            },
+            {
+              "id": "cheetah",
+              "en": "cheetah",
+              "zh": "猎豹",
+              "ipa": "/ˈtʃitə/"
+            },
+            {
+              "id": "trip",
+              "en": "trip",
+              "zh": "短途旅行；绊倒",
+              "ipa": "/trɪp/"
+            },
+            {
+              "id": "woke",
+              "en": "woke",
+              "zh": "醒来（wake 的过去式）",
+              "ipa": "/woʊk/"
+            },
+            {
+              "id": "dream",
+              "en": "dream",
+              "zh": "梦",
+              "ipa": "/drim/"
+            }
+          ],
+          "sentences": [
+            {
+              "en": "Was there a gym in your old school?",
+              "zh": "你以前的学校有体育馆吗？",
+              "tip": "Was there 用来问过去有没有一个事物。"
+            },
+            {
+              "en": "There was no dining hall five years ago.",
+              "zh": "五年前没有饭厅。",
+              "tip": "过去有或没有一个事物用 There was，ago 表示以前。",
+              "acceptedAnswers": [
+                "Five years ago there was no dining hall."
+              ]
+            },
+            {
+              "en": "There were no computers in that classroom.",
+              "zh": "那个教室里以前没有电脑。",
+              "tip": "computers 是复数，过去用 There were。"
+            },
+            {
+              "en": "I could not ride a bike before.",
+              "zh": "我以前不会骑自行车。",
+              "tip": "could not 表示过去不能或不会，后面用 ride 原形。",
+              "acceptedAnswers": [
+                "Before I could not ride a bike."
+              ]
+            },
+            {
+              "en": "Now I can go cycling with my father.",
+              "zh": "现在我会和爸爸一起骑自行车了。",
+              "tip": "Now 表示现在，can 后面用 go 原形。"
+            },
+            {
+              "en": "I was quiet before, but now I am active.",
+              "zh": "我以前很安静，但现在很活跃。",
+              "tip": "before 描述过去，用 was；now 描述现在，用 am。"
+            },
+            {
+              "en": "How do you know about the old school?",
+              "zh": "你是怎么了解那所旧学校的？",
+              "tip": "How do you know 用来问如何知道某个信息。"
+            },
+            {
+              "en": "Please tell us about your old classroom.",
+              "zh": "请给我们讲讲你以前的教室。",
+              "tip": "tell someone about something 表示告诉某人关于某物的情况。"
+            }
+          ],
+          "grammar": [
+            {
+              "prompt": "There ___ no gym five years ago.",
+              "options": [
+                "was",
+                "were",
+                "are"
+              ],
+              "answer": "was",
+              "explanation": "gym 是单数，five years ago 是过去，用 was。"
+            },
+            {
+              "prompt": "There ___ no computers in that classroom before.",
+              "options": [
+                "were",
+                "was",
+                "is"
+              ],
+              "answer": "were",
+              "explanation": "computers 是复数，过去用 There were。"
+            },
+            {
+              "prompt": "I could not ___ a bike before.",
+              "options": [
+                "ride",
+                "rode",
+                "riding"
+              ],
+              "answer": "ride",
+              "explanation": "could not 后面接动词原形 ride。"
+            }
+          ],
+          "coverage": {
+            "status": "partial",
+            "wordlistStatus": "verified",
+            "source": "https://www.pep.com.cn/yyptypzj/pep-6x-14-Words-in-Unit-4.mp3",
+            "expressionSources": [
+              "https://www.pep.com.cn/yyptypzj/pep-6x-15-Unit-4-Useful-expressions.mp3"
+            ],
+            "basis": "官方在用版 Words in each unit 完整音频，与同版四单元书面词表逐项比对；Unit 3 另补书面表明确列出的 Labour Day。Useful expressions 重点结构用于自编例句。",
+            "missing": [
+              "尚未取得整册官方电子书页面，C 拓展阅读、项目和语音例词未逐页核对。"
+            ],
+            "wordlistScope": "官方 Words in each unit 完整音频；书面整理补充项另在 writtenSources 与 basis 说明。",
+            "writtenSources": [
+              "https://www.sohu.com/a/627904679_500680",
+              "https://www.wanwords.com/phrases/pep-grade6-lower-course-015"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

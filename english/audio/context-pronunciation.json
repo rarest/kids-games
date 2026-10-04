@@ -12,5 +12,12 @@
     "word": "use",
     "start_seconds": 0.225,
     "end_seconds": 0.5375
+  },
+  "read-past": {
+    "voice": "en-US-AriaNeural",
+    "context": "I read a book yesterday.",
+    "word": "read-past",
+    "start_seconds": 0.275,
+    "end_seconds": 0.48750000000000004
   }
 }

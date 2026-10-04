@@ -14,12 +14,13 @@ function shuffle(a,rng){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Mat
 export function makeQuestions(unit,words,seed=1){
  const rng=random(seed),pool=unit.words.map(id=>({id,...words[id]})),order=shuffle(pool,rng),result=[];
  function choice(kind,word,answer,alternatives,prompt,explanation){return {id:`${unit.id}-${seed}-${result.length}`,unitId:unit.id,kind,wordId:word?.id,say:word?.en,prompt,answer,choices:shuffle([...new Set([answer,...shuffle(alternatives.filter(x=>x!==answer),rng).slice(0,3)])],rng),explanation,solution:answer};}
- for(let i=0;i<3;i++){const w=order[i%order.length];result.push(choice('word',w,w.en,pool.map(x=>x.en),`“${w.zh}”的英语是哪一个？`,`${w.en} 表示“${w.zh}”，美式音标是 ${w.ipa}。`));}
+ const meanings=word=>word.zh.replace(/[（(][^）)]*[）)]/g,'').split(/[；;,，、]/).map(s=>s.trim()).filter(Boolean);
+ for(let i=0;i<3;i++){const w=order[i%order.length],senses=new Set(meanings(w)),distractors=pool.filter(x=>!meanings(x).some(s=>senses.has(s))).map(x=>x.en);result.push(choice('word',w,w.en,distractors,`“${w.zh}”的英语是哪一个？`,`${w.en} 表示“${w.zh}”，美式音标是 ${w.ipa}。`));}
  for(let i=0;i<2;i++){const w=order[(i+3)%order.length];result.push(choice('ipa',w,w.ipa,pool.map(x=>x.ipa),`听一听 ${w.en}（${w.zh}），它的美式音标是哪一个？`,`${w.en} 的美式音标是 ${w.ipa}。ˈ 表示后面的音节重读；音标帮助我们读出单词。`));}
  const sentenceOrder=shuffle(unit.sentences,rng);
  for(let i=0;i<3;i++){const sentence=sentenceOrder[i%sentenceOrder.length];result.push({id:`${unit.id}-${seed}-${result.length}`,unitId:unit.id,kind:'sentence',prompt:`把单词拼成一句话：${sentence.zh}`,answer:sentence.en,acceptedAnswers:sentence.acceptedAnswers||[],tokens:shuffle(sentence.en.replace(/[.,!?]/g,'').split(/\s+/),rng),explanation:sentence.tip,solution:sentence.en,say:sentence.en});}
  const grammarOrder=shuffle(unit.grammar,rng);
- for(let i=0;i<2;i++){const g=grammarOrder[i%grammarOrder.length];result.push(choice('grammar',null,g.answer,g.options,`选词填空：${g.prompt}`,g.explanation));result.at(-1).solution=g.prompt.replace(/_{2,}/,g.answer);result.at(-1).say=result.at(-1).solution;}
+ for(let i=0;i<2;i++){const g=grammarOrder[i%grammarOrder.length];result.push(choice('grammar',null,g.answer,g.options,`选词填空：${g.prompt}${g.context?`（${g.context}）`:""}`,g.explanation));result.at(-1).solution=g.prompt.replace(/_{2,}/,g.answer);result.at(-1).say=result.at(-1).solution;}
  return shuffle(result,rng).map((x,i)=>({...x,number:i+1}));
 }
 export class Run {

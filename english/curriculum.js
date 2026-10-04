@@ -1,3 +1,5 @@
+import CONTENT_G34 from './content-g34.json' with {type:'json'};
+import CONTENT_G56 from './content-g56.json' with {type:'json'};
 // Topic-based original practice; see SOURCES.md for textbook versions and scope.
 // IPA uses broad General American forms (ɛ, ɑ, oʊ, ɚ, ɝ).
 const lexicon = `
@@ -695,3 +697,24 @@ export const BOOKS = [
     ]),
   ]),
 ];
+
+// Keep historical word IDs usable by saved rounds; new rounds follow verified unit lists.
+for(const correctedBook of [...CONTENT_G34.books,...CONTENT_G56.books]){
+ const targetBook=BOOKS.find(book=>book.id===correctedBook.id);
+ for(const corrected of correctedBook.units){
+  const target=targetBook.units.find(unit=>unit.id===corrected.id);
+  for(const {id,en,zh,ipa} of corrected.words){
+   // Shared senses must survive cross-grade merges (dress: noun and verb).
+   const meanings=[...new Set([...(WORDS[id]?.zh||'').split('；'),...zh.split('；')].filter(Boolean))];
+   WORDS[id]={en,zh:meanings.join('；'),ipa};
+  }
+  target.textbookWords=corrected.words.map(word=>word.id);target.words=[...target.textbookWords];target.coverage=corrected.coverage;
+  // Work and play teaches weekdays/frequency, not the former guessed jobs theme.
+  if(target.id==='g5-upper-u3'){target.sentences=[];target.grammar=[];}
+  const previousSentences=target.sentences;
+  const unique=(items,key)=>[...new Map(items.map(item=>[key(item),item])).values()];
+  target.sentences=unique([...target.sentences,...corrected.sentences],s=>s.en);
+  for(const sentence of target.sentences){const previous=previousSentences.find(s=>s.en===sentence.en);if(previous?.acceptedAnswers)sentence.acceptedAnswers=[...new Set([...previous.acceptedAnswers,...(sentence.acceptedAnswers||[])])];}
+  target.grammar=unique([...target.grammar,...corrected.grammar],g=>g.prompt);
+ }
+}
