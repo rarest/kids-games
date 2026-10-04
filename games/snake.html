@@ -187,6 +187,7 @@
     </div>
   </div>
 
+<script src="../shared/game-activity.js?v=20261004activity1" data-game-id="snake"></script>
 <script>
 (() => {
 
@@ -542,6 +543,7 @@
     overlay.classList.add('hidden');
     running = true;
     paused = false;
+    window.GameActivity?.setPlaying(running && !paused);
     beep(440, 0.05, 'sine', 0.05);   // 解锁音频
     MUSIC.start();                    // 摇滚卡农 BGM
     restartLoop();
@@ -564,6 +566,7 @@
 
   function gameWin() {
     running = false;
+    window.GameActivity?.finish();
     clearInterval(loop);
     addToBoard(score);
     ovTitle.textContent = '🎉 满分通关！';
@@ -574,6 +577,7 @@
 
   function gameOver() {
     running = false;
+    window.GameActivity?.finish();
     clearInterval(loop);
     MUSIC.stop();
     badSound();
@@ -587,6 +591,7 @@
   function togglePause() {
     if (!running) return;
     paused = !paused;
+    window.GameActivity?.setPlaying(running && !paused);
     if (paused) {
       clearInterval(loop);
       ovTitle.textContent = '⏸ 暂停中';

@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createVolley, advanceVolley } from "./volley.js";
 import {createEconomy,bankMinerals,purchase,winchPrice,mineTheme,applyMineTheme,selectBlastTarget,DYNAMITE_PRICE} from "./progression.js";
 
+declare global { interface Window { GameActivity?: { setPlaying(value: boolean): void; finish(): void }; } }
+
 type Phase = "ready" | "playing" | "store" | "gameover";
 type HookMode = "swing" | "extend" | "retract" | "done";
 type MineralKind = "gold" | "diamond" | "rock" | "bone";
@@ -360,6 +362,7 @@ export default function Home() {
 
   const updatePhase = useCallback((next: Phase) => {
     phaseRef.current = next;
+    window.GameActivity?.setPlaying(next === "playing");
     setPhase(next);
   }, []);
 

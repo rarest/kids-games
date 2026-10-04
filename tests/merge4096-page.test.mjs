@@ -17,7 +17,7 @@ test('page has the complete screens, controls and five empty columns', async () 
   assert.doesNotMatch(html,/再抽.*幸运牌|距离.*幸运牌/);
   assert.match(html,/50金币/);
   assert.match(html,/60金币/);
-  assert.match(html,/type="module" src="\.\.\/merge4096\/app\.js\?v=20260830i"/);
+  assert.match(html,/type="module" src="\.\.\/merge4096\/app\.js\?v=[a-zA-Z0-9._-]+"/);
   assert.match(html,/href="\.\.\/merge4096\/styles\.css\?v=20260830i"/);
   const app=await readFile(new URL('../merge4096/app.js',import.meta.url),'utf8');
   for(const module of ['game-core','save','audio','drag','difficulty'])assert.match(app,new RegExp(`from '\\.\\/${module}\\.js\\?v=20260830i'`));

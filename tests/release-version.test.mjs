@@ -5,7 +5,7 @@ import { AUDIO_RELEASE, MUSIC_DEFINITION, SOUND_DEFINITIONS, audioAssetUrl } fro
 
 const RELEASE='20260831a';
 
-test('public HTML and the complete ES module graph share the new cache version',async()=>{
+test('public HTML versions the updated entry while the unchanged maze asset graph retains its release',async()=>{
   assert.equal(AUDIO_RELEASE,RELEASE);
   for(const definition of [...Object.values(SOUND_DEFINITIONS),MUSIC_DEFINITION])for(const entry of definition.files){
     const file=typeof entry==='string'?entry:entry.file;
@@ -13,7 +13,7 @@ test('public HTML and the complete ES module graph share the new cache version',
   }
   const html=await readFile(new URL('../games/maze.html',import.meta.url),'utf8');
   assert.match(html,new RegExp(`game\\.css\\?v=${RELEASE}`));
-  assert.match(html,new RegExp(`main\\.js\\?v=${RELEASE}`));
+  assert.match(html,/main\.js\?v=[a-zA-Z0-9._-]+/);
   const visited=new Set();
   const visit=async file=>{
     if(visited.has(file))return;

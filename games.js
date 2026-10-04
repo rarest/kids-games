@@ -1,7 +1,8 @@
 /* 游戏目录清单 —— 加新游戏只需在这里加一项 + 把 HTML 放进 games/ 目录。
-   字段: file 路径 | emoji 图标 | name 名称 | desc 一句话 | tags 标签(用于搜索/分类) */
+   字段: id 稳定标识 | file 路径 | emoji 图标 | name 名称 | desc 一句话 | tags 标签(用于搜索/分类) */
 window.GAMES = [
   {
+    id: "memory",
     file: "games/memory.html",
     emoji: "🌼",
     name: "记忆花园",
@@ -9,6 +10,7 @@ window.GAMES = [
     tags: ["记忆", "配对", "3D", "手机"],
   },
   {
+    id: "english",
     file: "games/english.html",
     emoji: "🔵",
     name: "珠珠学习乐园",
@@ -16,6 +18,7 @@ window.GAMES = [
     tags: ["英语", "学习", "3D", "皮肤", "手机"],
   },
   {
+    id: "rescue",
     file: "games/rescue.html?v=20261004rescue-online6",
     emoji: "🐿️",
     name: "松鼠大作战",
@@ -23,6 +26,7 @@ window.GAMES = [
     tags: ["经典", "3D", "本机双人", "联网双人", "手柄", "闯关"],
   },
   {
+    id: "parkour",
     file: "games/parkour.html",
     emoji: "🌸",
     name: "微光跑酷",
@@ -30,6 +34,7 @@ window.GAMES = [
     tags: ["跑酷", "3D", "闯关", "手机"],
   },
   {
+    id: "racing",
     file: "games/racing.html",
     emoji: "🏎️",
     name: "峰谷竞速",
@@ -37,6 +42,7 @@ window.GAMES = [
     tags: ["赛车", "3D", "皮肤", "手机"],
   },
   {
+    id: "territory",
     file: "games/territory.html",
     emoji: "🟥",
     name: "纸片领地",
@@ -44,6 +50,7 @@ window.GAMES = [
     tags: ["圈地", "策略", "皮肤", "手机"],
   },
   {
+    id: "shooter",
     file: "games/shooter.html",
     emoji: "🛸",
     name: "星际小队",
@@ -51,6 +58,7 @@ window.GAMES = [
     tags: ["射击", "闯关", "手机", "升级"],
   },
   {
+    id: "pinyin",
     file: "games/pinyin.html",
     emoji: "🚀",
     name: "拼音打字小火箭",
@@ -58,6 +66,7 @@ window.GAMES = [
     tags: ["键盘", "拼音", "识字"],
   },
   {
+    id: "snake",
     file: "games/snake.html",
     emoji: "🐍",
     name: "贪吃蛇吃痘痘",
@@ -65,6 +74,7 @@ window.GAMES = [
     tags: ["反应", "经典"],
   },
   {
+    id: "fish",
     file: "games/fish.html",
     emoji: "🐟",
     name: "大鱼吃小鱼",
@@ -72,6 +82,7 @@ window.GAMES = [
     tags: ["休闲", "成长"],
   },
   {
+    id: "fishing",
     file: "games/fishing.html",
     emoji: "🎣",
     name: "捕鱼达人",
@@ -79,6 +90,7 @@ window.GAMES = [
     tags: ["射击", "金币", "休闲"],
   },
   {
+    id: "goldminer",
     file: "games/goldminer.html",
     emoji: "⛏️",
     name: "黄金矿工",
@@ -86,6 +98,7 @@ window.GAMES = [
     tags: ["经典", "金币", "反应", "手机"],
   },
   {
+    id: "maze",
     file: "games/maze.html",
     emoji: "👑",
     name: "皇冠迷宫",
@@ -93,6 +106,7 @@ window.GAMES = [
     tags: ["迷宫", "闯关", "金币", "手机"],
   },
   {
+    id: "merge4096",
     file: "games/merge4096.html",
     emoji: "🎼",
     name: "合成4096",

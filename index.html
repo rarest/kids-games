@@ -31,6 +31,56 @@
   h1{font-size:clamp(30px,7vw,52px);font-weight:900;letter-spacing:1px;
      text-shadow:0 4px 0 rgba(0,0,0,.25);}
   .sub{margin-top:12px;font-size:clamp(14px,3.4vw,18px);opacity:.85;}
+  .popularity{
+    width:100%;max-width:920px;margin:8px 0 28px;padding:24px;
+    background:linear-gradient(135deg,rgba(166,118,232,.16),rgba(255,255,255,.06));
+    border:1px solid rgba(235,215,255,.22);border-radius:24px;
+    box-shadow:0 12px 36px rgba(0,0,0,.16);line-height:1.65;
+  }
+  .popularity-heading{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;}
+  .popularity h2{font-size:22px;letter-spacing:.3px;}
+  .popularity-intro{color:#ded0f3;font-size:14px;margin-top:4px;}
+  .popularity-tabs{display:flex;gap:4px;padding:4px;background:rgba(17,9,40,.32);border-radius:14px;}
+  .popularity-tab,.popularity-retry{font:inherit;cursor:pointer;border:0;color:var(--text);border-radius:10px;}
+  .popularity-tab{min-height:44px;min-width:66px;padding:8px 16px;background:transparent;font-size:15px;font-weight:700;}
+  .popularity-tab[aria-selected="true"]{background:var(--accent);color:#2b1d54;box-shadow:0 2px 8px #140b3026;}
+  .popularity-tab:hover:not([aria-selected="true"]){background:rgba(255,255,255,.1);}
+  .popularity-tab:focus-visible,.popularity-retry:focus-visible,.popularity-row:focus-visible{outline:3px solid var(--accent);outline-offset:4px;}
+  .popularity-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 18px;margin:20px 0 12px;font-size:13px;color:#e1d5f0;}
+  .popularity-meta span{color:#c9b8e2;}
+  .popularity-column-label{font-size:12px;color:#d5c4ea;margin-bottom:8px;text-align:right;}
+  .popularity-list{list-style:none;display:grid;gap:8px;}
+  .popularity-row{display:flex;align-items:center;gap:14px;min-height:78px;padding:14px 16px;border:1px solid rgba(255,255,255,.09);border-radius:15px;text-decoration:none;color:inherit;background:rgba(23,13,50,.2);transition:background .15s,border-color .15s;}
+  .popularity-row:hover{background:rgba(255,213,74,.09);border-color:rgba(255,213,74,.5);}
+  .popularity-rank{width:24px;flex-shrink:0;text-align:center;font-size:17px;font-weight:800;color:#d7c8ef;font-variant-numeric:tabular-nums;}
+  .popularity-rank-top{color:var(--accent);}
+  .popularity-icon{font-size:29px;width:38px;flex-shrink:0;text-align:center;}
+  .popularity-game{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px;}
+  .popularity-name{font-size:16px;font-weight:750;overflow-wrap:anywhere;}
+  .popularity-duration{font-size:12px;color:#d2c1e9;}
+  .popularity-count{display:flex;align-items:baseline;justify-content:flex-end;gap:5px;flex-wrap:wrap;max-width:38%;text-align:right;font-variant-numeric:tabular-nums;}
+  .popularity-count strong{font-size:21px;font-weight:800;color:#ffe17b;overflow-wrap:anywhere;}
+  .popularity-count>span{font-size:13px;color:#e3d4f5;}
+  .popularity-arrow{font-size:24px;color:#c9b8e2;}
+  .popularity-message{padding:26px 12px;text-align:center;font-size:16px;}
+  .popularity-spark{display:block;margin-bottom:8px;font-size:26px;color:var(--accent);}
+  .popularity-muted{font-size:14px;color:#d5c4ea;margin-top:7px;}
+  .popularity-retry{min-height:44px;padding:8px 24px;margin-top:16px;background:#ffd54a;color:#2b1d54;font-weight:700;}
+  .popularity-note{font-size:12px;color:#d5c4ea;margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  @media(max-width:520px){
+    .popularity{padding:20px 14px;border-radius:20px;}
+    .popularity-heading{gap:14px;}
+    .popularity-tabs{width:100%;}
+    .popularity-tab{flex:1;}
+    .popularity-row{gap:9px;padding:12px 10px;}
+    .popularity-rank{width:20px;font-size:15px;}
+    .popularity-icon{width:30px;font-size:25px;}
+    .popularity-name{font-size:15px;}
+    .popularity-count strong{font-size:19px;}
+    .popularity-arrow{display:none;}
+    .popularity-meta{margin-top:16px;flex-direction:column;gap:5px;}
+  }
   .search{
     width:100%;max-width:420px;margin:8px auto 28px;
     display:flex;align-items:center;gap:10px;
@@ -82,6 +132,26 @@
     <p class="sub">给小朋友的趣味小游戏，打开就能玩 · 免费 · 无广告</p>
   </header>
 
+  <section class="popularity" id="popularity" aria-labelledby="popularity-title">
+    <div class="popularity-heading">
+      <div>
+        <h2 id="popularity-title">✦ 热门游戏</h2>
+        <p class="popularity-intro">看看大家最近爱玩什么</p>
+      </div>
+      <div class="popularity-tabs" role="tablist" aria-label="热门游戏统计周期">
+        <button type="button" class="popularity-tab" id="popularity-day" role="tab" aria-controls="popularity-panel" aria-selected="true" data-popularity-period="day">日榜</button>
+        <button type="button" class="popularity-tab" id="popularity-week" role="tab" aria-controls="popularity-panel" aria-selected="false" tabindex="-1" data-popularity-period="week">周榜</button>
+        <button type="button" class="popularity-tab" id="popularity-month" role="tab" aria-controls="popularity-panel" aria-selected="false" tabindex="-1" data-popularity-period="month">月榜</button>
+      </div>
+    </div>
+    <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-popularity-status></p>
+    <div id="popularity-panel" role="tabpanel" aria-labelledby="popularity-day" aria-busy="true" tabindex="0" data-popularity-panel>
+      <div data-popularity-results><p class="popularity-message">正在加载日榜…</p></div>
+    </div>
+    <p class="popularity-note">前台游玩满15秒计一次，30分钟内重复进入不重复计数。无需注册，打开就能玩。</p>
+    <noscript><p class="popularity-muted">启用 JavaScript 后可查看热门游戏。</p></noscript>
+  </section>
+
   <label class="search">
     🔍 <input id="q" type="search" placeholder="搜索游戏…" autocomplete="off" aria-label="搜索游戏">
   </label>
@@ -96,7 +166,8 @@
     games.nblord.com
   </footer>
 
-<script src="games.js?v=20261004memory1"></script>
+<script src="games.js?v=20261004popularity1"></script>
+<script src="shared/popularity.js?v=20261004popularity1"></script>
 <script>
   const grid = document.getElementById('grid');
   const empty = document.getElementById('empty');
@@ -130,6 +201,7 @@
   if (games.length < 5) document.querySelector('.search').style.display = 'none';
   q.addEventListener('input', () => render(q.value));
   render();
+  window.GamePopularity.mount(document.getElementById('popularity'), games);
 </script>
 </body>
 </html>

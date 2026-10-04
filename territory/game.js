@@ -88,6 +88,7 @@ function clearInput() {
 function screen(name) {
   clearInput();
   document.body.dataset.screen = name;
+  window.GameActivity?.setPlaying(name === "game" && !!game && ["playing", "reward"].includes(game.mode));
   document.body.dataset.mode = name === "game" ? game.mode : name;
   for (const n of ["home", "shop", "game", "result"])
     $(`${n}-screen`).hidden = n !== name;
@@ -281,6 +282,7 @@ function pause() {
   clearInput();
   game.resumeMode = game.mode;
   game.mode = "paused";
+  window.GameActivity?.setPlaying(false);
   document.body.dataset.mode = "paused";
   $("pause-dialog").hidden = false;
   $("resume").focus();
@@ -289,12 +291,14 @@ function resume() {
   if (!game || game.mode !== "paused") return;
   clearInput();
   game.mode = game.resumeMode || "playing";
+  window.GameActivity?.setPlaying(playable());
   game.resumeMode = null;
   document.body.dataset.mode = game.mode;
   $("pause-dialog").hidden = true;
   last = performance.now();
 }
 function end() {
+  window.GameActivity?.finish();
   if (!game) return;
   updateHud();
   clearInput();

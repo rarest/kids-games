@@ -45,6 +45,7 @@ function resetPageScroll(){
 }
 
 function showScreen(name) {
+  window.GameActivity?.setPlaying(name === 'game' && !run?.complete);
   if(name!=='game')cancelJoystick();
   for (const [key, screen] of Object.entries(screens)) screen.classList.toggle('active', key === name);
   document.body.dataset.screen = name;
@@ -224,6 +225,7 @@ function handleGameEvent(event) {
 
 function finishStage() {
   if (!run?.complete) return;
+  window.GameActivity?.finish();
   const stars = starsFor(run.steps, currentLevel.parSteps);
   const elapsed = Math.max(1, Math.round((Date.now() - run.startedAt) / 1000));
   save = completeStage(save, { levelId: currentLevel.id, stars, steps: run.steps, coinIds: [...run.newCoinIds] }); store(save);

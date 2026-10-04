@@ -5,6 +5,7 @@ export class RacingClient {
   constructor({onState,onJoined,onStatus,onError,onLeave}) {
     Object.assign(this,{onState,onJoined,onStatus,onError,onLeave});
     this.socket=null;this.session=null;this.room=null;
+    this.stateAt=null;
     this.seq=0;this.run=0;this.lastInput=0;this.retry=0;
   }
   restore() {
@@ -23,6 +24,7 @@ export class RacingClient {
     else this.connect(command);
   }
   connect(command) {
+    this.stateAt=null;
     clearTimeout(this.retryTimer);clearTimeout(this.connectTimer);
     this.onStatus('正在连接赛车房间…');
     const url=new URL('/racing-ws',location.href);url.protocol=location.protocol==='https:'?'wss:':'ws:';
@@ -38,6 +40,7 @@ export class RacingClient {
         try{sessionStorage.setItem(SESSION_KEY,JSON.stringify(this.session));}catch{}
         this.retry=0;this.onJoined(packet);this.onStatus('');
       } else if(packet.type==='state') {
+        this.stateAt=performance.now();
         this.room=packet.room;
         if(this.run!==packet.room.run){this.run=packet.room.run;this.seq=0;}
         this.seq=Math.max(this.seq,packet.acks?.[this.session?.slot]||0);
@@ -54,6 +57,7 @@ export class RacingClient {
     socket.onclose=()=>{
       if(this.socket!==socket)return;
       clearTimeout(this.connectTimer);this.socket=null;
+      this.stateAt=null;
       this.pending=false;
       if(!this.session){this.onStatus('暂时无法连接，请重新创建或加入房间。');return;}
       this.onStatus('连接中断，正在重新加入房间…');
@@ -67,6 +71,9 @@ export class RacingClient {
     if(this.socket?.readyState!==WebSocket.OPEN)return false;
     this.socket.send(JSON.stringify(message));return true;
   }
+  get hasLiveState() {
+    return this.socket?.readyState===WebSocket.OPEN && this.stateAt!==null && performance.now()-this.stateAt<=2000;
+  }
   input(input,now=performance.now(),force=false) {
     if(!this.session||this.room?.mode!=='racing'||(!force&&now-this.lastInput<33))return;
     this.lastInput=now;
@@ -76,6 +83,7 @@ export class RacingClient {
     clearTimeout(this.retryTimer);clearTimeout(this.connectTimer);
     this.send({type:'leave'});
     const socket=this.socket;this.socket=null;this.session=null;this.room=null;
+    this.stateAt=null;
     this.pending=false;socket?.close();try{sessionStorage.removeItem(SESSION_KEY);}catch{}
   }
 }
