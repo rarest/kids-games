@@ -22,7 +22,7 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
   const wss = new WebSocketServer({noServer:true,maxPayload:4096,perMessageDeflate:false});
   const send = (ws,packet) => {if(ws?.readyState===WebSocket.OPEN)ws.send(typeof packet==='string'?packet:JSON.stringify(packet));};
   function roomInfo(room) {
-    return {code:room.code,host:0,mode:room.mode,run:room.run,members:room.members.map((member,slot)=>member?{slot,character:slot===0?'chip':'dale',connected:!!member.ws,ready:member.ready}:null)};
+    return {code:room.code,host:0,mode:room.mode,run:room.run,pauseReason:room.pauseReason??null,members:room.members.map((member,slot)=>member?{slot,character:slot===0?'chip':'dale',connected:!!member.ws,ready:member.ready}:null)};
   }
   function broadcast(room) {
     const stageKey = `${room.epoch}:${room.game.areaLevel.id}:${room.game.level.id}`;
@@ -43,8 +43,8 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
       member.queue=[];member.received=0;member.lastInput=clock.now();
     }
   }
-  function pause(room) {
-    if(room.mode==='playing'){room.mode='paused';resetInputs(room);}
+  function pause(room,reason) {
+    if(room.mode==='playing'){room.mode='paused';room.pauseReason=reason;resetInputs(room);}
   }
   function closeRoom(room,message) {
     rooms.delete(room.code);
@@ -61,7 +61,7 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
     if(!room||!member||member.ws!==connection.ws)return;
     member.ws=null;member.connection=null;member.ready=false;member.until=clock.now()+RECLAIM_MS;
     member.queue=[];
-    pause(room);broadcast(room);
+    pause(room,{type:'disconnect',slot:member.slot});broadcast(room);
     connection.room=null;connection.member=null;
   }
   function entryValues(game) {
@@ -76,7 +76,7 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
       for(let i=0;i<2;i++)Object.assign(room.game.players[i],entry.players[i]);
     }
     room.entry=entryValues(room.game);room.campaign.current=id;
-    room.run++;room.tick=0;room.mode='playing';resetInputs(room);
+    room.run++;room.tick=0;room.mode='playing';room.pauseReason=null;resetInputs(room);
   }
   function allReady(room) {return room.members.every(m=>m?.ws?.readyState===WebSocket.OPEN&&m.ready);}
   function join(connection,message) {
@@ -140,8 +140,8 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
     if(message.type==='ready'){
       if(typeof message.value!=='boolean')throw Error('准备状态无效');
       member.ready=message.value;
-      if(!member.ready)pause(room);
-    }else if(message.type==='pause')pause(room);
+      if(!member.ready)pause(room,{type:'not-ready',slot:member.slot});
+    }else if(message.type==='pause')pause(room,{type:'manual',slot:member.slot});
     else {
       if(member.slot!==0)throw Error('只有房主可以执行此操作');
       if(message.type==='start'){
@@ -149,7 +149,7 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
         newGame(room,'0');
       }else if(message.type==='resume'){
         if(room.mode!=='paused'||!allReady(room))throw Error('需要两位玩家连接并准备');
-        room.mode='playing';resetInputs(room);
+        room.mode='playing';room.pauseReason=null;resetInputs(room);
       }else if(message.type==='retry'){
         if(room.mode==='lobby'||!allReady(room))throw Error('需要两位玩家连接并准备');
         const entry=structuredClone(room.entry);
@@ -192,7 +192,8 @@ export function createRescueServer({port=8788,host='127.0.0.1',origins=['https:/
       if(room.mode==='playing'&&['playing','bonus'].includes(room.game.status)){
         // Before the first valid epoch command controls are neutral. The bounded
         // RTT handshake grace ends immediately on that command; active streams retain 350ms.
-        if(room.members.some(m=>!m?.ws||now-m.lastInput>(m.received===0?FIRST_INPUT_MS:STALE_MS))){pause(room);broadcast(room);continue;}
+        const staleSlot=room.members.findIndex(m=>!m?.ws||now-m.lastInput>(m.received===0?FIRST_INPUT_MS:STALE_MS));
+        if(staleSlot>=0){pause(room,{type:'input-timeout',slot:staleSlot});broadcast(room);continue;}
         const samples=room.members.map(m=>m.queue.shift());
         room.inputs=samples.map((command,slot)=>command?.input??{...room.inputs[slot],jump:false,action:false});
         const levelId=room.game.level.id,status=room.game.status;

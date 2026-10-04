@@ -19,7 +19,7 @@ window.GAMES = [
   },
   {
     id: "rescue",
-    file: "games/rescue.html?v=20261004rescue-online6",
+    file: "games/rescue.html?v=20261005rescue-pause1",
     emoji: "🐿️",
     name: "松鼠大作战",
     desc: "11个经典区域的3D横版重制，举箱子、扔队友，本机 / 联网双人救援",
