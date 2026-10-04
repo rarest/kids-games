@@ -59,7 +59,7 @@ test('rankings use the known catalog links and server order, with no zero-play o
     { gameId: 'fish', plays: 0, activeSeconds: 0 },
   ]), catalog, 'day');
   assert.deepEqual(Array.from(result.items, row => [row.id, row.name, row.file, row.plays]), [
-    ['rescue', '松鼠大作战', 'games/rescue.html?v=20261004rescue-online6', 12],
+    ['rescue', '松鼠大作战', 'games/rescue.html?v=20261005rescue-pause1', 12],
     ['memory', '记忆花园', 'games/memory.html', 3],
   ]);
 });

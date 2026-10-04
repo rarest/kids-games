@@ -21,7 +21,16 @@ export function updateRoomUI(status,available) {
   $('gameover-retry').disabled=!host||!ready||!available;
   $('next-area').disabled=!host||!ready;
   $('bonus-finish').disabled=!host;
-  $('pause-copy').textContent=!available?'本设备正在恢复，恢复后由房主继续。':!ready?'等待两位搭档连接并准备。':host?'两位搭档已准备，点击继续冒险。':'等待房主继续冒险。';
+  const reason=room?.mode==='paused'?room.pauseReason:null;
+  const teammate=reason?.slot===0?'奇奇':reason?.slot===1?'蒂蒂':null;
+  const explanations=teammate?{
+    'input-timeout':`${teammate}的操作更新暂时中断，冒险已暂停。`,
+    'manual':`${teammate}暂停了冒险。`,
+    'not-ready':`${teammate}正在恢复画面或返回游戏，冒险已暂停。`,
+    'disconnect':`${teammate}的连接已断开，冒险已暂停。`,
+  }:{};
+  const recovery=!available?'本设备正在恢复，恢复后由房主继续。':!ready?'等待两位搭档连接并准备。':host?'两位搭档已准备，点击继续冒险。':'等待房主继续冒险。';
+  $('pause-copy').textContent=(explanations[reason?.type]??'')+recovery;
 }
 export function resetRoomUI(){
   updateRoomUI({connection:'idle',message:'',rtt:null,code:null,slot:null,room:null,suspended:false},true);

@@ -86,6 +86,24 @@ test('ready false, stale input and disconnect pause; token reclaims original sea
   await h.send(c,{type:'ready',value:true});await h.send(a,{type:'resume'});assert.equal(h.last(a).room.mode,'playing');
 });
 
+test('pause identifies the stalled seat and clears the reason only on manual resume',async t=>{
+ const h=await setup(t),[a,b]=await h.pair();await h.start(a,b);
+ await h.commands(a,[{}]);await h.commands(b,[{}]);await h.poll(300);
+ await h.send(a,{type:'input',epoch:h.last(a).epoch,commands:[{seq:2,input:input()}]});
+ await h.poll(60);
+ assert.equal(h.last(a).room.mode,'paused');
+ assert.deepEqual(h.last(a).room.pauseReason,{type:'input-timeout',slot:1});
+ assert.deepEqual(h.last(b).room.pauseReason,{type:'input-timeout',slot:1});
+ await h.poll(100);assert.equal(h.last(a).room.mode,'paused');
+ await h.send(a,{type:'resume'});assert.equal(h.last(a).room.pauseReason,null);
+ await h.send(a,{type:'pause'});assert.deepEqual(h.last(a).room.pauseReason,{type:'manual',slot:0});
+ await h.send(a,{type:'resume'});await h.send(b,{type:'ready',value:false});
+ assert.deepEqual(h.last(a).room.pauseReason,{type:'not-ready',slot:1});
+ await h.send(b,{type:'ready',value:true});await h.send(a,{type:'resume'});
+ b.ws.terminate();await once(b.ws,'close');await new Promise(r=>setTimeout(r,10));await h.barrier(a);
+ assert.deepEqual(h.last(a).room.pauseReason,{type:'disconnect',slot:1});
+});
+
 test('input validation is atomic and cannot write another seat or authoritative state',async t=>{
   const h=await setup(t),[a,b]=await h.pair();await h.start(a,b);
   const epoch=h.last(a).epoch;
