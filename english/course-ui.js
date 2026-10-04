@@ -11,7 +11,7 @@ const quizKinds=new Set(['listen','meaning','sentence','check']);
 export function mountCourse({root,speak,read,stopAudio,openPages,onReward,notice,onActivity=()=>{},onSave=()=>{}}){
  let raw;try{raw=localStorage.getItem(KEY);}catch{}
  let progress=loadProgress(raw,LESSONS),storageKey=KEY;let lesson=null,session=null;
- const api={get progress(){return progress},get lesson(){return lesson},get session(){return session},home,start,save,snapshot:()=>JSON.parse(JSON.stringify(progress)),replaceProgress};window.englishCourse=api;
+ const api={get progress(){return progress},get lesson(){return lesson},get session(){return session},get storageKey(){return storageKey},home,start,save,snapshot:()=>JSON.parse(JSON.stringify(progress)),replaceProgress};window.englishCourse=api;
  function save(event=null){if(session)progress.session=session;try{localStorage.setItem(storageKey,JSON.stringify(progress));}catch{notice('学习进度暂时无法保存，请保持页面打开。');}onSave({progress:JSON.parse(JSON.stringify(progress)),event});}
  function replaceProgress(raw,{storageKey:nextKey=KEY,preserveView=false}={}){if(!preserveView)stopAudio();storageKey=nextKey;progress=loadProgress(raw,LESSONS);if(preserveView&&lesson){if(session&&progress.session){session=progress.session;lesson=LESSONS.find(l=>l.id===session.lessonId);}return;}session=null;lesson=null;home();}
  function home(){onActivity(false);if(session)save();stopAudio();lesson=null;session=null;const resume=progress.session,done=LESSONS.filter(l=>progress.lessons[l.id]?.completed).length,recommended=recommendLesson(LESSONS,progress),due=dueItems(progress).length;
