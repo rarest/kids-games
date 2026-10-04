@@ -4,6 +4,9 @@ import {isIP} from 'node:net';
 import {pathToFileURL} from 'node:url';
 import {Pool} from 'pg';
 import {ActivityStore, problem} from './store.mjs';
+import {fromNodeHeaders} from 'better-auth/node';
+import {createAuth, migrateAuth} from './auth.mjs';
+import {createMailer} from './mail.mjs';
 
 const COOKIE = 'games_visitor';
 function visitorCookie(req, secret) {
@@ -18,12 +21,12 @@ function send(res, status, value) {
   res.writeHead(status, {'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff'});
   res.end(JSON.stringify(value));
 }
-async function jsonBody(req) {
+async function jsonBody(req, maxLength = 8192) {
   if (!req.headers['content-type']?.toLowerCase().startsWith('application/json')) throw problem(415, 'JSON required');
   let length = 0, chunks = [];
-  for await (const chunk of req) {
+  for await (const chunk of req.iterator({destroyOnReturn:false})) {
     length += chunk.length;
-    if (length > 8192) throw problem(413, 'Body too large');
+    if (length > maxLength) { req.resume(); throw problem(413, 'Body too large'); }
     chunks.push(chunk);
   }
   try {
@@ -33,7 +36,7 @@ async function jsonBody(req) {
   } catch { throw problem(400, 'Invalid JSON'); }
 }
 
-export function createApi({store, secret, publicOrigin}) {
+export function createApi({store, secret, publicOrigin, auth, familyStore, mailReady = auth?.mailReady ?? false, trustProxy = false}) {
   if (!secret || secret.length < 32) throw new Error('A persistent visitor secret of at least 32 characters is required');
   const origin = new URL(publicOrigin).origin;
   const secure = origin.startsWith('https:');
@@ -52,10 +55,68 @@ export function createApi({store, secret, publicOrigin}) {
     try {
       const url = new URL(req.url, origin);
       const remote = req.socket.remoteAddress;
-      const trustedProxy = remote === '127.0.0.1' || remote === '::1' || remote === '::ffff:127.0.0.1';
+      const trustedProxy = trustProxy && (remote === '127.0.0.1' || remote === '::1' || remote === '::ffff:127.0.0.1');
       const realIP = trustedProxy && isIP(req.headers['x-real-ip'] ?? '') ? req.headers['x-real-ip'] : remote;
       const ipKey = createHmac('sha256', secret).update(realIP ?? 'unknown').digest('hex');
       if (limited(`ip:${ipKey}`, 1000)) { res.setHeader('Retry-After', '60'); throw problem(429, 'Try again later'); }
+      const mutation = !['GET','HEAD','OPTIONS'].includes(req.method);
+      const requireOrigin = () => {
+        if (req.headers.origin !== origin || req.headers['sec-fetch-site'] === 'cross-site') throw problem(403, 'Origin not allowed');
+      };
+      const authHeaders = fromNodeHeaders(req.headers);
+      for (const key of ['x-forwarded-for','x-forwarded-host','x-forwarded-proto','forwarded','x-real-ip']) authHeaders.delete(key);
+      authHeaders.set('x-real-ip', realIP ?? 'unknown');
+      const handleAuth = async (path, body, method=req.method) => {
+        if (!auth) throw problem(503,'Parent accounts unavailable');
+        const response=await auth.handler(new Request(new URL(path,origin),{method,headers:authHeaders,...(body?{body:JSON.stringify(body)}:{})}));
+        res.statusCode=response.status;
+        for (const [key,value] of response.headers) if(key!=='set-cookie')res.setHeader(key,value);
+        const cookies=response.headers.getSetCookie(); if(cookies.length)res.setHeader('Set-Cookie',cookies);
+        res.setHeader('Cache-Control','no-store'); res.setHeader('X-Content-Type-Options','nosniff');
+        res.end(Buffer.from(await response.arrayBuffer()));
+      };
+      if (url.pathname.startsWith('/api/auth/')) {
+        if(mutation)requireOrigin();
+        if(limited(`auth:${ipKey}`,40)) {res.setHeader('Retry-After','60');throw problem(429,'Try again later');}
+        const emailPaths=['/sign-up/email','/request-password-reset','/reset-password','/send-verification-email','/verify-email','/change-email','/delete-user/callback'];
+        if(!mailReady && emailPaths.some(path=>url.pathname==='/api/auth'+path || url.pathname.startsWith('/api/auth'+path+'/')))throw problem(503,'Email service unavailable');
+        const body=mutation?await jsonBody(req,16384):undefined;
+        if(url.pathname==='/api/auth/delete-user' && !body?.password)throw problem(400,'Password required');
+        return await handleAuth(url.pathname+url.search,body);
+      }
+      if (url.pathname==='/api/family/status' && req.method==='GET')return send(res,200,{enabled:!!(auth&&familyStore),mailReady:!!(auth&&familyStore&&mailReady)});
+      if (url.pathname.startsWith('/api/family/')) {
+        if(mutation)requireOrigin();
+        if(!auth||!familyStore)throw problem(503,'Parent accounts unavailable');
+        const session=await auth.api.getSession({headers:authHeaders});
+        if(!session?.user?.emailVerified)throw problem(401,'Verified parent session required');
+        const owner=session.user.id;
+        if(url.pathname==='/api/family/account' && req.method==='DELETE') {
+          const body=await jsonBody(req,16384);
+          if(typeof body.password!=='string'||!body.password)throw problem(400,'Password required');
+          return await handleAuth('/api/auth/delete-user',{password:body.password},'POST');
+        }
+        if(url.pathname==='/api/family/export' && req.method==='GET')return send(res,200,await familyStore.exportAccount(owner));
+        if(url.pathname==='/api/family/profiles') {
+          if(req.method==='GET')return send(res,200,{profiles:await familyStore.profiles(owner)});
+          if(req.method==='POST')return send(res,201,{profile:await familyStore.createProfile(owner,await jsonBody(req,512*1024))});
+        }
+        const profileMatch=url.pathname.match(/^\/api\/family\/profiles\/([^/]+)$/);
+        if(profileMatch) {
+          if(req.method==='PATCH')return send(res,200,{profile:await familyStore.updateProfile(owner,profileMatch[1],await jsonBody(req,512*1024))});
+          if(req.method==='DELETE')return send(res,200,await familyStore.deleteProfile(owner,profileMatch[1]));
+        }
+        const progressMatch=url.pathname.match(/^\/api\/family\/profiles\/([^/]+)\/progress\/english(\/import)?$/);
+        if(progressMatch) {
+          const id=progressMatch[1];
+          if(req.method==='GET'&&!progressMatch[2])return send(res,200,await familyStore.getProgress(owner,id));
+          if(req.method==='POST') {
+            const body=await jsonBody(req,512*1024);
+            return send(res,200,await (progressMatch[2]?familyStore.importProgress(owner,id,body):familyStore.syncProgress(owner,id,body)));
+          }
+        }
+        throw problem(404,'Not found');
+      }
       if (req.method === 'GET' && url.pathname === '/api/health') {
         await store.pool.query('SELECT 1'); return send(res, 200, {ok:true, service:'games-platform'});
       }
@@ -79,7 +140,7 @@ export function createApi({store, secret, publicOrigin}) {
     } catch (error) {
       const status = error.status ?? 503;
       if (!error.status) console.error(`[platform] request unavailable (${error.code ?? 'unexpected'})`);
-      if (!res.headersSent) send(res, status, {error: error.status ? error.message : 'Service temporarily unavailable'});
+      if (!res.headersSent) send(res, status, {error: error.status ? error.message : 'Service temporarily unavailable',...(status===409&&error.current?{current:error.current}:{})});
       else res.end();
     }
   });
@@ -91,7 +152,15 @@ async function main() {
   const pool = new Pool({connectionString:DATABASE_URL, max:8, connectionTimeoutMillis:5000, idleTimeoutMillis:30000, statement_timeout:10000});
   pool.on('error', error => console.error(`[platform] database connection unavailable (${error.code ?? 'unexpected'})`));
   const store = new ActivityStore({pool}); await store.migrate(); await store.prune();
-  const server = createApi({store, secret:VISITOR_SECRET, publicOrigin:PUBLIC_ORIGIN});
+  let auth, familyStore;
+  const sendMail=createMailer();
+  if(process.env.AUTH_SECRET) {
+    auth=createAuth({pool,secret:process.env.AUTH_SECRET,publicOrigin:PUBLIC_ORIGIN,sendMail});
+    await migrateAuth(auth);
+    const {FamilyStore}=await import('./family-store.mjs');
+    familyStore=new FamilyStore({pool}); await familyStore.migrate();
+  }
+  const server = createApi({store, secret:VISITOR_SECRET, publicOrigin:PUBLIC_ORIGIN,auth,familyStore,mailReady:!!sendMail,trustProxy:true});
   const cleanup = setInterval(() => store.prune().catch(() => console.error('[platform] cleanup unavailable')), 3600000); cleanup.unref();
   server.listen(Number(PORT), HOST, () => console.log(`[platform] listening on ${HOST}:${PORT}`));
   let stopping = false;

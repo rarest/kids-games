@@ -1,0 +1,8 @@
+[Unit]
+Description=Encrypted game platform database backup on a separate host
+[Service]
+Type=oneshot
+EnvironmentFile=%h/.config/games-platform-offsite/backup.env
+ExecStart=/usr/bin/node %h/.local/share/games-platform-offsite/platform-offsite-backup.mjs
+UMask=0077
+NoNewPrivileges=true

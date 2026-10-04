@@ -118,6 +118,15 @@ test('game and platform deployment preserve unchanged rooms and retry failed pha
    await clear();await change('platform/package-lock.json',JSON.stringify({packages:{'':{dependencies:{pg:'1'}},'node_modules/pg':{version:'2'}}}));execute();out=await calls();
    assert.match(out,/npm ci --prefix platform/);assert.match(out,/restart games-platform.service/);noGameRestart(out);noRootNpm(out);assert.doesNotMatch(out,/openresty/);
   });
+  await t.test('auth modules and shared course validation changes update only the platform',async()=>{
+   await clear();await change('platform/auth.mjs','// new auth module\n');execute();out=await calls();
+   assert.match(out,/restart games-platform.service/);noGameRestart(out);noRootNpm(out);assert.doesNotMatch(out,/npm ci|openresty/);
+   await mkdir(join(repo,'english'),{recursive:true});
+   await clear();await change('english/course-engine.js','// new validated progress schema\n');execute();out=await calls();
+   assert.match(out,/restart games-platform.service/);noGameRestart(out);noRootNpm(out);assert.doesNotMatch(out,/npm ci|openresty/);
+   await clear();await change('english/course-ui.js','// browser only course change\n');execute();out=await calls();
+   assert.doesNotMatch(out,/restart|npm ci|openresty/);
+  });
   await t.test('failed platform npm does not advance successful markers and the next deployment retries',async()=>{
    const dependencies=await readFile(join(state,'platform-dependencies'),'utf8'),runtime=await readFile(join(state,'platform-runtime'),'utf8');
    await clear();await change('platform/package-lock.json',JSON.stringify({packages:{'':{dependencies:{pg:'1'}},'node_modules/pg':{version:'3'}}}));env.DEPLOY_TEST_FAIL_NPM='1';

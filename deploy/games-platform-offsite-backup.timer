@@ -1,0 +1,8 @@
+[Unit]
+Description=Daily encrypted offsite game platform database backup
+[Timer]
+OnCalendar=*-*-* 03:45:00 Asia/Shanghai
+RandomizedDelaySec=300
+Persistent=true
+[Install]
+WantedBy=timers.target

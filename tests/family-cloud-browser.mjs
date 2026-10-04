@@ -1,0 +1,62 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomUUID,randomBytes} from 'node:crypto';
+import {writeFile} from 'node:fs/promises';
+import {openBrowser,sleep} from './game-browser-harness.mjs';
+import {startFixture} from './platform-browser-fixture.mjs';
+const output='/home/ubuntu/codex-work/output/family-cloud';
+async function wait(b,expression,label='browser state',{attempts=120}={}){for(let i=0;i<attempts;i++){if(await b.evaluate(expression))return;await sleep(100)}throw new Error('Timed out: '+label)}
+async function click(b,selector){const point=await b.evaluate(`(()=>{const e=document.querySelector(${JSON.stringify(selector)});if(!e||e.disabled)return null;e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()`);assert.ok(point,'native control exists and is enabled: '+selector);await b.call('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});await b.call('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await sleep(80)}
+async function fill(b,selector,value){await click(b,selector);await b.call('Input.dispatchKeyEvent',{type:'keyDown',key:'a',code:'KeyA',modifiers:2});await b.call('Input.dispatchKeyEvent',{type:'keyUp',key:'a',code:'KeyA',modifiers:2});await b.call('Input.insertText',{text:value})}
+async function login(b,email,password){await b.navigate('account.html');await wait(b,'!!document.querySelector("form[data-form=login]")','login form');await fill(b,'input[name=email]',email);await fill(b,'input[name=password]',password);await click(b,'form[data-form=login] button[type=submit]');await wait(b,'!!document.querySelector("form[data-form=profile]")','signed-in family centre')}
+async function createProfile(b,nickname){await fill(b,'form[data-form=profile] input[name=nickname]',nickname);await click(b,'form[data-form=profile] button[type=submit]');await wait(b,`Array.from(document.querySelectorAll('.family-profile strong')).some(e=>e.textContent===${JSON.stringify(nickname)})`,'child created');return b.evaluate(`Array.from(document.querySelectorAll('.family-profile')).find(e=>e.querySelector('strong').textContent===${JSON.stringify(nickname)}).querySelector('[data-select]').dataset.select`)}
+async function learn(b,profile){await b.navigate('games/english.html');await wait(b,`window.englishCourseCloud?.profile?.id===${JSON.stringify(profile)}`,'cloud profile ready');await wait(b,'document.getElementById("familySyncStatus")?.textContent.includes("已同步")','profile loaded')}
+async function completeLessonNative(b){
+ if(!await b.evaluate('!!window.englishCourse.session'))await click(b,'#startCourse');
+ let wrong=false;
+ for(let n=0;n<100;n++){
+  const step=await b.evaluate('window.englishCourse.session?.steps[window.englishCourse.session.index]');if(!step)return;
+  if(['listen','meaning','check'].includes(step.kind)){
+   const good=step.choices.indexOf(step.answer);assert.ok(good>=0);
+   if(!wrong&&step.choices.length>1){await click(b,`.course-choices>button:nth-child(${(good+1)%step.choices.length+1})`);assert.equal(await b.evaluate('document.getElementById("courseNext").disabled'),true);wrong=true;}
+   await click(b,`.course-choices>button:nth-child(${good+1})`);
+  }else if(step.kind==='sentence'){
+   const used=new Set();for(const token of step.answer.replace(/[.,!?]/g,'').trim().split(/\s+/)){const index=step.tokens.findIndex((value,i)=>value===token&&!used.has(i));assert.ok(index>=0);used.add(index);await click(b,`[data-course-token="${index}"]`)}await click(b,'#courseCheckSentence');
+  }else if(step.kind==='oral')await click(b,'#courseOral');
+  await click(b,'#courseNext');
+ }
+ throw new Error('Native course did not finish');
+}
+async function screenshot(b,name){await writeFile(`${output}/${name}.png`,Buffer.from((await b.call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false})).data,'base64'))}
+
+test('native parent signup, independent-browser resume, sibling isolation, offline conflict and guest preservation',{skip:!process.env.PLATFORM_TEST_DATABASE_URL,timeout:180000},async()=>{
+ const fixture=await startFixture({family:true});const previous=process.env.GAMES_TEST_ORIGIN;process.env.GAMES_TEST_ORIGIN=fixture.origin;let a,b;
+ const email=`browser-${randomUUID()}@example.test`,password=randomBytes(18).toString('base64url');
+ try{
+  a=await openBrowser();await a.size(390,844,true);await a.navigate('games/english.html');await wait(a,'!!window.englishCourse','guest course');
+  await click(a,'#startCourse');await click(a,'#courseNext');const guest=await a.evaluate('localStorage.getItem("pearl-english-course-v1")');const guestIndex=await a.evaluate('window.englishCourse.session.index');assert.equal(guestIndex,1);
+  await a.navigate('account.html');await wait(a,'!!document.querySelector("[data-tab=register]")','account centre');await click(a,'[data-tab=register]');await fill(a,'input[name=email]',email);await fill(a,'input[name=password]',password);await click(a,'form[data-form=register] button[type=submit]');await wait(a,'document.getElementById("accountNotice").textContent.includes("验证邮件已发送")','registration email');
+  const mail=fixture.mailbox.findLast(m=>m.to===email&&m.subject.includes('验证'));assert.ok(mail,'verification is sent through configured test transport');const link=mail.text.match(/https?:\/\/\S+/)[0];
+  await a.call('Page.navigate',{url:link});await wait(a,'location.pathname==="/account.html"&&document.readyState==="complete"','verification callback');
+  await login(a,email,password);const child=await createProfile(a,'小海');await screenshot(a,'parent-mobile');
+  await click(a,`[data-select="${child}"]`);await wait(a,'!!window.englishCourseCloud?.profile','child course');await wait(a,'!!document.getElementById("familyImportOpen")','explicit import');await click(a,'#familyImportOpen');await click(a,'#familyImportConfirm');await wait(a,`window.englishCourse.progress.session?.index===${guestIndex}`,'guest progress imported');assert.equal(await a.evaluate('localStorage.getItem("pearl-english-course-v1")'),guest);
+  await click(a,'#startCourse');await click(a,'#courseNext');await wait(a,'window.englishCourseCloud.status==="已同步"','first device save');assert.equal(await a.evaluate('window.englishCourse.session.index'),2);
+  b=await openBrowser();await b.size(1366,900);await login(b,email,password);await click(b,`[data-select="${child}"]`);await wait(b,'!!window.englishCourseCloud?.profile','second device course');await click(b,'#startCourse');assert.equal(await b.evaluate('window.englishCourse.session.index'),2,'independent browser resumes actual step');
+  await a.call('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:-1,uploadThroughput:-1});await click(a,'#courseNext');await wait(a,'window.englishCourseCloud.status==="离线待同步"','offline save remains pending');const localIndex=await a.evaluate('window.englishCourse.session.index');
+  await click(b,'#courseNext');await click(b,'#courseNext');await wait(b,'window.englishCourseCloud.status==="已同步"','second device update');assert.notEqual(await b.evaluate('window.englishCourse.session.index'),localIndex);
+  await a.call('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});await a.evaluate('window.englishCourseCloud.flush()');await wait(a,'!!window.englishCourseCloud.conflict','two versions preserved');assert.equal(await a.evaluate('window.englishCourseCloud.conflict.local.session.index'),localIndex);await screenshot(a,'conflict-mobile');await click(a,'[data-conflict=local]');await wait(a,'window.englishCourseCloud.status==="已同步"','chosen version saves');await learn(b,child);await click(b,'#startCourse');assert.equal(await b.evaluate('window.englishCourse.session.index'),localIndex);
+  await completeLessonNative(a);await wait(a,'window.englishCourseCloud.status==="已同步"','completed lesson sync');assert.equal(await a.evaluate('Object.values(window.englishCourse.progress.lessons).filter(l=>l.completed).length'),1);assert.ok(await a.evaluate('Object.values(window.englishCourse.progress.items).some(i=>i.incorrect>0)'),'wrong answer added to review');
+  await learn(b,child);assert.equal(await b.evaluate('Object.values(window.englishCourse.progress.lessons).filter(l=>l.completed).length'),1,'second device sees native completion');assert.ok(await b.evaluate('Object.values(window.englishCourse.progress.items).some(i=>i.incorrect>0)'),'second device sees wrong-item review');assert.equal(await b.evaluate('window.englishApp.save.coins'),0,'cloud completion does not sync device coins');
+  await a.navigate('account.html');await wait(a,'!!document.querySelector("form[data-form=profile]")','family management');const sibling=await createProfile(a,'小山');await click(a,`[data-select="${sibling}"]`);await wait(a,`window.englishCourseCloud?.profile?.id===${JSON.stringify(sibling)}`,'sibling selected');assert.equal(await a.evaluate('window.englishCourse.progress.session'),null,'sibling has an independent empty save');await screenshot(a,'course-mobile');assert.ok(await a.evaluate('document.documentElement.scrollWidth<=innerWidth+1'));
+  await a.evaluate(`window.__familyFetch=window.fetch;window.fetch=async(...args)=>{const response=await window.__familyFetch(...args);if(String(args[0]).includes('/progress/english')&&(!args[1]?.method||args[1].method==='GET'))await new Promise(resolve=>window.__releaseProgress=resolve);return response}`);
+  await click(a,'#familyProfile');await a.call('Input.dispatchKeyEvent',{type:'keyDown',key:'ArrowUp',code:'ArrowUp'});await a.call('Input.dispatchKeyEvent',{type:'keyUp',key:'ArrowUp',code:'ArrowUp'});await a.call('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter'});await a.call('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter'});await wait(a,'!!window.__releaseProgress','delayed native profile switch');assert.equal(await a.evaluate('document.getElementById("courseRoot").inert'),true);assert.equal(await a.evaluate('document.getElementById("familyProfile").disabled'),true,'rapid profile switches are prevented while loading');await click(a,'#startCourse');assert.equal(await a.evaluate('window.englishCourse.session'),null,'loading cannot write to the previous child');await a.evaluate('window.fetch=window.__familyFetch;window.__releaseProgress()');await wait(a,`window.englishCourseCloud?.profile?.id===${JSON.stringify(child)}&&!document.getElementById("courseRoot").inert`,'target profile unlocked only after loading');assert.equal(await a.evaluate('Object.values(window.englishCourse.progress.lessons).filter(l=>l.completed).length'),1);
+  await a.navigate('account.html');await wait(a,'!!document.querySelector("[data-action=logout]")','logout entry');await click(a,'[data-action=logout]');await wait(a,'!!document.querySelector("form[data-form=login]")','logged out');await a.navigate('games/english.html');await wait(a,'window.englishCourseCloud&&window.englishCourseCloud.profile===null','guest restored');assert.equal(await a.evaluate('window.englishCourse.progress.session.index'),guestIndex);assert.equal(await a.evaluate('localStorage.getItem("pearl-english-course-v1")'),guest);assert.deepEqual(a.errors,[]);assert.deepEqual(b.errors,[]);
+ }finally{a?.close();b?.close();await fixture.close();if(previous===undefined)delete process.env.GAMES_TEST_ORIGIN;else process.env.GAMES_TEST_ORIGIN=previous}
+});
+
+test('English guest can start and advance when browser storage access is blocked',{skip:!process.env.PLATFORM_TEST_DATABASE_URL,timeout:45000},async()=>{
+ const fixture=await startFixture({family:true});const previous=process.env.GAMES_TEST_ORIGIN;process.env.GAMES_TEST_ORIGIN=fixture.origin;let browser;
+ try{
+  browser=await openBrowser();await browser.call('Page.addScriptToEvaluateOnNewDocument',{source:"Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Blocked','SecurityError')}})"});await browser.size(390,844,true);await browser.navigate('games/english.html');await wait(browser,'!!window.englishCourse&&!!window.englishCourseCloud','guest startup without storage');await sleep(400);await click(browser,'#startCourse');await click(browser,'#courseNext');assert.equal(await browser.evaluate('window.englishCourse.session.index'),1);assert.deepEqual(browser.errors,[]);
+ }finally{browser?.close();await fixture.close();if(previous===undefined)delete process.env.GAMES_TEST_ORIGIN;else process.env.GAMES_TEST_ORIGIN=previous}
+});
