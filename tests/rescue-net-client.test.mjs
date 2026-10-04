@@ -35,7 +35,8 @@ test('real WS clients own separate roles, no lobby input, full room errors and e
  assert.equal(a.c.advance({move:1},1/60).commands.length,0);
  const c=h.make();c.c.join(a.c.room.code);await until(()=>c.statuses.some(s=>s.connection==='error'),'full');
  assert.match(c.statuses.at(-1).message,/满/);await h.start(a,b);
- const before=b.c.authority.players[1].x;b.c.advance({move:1},1/60);assert.ok(b.c.render().players[1].x>before);
+ const before=b.c.render().players[1].x;b.c.advance({move:1},1/60);assert.equal(b.c.render().players[1].x,before,'input alone cannot invent a position');
+ await until(()=>b.c.render().players[1].x>before,'confirmed movement');
  b.c.leave();await until(()=>a.statuses.some(s=>s.connection==='closed'),'closed');assert.equal(b.store.values().length,0);assert.equal(b.c.render(),null);
 });
 test('a reconnect clears the old socket RTT until the new socket receives its own pong',async t=>{
@@ -48,17 +49,19 @@ test('a reconnect clears the old socket RTT until the new socket receives its ow
  assert.equal(replacement.rtt,null,'the replacement socket cannot inherit the old socket RTT');
  await until(()=>a.statuses.at(-1).rtt>=100,'new socket pong');
 });
-test('200ms RTT predicts within 100ms and converges after ack with bounded history and queues',async t=>{
+test('200ms RTT waits for confirmed motion and converges after ack with bounded history and queues',async t=>{
  const h=await setup(t,{delay:100}),[a,b]=await h.pair();await h.start(a,b);
  const original=b.c.authority,level=original.level,base=original.players[1].x,frameStart=b.frames.length,start=performance.now();
- const first=b.c.advance({move:1,jump:true},1/60);const response=performance.now()-start;
- assert.ok(first.state.players[1].x>base);assert.ok(first.state.players[1].y>original.players[1].y);assert.ok(response<100);
+ const first=b.c.advance({move:1,jump:true},1/60);
+ assert.equal(first.state.players[1].x,base);assert.equal(first.state.players[1].y,original.players[1].y);
+ let response=null;
  let maxPending=0,maxHistory=0;
- for(let i=0;i<75;i++){a.c.advance({},1/60);b.c.advance({move:i<12?1:0,jump:i<12},1/60);maxPending=Math.max(maxPending,b.c.diagnostics().pending);maxHistory=Math.max(maxHistory,b.c.diagnostics().history);await sleep(1000/60);}
- await until(()=>b.c.diagnostics().pending===0,'ack');await sleep(90);
+ for(let i=0;i<75;i++){a.c.advance({},1/60);b.c.advance({move:i<12?1:0,jump:i<12},1/60);if(response===null&&b.c.render().players[1].x>base+.01)response=performance.now()-start;maxPending=Math.max(maxPending,b.c.diagnostics().pending);maxHistory=Math.max(maxHistory,b.c.diagnostics().history);await sleep(1000/60);}
+ assert.ok(response>=200&&response<600,`confirmed response ${response}ms`);
+ await until(()=>b.c.diagnostics().pending===0,'ack');await sleep(150);
  assert.equal(b.c.authority,original);assert.equal(b.c.authority.level,level);
  const error=Math.hypot(b.c.render().players[1].x-b.c.authority.players[1].x,b.c.render().players[1].y-b.c.authority.players[1].y);
- assert.ok(error<.001,`settled error ${error}`);assert.ok(maxPending<=120);assert.ok(maxHistory<=8);
+ assert.ok(error<.001,`settled error ${error}`);assert.ok(maxPending<=120);assert.ok(maxHistory<=32);assert.equal(b.c.diagnostics().mode,'confirmed');
  assert.equal(b.c.authority.events.filter(e=>e.type==='jump'&&e.player==='p2').length,1);
  const sampleSeconds=(performance.now()-start)/1000,dynamic=b.frames.slice(frameStart).filter(f=>!f.p.stage),dynamicBytes=dynamic.reduce((total,f)=>total+Buffer.byteLength(JSON.stringify(f.p)),0),dynamicBytesPerSecond=dynamicBytes/sampleSeconds;
  assert.ok(dynamicBytesPerSecond<=80*1024);
