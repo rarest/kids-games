@@ -105,6 +105,15 @@ test('three browsers use a six-digit room, start together, drive independent car
     console.log("native refresh rejoined");
     await click(host,'#pause');await click(host,'#quit');
     await wait(guest,'view.dataset.captain==="1"');
+    // Traffic may push the unattended third car onto the shoulder while the
+    // other device reloads. Steer back using the same native recovery as start.
+    const remainingOffset=await third.evaluate('Number(view.dataset.offset)');
+    if(Math.abs(remainingOffset)>7){
+      const key=remainingOffset>0?'ArrowRight':'ArrowLeft';
+      await third.call('Input.dispatchKeyEvent',{type:'keyDown',key,code:key});
+      await wait(third,'Math.abs(Number(view.dataset.offset))<6',20000);
+      await third.call('Input.dispatchKeyEvent',{type:'keyUp',key,code:key});
+    }
     const s=await third.evaluate('Number(view.dataset.distance)');
     await wait(third,`Number(view.dataset.distance)>${s+10}`,20000);
     assert.equal(await host.evaluate('!document.querySelector("#garage").hidden'),true);
