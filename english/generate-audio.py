@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate original American-English practice audio, not textbook recordings.
+"""Generate American-English practice and user-provided textbook photo audio.
 
 Run with a Python environment containing edge-tts and with node/ffprobe on PATH:
     /path/to/venv/bin/python english/generate-audio.py
@@ -23,13 +23,14 @@ HERE = Path(__file__).resolve().parent
 VOICE = "en-US-AriaNeural"
 # Context selects the intended pronunciation of these homographs. Only the
 # target WordBoundary interval is exported, never the complete context sentence.
+CONTEXT_TARGETS = {"read-past": "read"}
 CONTEXT_WORDS = {"read": "I read a book every day.", "use": "I use a book.",
                  "read-past": "I read a book yesterday."}
 
 
 async def save_context_word(word, destination):
     context = CONTEXT_WORDS[word]
-    target_word = "read" if word == "read-past" else word
+    target_word = CONTEXT_TARGETS.get(word, word)
     source = destination.with_suffix(".context.mp3")
     boundaries = []
     try:
@@ -64,26 +65,39 @@ def load_clips():
     program = """
 import {WORDS, BOOKS} from './curriculum.js';
 const units = BOOKS.flatMap(book => book.units);
-const sentences = units.flatMap(unit => unit.sentences.map(sentence => sentence.en));
+const sentences = units.flatMap(unit => [...unit.sentences.map(sentence => sentence.en)]);
 const grammar = units.flatMap(unit => unit.grammar.map(question =>
   question.prompt.replaceAll('___', question.answer)));
-console.log(JSON.stringify({words: WORDS, sentences: [...sentences, ...grammar]}));
+const lines = BOOKS.flatMap(book => (book.textbookPages ?? []).flatMap(page => page.blocks.flatMap(block => block.lines)));
+console.log(JSON.stringify({words: WORDS, sentences: [...sentences, ...grammar, ...lines.map(line=>line.en)], speech: Object.fromEntries(lines.filter(line=>line.say).map(line=>[line.en,line.say]))}));
 """
     data = json.loads(subprocess.check_output(
         ["node", "--input-type=module", "-e", program], cwd=HERE, text=True
     ))
     clips = {}
     for key, word in data["words"].items():
+        if "字母" in word["zh"] and re.fullmatch(r"[A-Za-z]|[A-Z] ?[a-z]", word["en"]):
+            letter = word["en"][0].upper()
+            CONTEXT_WORDS[key] = f"This is the letter {letter}."
+            CONTEXT_TARGETS[key] = letter.lower()
         safe_id = re.sub(r"[^a-zA-Z0-9_-]", "-", key)
-        clips[key] = (word["en"], f"{safe_id}.mp3")
+        spoken_word = word.get("say", word["en"])
+        suffix = "-" + hashlib.sha256(spoken_word.encode()).hexdigest()[:12] if word.get("say") else ""
+        clips[key] = (spoken_word, f"{safe_id}{suffix}.mp3")
     # Previous question snapshots and wrong-card reviews keep their original audio.
     legacy = json.loads((HERE / "legacy-sentences.json").read_text())
     for sentence in [*data["sentences"], *legacy]:
         # Chinese instructions are not spoken as English; only completed sentences.
-        if re.search(r"[\u3400-\u9fff]", sentence) or "___" in sentence:
+        if re.search(r"[\u3400-\u9fff]", sentence) or "___" in sentence or not re.search(r"[A-Za-z0-9]", sentence):
             continue
         digest = hashlib.sha256(sentence.encode()).hexdigest()[:20]
-        clips[f"sentence:{sentence}"] = (sentence, f"sentence-{digest}.mp3")
+        if data["speech"].get(sentence):
+            digest += "-" + hashlib.sha256(data["speech"][sentence].encode()).hexdigest()[:12]
+        spoken = re.sub(r"\b([A-Z])([a-z])\b", lambda match: match[1] if match[1].lower() == match[2] else match[0], data["speech"].get(sentence, sentence))
+        tokens = spoken.split()
+        if tokens and all(re.fullmatch(r"[A-Za-z]", token) for token in tokens):
+            spoken = ". ".join(token.upper() for token in tokens) + "."
+        clips[f"sentence:{sentence}"] = (spoken, f"sentence-{digest}.mp3")
     filenames = [filename for _, filename in clips.values()]
     if len(filenames) != len(set(filenames)):
         raise ValueError("Audio filename collision")

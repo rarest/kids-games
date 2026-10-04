@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 
 import { WORDS, BOOKS } from '../english/curriculum.js';
 const expectedTitles = [
-  ['g3-upper', 'Making friends', 'Different families', 'Amazing animals', 'Plants around us', 'The colourful world', 'Useful numbers'],
+  ['g3-upper', 'Making friends', 'Different families', 'Our animal friends', 'Plants around us', 'The colourful world', 'Useful numbers'],
   ['g3-lower', 'Meeting new people', 'Expressing yourself', 'Learning better', 'Healthy food', 'Old toys', 'Numbers in life'],
   ['g4-upper', 'Helping at home', 'My friends', 'Places we live in', 'Helping in the community', 'The weather and us', 'Changing for the seasons'],
   ['g4-lower', 'Class rules', 'Family rules', 'Time for school', 'Going shopping', 'Farms and us', 'From farm to table'],

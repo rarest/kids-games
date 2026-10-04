@@ -6,6 +6,7 @@ test('bundled US audio covers all word, sentence and completed grammar listening
  const manifest=JSON.parse(await readFile(new URL('../english/audio-manifest.json',import.meta.url),'utf8'));
  const legacy=JSON.parse(await readFile(new URL('../english/legacy-sentences.json',import.meta.url),'utf8'));
  const expected=new Set([...Object.keys(WORDS),...legacy.map(text=>`sentence:${text}`)]);for(const book of BOOKS)for(const unit of book.units){for(const s of unit.sentences)expected.add(`sentence:${s.en}`);for(const g of unit.grammar)expected.add(`sentence:${g.prompt.replaceAll('___',g.answer)}`);}
+ for(const book of BOOKS)for(const p of book.textbookPages??[])for(const b of p.blocks)for(const l of b.lines)if(/[A-Za-z0-9]/.test(l.en))expected.add(`sentence:${l.en}`);
  assert.deepEqual(Object.keys(manifest).sort(),[...expected].sort());
  for(const [key,file] of Object.entries(manifest)){assert.match(file,/^[a-z0-9-]+\.mp3$/);const data=await readFile(new URL(`../english/audio/${file}`,import.meta.url));assert.ok(data.length>512,key);}
  const files=(await readdir(new URL('../english/audio/',import.meta.url))).filter(x=>x.endsWith('.mp3'));assert.deepEqual(files.sort(),Object.values(manifest).sort());

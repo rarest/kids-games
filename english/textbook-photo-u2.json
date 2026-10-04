@@ -1,0 +1,3110 @@
+{
+  "unitId": "g3-upper-u2",
+  "title": "Different families",
+  "pages": [
+    {
+      "page": 14,
+      "title": "单元导入",
+      "blocks": [
+        {
+          "title": "单元标题与核心问题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Unit 2",
+              "zh": "第二单元"
+            },
+            {
+              "en": "Different families",
+              "zh": "不同的家庭"
+            },
+            {
+              "en": "What makes a family?",
+              "zh": "是什么让人们成为一家人？",
+              "tip": "这里的 makes 表示“使……成为”。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "different",
+          "en": "different",
+          "zh": "不同的",
+          "ipa": "/ˈdɪfərənt/"
+        },
+        {
+          "id": "photo-families",
+          "en": "families",
+          "zh": "家庭（复数）",
+          "ipa": "/ˈfæməliz/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-makes",
+          "en": "makes",
+          "zh": "使……成为（make 的第三人称单数）",
+          "ipa": "/meɪks/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        }
+      ]
+    },
+    {
+      "page": 15,
+      "title": "观察、歌谣与歌曲",
+      "blocks": [
+        {
+          "title": "看一看，想一想",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Look and think",
+              "zh": "看一看，想一想"
+            },
+            {
+              "en": "Why are the people together?",
+              "zh": "这些人为什么在一起？"
+            },
+            {
+              "en": "How are families different?",
+              "zh": "不同的家庭有哪些不同之处？"
+            }
+          ]
+        },
+        {
+          "title": "家庭歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，说唱歌谣"
+            },
+            {
+              "en": "We are a family,",
+              "zh": "我们是一家人，"
+            },
+            {
+              "en": "A happy family,",
+              "zh": "一个幸福的家庭，"
+            },
+            {
+              "en": "My father, my mother,",
+              "zh": "我的爸爸、我的妈妈，"
+            },
+            {
+              "en": "My sister and me!",
+              "zh": "我的姐妹和我！"
+            }
+          ]
+        },
+        {
+          "title": "听唱歌曲",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Listen and sing",
+              "zh": "听一听，唱一唱"
+            },
+            {
+              "en": "My family",
+              "zh": "我的家庭",
+              "tip": "照片只印出歌曲标题，没有歌词。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-think",
+          "en": "think",
+          "zh": "想；思考",
+          "ipa": "/θɪŋk/"
+        },
+        {
+          "id": "photo-why",
+          "en": "why",
+          "zh": "为什么",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（与 you、we、they 等连用）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "people",
+          "en": "people",
+          "zh": "人们",
+          "ipa": "/ˈpipəl/"
+        },
+        {
+          "id": "together",
+          "en": "together",
+          "zh": "一起",
+          "ipa": "/təˈɡɛðɚ/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-families",
+          "en": "families",
+          "zh": "家庭（复数）",
+          "ipa": "/ˈfæməliz/"
+        },
+        {
+          "id": "different",
+          "en": "different",
+          "zh": "不同的",
+          "ipa": "/ˈdɪfərənt/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "说唱歌谣",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "happy",
+          "en": "happy",
+          "zh": "开心的",
+          "ipa": "/ˈhæpi/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "father",
+          "en": "father",
+          "zh": "爸爸",
+          "ipa": "/ˈfɑðɚ/"
+        },
+        {
+          "id": "mother",
+          "en": "mother",
+          "zh": "妈妈",
+          "ipa": "/ˈmʌðɚ/"
+        },
+        {
+          "id": "sister",
+          "en": "sister",
+          "zh": "姐妹",
+          "ipa": "/ˈsɪstɚ/"
+        },
+        {
+          "id": "photo-me",
+          "en": "me",
+          "zh": "我（宾格）",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "sing",
+          "en": "sing",
+          "zh": "唱歌",
+          "ipa": "/sɪŋ/"
+        }
+      ]
+    },
+    {
+      "page": 16,
+      "title": "A：谁和你住在一起",
+      "blocks": [
+        {
+          "title": "A 部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Who lives with you?",
+              "zh": "谁和你住在一起？"
+            }
+          ]
+        },
+        {
+          "title": "介绍朋友与祖辈",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "说一说"
+            },
+            {
+              "en": "Mum! Dad! This is my friend, Sarah Miller.",
+              "zh": "妈妈！爸爸！这是我的朋友，萨拉·米勒。"
+            },
+            {
+              "en": "Hi, Sarah.",
+              "zh": "你好，萨拉。"
+            },
+            {
+              "en": "This is my grandma.",
+              "zh": "这是我的奶奶（或外婆）。"
+            },
+            {
+              "en": "This is my grandpa.",
+              "zh": "这是我的爷爷（或外公）。"
+            },
+            {
+              "en": "Nice to meet you.",
+              "zh": "很高兴认识你。"
+            }
+          ]
+        },
+        {
+          "title": "听、唱与游戏",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen, sing and play",
+              "zh": "听一听，唱一唱，玩一玩"
+            },
+            {
+              "en": "Daddy Finger, Daddy Finger, where are you?",
+              "zh": "爸爸手指，爸爸手指，你在哪里？",
+              "tip": "照片只印出这一句歌词。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-who",
+          "en": "who",
+          "zh": "谁",
+          "ipa": "/hu/"
+        },
+        {
+          "id": "photo-lives",
+          "en": "lives",
+          "zh": "居住（live 的第三人称单数）",
+          "ipa": "/lɪvz/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "photo-talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-mum",
+          "en": "mum",
+          "zh": "妈妈",
+          "ipa": "/mʌm/"
+        },
+        {
+          "id": "photo-dad",
+          "en": "dad",
+          "zh": "爸爸",
+          "ipa": "/dæd/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        },
+        {
+          "id": "photo-sarah",
+          "en": "Sarah",
+          "zh": "萨拉（人名）",
+          "ipa": "/ˈsɛrə/"
+        },
+        {
+          "id": "photo-miller",
+          "en": "Miller",
+          "zh": "米勒（姓）",
+          "ipa": "/ˈmɪlɚ/"
+        },
+        {
+          "id": "photo-hi",
+          "en": "hi",
+          "zh": "嗨；你好",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "photo-grandma",
+          "en": "grandma",
+          "zh": "奶奶；外婆",
+          "ipa": "/ˈɡrænmɑ/"
+        },
+        {
+          "id": "photo-grandpa",
+          "en": "grandpa",
+          "zh": "爷爷；外公",
+          "ipa": "/ˈɡrænpɑ/"
+        },
+        {
+          "id": "photo-nice",
+          "en": "nice",
+          "zh": "令人愉快的；好的",
+          "ipa": "/naɪs/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "向；到；不定式标记",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "meet",
+          "en": "meet",
+          "zh": "遇见；认识",
+          "ipa": "/mit/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "sing",
+          "en": "sing",
+          "zh": "唱歌",
+          "ipa": "/sɪŋ/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "play",
+          "en": "play",
+          "zh": "玩；演奏",
+          "ipa": "/pleɪ/"
+        },
+        {
+          "id": "photo-daddy",
+          "en": "daddy",
+          "zh": "爸爸（亲昵称呼）",
+          "ipa": "/ˈdædi/"
+        },
+        {
+          "id": "photo-finger",
+          "en": "finger",
+          "zh": "手指",
+          "ipa": "/ˈfɪŋɡɚ/"
+        },
+        {
+          "id": "where",
+          "en": "where",
+          "zh": "在哪里",
+          "ipa": "/wɛr/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（与 you、we、they 等连用）",
+          "ipa": "/ɑr/"
+        }
+      ]
+    },
+    {
+      "page": 17,
+      "title": "A：认识家庭成员",
+      "blocks": [
+        {
+          "title": "词语与图示",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "学一学"
+            },
+            {
+              "en": "grandmother (grandma)",
+              "zh": "祖母；外祖母（奶奶；外婆）"
+            },
+            {
+              "en": "mother (mum)",
+              "zh": "母亲（妈妈）"
+            },
+            {
+              "en": "father (dad)",
+              "zh": "父亲（爸爸）"
+            },
+            {
+              "en": "grandfather (grandpa)",
+              "zh": "祖父；外祖父（爷爷；外公）"
+            },
+            {
+              "en": "me",
+              "zh": "我"
+            },
+            {
+              "en": "sister",
+              "zh": "姐妹"
+            }
+          ]
+        },
+        {
+          "title": "介绍自己的家庭",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Hi! I'm Chen Jie. Look! This is my family. This is my ...",
+              "zh": "嗨！我是陈杰。看！这是我的家庭。这是我的……"
+            }
+          ]
+        },
+        {
+          "title": "家庭成员歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，说唱歌谣"
+            },
+            {
+              "en": "This is my mum.",
+              "zh": "这是我的妈妈。"
+            },
+            {
+              "en": "Hello, hello, hello!",
+              "zh": "你好，你好，你好！"
+            },
+            {
+              "en": "This is my dad.",
+              "zh": "这是我的爸爸。"
+            },
+            {
+              "en": "Hi, hi, hi!",
+              "zh": "嗨，嗨，嗨！"
+            },
+            {
+              "en": "This is my sister.",
+              "zh": "这是我的姐妹。"
+            },
+            {
+              "en": "How are you?",
+              "zh": "你好吗？"
+            },
+            {
+              "en": "This is my grandma.",
+              "zh": "这是我的奶奶（或外婆）。"
+            },
+            {
+              "en": "Nice to meet you.",
+              "zh": "很高兴认识你。"
+            },
+            {
+              "en": "This is my grandpa.",
+              "zh": "这是我的爷爷（或外公）。"
+            },
+            {
+              "en": "How do you do?",
+              "zh": "你好！",
+              "tip": "初次见面时较正式的问候语，通常也用 How do you do? 回答。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "photo-grandmother",
+          "en": "grandmother",
+          "zh": "奶奶；外婆",
+          "ipa": "/ˈɡrænmʌðɚ/"
+        },
+        {
+          "id": "photo-grandma",
+          "en": "grandma",
+          "zh": "奶奶；外婆",
+          "ipa": "/ˈɡrænmɑ/"
+        },
+        {
+          "id": "mother",
+          "en": "mother",
+          "zh": "妈妈",
+          "ipa": "/ˈmʌðɚ/"
+        },
+        {
+          "id": "photo-mum",
+          "en": "mum",
+          "zh": "妈妈",
+          "ipa": "/mʌm/"
+        },
+        {
+          "id": "father",
+          "en": "father",
+          "zh": "爸爸",
+          "ipa": "/ˈfɑðɚ/"
+        },
+        {
+          "id": "photo-dad",
+          "en": "dad",
+          "zh": "爸爸",
+          "ipa": "/dæd/"
+        },
+        {
+          "id": "grandfather",
+          "en": "grandfather",
+          "zh": "爷爷；外公",
+          "ipa": "/ˈɡrænfɑðɚ/"
+        },
+        {
+          "id": "photo-grandpa",
+          "en": "grandpa",
+          "zh": "爷爷；外公",
+          "ipa": "/ˈɡrænpɑ/"
+        },
+        {
+          "id": "photo-me",
+          "en": "me",
+          "zh": "我（宾格）",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "sister",
+          "en": "sister",
+          "zh": "姐妹",
+          "ipa": "/ˈsɪstɚ/"
+        },
+        {
+          "id": "photo-hi",
+          "en": "hi",
+          "zh": "嗨；你好",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "photo-i-m",
+          "en": "I'm",
+          "zh": "我是（I am 的缩写）",
+          "ipa": "/aɪm/"
+        },
+        {
+          "id": "photo-chen",
+          "en": "Chen",
+          "zh": "陈（姓，按中文读）",
+          "ipa": "/tʃɛn/"
+        },
+        {
+          "id": "photo-jie",
+          "en": "Jie",
+          "zh": "杰（人名，按中文读）",
+          "ipa": "/dʒjɛ/"
+        },
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "说唱歌谣",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "hello",
+          "en": "hello",
+          "zh": "你好",
+          "ipa": "/həˈloʊ/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（与 you、we、they 等连用）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-nice",
+          "en": "nice",
+          "zh": "令人愉快的；好的",
+          "ipa": "/naɪs/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "向；到；不定式标记",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "meet",
+          "en": "meet",
+          "zh": "遇见；认识",
+          "ipa": "/mit/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句的助动词",
+          "ipa": "/du/"
+        }
+      ]
+    },
+    {
+      "page": 18,
+      "title": "字母与发音：E、F、G、H",
+      "blocks": [
+        {
+          "title": "字母与发音",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Letters and sounds",
+              "zh": "字母与发音"
+            }
+          ]
+        },
+        {
+          "title": "听、跟读与说唱",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Listen, repeat and chant.",
+              "zh": "听一听，跟读并说唱歌谣。"
+            },
+            {
+              "en": "E e",
+              "zh": "字母 E 的大写和小写"
+            },
+            {
+              "en": "F f",
+              "zh": "字母 F 的大写和小写"
+            },
+            {
+              "en": "G g",
+              "zh": "字母 G 的大写和小写"
+            },
+            {
+              "en": "H h",
+              "zh": "字母 H 的大写和小写"
+            },
+            {
+              "en": "egg",
+              "zh": "鸡蛋"
+            },
+            {
+              "en": "nest",
+              "zh": "鸟巢"
+            },
+            {
+              "en": "fish",
+              "zh": "鱼"
+            },
+            {
+              "en": "beef",
+              "zh": "牛肉"
+            },
+            {
+              "en": "girl",
+              "zh": "女孩"
+            },
+            {
+              "en": "pig",
+              "zh": "猪"
+            },
+            {
+              "en": "hot",
+              "zh": "热的"
+            },
+            {
+              "en": "hat",
+              "zh": "帽子"
+            }
+          ]
+        },
+        {
+          "title": "圈出第一个音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Listen and circle the first sound.",
+              "zh": "听一听，圈出第一个音。"
+            },
+            {
+              "en": "d h e",
+              "zh": "选项：d、h、e"
+            },
+            {
+              "en": "f h e",
+              "zh": "选项：f、h、e"
+            },
+            {
+              "en": "g b e",
+              "zh": "选项：g、b、e"
+            },
+            {
+              "en": "f g e",
+              "zh": "选项：f、g、e"
+            }
+          ]
+        },
+        {
+          "title": "试着拼读",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Can you read the words?",
+              "zh": "你能读出这些单词吗？"
+            },
+            {
+              "en": "b e d → bed",
+              "zh": "b、e、d 拼成 bed（床）",
+              "tip": "朗读示范拼出的单词。",
+              "say": "bed."
+            },
+            {
+              "en": "fed",
+              "zh": "喂了；喂养过",
+              "tip": "feed（喂养）的过去式和过去分词。"
+            },
+            {
+              "en": "gab",
+              "zh": "闲聊；唠叨"
+            },
+            {
+              "en": "had",
+              "zh": "有过；曾经有",
+              "tip": "have（有）的过去式和过去分词。"
+            }
+          ]
+        },
+        {
+          "title": "书写与字母表",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Write and say.",
+              "zh": "写一写，说一说。"
+            },
+            {
+              "en": "E e",
+              "zh": "字母 E 的大写和小写"
+            },
+            {
+              "en": "F f",
+              "zh": "字母 F 的大写和小写"
+            },
+            {
+              "en": "G g",
+              "zh": "字母 G 的大写和小写"
+            },
+            {
+              "en": "H h",
+              "zh": "字母 H 的大写和小写"
+            },
+            {
+              "en": "Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz",
+              "zh": "英语字母表：26 个字母的大写和小写"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letters",
+          "en": "letters",
+          "zh": "字母（复数）",
+          "ipa": "/ˈlɛtɚz/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-sounds",
+          "en": "sounds",
+          "zh": "声音；发音（复数）",
+          "ipa": "/saʊndz/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-repeat",
+          "en": "repeat",
+          "zh": "跟读；重复",
+          "ipa": "/rɪˈpit/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "说唱歌谣",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-e",
+          "en": "e",
+          "zh": "字母 E",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-f",
+          "en": "f",
+          "zh": "字母 F",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-g",
+          "en": "g",
+          "zh": "字母 G",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-h",
+          "en": "h",
+          "zh": "字母 H",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "egg",
+          "en": "egg",
+          "zh": "鸡蛋",
+          "ipa": "/ɛɡ/"
+        },
+        {
+          "id": "photo-nest",
+          "en": "nest",
+          "zh": "鸟巢",
+          "ipa": "/nɛst/"
+        },
+        {
+          "id": "fish",
+          "en": "fish",
+          "zh": "鱼",
+          "ipa": "/fɪʃ/"
+        },
+        {
+          "id": "beef",
+          "en": "beef",
+          "zh": "牛肉",
+          "ipa": "/bif/"
+        },
+        {
+          "id": "girl",
+          "en": "girl",
+          "zh": "女孩",
+          "ipa": "/ɡɝl/"
+        },
+        {
+          "id": "photo-pig",
+          "en": "pig",
+          "zh": "猪",
+          "ipa": "/pɪɡ/"
+        },
+        {
+          "id": "hot",
+          "en": "hot",
+          "zh": "热的",
+          "ipa": "/hɑt/"
+        },
+        {
+          "id": "photo-hat",
+          "en": "hat",
+          "zh": "帽子",
+          "ipa": "/hæt/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-first",
+          "en": "first",
+          "zh": "第一；最初的",
+          "ipa": "/fɝst/"
+        },
+        {
+          "id": "photo-sound",
+          "en": "sound",
+          "zh": "声音；发音",
+          "ipa": "/saʊnd/"
+        },
+        {
+          "id": "photo-d",
+          "en": "d",
+          "zh": "字母 D",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-b",
+          "en": "b",
+          "zh": "字母 B",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-words",
+          "en": "words",
+          "zh": "单词（复数）",
+          "ipa": "/wɝdz/"
+        },
+        {
+          "id": "bed",
+          "en": "bed",
+          "zh": "床",
+          "ipa": "/bɛd/"
+        },
+        {
+          "id": "photo-fed",
+          "en": "fed",
+          "zh": "喂了；喂养过（feed 的过去式和过去分词）",
+          "ipa": "/fɛd/"
+        },
+        {
+          "id": "photo-gab",
+          "en": "gab",
+          "zh": "闲聊；唠叨",
+          "ipa": "/ɡæb/"
+        },
+        {
+          "id": "photo-had",
+          "en": "had",
+          "zh": "有过（have 的过去式和过去分词）",
+          "ipa": "/hæd/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "photo-say",
+          "en": "say",
+          "zh": "说",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-aa",
+          "en": "Aa",
+          "zh": "字母 A 的大写和小写",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-bb",
+          "en": "Bb",
+          "zh": "字母 B 的大写和小写",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-cc",
+          "en": "Cc",
+          "zh": "字母 C 的大写和小写",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-dd",
+          "en": "Dd",
+          "zh": "字母 D 的大写和小写",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-ee",
+          "en": "Ee",
+          "zh": "字母 E 的大写和小写",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-ff",
+          "en": "Ff",
+          "zh": "字母 F 的大写和小写",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-gg",
+          "en": "Gg",
+          "zh": "字母 G 的大写和小写",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-hh",
+          "en": "Hh",
+          "zh": "字母 H 的大写和小写",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "photo-ii",
+          "en": "Ii",
+          "zh": "字母 I 的大写和小写",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-jj",
+          "en": "Jj",
+          "zh": "字母 J 的大写和小写",
+          "ipa": "/dʒeɪ/"
+        },
+        {
+          "id": "photo-kk",
+          "en": "Kk",
+          "zh": "字母 K 的大写和小写",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "photo-ll",
+          "en": "Ll",
+          "zh": "字母 L 的大写和小写",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "photo-mm",
+          "en": "Mm",
+          "zh": "字母 M 的大写和小写",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-nn",
+          "en": "Nn",
+          "zh": "字母 N 的大写和小写",
+          "ipa": "/ɛn/"
+        },
+        {
+          "id": "photo-oo",
+          "en": "Oo",
+          "zh": "字母 O 的大写和小写",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-pp",
+          "en": "Pp",
+          "zh": "字母 P 的大写和小写",
+          "ipa": "/pi/"
+        },
+        {
+          "id": "photo-qq",
+          "en": "Qq",
+          "zh": "字母 Q 的大写和小写",
+          "ipa": "/kju/"
+        },
+        {
+          "id": "photo-rr",
+          "en": "Rr",
+          "zh": "字母 R 的大写和小写",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-ss",
+          "en": "Ss",
+          "zh": "字母 S 的大写和小写",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-tt",
+          "en": "Tt",
+          "zh": "字母 T 的大写和小写",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "photo-uu",
+          "en": "Uu",
+          "zh": "字母 U 的大写和小写",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-vv",
+          "en": "Vv",
+          "zh": "字母 V 的大写和小写",
+          "ipa": "/vi/"
+        },
+        {
+          "id": "photo-ww",
+          "en": "Ww",
+          "zh": "字母 W 的大写和小写",
+          "ipa": "/ˈdʌbəlju/"
+        },
+        {
+          "id": "photo-xx",
+          "en": "Xx",
+          "zh": "字母 X 的大写和小写",
+          "ipa": "/ɛks/"
+        },
+        {
+          "id": "photo-yy",
+          "en": "Yy",
+          "zh": "字母 Y 的大写和小写",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-zz",
+          "en": "Zz",
+          "zh": "字母 Z 的大写和小写",
+          "ipa": "/zi/"
+        }
+      ]
+    },
+    {
+      "page": 19,
+      "title": "B：家庭有哪些不同",
+      "blocks": [
+        {
+          "title": "B 部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "How are families different?",
+              "zh": "不同的家庭有哪些不同之处？"
+            }
+          ]
+        },
+        {
+          "title": "谈论家庭成员",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "说一说"
+            },
+            {
+              "en": "Sarah, you have a big family.",
+              "zh": "萨拉，你有一个大家庭。"
+            },
+            {
+              "en": "Is this your sister?",
+              "zh": "这是你的姐妹吗？"
+            },
+            {
+              "en": "No, it's my cousin.",
+              "zh": "不，这是我的堂（或表）兄弟姐妹。"
+            },
+            {
+              "en": "Is that your brother?",
+              "zh": "那是你的兄弟吗？"
+            },
+            {
+              "en": "Yes, it is.",
+              "zh": "是的，他是。"
+            }
+          ]
+        },
+        {
+          "title": "问一问，答一答",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Ask and answer",
+              "zh": "问一问，答一答"
+            },
+            {
+              "en": "Is this your brother?",
+              "zh": "这是你的兄弟吗？"
+            },
+            {
+              "en": "No, it's my cousin.",
+              "zh": "不，这是我的堂（或表）兄弟姐妹。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（与 you、we、they 等连用）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-families",
+          "en": "families",
+          "zh": "家庭（复数）",
+          "ipa": "/ˈfæməliz/"
+        },
+        {
+          "id": "different",
+          "en": "different",
+          "zh": "不同的",
+          "ipa": "/ˈdɪfərənt/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "photo-talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-sarah",
+          "en": "Sarah",
+          "zh": "萨拉（人名）",
+          "ipa": "/ˈsɛrə/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-have",
+          "en": "have",
+          "zh": "有",
+          "ipa": "/hæv/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "sister",
+          "en": "sister",
+          "zh": "姐妹",
+          "ipa": "/ˈsɪstɚ/"
+        },
+        {
+          "id": "photo-no",
+          "en": "no",
+          "zh": "不；不是",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "photo-cousin",
+          "en": "cousin",
+          "zh": "堂（或表）兄弟姐妹",
+          "ipa": "/ˈkʌzən/"
+        },
+        {
+          "id": "photo-that",
+          "en": "that",
+          "zh": "那；那个",
+          "ipa": "/ðæt/"
+        },
+        {
+          "id": "brother",
+          "en": "brother",
+          "zh": "兄弟",
+          "ipa": "/ˈbrʌðɚ/"
+        },
+        {
+          "id": "photo-yes",
+          "en": "yes",
+          "zh": "是的",
+          "ipa": "/jɛs/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；它指代的人或事物",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "photo-ask",
+          "en": "ask",
+          "zh": "问",
+          "ipa": "/æsk/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-answer",
+          "en": "answer",
+          "zh": "回答；答案",
+          "ipa": "/ˈænsɚ/"
+        }
+      ]
+    },
+    {
+      "page": 20,
+      "title": "B：更多家庭成员",
+      "blocks": [
+        {
+          "title": "词语与图示",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "学一学"
+            },
+            {
+              "en": "uncle",
+              "zh": "叔叔；伯伯；舅舅；姑父；姨父"
+            },
+            {
+              "en": "aunt",
+              "zh": "姑姑；姨妈；伯母；婶婶；舅妈"
+            },
+            {
+              "en": "cousin",
+              "zh": "堂（或表）兄弟姐妹"
+            },
+            {
+              "en": "baby sister",
+              "zh": "小妹妹"
+            },
+            {
+              "en": "brother",
+              "zh": "兄弟"
+            }
+          ]
+        },
+        {
+          "title": "介绍大家庭",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "My family is big.",
+              "zh": "我的家庭很大。"
+            },
+            {
+              "en": "I have a brother, a baby sister, a cousin ...",
+              "zh": "我有一个兄弟、一个小妹妹、一个堂（或表）兄弟姐妹……"
+            }
+          ]
+        },
+        {
+          "title": "家庭歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，说唱歌谣"
+            },
+            {
+              "en": "I have an uncle.",
+              "zh": "我有一位叔叔（或舅舅等）。"
+            },
+            {
+              "en": "I have an aunt.",
+              "zh": "我有一位姑姑（或姨妈等）。"
+            },
+            {
+              "en": "I have two cousins too.",
+              "zh": "我还有两个堂（或表）兄弟姐妹。"
+            },
+            {
+              "en": "I have a brother,",
+              "zh": "我有一个兄弟，"
+            },
+            {
+              "en": "And a baby sister.",
+              "zh": "还有一个小妹妹。"
+            },
+            {
+              "en": "They can play with me.",
+              "zh": "他们可以和我一起玩。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "photo-uncle",
+          "en": "uncle",
+          "zh": "叔叔；伯伯；舅舅；姑父；姨父",
+          "ipa": "/ˈʌŋkəl/"
+        },
+        {
+          "id": "photo-aunt",
+          "en": "aunt",
+          "zh": "姑姑；姨妈；伯母；婶婶；舅妈",
+          "ipa": "/ænt/"
+        },
+        {
+          "id": "photo-cousin",
+          "en": "cousin",
+          "zh": "堂（或表）兄弟姐妹",
+          "ipa": "/ˈkʌzən/"
+        },
+        {
+          "id": "photo-baby",
+          "en": "baby",
+          "zh": "婴儿；年幼的",
+          "ipa": "/ˈbeɪbi/"
+        },
+        {
+          "id": "sister",
+          "en": "sister",
+          "zh": "姐妹",
+          "ipa": "/ˈsɪstɚ/"
+        },
+        {
+          "id": "brother",
+          "en": "brother",
+          "zh": "兄弟",
+          "ipa": "/ˈbrʌðɚ/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-have",
+          "en": "have",
+          "zh": "有",
+          "ipa": "/hæv/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "说唱歌谣",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-an",
+          "en": "an",
+          "zh": "一个（用于元音音素前）",
+          "ipa": "/ən/"
+        },
+        {
+          "id": "two",
+          "en": "two",
+          "zh": "二",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-cousins",
+          "en": "cousins",
+          "zh": "堂（或表）兄弟姐妹（复数）",
+          "ipa": "/ˈkʌzənz/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-they",
+          "en": "they",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðeɪ/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "play",
+          "en": "play",
+          "zh": "玩；演奏",
+          "ipa": "/pleɪ/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "photo-me",
+          "en": "me",
+          "zh": "我（宾格）",
+          "ipa": "/mi/"
+        }
+      ]
+    },
+    {
+      "page": 21,
+      "title": "开始阅读：家人相亲相爱",
+      "blocks": [
+        {
+          "title": "开始阅读",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Start to read",
+              "zh": "开始阅读"
+            },
+            {
+              "en": "This is my mum.",
+              "zh": "这是我的妈妈。"
+            },
+            {
+              "en": "And this is my dad.",
+              "zh": "这是我的爸爸。"
+            },
+            {
+              "en": "This is my family.",
+              "zh": "这是我的家庭。"
+            },
+            {
+              "en": "This family is small.",
+              "zh": "这个家庭很小。"
+            },
+            {
+              "en": "They love each other.",
+              "zh": "他们彼此相爱。"
+            },
+            {
+              "en": "This family is big.",
+              "zh": "这个家庭很大。"
+            },
+            {
+              "en": "They love each other too.",
+              "zh": "他们也彼此相爱。"
+            }
+          ]
+        },
+        {
+          "title": "勾出陈杰的家人",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Tick Chen Jie's family members.",
+              "zh": "勾出陈杰的家庭成员。"
+            },
+            {
+              "en": "aunt",
+              "zh": "姑姑；姨妈；伯母；婶婶；舅妈"
+            },
+            {
+              "en": "baby sister",
+              "zh": "小妹妹"
+            },
+            {
+              "en": "brother",
+              "zh": "兄弟"
+            },
+            {
+              "en": "cousin",
+              "zh": "堂（或表）兄弟姐妹"
+            },
+            {
+              "en": "father",
+              "zh": "爸爸"
+            },
+            {
+              "en": "grandfather",
+              "zh": "爷爷；外公"
+            },
+            {
+              "en": "grandmother",
+              "zh": "奶奶；外婆"
+            },
+            {
+              "en": "mother",
+              "zh": "妈妈"
+            },
+            {
+              "en": "sister",
+              "zh": "姐妹"
+            },
+            {
+              "en": "uncle",
+              "zh": "叔叔；伯伯；舅舅；姑父；姨父"
+            }
+          ]
+        },
+        {
+          "title": "画画、结对问答",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Draw your family. Ask and answer in pairs.",
+              "zh": "画出你的家庭。两人一组问答。"
+            },
+            {
+              "en": "Is this your brother?",
+              "zh": "这是你的兄弟吗？"
+            },
+            {
+              "en": "No, it's my ...",
+              "zh": "不，这是我的……"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-start",
+          "en": "start",
+          "zh": "开始",
+          "ipa": "/stɑrt/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "向；到；不定式标记",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "photo-mum",
+          "en": "mum",
+          "zh": "妈妈",
+          "ipa": "/mʌm/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-dad",
+          "en": "dad",
+          "zh": "爸爸",
+          "ipa": "/dæd/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "small",
+          "en": "small",
+          "zh": "小的",
+          "ipa": "/smɔl/"
+        },
+        {
+          "id": "photo-they",
+          "en": "they",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðeɪ/"
+        },
+        {
+          "id": "love",
+          "en": "love",
+          "zh": "爱",
+          "ipa": "/lʌv/"
+        },
+        {
+          "id": "photo-each",
+          "en": "each",
+          "zh": "每一个",
+          "ipa": "/itʃ/"
+        },
+        {
+          "id": "photo-other",
+          "en": "other",
+          "zh": "另一个；其他的",
+          "ipa": "/ˈʌðɚ/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-tick",
+          "en": "tick",
+          "zh": "打勾",
+          "ipa": "/tɪk/"
+        },
+        {
+          "id": "photo-chen",
+          "en": "Chen",
+          "zh": "陈（姓，按中文读）",
+          "ipa": "/tʃɛn/"
+        },
+        {
+          "id": "photo-jie-s",
+          "en": "Jie's",
+          "zh": "杰的（人名的所有格）",
+          "ipa": "/dʒjɛz/"
+        },
+        {
+          "id": "photo-members",
+          "en": "members",
+          "zh": "成员（复数）",
+          "ipa": "/ˈmɛmbɚz/"
+        },
+        {
+          "id": "photo-aunt",
+          "en": "aunt",
+          "zh": "姑姑；姨妈；伯母；婶婶；舅妈",
+          "ipa": "/ænt/"
+        },
+        {
+          "id": "photo-baby",
+          "en": "baby",
+          "zh": "婴儿；年幼的",
+          "ipa": "/ˈbeɪbi/"
+        },
+        {
+          "id": "sister",
+          "en": "sister",
+          "zh": "姐妹",
+          "ipa": "/ˈsɪstɚ/"
+        },
+        {
+          "id": "brother",
+          "en": "brother",
+          "zh": "兄弟",
+          "ipa": "/ˈbrʌðɚ/"
+        },
+        {
+          "id": "photo-cousin",
+          "en": "cousin",
+          "zh": "堂（或表）兄弟姐妹",
+          "ipa": "/ˈkʌzən/"
+        },
+        {
+          "id": "father",
+          "en": "father",
+          "zh": "爸爸",
+          "ipa": "/ˈfɑðɚ/"
+        },
+        {
+          "id": "grandfather",
+          "en": "grandfather",
+          "zh": "爷爷；外公",
+          "ipa": "/ˈɡrænfɑðɚ/"
+        },
+        {
+          "id": "photo-grandmother",
+          "en": "grandmother",
+          "zh": "奶奶；外婆",
+          "ipa": "/ˈɡrænmʌðɚ/"
+        },
+        {
+          "id": "mother",
+          "en": "mother",
+          "zh": "妈妈",
+          "ipa": "/ˈmʌðɚ/"
+        },
+        {
+          "id": "photo-uncle",
+          "en": "uncle",
+          "zh": "叔叔；伯伯；舅舅；姑父；姨父",
+          "ipa": "/ˈʌŋkəl/"
+        },
+        {
+          "id": "photo-draw",
+          "en": "draw",
+          "zh": "画",
+          "ipa": "/drɔ/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "photo-ask",
+          "en": "ask",
+          "zh": "问",
+          "ipa": "/æsk/"
+        },
+        {
+          "id": "photo-answer",
+          "en": "answer",
+          "zh": "回答；答案",
+          "ipa": "/ˈænsɚ/"
+        },
+        {
+          "id": "photo-in",
+          "en": "in",
+          "zh": "在……里",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "photo-pairs",
+          "en": "pairs",
+          "zh": "成对；两人一组",
+          "ipa": "/pɛrz/"
+        },
+        {
+          "id": "photo-no",
+          "en": "no",
+          "zh": "不；不是",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        }
+      ]
+    },
+    {
+      "page": 22,
+      "title": "C 项目：制作家庭树",
+      "blocks": [
+        {
+          "title": "项目主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Project: Make a family tree",
+              "zh": "项目：制作一棵家庭树",
+              "tip": "家庭树用图示呈现家庭成员之间的关系。"
+            }
+          ]
+        },
+        {
+          "title": "辨认李娜的家庭",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Which is Li Na's family? Listen and tick.",
+              "zh": "哪个是李娜的家庭？听一听，打勾。"
+            }
+          ]
+        },
+        {
+          "title": "补全家庭树",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Complete the family tree.",
+              "zh": "补全家庭树。"
+            },
+            {
+              "en": "E",
+              "zh": "E 项：grandfather（爷爷或外公）",
+              "tip": "图中已经印出的填写示例。"
+            },
+            {
+              "en": "me",
+              "zh": "我"
+            },
+            {
+              "en": "A. aunt",
+              "zh": "A. 姑姑；姨妈；伯母；婶婶；舅妈"
+            },
+            {
+              "en": "B. brother",
+              "zh": "B. 兄弟"
+            },
+            {
+              "en": "C. cousin",
+              "zh": "C. 堂（或表）兄弟姐妹"
+            },
+            {
+              "en": "D. father",
+              "zh": "D. 爸爸"
+            },
+            {
+              "en": "E. grandfather",
+              "zh": "E. 爷爷；外公"
+            },
+            {
+              "en": "F. grandmother",
+              "zh": "F. 奶奶；外婆"
+            },
+            {
+              "en": "G. mother",
+              "zh": "G. 妈妈"
+            },
+            {
+              "en": "H. sister",
+              "zh": "H. 姐妹"
+            },
+            {
+              "en": "I. uncle",
+              "zh": "I. 叔叔；伯伯；舅舅；姑父；姨父"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-project",
+          "en": "project",
+          "zh": "项目",
+          "ipa": "/ˈprɑdʒɛkt/"
+        },
+        {
+          "id": "photo-make",
+          "en": "make",
+          "zh": "制作；使成为",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "tree",
+          "en": "tree",
+          "zh": "树",
+          "ipa": "/tri/"
+        },
+        {
+          "id": "photo-which",
+          "en": "which",
+          "zh": "哪一个",
+          "ipa": "/wɪtʃ/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-li",
+          "en": "Li",
+          "zh": "李（姓，按中文读）",
+          "ipa": "/li/"
+        },
+        {
+          "id": "photo-na-s",
+          "en": "Na's",
+          "zh": "娜的（人名的所有格）",
+          "ipa": "/nɑz/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-tick",
+          "en": "tick",
+          "zh": "打勾",
+          "ipa": "/tɪk/"
+        },
+        {
+          "id": "photo-complete",
+          "en": "complete",
+          "zh": "补全；完成",
+          "ipa": "/kəmˈplit/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-e",
+          "en": "e",
+          "zh": "字母 E",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-me",
+          "en": "me",
+          "zh": "我（宾格）",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "photo-aunt",
+          "en": "aunt",
+          "zh": "姑姑；姨妈；伯母；婶婶；舅妈",
+          "ipa": "/ænt/"
+        },
+        {
+          "id": "photo-b",
+          "en": "b",
+          "zh": "字母 B",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "brother",
+          "en": "brother",
+          "zh": "兄弟",
+          "ipa": "/ˈbrʌðɚ/"
+        },
+        {
+          "id": "photo-c",
+          "en": "c",
+          "zh": "字母 C",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-cousin",
+          "en": "cousin",
+          "zh": "堂（或表）兄弟姐妹",
+          "ipa": "/ˈkʌzən/"
+        },
+        {
+          "id": "photo-d",
+          "en": "d",
+          "zh": "字母 D",
+          "ipa": "/di/"
+        },
+        {
+          "id": "father",
+          "en": "father",
+          "zh": "爸爸",
+          "ipa": "/ˈfɑðɚ/"
+        },
+        {
+          "id": "grandfather",
+          "en": "grandfather",
+          "zh": "爷爷；外公",
+          "ipa": "/ˈɡrænfɑðɚ/"
+        },
+        {
+          "id": "photo-f",
+          "en": "f",
+          "zh": "字母 F",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-grandmother",
+          "en": "grandmother",
+          "zh": "奶奶；外婆",
+          "ipa": "/ˈɡrænmʌðɚ/"
+        },
+        {
+          "id": "photo-g",
+          "en": "g",
+          "zh": "字母 G",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "mother",
+          "en": "mother",
+          "zh": "妈妈",
+          "ipa": "/ˈmʌðɚ/"
+        },
+        {
+          "id": "photo-h",
+          "en": "h",
+          "zh": "字母 H",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "sister",
+          "en": "sister",
+          "zh": "姐妹",
+          "ipa": "/ˈsɪstɚ/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-uncle",
+          "en": "uncle",
+          "zh": "叔叔；伯伯；舅舅；姑父；姨父",
+          "ipa": "/ˈʌŋkəl/"
+        },
+        {
+          "id": "photo-letter-a",
+          "en": "A",
+          "zh": "选项字母 A",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-letter-b",
+          "en": "B",
+          "zh": "选项字母 B",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-letter-c",
+          "en": "C",
+          "zh": "选项字母 C",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-letter-d",
+          "en": "D",
+          "zh": "选项字母 D",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-letter-e",
+          "en": "E",
+          "zh": "选项字母 E",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-letter-f",
+          "en": "F",
+          "zh": "选项字母 F",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-letter-g",
+          "en": "G",
+          "zh": "选项字母 G",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-letter-h",
+          "en": "H",
+          "zh": "选项字母 H",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "photo-letter-i",
+          "en": "I",
+          "zh": "选项字母 I",
+          "ipa": "/aɪ/"
+        }
+      ]
+    },
+    {
+      "page": 23,
+      "title": "C 项目展示与自我检查",
+      "blocks": [
+        {
+          "title": "制作自己的家庭树",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Make your family tree.",
+              "zh": "制作你自己的家庭树。"
+            },
+            {
+              "en": "My family tree",
+              "zh": "我的家庭树"
+            },
+            {
+              "en": "(your picture here)",
+              "zh": "（在这里放你的图片）"
+            }
+          ]
+        },
+        {
+          "title": "在班级中展示",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Share your family tree in class.",
+              "zh": "在班级里分享你的家庭树。"
+            },
+            {
+              "en": "This is my family tree. This is my ...",
+              "zh": "这是我的家庭树。这是我的……"
+            }
+          ]
+        },
+        {
+          "title": "自我检查",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Self-check",
+              "zh": "自我检查"
+            },
+            {
+              "en": "I still need help",
+              "zh": "我还需要帮助。"
+            },
+            {
+              "en": "I can mostly do it",
+              "zh": "我大部分都能做到。"
+            },
+            {
+              "en": "I can do it!",
+              "zh": "我能做到！"
+            },
+            {
+              "en": "I can introduce my family to others.",
+              "zh": "我能向别人介绍我的家庭。"
+            },
+            {
+              "en": "I can name different family members.",
+              "zh": "我能说出不同家庭成员的名称。"
+            },
+            {
+              "en": "I can say how families are different.",
+              "zh": "我能说出不同的家庭有哪些不同之处。"
+            },
+            {
+              "en": "I can read, write and say Ee, Ff, Gg and Hh.",
+              "zh": "我能读、写并说出 Ee、Ff、Gg 和 Hh。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-make",
+          "en": "make",
+          "zh": "制作；使成为",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "tree",
+          "en": "tree",
+          "zh": "树",
+          "ipa": "/tri/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "photo-picture",
+          "en": "picture",
+          "zh": "图片；照片",
+          "ipa": "/ˈpɪktʃɚ/"
+        },
+        {
+          "id": "photo-here",
+          "en": "here",
+          "zh": "这里",
+          "ipa": "/hɪr/"
+        },
+        {
+          "id": "photo-share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "photo-in",
+          "en": "in",
+          "zh": "在……里",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "class",
+          "en": "class",
+          "zh": "班级；课",
+          "ipa": "/klæs/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-self-check",
+          "en": "self-check",
+          "zh": "自我检查",
+          "ipa": "/ˌsɛlfˈtʃɛk/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-still",
+          "en": "still",
+          "zh": "还；仍然",
+          "ipa": "/stɪl/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-mostly",
+          "en": "mostly",
+          "zh": "大部分；主要地",
+          "ipa": "/ˈmoʊstli/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句的助动词",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；它指代的人或事物",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "photo-introduce",
+          "en": "introduce",
+          "zh": "介绍",
+          "ipa": "/ˌɪntrəˈdus/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "向；到；不定式标记",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-others",
+          "en": "others",
+          "zh": "其他人；别人",
+          "ipa": "/ˈʌðɚz/"
+        },
+        {
+          "id": "name",
+          "en": "name",
+          "zh": "名字",
+          "ipa": "/neɪm/"
+        },
+        {
+          "id": "different",
+          "en": "different",
+          "zh": "不同的",
+          "ipa": "/ˈdɪfərənt/"
+        },
+        {
+          "id": "photo-members",
+          "en": "members",
+          "zh": "成员（复数）",
+          "ipa": "/ˈmɛmbɚz/"
+        },
+        {
+          "id": "photo-say",
+          "en": "say",
+          "zh": "说",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-families",
+          "en": "families",
+          "zh": "家庭（复数）",
+          "ipa": "/ˈfæməliz/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（与 you、we、they 等连用）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-ee",
+          "en": "Ee",
+          "zh": "字母 E 的大写和小写",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-ff",
+          "en": "Ff",
+          "zh": "字母 F 的大写和小写",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-gg",
+          "en": "Gg",
+          "zh": "字母 G 的大写和小写",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-hh",
+          "en": "Hh",
+          "zh": "字母 H 的大写和小写",
+          "ipa": "/eɪtʃ/"
+        }
+      ]
+    },
+    {
+      "page": 24,
+      "title": "阅读时间：家庭诗（一）",
+      "blocks": [
+        {
+          "title": "阅读标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Reading time",
+              "zh": "阅读时间"
+            },
+            {
+              "en": "Family Poems",
+              "zh": "家庭诗"
+            }
+          ]
+        },
+        {
+          "title": "小家庭",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "This is my family.",
+              "zh": "这是我的家庭。"
+            },
+            {
+              "en": "I play with my brother.",
+              "zh": "我和我的兄弟一起玩。"
+            },
+            {
+              "en": "We share.",
+              "zh": "我们分享。"
+            },
+            {
+              "en": "We listen with care.",
+              "zh": "我们用心倾听。"
+            },
+            {
+              "en": "I have a small family.",
+              "zh": "我有一个小家庭。"
+            },
+            {
+              "en": "I love my small family.",
+              "zh": "我爱我的小家庭。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-reading",
+          "en": "reading",
+          "zh": "阅读",
+          "ipa": "/ˈridɪŋ/"
+        },
+        {
+          "id": "time",
+          "en": "time",
+          "zh": "时间",
+          "ipa": "/taɪm/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "photo-poems",
+          "en": "poems",
+          "zh": "诗（复数）",
+          "ipa": "/ˈpoʊəmz/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "play",
+          "en": "play",
+          "zh": "玩；演奏",
+          "ipa": "/pleɪ/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "brother",
+          "en": "brother",
+          "zh": "兄弟",
+          "ipa": "/ˈbrʌðɚ/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "photo-share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-care",
+          "en": "care",
+          "zh": "关心；认真",
+          "ipa": "/kɛr/"
+        },
+        {
+          "id": "photo-have",
+          "en": "have",
+          "zh": "有",
+          "ipa": "/hæv/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "small",
+          "en": "small",
+          "zh": "小的",
+          "ipa": "/smɔl/"
+        },
+        {
+          "id": "love",
+          "en": "love",
+          "zh": "爱",
+          "ipa": "/lʌv/"
+        }
+      ]
+    },
+    {
+      "page": 25,
+      "title": "阅读时间：家庭诗（二）",
+      "blocks": [
+        {
+          "title": "大家庭",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "This is my family.",
+              "zh": "这是我的家庭。"
+            },
+            {
+              "en": "I play with my brothers.",
+              "zh": "我和我的兄弟们一起玩。"
+            },
+            {
+              "en": "I share with my sisters.",
+              "zh": "我和我的姐妹们分享。"
+            },
+            {
+              "en": "I talk with my cousins.",
+              "zh": "我和我的堂（或表）兄弟姐妹聊天。"
+            },
+            {
+              "en": "We listen with care.",
+              "zh": "我们用心倾听。"
+            },
+            {
+              "en": "I have a big family.",
+              "zh": "我有一个大家庭。"
+            },
+            {
+              "en": "I love my big family.",
+              "zh": "我爱我的大家庭。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "play",
+          "en": "play",
+          "zh": "玩；演奏",
+          "ipa": "/pleɪ/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "photo-brothers",
+          "en": "brothers",
+          "zh": "兄弟们（复数）",
+          "ipa": "/ˈbrʌðɚz/"
+        },
+        {
+          "id": "photo-share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "photo-sisters",
+          "en": "sisters",
+          "zh": "姐妹们（复数）",
+          "ipa": "/ˈsɪstɚz/"
+        },
+        {
+          "id": "photo-talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-cousins",
+          "en": "cousins",
+          "zh": "堂（或表）兄弟姐妹（复数）",
+          "ipa": "/ˈkʌzənz/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-care",
+          "en": "care",
+          "zh": "关心；认真",
+          "ipa": "/kɛr/"
+        },
+        {
+          "id": "photo-have",
+          "en": "have",
+          "zh": "有",
+          "ipa": "/hæv/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "love",
+          "en": "love",
+          "zh": "爱",
+          "ipa": "/lʌv/"
+        }
+      ]
+    }
+  ]
+}

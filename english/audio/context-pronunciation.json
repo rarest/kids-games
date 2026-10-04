@@ -19,5 +19,460 @@
     "word": "read-past",
     "start_seconds": 0.275,
     "end_seconds": 0.48750000000000004
+  },
+  "photo-letter-a": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter A.",
+    "word": "photo-letter-a",
+    "start_seconds": 0.975,
+    "end_seconds": 1.325
+  },
+  "photo-letter-c": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter C.",
+    "word": "photo-letter-c",
+    "start_seconds": 0.925,
+    "end_seconds": 1.35
+  },
+  "photo-letter-d": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter D.",
+    "word": "photo-letter-d",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.3125
+  },
+  "photo-letter-b": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter B.",
+    "word": "photo-letter-b",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.275
+  },
+  "photo-aa": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter A.",
+    "word": "photo-aa",
+    "start_seconds": 0.975,
+    "end_seconds": 1.325
+  },
+  "photo-cc": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter C.",
+    "word": "photo-cc",
+    "start_seconds": 0.925,
+    "end_seconds": 1.35
+  },
+  "photo-bb": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter B.",
+    "word": "photo-bb",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.275
+  },
+  "photo-dd": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter D.",
+    "word": "photo-dd",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.3125
+  },
+  "photo-ee": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter E.",
+    "word": "photo-ee",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.2875
+  },
+  "photo-gg": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter G.",
+    "word": "photo-gg",
+    "start_seconds": 0.95,
+    "end_seconds": 1.3624999999999998
+  },
+  "photo-ff": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter F.",
+    "word": "photo-ff",
+    "start_seconds": 0.975,
+    "end_seconds": 1.3625
+  },
+  "photo-ii": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter I.",
+    "word": "photo-ii",
+    "start_seconds": 0.9625,
+    "end_seconds": 1.3375
+  },
+  "photo-hh": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter H.",
+    "word": "photo-hh",
+    "start_seconds": 0.95,
+    "end_seconds": 1.4249999999999998
+  },
+  "photo-jj": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter J.",
+    "word": "photo-jj",
+    "start_seconds": 0.95,
+    "end_seconds": 1.3875
+  },
+  "photo-kk": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter K.",
+    "word": "photo-kk",
+    "start_seconds": 0.95,
+    "end_seconds": 1.4125
+  },
+  "photo-oo": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter O.",
+    "word": "photo-oo",
+    "start_seconds": 0.9875,
+    "end_seconds": 1.3125
+  },
+  "photo-mm": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter M.",
+    "word": "photo-mm",
+    "start_seconds": 1.0125,
+    "end_seconds": 1.375
+  },
+  "photo-ll": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter L.",
+    "word": "photo-ll",
+    "start_seconds": 1.0125,
+    "end_seconds": 1.35
+  },
+  "photo-nn": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter N.",
+    "word": "photo-nn",
+    "start_seconds": 0.9875,
+    "end_seconds": 1.35
+  },
+  "photo-tt": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter T.",
+    "word": "photo-tt",
+    "start_seconds": 0.9125,
+    "end_seconds": 1.3125
+  },
+  "photo-pp": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter P.",
+    "word": "photo-pp",
+    "start_seconds": 0.95,
+    "end_seconds": 1.3375
+  },
+  "photo-rr": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter R.",
+    "word": "photo-rr",
+    "start_seconds": 0.975,
+    "end_seconds": 1.3
+  },
+  "photo-ss": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter S.",
+    "word": "photo-ss",
+    "start_seconds": 0.9875,
+    "end_seconds": 1.4125
+  },
+  "photo-uu": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter U.",
+    "word": "photo-uu",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.2875
+  },
+  "photo-qq": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter Q.",
+    "word": "photo-qq",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.3625
+  },
+  "photo-ww": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter W.",
+    "word": "photo-ww",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.5375
+  },
+  "photo-yy": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter Y.",
+    "word": "photo-yy",
+    "start_seconds": 0.9625,
+    "end_seconds": 1.375
+  },
+  "photo-vv": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter V.",
+    "word": "photo-vv",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.3
+  },
+  "photo-zz": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter Z.",
+    "word": "photo-zz",
+    "start_seconds": 0.975,
+    "end_seconds": 1.3875
+  },
+  "photo-xx": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter X.",
+    "word": "photo-xx",
+    "start_seconds": 0.9625,
+    "end_seconds": 1.4375
+  },
+  "photo-e": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter E.",
+    "word": "photo-e",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.2875
+  },
+  "photo-f": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter F.",
+    "word": "photo-f",
+    "start_seconds": 0.975,
+    "end_seconds": 1.3625
+  },
+  "photo-g": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter G.",
+    "word": "photo-g",
+    "start_seconds": 0.95,
+    "end_seconds": 1.3624999999999998
+  },
+  "photo-b": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter B.",
+    "word": "photo-b",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.275
+  },
+  "photo-h": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter H.",
+    "word": "photo-h",
+    "start_seconds": 0.95,
+    "end_seconds": 1.4249999999999998
+  },
+  "photo-d": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter D.",
+    "word": "photo-d",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.3125
+  },
+  "photo-c": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter C.",
+    "word": "photo-c",
+    "start_seconds": 0.925,
+    "end_seconds": 1.35
+  },
+  "photo-letter-e": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter E.",
+    "word": "photo-letter-e",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.2875
+  },
+  "photo-letter-f": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter F.",
+    "word": "photo-letter-f",
+    "start_seconds": 0.975,
+    "end_seconds": 1.3625
+  },
+  "photo-letter-g": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter G.",
+    "word": "photo-letter-g",
+    "start_seconds": 0.95,
+    "end_seconds": 1.3624999999999998
+  },
+  "photo-letter-h": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter H.",
+    "word": "photo-letter-h",
+    "start_seconds": 0.95,
+    "end_seconds": 1.4249999999999998
+  },
+  "photo-letter-j": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter J.",
+    "word": "photo-letter-j",
+    "start_seconds": 0.95,
+    "end_seconds": 1.3875
+  },
+  "photo-letter-k": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter K.",
+    "word": "photo-letter-k",
+    "start_seconds": 0.95,
+    "end_seconds": 1.4125
+  },
+  "photo-letter-l": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter L.",
+    "word": "photo-letter-l",
+    "start_seconds": 1.0125,
+    "end_seconds": 1.35
+  },
+  "photo-n": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter N.",
+    "word": "photo-n",
+    "start_seconds": 0.9875,
+    "end_seconds": 1.35
+  },
+  "photo-m": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter M.",
+    "word": "photo-m",
+    "start_seconds": 1.0125,
+    "end_seconds": 1.375
+  },
+  "photo-p": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter P.",
+    "word": "photo-p",
+    "start_seconds": 0.95,
+    "end_seconds": 1.3375
+  },
+  "photo-o": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter O.",
+    "word": "photo-o",
+    "start_seconds": 0.9875,
+    "end_seconds": 1.3125
+  },
+  "photo-l": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter L.",
+    "word": "photo-l",
+    "start_seconds": 1.0125,
+    "end_seconds": 1.35
+  },
+  "photo-letter-a-variant": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter A.",
+    "word": "photo-letter-a-variant",
+    "start_seconds": 0.975,
+    "end_seconds": 1.325
+  },
+  "photo-letter-q": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter Q.",
+    "word": "photo-letter-q",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.3625
+  },
+  "photo-letter-u": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter U.",
+    "word": "photo-letter-u",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.2875
+  },
+  "photo-letter-r": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter R.",
+    "word": "photo-letter-r",
+    "start_seconds": 0.975,
+    "end_seconds": 1.3
+  },
+  "photo-letter-t": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter T.",
+    "word": "photo-letter-t",
+    "start_seconds": 0.9125,
+    "end_seconds": 1.3125
+  },
+  "photo-letter-s": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter S.",
+    "word": "photo-letter-s",
+    "start_seconds": 0.9875,
+    "end_seconds": 1.4125
+  },
+  "photo-letter-p": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter P.",
+    "word": "photo-letter-p",
+    "start_seconds": 0.95,
+    "end_seconds": 1.3375
+  },
+  "photo-letter-m": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter M.",
+    "word": "photo-letter-m",
+    "start_seconds": 1.0125,
+    "end_seconds": 1.375
+  },
+  "photo-letter-o": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter O.",
+    "word": "photo-letter-o",
+    "start_seconds": 0.9875,
+    "end_seconds": 1.3125
+  },
+  "photo-letter-v": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter V.",
+    "word": "photo-letter-v",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.3
+  },
+  "photo-letter-w": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter W.",
+    "word": "photo-letter-w",
+    "start_seconds": 0.9375,
+    "end_seconds": 1.5375
+  },
+  "photo-letter-x": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter X.",
+    "word": "photo-letter-x",
+    "start_seconds": 0.9625,
+    "end_seconds": 1.4375
+  },
+  "photo-letter-y": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter Y.",
+    "word": "photo-letter-y",
+    "start_seconds": 0.9625,
+    "end_seconds": 1.375
+  },
+  "photo-letter-z": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter Z.",
+    "word": "photo-letter-z",
+    "start_seconds": 0.975,
+    "end_seconds": 1.3875
+  },
+  "photo-letter-n": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter N.",
+    "word": "photo-letter-n",
+    "start_seconds": 0.9875,
+    "end_seconds": 1.35
+  },
+  "photo-n-variant": {
+    "voice": "en-US-AriaNeural",
+    "context": "This is the letter N.",
+    "word": "photo-n-variant",
+    "start_seconds": 0.9875,
+    "end_seconds": 1.35
   }
 }

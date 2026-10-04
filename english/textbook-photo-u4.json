@@ -1,0 +1,3437 @@
+{
+  "unitId": "g3-upper-u4",
+  "title": "Plants around us",
+  "pages": [
+    {
+      "page": 38,
+      "title": "单元导入",
+      "blocks": [
+        {
+          "title": "单元标题与核心问题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Unit 4",
+              "zh": "第四单元"
+            },
+            {
+              "en": "Plants around us",
+              "zh": "我们身边的植物"
+            },
+            {
+              "en": "How do plants and people help each other?",
+              "zh": "植物和人怎样互相帮助？"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "photo-plants",
+          "en": "plants",
+          "zh": "植物（复数）",
+          "ipa": "/plænts/"
+        },
+        {
+          "id": "photo-around",
+          "en": "around",
+          "zh": "在……周围",
+          "ipa": "/əˈraʊnd/"
+        },
+        {
+          "id": "photo-us",
+          "en": "us",
+          "zh": "我们（宾格）",
+          "ipa": "/ʌs/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句的助动词",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "people",
+          "en": "people",
+          "zh": "人们",
+          "ipa": "/ˈpipəl/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "photo-each",
+          "en": "each",
+          "zh": "每一个",
+          "ipa": "/itʃ/"
+        },
+        {
+          "id": "photo-other",
+          "en": "other",
+          "zh": "另一个；其他的",
+          "ipa": "/ˈʌðɚ/"
+        }
+      ]
+    },
+    {
+      "page": 39,
+      "title": "观察、歌谣与歌曲",
+      "blocks": [
+        {
+          "title": "看一看，想一想",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Look and think",
+              "zh": "看一看，想一想"
+            },
+            {
+              "en": "What plants do you see?",
+              "zh": "你看到了哪些植物？"
+            },
+            {
+              "en": "What fruit do you like?",
+              "zh": "你喜欢什么水果？"
+            }
+          ]
+        },
+        {
+          "title": "植物与水果歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，说唱歌谣"
+            },
+            {
+              "en": "I see an apple.",
+              "zh": "我看到一个苹果。"
+            },
+            {
+              "en": "I see grapes.",
+              "zh": "我看到葡萄。"
+            },
+            {
+              "en": "I like fruit.",
+              "zh": "我喜欢水果。"
+            },
+            {
+              "en": "Let's eat!",
+              "zh": "让我们吃吧！"
+            },
+            {
+              "en": "I have a garden.",
+              "zh": "我有一个花园。"
+            },
+            {
+              "en": "I have water.",
+              "zh": "我有水。"
+            },
+            {
+              "en": "I like apples.",
+              "zh": "我喜欢苹果。"
+            },
+            {
+              "en": "Let's grow a tree!",
+              "zh": "让我们种一棵树吧！"
+            }
+          ]
+        },
+        {
+          "title": "听唱歌曲",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Listen and sing",
+              "zh": "听一听，唱一唱"
+            },
+            {
+              "en": "Plants and us",
+              "zh": "植物和我们",
+              "tip": "照片只印出歌曲标题，没有歌词。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-think",
+          "en": "think",
+          "zh": "想；思考",
+          "ipa": "/θɪŋk/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-plants",
+          "en": "plants",
+          "zh": "植物（复数）",
+          "ipa": "/plænts/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句的助动词",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "fruit",
+          "en": "fruit",
+          "zh": "水果",
+          "ipa": "/frut/"
+        },
+        {
+          "id": "photo-like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "说唱歌谣",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-an",
+          "en": "an",
+          "zh": "一个（用于元音音素前）",
+          "ipa": "/ən/"
+        },
+        {
+          "id": "apple",
+          "en": "apple",
+          "zh": "苹果",
+          "ipa": "/ˈæpəl/"
+        },
+        {
+          "id": "photo-grapes",
+          "en": "grapes",
+          "zh": "葡萄（复数）",
+          "ipa": "/ɡreɪps/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "photo-eat",
+          "en": "eat",
+          "zh": "吃",
+          "ipa": "/it/"
+        },
+        {
+          "id": "photo-have",
+          "en": "have",
+          "zh": "有",
+          "ipa": "/hæv/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-garden",
+          "en": "garden",
+          "zh": "花园",
+          "ipa": "/ˈɡɑrdən/"
+        },
+        {
+          "id": "water",
+          "en": "water",
+          "zh": "水",
+          "ipa": "/ˈwɔtɚ/"
+        },
+        {
+          "id": "photo-apples",
+          "en": "apples",
+          "zh": "苹果（复数）",
+          "ipa": "/ˈæpəlz/"
+        },
+        {
+          "id": "photo-grow",
+          "en": "grow",
+          "zh": "生长；种植",
+          "ipa": "/ɡroʊ/"
+        },
+        {
+          "id": "tree",
+          "en": "tree",
+          "zh": "树",
+          "ipa": "/tri/"
+        },
+        {
+          "id": "sing",
+          "en": "sing",
+          "zh": "唱歌",
+          "ipa": "/sɪŋ/"
+        },
+        {
+          "id": "photo-us",
+          "en": "us",
+          "zh": "我们（宾格）",
+          "ipa": "/ʌs/"
+        }
+      ]
+    },
+    {
+      "page": 40,
+      "title": "A：植物给我们什么",
+      "blocks": [
+        {
+          "title": "A 部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "What do we get from plants?",
+              "zh": "我们从植物那里得到什么？"
+            }
+          ]
+        },
+        {
+          "title": "谈论喜欢的水果与农场",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "说一说"
+            },
+            {
+              "en": "Mike, do you like apples?",
+              "zh": "迈克，你喜欢苹果吗？"
+            },
+            {
+              "en": "Yes, I do.",
+              "zh": "是的，我喜欢。"
+            },
+            {
+              "en": "And you?",
+              "zh": "你呢？"
+            },
+            {
+              "en": "No, I don't.",
+              "zh": "不，我不喜欢。"
+            },
+            {
+              "en": "I like bananas.",
+              "zh": "我喜欢香蕉。"
+            },
+            {
+              "en": "Do you like the farm?",
+              "zh": "你喜欢这个农场吗？"
+            },
+            {
+              "en": "Yes, Miss White.",
+              "zh": "是的，怀特老师。"
+            },
+            {
+              "en": "I like the fresh air.",
+              "zh": "我喜欢这里的新鲜空气。"
+            }
+          ]
+        },
+        {
+          "title": "问一问，答一答",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Ask and answer",
+              "zh": "问一问，答一答"
+            },
+            {
+              "en": "Do you like apples?",
+              "zh": "你喜欢苹果吗？"
+            },
+            {
+              "en": "Yes, I do.",
+              "zh": "是的，我喜欢。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句的助动词",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "photo-get",
+          "en": "get",
+          "zh": "得到",
+          "ipa": "/ɡɛt/"
+        },
+        {
+          "id": "from",
+          "en": "from",
+          "zh": "来自",
+          "ipa": "/frʌm/"
+        },
+        {
+          "id": "photo-plants",
+          "en": "plants",
+          "zh": "植物（复数）",
+          "ipa": "/plænts/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "photo-talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-mike",
+          "en": "Mike",
+          "zh": "迈克（人名）",
+          "ipa": "/maɪk/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "photo-apples",
+          "en": "apples",
+          "zh": "苹果（复数）",
+          "ipa": "/ˈæpəlz/"
+        },
+        {
+          "id": "photo-yes",
+          "en": "yes",
+          "zh": "是的",
+          "ipa": "/jɛs/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-no",
+          "en": "no",
+          "zh": "不；不是",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "photo-don-t",
+          "en": "don't",
+          "zh": "不（do not 的缩写）",
+          "ipa": "/doʊnt/"
+        },
+        {
+          "id": "photo-bananas",
+          "en": "bananas",
+          "zh": "香蕉（复数）",
+          "ipa": "/bəˈnænəz/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "farm",
+          "en": "farm",
+          "zh": "农场",
+          "ipa": "/fɑrm/"
+        },
+        {
+          "id": "photo-miss",
+          "en": "Miss",
+          "zh": "小姐；对女教师的称呼",
+          "ipa": "/mɪs/"
+        },
+        {
+          "id": "photo-white",
+          "en": "White",
+          "zh": "怀特（姓）",
+          "ipa": "/waɪt/"
+        },
+        {
+          "id": "fresh",
+          "en": "fresh",
+          "zh": "新鲜的",
+          "ipa": "/frɛʃ/"
+        },
+        {
+          "id": "photo-air",
+          "en": "air",
+          "zh": "空气",
+          "ipa": "/ɛr/"
+        },
+        {
+          "id": "photo-ask",
+          "en": "ask",
+          "zh": "问",
+          "ipa": "/æsk/"
+        },
+        {
+          "id": "photo-answer",
+          "en": "answer",
+          "zh": "回答；答案",
+          "ipa": "/ˈænsɚ/"
+        }
+      ]
+    },
+    {
+      "page": 41,
+      "title": "A：认识水果",
+      "blocks": [
+        {
+          "title": "学习与问答",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "学一学"
+            },
+            {
+              "en": "Do you like apples?",
+              "zh": "你喜欢苹果吗？"
+            },
+            {
+              "en": "No, I don't. I like bananas.",
+              "zh": "不，我不喜欢。我喜欢香蕉。"
+            }
+          ]
+        },
+        {
+          "title": "水果标签",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "bananas",
+              "zh": "香蕉（复数）"
+            },
+            {
+              "en": "oranges",
+              "zh": "橙子（复数）"
+            },
+            {
+              "en": "grapes",
+              "zh": "葡萄（复数）"
+            },
+            {
+              "en": "apples",
+              "zh": "苹果（复数）"
+            }
+          ]
+        },
+        {
+          "title": "水果和树木歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，说唱歌谣"
+            },
+            {
+              "en": "Grapes are small. Bananas are long.",
+              "zh": "葡萄小小的，香蕉长长的。"
+            },
+            {
+              "en": "Apples and oranges make you strong.",
+              "zh": "苹果和橙子让你强壮。"
+            },
+            {
+              "en": "Trees grow and give us things:",
+              "zh": "树木生长，给我们许多东西："
+            },
+            {
+              "en": "Fresh air, flowers and leaves in spring.",
+              "zh": "新鲜空气，还有春天的花朵和树叶。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句的助动词",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "photo-apples",
+          "en": "apples",
+          "zh": "苹果（复数）",
+          "ipa": "/ˈæpəlz/"
+        },
+        {
+          "id": "photo-no",
+          "en": "no",
+          "zh": "不；不是",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-don-t",
+          "en": "don't",
+          "zh": "不（do not 的缩写）",
+          "ipa": "/doʊnt/"
+        },
+        {
+          "id": "photo-bananas",
+          "en": "bananas",
+          "zh": "香蕉（复数）",
+          "ipa": "/bəˈnænəz/"
+        },
+        {
+          "id": "photo-oranges",
+          "en": "oranges",
+          "zh": "橙子（复数）",
+          "ipa": "/ˈɔrɪndʒɪz/"
+        },
+        {
+          "id": "photo-grapes",
+          "en": "grapes",
+          "zh": "葡萄（复数）",
+          "ipa": "/ɡreɪps/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "说唱歌谣",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（与 you、we、they 等连用）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "small",
+          "en": "small",
+          "zh": "小的",
+          "ipa": "/smɔl/"
+        },
+        {
+          "id": "long",
+          "en": "long",
+          "zh": "长的",
+          "ipa": "/lɔŋ/"
+        },
+        {
+          "id": "photo-make",
+          "en": "make",
+          "zh": "制作；使成为",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "strong",
+          "en": "strong",
+          "zh": "强壮的",
+          "ipa": "/strɔŋ/"
+        },
+        {
+          "id": "photo-trees",
+          "en": "trees",
+          "zh": "树（复数）",
+          "ipa": "/triz/"
+        },
+        {
+          "id": "photo-grow",
+          "en": "grow",
+          "zh": "生长；种植",
+          "ipa": "/ɡroʊ/"
+        },
+        {
+          "id": "photo-give",
+          "en": "give",
+          "zh": "给予；给",
+          "ipa": "/ɡɪv/"
+        },
+        {
+          "id": "photo-us",
+          "en": "us",
+          "zh": "我们（宾格）",
+          "ipa": "/ʌs/"
+        },
+        {
+          "id": "photo-things",
+          "en": "things",
+          "zh": "东西；事情（复数）",
+          "ipa": "/θɪŋz/"
+        },
+        {
+          "id": "fresh",
+          "en": "fresh",
+          "zh": "新鲜的",
+          "ipa": "/frɛʃ/"
+        },
+        {
+          "id": "photo-air",
+          "en": "air",
+          "zh": "空气",
+          "ipa": "/ɛr/"
+        },
+        {
+          "id": "photo-flowers",
+          "en": "flowers",
+          "zh": "花（复数）",
+          "ipa": "/ˈflaʊɚz/"
+        },
+        {
+          "id": "photo-leaves",
+          "en": "leaves",
+          "zh": "树叶（leaf 的复数）",
+          "ipa": "/livz/"
+        },
+        {
+          "id": "photo-in",
+          "en": "in",
+          "zh": "在……里",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "spring",
+          "en": "spring",
+          "zh": "春天",
+          "ipa": "/sprɪŋ/"
+        }
+      ]
+    },
+    {
+      "page": 42,
+      "title": "字母与发音：M、N、O、P",
+      "blocks": [
+        {
+          "title": "字母与发音",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Letters and sounds",
+              "zh": "字母与发音"
+            }
+          ]
+        },
+        {
+          "title": "听、跟读与说唱",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Listen, repeat and chant.",
+              "zh": "听一听，跟读并说唱歌谣。"
+            },
+            {
+              "en": "M m",
+              "zh": "字母 M 的大写和小写"
+            },
+            {
+              "en": "N n",
+              "zh": "字母 N 的大写和小写"
+            },
+            {
+              "en": "O o",
+              "zh": "字母 O 的大写和小写"
+            },
+            {
+              "en": "P p",
+              "zh": "字母 P 的大写和小写"
+            },
+            {
+              "en": "map",
+              "zh": "地图"
+            },
+            {
+              "en": "mum",
+              "zh": "妈妈"
+            },
+            {
+              "en": "new",
+              "zh": "新的"
+            },
+            {
+              "en": "fan",
+              "zh": "风扇"
+            },
+            {
+              "en": "orange",
+              "zh": "橙子"
+            },
+            {
+              "en": "fox",
+              "zh": "狐狸"
+            },
+            {
+              "en": "pen",
+              "zh": "钢笔"
+            },
+            {
+              "en": "cup",
+              "zh": "杯子"
+            }
+          ]
+        },
+        {
+          "title": "圈出第一个音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Listen and circle the first sound.",
+              "zh": "听一听，圈出第一个音。"
+            },
+            {
+              "en": "i o a",
+              "zh": "选项：i、o、a"
+            },
+            {
+              "en": "m n l",
+              "zh": "选项：m、n、l"
+            },
+            {
+              "en": "l m n",
+              "zh": "选项：l、m、n"
+            },
+            {
+              "en": "b p d",
+              "zh": "选项：b、p、d"
+            }
+          ]
+        },
+        {
+          "title": "试着拼读",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Can you read the words?",
+              "zh": "你能读出这些单词吗？"
+            },
+            {
+              "en": "n o d → nod",
+              "zh": "n、o、d 拼成 nod（点头）",
+              "tip": "朗读示范拼出的单词。",
+              "say": "nod."
+            },
+            {
+              "en": "hop",
+              "zh": "单脚跳；跳跃"
+            },
+            {
+              "en": "men",
+              "zh": "男人们",
+              "tip": "man（男人）的复数。"
+            },
+            {
+              "en": "nap",
+              "zh": "小睡；打盹"
+            },
+            {
+              "en": "pig",
+              "zh": "猪"
+            }
+          ]
+        },
+        {
+          "title": "书写与字母表",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Write and say.",
+              "zh": "写一写，说一说。"
+            },
+            {
+              "en": "M m",
+              "zh": "字母 M 的大写和小写"
+            },
+            {
+              "en": "N n",
+              "zh": "字母 N 的大写和小写"
+            },
+            {
+              "en": "O o",
+              "zh": "字母 O 的大写和小写"
+            },
+            {
+              "en": "P p",
+              "zh": "字母 P 的大写和小写"
+            },
+            {
+              "en": "Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz",
+              "zh": "英语字母表：26 个字母的大写和小写"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letters",
+          "en": "letters",
+          "zh": "字母（复数）",
+          "ipa": "/ˈlɛtɚz/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-sounds",
+          "en": "sounds",
+          "zh": "声音；发音（复数）",
+          "ipa": "/saʊndz/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-repeat",
+          "en": "repeat",
+          "zh": "跟读；重复",
+          "ipa": "/rɪˈpit/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "说唱歌谣",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-m",
+          "en": "m",
+          "zh": "字母 M",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-n",
+          "en": "n",
+          "zh": "字母 N",
+          "ipa": "/ɛn/"
+        },
+        {
+          "id": "photo-o",
+          "en": "o",
+          "zh": "字母 O",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-p",
+          "en": "p",
+          "zh": "字母 P",
+          "ipa": "/pi/"
+        },
+        {
+          "id": "map",
+          "en": "map",
+          "zh": "地图",
+          "ipa": "/mæp/"
+        },
+        {
+          "id": "photo-mum",
+          "en": "mum",
+          "zh": "妈妈",
+          "ipa": "/mʌm/"
+        },
+        {
+          "id": "new",
+          "en": "new",
+          "zh": "新的",
+          "ipa": "/nu/"
+        },
+        {
+          "id": "photo-fan",
+          "en": "fan",
+          "zh": "风扇",
+          "ipa": "/fæn/"
+        },
+        {
+          "id": "orange",
+          "en": "orange",
+          "zh": "橙色的；橙子",
+          "ipa": "/ˈɔrɪndʒ/"
+        },
+        {
+          "id": "photo-fox",
+          "en": "fox",
+          "zh": "狐狸",
+          "ipa": "/fɑks/"
+        },
+        {
+          "id": "photo-pen",
+          "en": "pen",
+          "zh": "钢笔",
+          "ipa": "/pɛn/"
+        },
+        {
+          "id": "photo-cup",
+          "en": "cup",
+          "zh": "杯子",
+          "ipa": "/kʌp/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-first",
+          "en": "first",
+          "zh": "第一；最初的",
+          "ipa": "/fɝst/"
+        },
+        {
+          "id": "photo-sound",
+          "en": "sound",
+          "zh": "声音；发音",
+          "ipa": "/saʊnd/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-l",
+          "en": "l",
+          "zh": "字母 L",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "photo-b",
+          "en": "b",
+          "zh": "字母 B",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-d",
+          "en": "d",
+          "zh": "字母 D",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-words",
+          "en": "words",
+          "zh": "单词（复数）",
+          "ipa": "/wɝdz/"
+        },
+        {
+          "id": "photo-nod",
+          "en": "nod",
+          "zh": "点头",
+          "ipa": "/nɑd/"
+        },
+        {
+          "id": "photo-hop",
+          "en": "hop",
+          "zh": "单脚跳；跳跃",
+          "ipa": "/hɑp/"
+        },
+        {
+          "id": "photo-men",
+          "en": "men",
+          "zh": "男人们（man 的复数）",
+          "ipa": "/mɛn/"
+        },
+        {
+          "id": "photo-nap",
+          "en": "nap",
+          "zh": "小睡；打盹",
+          "ipa": "/næp/"
+        },
+        {
+          "id": "photo-pig",
+          "en": "pig",
+          "zh": "猪",
+          "ipa": "/pɪɡ/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "photo-say",
+          "en": "say",
+          "zh": "说",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-aa",
+          "en": "Aa",
+          "zh": "字母 A 的大写和小写",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-bb",
+          "en": "Bb",
+          "zh": "字母 B 的大写和小写",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-cc",
+          "en": "Cc",
+          "zh": "字母 C 的大写和小写",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-dd",
+          "en": "Dd",
+          "zh": "字母 D 的大写和小写",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-ee",
+          "en": "Ee",
+          "zh": "字母 E 的大写和小写",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-ff",
+          "en": "Ff",
+          "zh": "字母 F 的大写和小写",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-gg",
+          "en": "Gg",
+          "zh": "字母 G 的大写和小写",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-hh",
+          "en": "Hh",
+          "zh": "字母 H 的大写和小写",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "photo-ii",
+          "en": "Ii",
+          "zh": "字母 I 的大写和小写",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-jj",
+          "en": "Jj",
+          "zh": "字母 J 的大写和小写",
+          "ipa": "/dʒeɪ/"
+        },
+        {
+          "id": "photo-kk",
+          "en": "Kk",
+          "zh": "字母 K 的大写和小写",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "photo-ll",
+          "en": "Ll",
+          "zh": "字母 L 的大写和小写",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "photo-mm",
+          "en": "Mm",
+          "zh": "字母 M 的大写和小写",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-nn",
+          "en": "Nn",
+          "zh": "字母 N 的大写和小写",
+          "ipa": "/ɛn/"
+        },
+        {
+          "id": "photo-oo",
+          "en": "Oo",
+          "zh": "字母 O 的大写和小写",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-pp",
+          "en": "Pp",
+          "zh": "字母 P 的大写和小写",
+          "ipa": "/pi/"
+        },
+        {
+          "id": "photo-qq",
+          "en": "Qq",
+          "zh": "字母 Q 的大写和小写",
+          "ipa": "/kju/"
+        },
+        {
+          "id": "photo-rr",
+          "en": "Rr",
+          "zh": "字母 R 的大写和小写",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-ss",
+          "en": "Ss",
+          "zh": "字母 S 的大写和小写",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-tt",
+          "en": "Tt",
+          "zh": "字母 T 的大写和小写",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "photo-uu",
+          "en": "Uu",
+          "zh": "字母 U 的大写和小写",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-vv",
+          "en": "Vv",
+          "zh": "字母 V 的大写和小写",
+          "ipa": "/vi/"
+        },
+        {
+          "id": "photo-ww",
+          "en": "Ww",
+          "zh": "字母 W 的大写和小写",
+          "ipa": "/ˈdʌbəlju/"
+        },
+        {
+          "id": "photo-xx",
+          "en": "Xx",
+          "zh": "字母 X 的大写和小写",
+          "ipa": "/ɛks/"
+        },
+        {
+          "id": "photo-yy",
+          "en": "Yy",
+          "zh": "字母 Y 的大写和小写",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-zz",
+          "en": "Zz",
+          "zh": "字母 Z 的大写和小写",
+          "ipa": "/zi/"
+        },
+        {
+          "id": "photo-letter-a",
+          "en": "a",
+          "zh": "字母 A",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-letter-m",
+          "en": "m",
+          "zh": "字母 M",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-letter-n",
+          "en": "n",
+          "zh": "字母 N",
+          "ipa": "/ɛn/"
+        },
+        {
+          "id": "photo-letter-o",
+          "en": "o",
+          "zh": "字母 O",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-letter-p",
+          "en": "p",
+          "zh": "字母 P",
+          "ipa": "/pi/"
+        }
+      ]
+    },
+    {
+      "page": 43,
+      "title": "B：怎样帮助植物",
+      "blocks": [
+        {
+          "title": "B 部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "How can we help plants?",
+              "zh": "我们怎样帮助植物？"
+            }
+          ]
+        },
+        {
+          "title": "照料学校花园",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "说一说"
+            },
+            {
+              "en": "The school gardens need help.",
+              "zh": "学校的花园需要帮助。"
+            },
+            {
+              "en": "We can water the flowers.",
+              "zh": "我们可以给花浇水。"
+            },
+            {
+              "en": "We can water the grass.",
+              "zh": "我们可以给草浇水。"
+            },
+            {
+              "en": "Nice. And?",
+              "zh": "很好。还有呢？"
+            },
+            {
+              "en": "We can plant new trees.",
+              "zh": "我们可以种新的树。"
+            }
+          ]
+        },
+        {
+          "title": "看一看，说一说",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Look and talk",
+              "zh": "看一看，说一说"
+            },
+            {
+              "en": "How can we help?",
+              "zh": "我们可以怎样帮忙？"
+            },
+            {
+              "en": "We can plant trees.",
+              "zh": "我们可以种树。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "photo-plants",
+          "en": "plants",
+          "zh": "植物（复数）",
+          "ipa": "/plænts/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "photo-talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "school",
+          "en": "school",
+          "zh": "学校",
+          "ipa": "/skul/"
+        },
+        {
+          "id": "photo-gardens",
+          "en": "gardens",
+          "zh": "花园（复数）",
+          "ipa": "/ˈɡɑrdənz/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "water",
+          "en": "water",
+          "zh": "水",
+          "ipa": "/ˈwɔtɚ/"
+        },
+        {
+          "id": "photo-flowers",
+          "en": "flowers",
+          "zh": "花（复数）",
+          "ipa": "/ˈflaʊɚz/"
+        },
+        {
+          "id": "grass",
+          "en": "grass",
+          "zh": "草",
+          "ipa": "/ɡræs/"
+        },
+        {
+          "id": "photo-nice",
+          "en": "nice",
+          "zh": "令人愉快的；好的",
+          "ipa": "/naɪs/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "plant",
+          "en": "plant",
+          "zh": "植物；种植",
+          "ipa": "/plænt/"
+        },
+        {
+          "id": "new",
+          "en": "new",
+          "zh": "新的",
+          "ipa": "/nu/"
+        },
+        {
+          "id": "photo-trees",
+          "en": "trees",
+          "zh": "树（复数）",
+          "ipa": "/triz/"
+        },
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        }
+      ]
+    },
+    {
+      "page": 44,
+      "title": "B：植物生长需要什么",
+      "blocks": [
+        {
+          "title": "学习与图示",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "学一学"
+            },
+            {
+              "en": "Plants need our help.",
+              "zh": "植物需要我们的帮助。"
+            },
+            {
+              "en": "sun",
+              "zh": "太阳；阳光"
+            },
+            {
+              "en": "air",
+              "zh": "空气"
+            },
+            {
+              "en": "water",
+              "zh": "水"
+            },
+            {
+              "en": "trees",
+              "zh": "树（复数）"
+            },
+            {
+              "en": "flowers",
+              "zh": "花（复数）"
+            },
+            {
+              "en": "grass",
+              "zh": "草"
+            }
+          ]
+        },
+        {
+          "title": "说明植物的需要",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Plants need air, water and sun.",
+              "zh": "植物需要空气、水和阳光。"
+            }
+          ]
+        },
+        {
+          "title": "植物养护歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，说唱歌谣"
+            },
+            {
+              "en": "Air, water and sun.",
+              "zh": "空气、水和阳光。"
+            },
+            {
+              "en": "These can all help plants grow.",
+              "zh": "这些都能帮助植物生长。"
+            },
+            {
+              "en": "Plant, water, cut and turn.",
+              "zh": "种植、浇水、修剪和转动。",
+              "tip": "这里的 cut 指修剪植物，turn 指转动花盆。"
+            },
+            {
+              "en": "These are some things I know.",
+              "zh": "这些是我知道的一些事情。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "photo-plants",
+          "en": "plants",
+          "zh": "植物（复数）",
+          "ipa": "/plænts/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "photo-our",
+          "en": "our",
+          "zh": "我们的",
+          "ipa": "/aʊr/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "sun",
+          "en": "sun",
+          "zh": "太阳",
+          "ipa": "/sʌn/"
+        },
+        {
+          "id": "photo-air",
+          "en": "air",
+          "zh": "空气",
+          "ipa": "/ɛr/"
+        },
+        {
+          "id": "water",
+          "en": "water",
+          "zh": "水",
+          "ipa": "/ˈwɔtɚ/"
+        },
+        {
+          "id": "photo-trees",
+          "en": "trees",
+          "zh": "树（复数）",
+          "ipa": "/triz/"
+        },
+        {
+          "id": "photo-flowers",
+          "en": "flowers",
+          "zh": "花（复数）",
+          "ipa": "/ˈflaʊɚz/"
+        },
+        {
+          "id": "grass",
+          "en": "grass",
+          "zh": "草",
+          "ipa": "/ɡræs/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "说唱歌谣",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-these",
+          "en": "these",
+          "zh": "这些",
+          "ipa": "/ðiz/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-all",
+          "en": "all",
+          "zh": "全部；都",
+          "ipa": "/ɔl/"
+        },
+        {
+          "id": "photo-grow",
+          "en": "grow",
+          "zh": "生长；种植",
+          "ipa": "/ɡroʊ/"
+        },
+        {
+          "id": "plant",
+          "en": "plant",
+          "zh": "植物；种植",
+          "ipa": "/plænt/"
+        },
+        {
+          "id": "photo-cut",
+          "en": "cut",
+          "zh": "修剪；切；剪",
+          "ipa": "/kʌt/"
+        },
+        {
+          "id": "turn",
+          "en": "turn",
+          "zh": "转动",
+          "ipa": "/tɝn/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（与 you、we、they 等连用）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-some",
+          "en": "some",
+          "zh": "一些",
+          "ipa": "/sʌm/"
+        },
+        {
+          "id": "photo-things",
+          "en": "things",
+          "zh": "东西；事情（复数）",
+          "ipa": "/θɪŋz/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-know",
+          "en": "know",
+          "zh": "知道；了解",
+          "ipa": "/noʊ/"
+        }
+      ]
+    },
+    {
+      "page": 45,
+      "title": "开始阅读：植物和我们互相帮助",
+      "blocks": [
+        {
+          "title": "阅读与图示",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Start to read",
+              "zh": "开始阅读"
+            },
+            {
+              "en": "Help",
+              "zh": "帮助"
+            },
+            {
+              "en": "Give",
+              "zh": "给予"
+            },
+            {
+              "en": "Plants can give us many things.",
+              "zh": "植物可以给我们许多东西。"
+            },
+            {
+              "en": "We need plants.",
+              "zh": "我们需要植物。"
+            },
+            {
+              "en": "Plants need air, water and sun.",
+              "zh": "植物需要空气、水和阳光。"
+            },
+            {
+              "en": "Can we help them?",
+              "zh": "我们能帮助它们吗？"
+            },
+            {
+              "en": "What fruit do you see?",
+              "zh": "你看到了什么水果？"
+            },
+            {
+              "en": "What does this fruit tree need?",
+              "zh": "这棵果树需要什么？"
+            }
+          ]
+        },
+        {
+          "title": "圈一圈，说一说",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Circle the things you see in the picture. Then talk about a plant.",
+              "zh": "圈出你在图片里看到的东西。然后说一说一种植物。"
+            },
+            {
+              "en": "apples",
+              "zh": "苹果（复数）"
+            },
+            {
+              "en": "bananas",
+              "zh": "香蕉（复数）"
+            },
+            {
+              "en": "grapes",
+              "zh": "葡萄（复数）"
+            },
+            {
+              "en": "oranges",
+              "zh": "橙子（复数）"
+            },
+            {
+              "en": "air",
+              "zh": "空气"
+            },
+            {
+              "en": "sun",
+              "zh": "太阳；阳光"
+            },
+            {
+              "en": "water",
+              "zh": "水"
+            },
+            {
+              "en": "flowers",
+              "zh": "花（复数）"
+            },
+            {
+              "en": "grass",
+              "zh": "草"
+            },
+            {
+              "en": "tree",
+              "zh": "树"
+            }
+          ]
+        },
+        {
+          "title": "介绍一种植物",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Flowers need air, water and sun.",
+              "zh": "花需要空气、水和阳光。"
+            },
+            {
+              "en": "We can help them. We can ...",
+              "zh": "我们可以帮助它们。我们可以……"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-start",
+          "en": "start",
+          "zh": "开始",
+          "ipa": "/stɑrt/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "向；到；不定式标记",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "photo-give",
+          "en": "give",
+          "zh": "给予；给",
+          "ipa": "/ɡɪv/"
+        },
+        {
+          "id": "photo-plants",
+          "en": "plants",
+          "zh": "植物（复数）",
+          "ipa": "/plænts/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-us",
+          "en": "us",
+          "zh": "我们（宾格）",
+          "ipa": "/ʌs/"
+        },
+        {
+          "id": "photo-many",
+          "en": "many",
+          "zh": "许多",
+          "ipa": "/ˈmɛni/"
+        },
+        {
+          "id": "photo-things",
+          "en": "things",
+          "zh": "东西；事情（复数）",
+          "ipa": "/θɪŋz/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "photo-air",
+          "en": "air",
+          "zh": "空气",
+          "ipa": "/ɛr/"
+        },
+        {
+          "id": "water",
+          "en": "water",
+          "zh": "水",
+          "ipa": "/ˈwɔtɚ/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "sun",
+          "en": "sun",
+          "zh": "太阳",
+          "ipa": "/sʌn/"
+        },
+        {
+          "id": "photo-them",
+          "en": "them",
+          "zh": "他们；她们；它们（宾格）",
+          "ipa": "/ðɛm/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "fruit",
+          "en": "fruit",
+          "zh": "水果",
+          "ipa": "/frut/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句的助动词",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-does",
+          "en": "does",
+          "zh": "疑问句的助动词；做（do 的第三人称单数）",
+          "ipa": "/dʌz/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "tree",
+          "en": "tree",
+          "zh": "树",
+          "ipa": "/tri/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-in",
+          "en": "in",
+          "zh": "在……里",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "photo-picture",
+          "en": "picture",
+          "zh": "图片；照片",
+          "ipa": "/ˈpɪktʃɚ/"
+        },
+        {
+          "id": "then",
+          "en": "then",
+          "zh": "那时",
+          "ipa": "/ðɛn/"
+        },
+        {
+          "id": "photo-talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-about",
+          "en": "about",
+          "zh": "关于",
+          "ipa": "/əˈbaʊt/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "plant",
+          "en": "plant",
+          "zh": "植物；种植",
+          "ipa": "/plænt/"
+        },
+        {
+          "id": "photo-apples",
+          "en": "apples",
+          "zh": "苹果（复数）",
+          "ipa": "/ˈæpəlz/"
+        },
+        {
+          "id": "photo-bananas",
+          "en": "bananas",
+          "zh": "香蕉（复数）",
+          "ipa": "/bəˈnænəz/"
+        },
+        {
+          "id": "photo-grapes",
+          "en": "grapes",
+          "zh": "葡萄（复数）",
+          "ipa": "/ɡreɪps/"
+        },
+        {
+          "id": "photo-oranges",
+          "en": "oranges",
+          "zh": "橙子（复数）",
+          "ipa": "/ˈɔrɪndʒɪz/"
+        },
+        {
+          "id": "photo-flowers",
+          "en": "flowers",
+          "zh": "花（复数）",
+          "ipa": "/ˈflaʊɚz/"
+        },
+        {
+          "id": "grass",
+          "en": "grass",
+          "zh": "草",
+          "ipa": "/ɡræs/"
+        }
+      ]
+    },
+    {
+      "page": 46,
+      "title": "C 项目：制作纸花园",
+      "blocks": [
+        {
+          "title": "项目主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Project: Make a paper garden",
+              "zh": "项目：制作一个纸花园"
+            }
+          ]
+        },
+        {
+          "title": "水果喜好连线",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Which fruit do the children like? Listen and match.",
+              "zh": "孩子们喜欢哪种水果？听一听，连一连。"
+            },
+            {
+              "en": "Binbin",
+              "zh": "斌斌（人名）"
+            },
+            {
+              "en": "John",
+              "zh": "约翰（人名）"
+            },
+            {
+              "en": "Chen Jie",
+              "zh": "陈杰（人名）"
+            },
+            {
+              "en": "Sarah",
+              "zh": "萨拉（人名）"
+            }
+          ]
+        },
+        {
+          "title": "小组讨论果树",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "What do you know about fruit trees? Talk in your group.",
+              "zh": "你对果树了解多少？在你的小组里讨论。"
+            },
+            {
+              "en": "What do fruit trees need?",
+              "zh": "果树需要什么？"
+            },
+            {
+              "en": "How can we help?",
+              "zh": "我们能怎样帮助它们？"
+            },
+            {
+              "en": "A, G",
+              "zh": "A、G（图中已填写的示例）"
+            },
+            {
+              "en": "B",
+              "zh": "B（图中已填写的示例）"
+            },
+            {
+              "en": "What can they give us?",
+              "zh": "它们能给我们什么？"
+            },
+            {
+              "en": "A. air",
+              "zh": "A. 空气"
+            },
+            {
+              "en": "B. apples",
+              "zh": "B. 苹果"
+            },
+            {
+              "en": "C. bananas",
+              "zh": "C. 香蕉"
+            },
+            {
+              "en": "D. grapes",
+              "zh": "D. 葡萄"
+            },
+            {
+              "en": "E. oranges",
+              "zh": "E. 橙子"
+            },
+            {
+              "en": "F. plant the tree",
+              "zh": "F. 种这棵树"
+            },
+            {
+              "en": "G. sun",
+              "zh": "G. 太阳；阳光"
+            },
+            {
+              "en": "H. water",
+              "zh": "H. 水"
+            },
+            {
+              "en": "I. water the tree",
+              "zh": "I. 给这棵树浇水"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-project",
+          "en": "project",
+          "zh": "项目",
+          "ipa": "/ˈprɑdʒɛkt/"
+        },
+        {
+          "id": "photo-make",
+          "en": "make",
+          "zh": "制作；使成为",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-paper",
+          "en": "paper",
+          "zh": "纸；纸制的",
+          "ipa": "/ˈpeɪpɚ/"
+        },
+        {
+          "id": "photo-garden",
+          "en": "garden",
+          "zh": "花园",
+          "ipa": "/ˈɡɑrdən/"
+        },
+        {
+          "id": "photo-which",
+          "en": "which",
+          "zh": "哪一个",
+          "ipa": "/wɪtʃ/"
+        },
+        {
+          "id": "fruit",
+          "en": "fruit",
+          "zh": "水果",
+          "ipa": "/frut/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句的助动词",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-children",
+          "en": "children",
+          "zh": "孩子们（child 的复数）",
+          "ipa": "/ˈtʃɪldrən/"
+        },
+        {
+          "id": "photo-like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-match",
+          "en": "match",
+          "zh": "连线；配对",
+          "ipa": "/mætʃ/"
+        },
+        {
+          "id": "photo-binbin",
+          "en": "Binbin",
+          "zh": "斌斌（人名，按中文读）",
+          "ipa": "/ˈbɪnbɪn/"
+        },
+        {
+          "id": "photo-john",
+          "en": "John",
+          "zh": "约翰（人名）",
+          "ipa": "/dʒɑn/"
+        },
+        {
+          "id": "photo-chen",
+          "en": "Chen",
+          "zh": "陈（姓，按中文读）",
+          "ipa": "/tʃɛn/"
+        },
+        {
+          "id": "photo-jie",
+          "en": "Jie",
+          "zh": "杰（人名，按中文读）",
+          "ipa": "/dʒjɛ/"
+        },
+        {
+          "id": "photo-sarah",
+          "en": "Sarah",
+          "zh": "萨拉（人名）",
+          "ipa": "/ˈsɛrə/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-know",
+          "en": "know",
+          "zh": "知道；了解",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "photo-about",
+          "en": "about",
+          "zh": "关于",
+          "ipa": "/əˈbaʊt/"
+        },
+        {
+          "id": "photo-trees",
+          "en": "trees",
+          "zh": "树（复数）",
+          "ipa": "/triz/"
+        },
+        {
+          "id": "photo-talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-in",
+          "en": "in",
+          "zh": "在……里",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "photo-group",
+          "en": "group",
+          "zh": "小组",
+          "ipa": "/ɡrup/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "photo-g",
+          "en": "g",
+          "zh": "字母 G",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-b",
+          "en": "b",
+          "zh": "字母 B",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-they",
+          "en": "they",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðeɪ/"
+        },
+        {
+          "id": "photo-give",
+          "en": "give",
+          "zh": "给予；给",
+          "ipa": "/ɡɪv/"
+        },
+        {
+          "id": "photo-us",
+          "en": "us",
+          "zh": "我们（宾格）",
+          "ipa": "/ʌs/"
+        },
+        {
+          "id": "photo-air",
+          "en": "air",
+          "zh": "空气",
+          "ipa": "/ɛr/"
+        },
+        {
+          "id": "photo-apples",
+          "en": "apples",
+          "zh": "苹果（复数）",
+          "ipa": "/ˈæpəlz/"
+        },
+        {
+          "id": "photo-c",
+          "en": "c",
+          "zh": "字母 C",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-bananas",
+          "en": "bananas",
+          "zh": "香蕉（复数）",
+          "ipa": "/bəˈnænəz/"
+        },
+        {
+          "id": "photo-d",
+          "en": "d",
+          "zh": "字母 D",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-grapes",
+          "en": "grapes",
+          "zh": "葡萄（复数）",
+          "ipa": "/ɡreɪps/"
+        },
+        {
+          "id": "photo-e",
+          "en": "e",
+          "zh": "字母 E",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-oranges",
+          "en": "oranges",
+          "zh": "橙子（复数）",
+          "ipa": "/ˈɔrɪndʒɪz/"
+        },
+        {
+          "id": "photo-f",
+          "en": "f",
+          "zh": "字母 F",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "plant",
+          "en": "plant",
+          "zh": "植物；种植",
+          "ipa": "/plænt/"
+        },
+        {
+          "id": "tree",
+          "en": "tree",
+          "zh": "树",
+          "ipa": "/tri/"
+        },
+        {
+          "id": "sun",
+          "en": "sun",
+          "zh": "太阳",
+          "ipa": "/sʌn/"
+        },
+        {
+          "id": "photo-h",
+          "en": "h",
+          "zh": "字母 H",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "water",
+          "en": "water",
+          "zh": "水",
+          "ipa": "/ˈwɔtɚ/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-letter-a",
+          "en": "A",
+          "zh": "选项字母 A",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-letter-b",
+          "en": "B",
+          "zh": "选项字母 B",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-letter-c",
+          "en": "C",
+          "zh": "选项字母 C",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-letter-d",
+          "en": "D",
+          "zh": "选项字母 D",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-letter-e",
+          "en": "E",
+          "zh": "选项字母 E",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-letter-f",
+          "en": "F",
+          "zh": "选项字母 F",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-letter-g",
+          "en": "G",
+          "zh": "选项字母 G",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-letter-h",
+          "en": "H",
+          "zh": "选项字母 H",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "photo-letter-i",
+          "en": "I",
+          "zh": "选项字母 I",
+          "ipa": "/aɪ/"
+        }
+      ]
+    },
+    {
+      "page": 47,
+      "title": "C 项目展示与自我检查",
+      "blocks": [
+        {
+          "title": "制作纸花园",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Make your paper garden.",
+              "zh": "制作你的纸花园。"
+            },
+            {
+              "en": "Step",
+              "zh": "步骤"
+            },
+            {
+              "en": "Make some cards.",
+              "zh": "制作一些卡片。"
+            },
+            {
+              "en": "sun",
+              "zh": "太阳；阳光"
+            },
+            {
+              "en": "Step",
+              "zh": "步骤"
+            },
+            {
+              "en": "Make your garden.",
+              "zh": "制作你的花园。"
+            },
+            {
+              "en": "Sun",
+              "zh": "太阳；阳光"
+            },
+            {
+              "en": "water",
+              "zh": "水"
+            },
+            {
+              "en": "apple tree",
+              "zh": "苹果树"
+            }
+          ]
+        },
+        {
+          "title": "在班级中分享",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Share your paper garden in class.",
+              "zh": "在班级里分享你的纸花园。"
+            },
+            {
+              "en": "This is my garden. The apple trees need air, water and sun. We can help them. We ...",
+              "zh": "这是我的花园。苹果树需要空气、水和阳光。我们可以帮助它们。我们……"
+            }
+          ]
+        },
+        {
+          "title": "自我检查",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Self-check",
+              "zh": "自我检查"
+            },
+            {
+              "en": "I still need help",
+              "zh": "我还需要帮助。"
+            },
+            {
+              "en": "I can mostly do it",
+              "zh": "我大部分都能做到。"
+            },
+            {
+              "en": "I can do it!",
+              "zh": "我能做到！"
+            },
+            {
+              "en": "I can ask about fruit and say the fruit I like.",
+              "zh": "我能询问水果并说出我喜欢的水果。"
+            },
+            {
+              "en": "I can name some plants and talk about how they grow.",
+              "zh": "我能说出一些植物的名字，并谈论它们怎样生长。"
+            },
+            {
+              "en": "I can say how we help plants and plants help us.",
+              "zh": "我能说出我们怎样帮助植物，以及植物怎样帮助我们。"
+            },
+            {
+              "en": "I can read, write and say Mm, Nn, Oo and Pp.",
+              "zh": "我能读、写并说出 Mm、Nn、Oo 和 Pp。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-make",
+          "en": "make",
+          "zh": "制作；使成为",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "photo-paper",
+          "en": "paper",
+          "zh": "纸；纸制的",
+          "ipa": "/ˈpeɪpɚ/"
+        },
+        {
+          "id": "photo-garden",
+          "en": "garden",
+          "zh": "花园",
+          "ipa": "/ˈɡɑrdən/"
+        },
+        {
+          "id": "photo-step",
+          "en": "step",
+          "zh": "步骤",
+          "ipa": "/stɛp/"
+        },
+        {
+          "id": "photo-some",
+          "en": "some",
+          "zh": "一些",
+          "ipa": "/sʌm/"
+        },
+        {
+          "id": "photo-cards",
+          "en": "cards",
+          "zh": "卡片（复数）",
+          "ipa": "/kɑrdz/"
+        },
+        {
+          "id": "sun",
+          "en": "sun",
+          "zh": "太阳",
+          "ipa": "/sʌn/"
+        },
+        {
+          "id": "water",
+          "en": "water",
+          "zh": "水",
+          "ipa": "/ˈwɔtɚ/"
+        },
+        {
+          "id": "apple",
+          "en": "apple",
+          "zh": "苹果",
+          "ipa": "/ˈæpəl/"
+        },
+        {
+          "id": "tree",
+          "en": "tree",
+          "zh": "树",
+          "ipa": "/tri/"
+        },
+        {
+          "id": "photo-share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "photo-in",
+          "en": "in",
+          "zh": "在……里",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "class",
+          "en": "class",
+          "zh": "班级；课",
+          "ipa": "/klæs/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-trees",
+          "en": "trees",
+          "zh": "树（复数）",
+          "ipa": "/triz/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "photo-air",
+          "en": "air",
+          "zh": "空气",
+          "ipa": "/ɛr/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "photo-them",
+          "en": "them",
+          "zh": "他们；她们；它们（宾格）",
+          "ipa": "/ðɛm/"
+        },
+        {
+          "id": "photo-self-check",
+          "en": "self-check",
+          "zh": "自我检查",
+          "ipa": "/ˌsɛlfˈtʃɛk/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-still",
+          "en": "still",
+          "zh": "还；仍然",
+          "ipa": "/stɪl/"
+        },
+        {
+          "id": "photo-mostly",
+          "en": "mostly",
+          "zh": "大部分；主要地",
+          "ipa": "/ˈmoʊstli/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句的助动词",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；它指代的人或事物",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "photo-ask",
+          "en": "ask",
+          "zh": "问",
+          "ipa": "/æsk/"
+        },
+        {
+          "id": "photo-about",
+          "en": "about",
+          "zh": "关于",
+          "ipa": "/əˈbaʊt/"
+        },
+        {
+          "id": "fruit",
+          "en": "fruit",
+          "zh": "水果",
+          "ipa": "/frut/"
+        },
+        {
+          "id": "photo-say",
+          "en": "say",
+          "zh": "说",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "name",
+          "en": "name",
+          "zh": "名字",
+          "ipa": "/neɪm/"
+        },
+        {
+          "id": "photo-plants",
+          "en": "plants",
+          "zh": "植物（复数）",
+          "ipa": "/plænts/"
+        },
+        {
+          "id": "photo-talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-they",
+          "en": "they",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðeɪ/"
+        },
+        {
+          "id": "photo-grow",
+          "en": "grow",
+          "zh": "生长；种植",
+          "ipa": "/ɡroʊ/"
+        },
+        {
+          "id": "photo-us",
+          "en": "us",
+          "zh": "我们（宾格）",
+          "ipa": "/ʌs/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "photo-mm",
+          "en": "Mm",
+          "zh": "字母 M 的大写和小写",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-nn",
+          "en": "Nn",
+          "zh": "字母 N 的大写和小写",
+          "ipa": "/ɛn/"
+        },
+        {
+          "id": "photo-oo",
+          "en": "Oo",
+          "zh": "字母 O 的大写和小写",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-pp",
+          "en": "Pp",
+          "zh": "字母 P 的大写和小写",
+          "ipa": "/pi/"
+        }
+      ]
+    },
+    {
+      "page": 48,
+      "title": "阅读时间：一棵苹果树的故事（一）",
+      "blocks": [
+        {
+          "title": "阅读标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Reading time",
+              "zh": "阅读时间"
+            }
+          ]
+        },
+        {
+          "title": "1：新的家庭",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "I am an apple tree.",
+              "zh": "我是一棵苹果树。"
+            },
+            {
+              "en": "My new family help me.",
+              "zh": "我的新家人帮助我。",
+              "tip": "这里的 family 指家庭成员，因此原文用 help。"
+            }
+          ]
+        },
+        {
+          "title": "2：浇水",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "I need air, water and sun.",
+              "zh": "我需要空气、水和阳光。"
+            },
+            {
+              "en": "My family water me.",
+              "zh": "我的家人给我浇水。",
+              "tip": "这里 water 是动词，意思是“给……浇水”。"
+            }
+          ]
+        },
+        {
+          "title": "3：冬天",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "It is cold. They help me.",
+              "zh": "天气冷了。他们帮助我。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-reading",
+          "en": "reading",
+          "zh": "阅读",
+          "ipa": "/ˈridɪŋ/"
+        },
+        {
+          "id": "time",
+          "en": "time",
+          "zh": "时间",
+          "ipa": "/taɪm/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-am",
+          "en": "am",
+          "zh": "是（与 I 连用）",
+          "ipa": "/æm/"
+        },
+        {
+          "id": "photo-an",
+          "en": "an",
+          "zh": "一个（用于元音音素前）",
+          "ipa": "/ən/"
+        },
+        {
+          "id": "apple",
+          "en": "apple",
+          "zh": "苹果",
+          "ipa": "/ˈæpəl/"
+        },
+        {
+          "id": "tree",
+          "en": "tree",
+          "zh": "树",
+          "ipa": "/tri/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "new",
+          "en": "new",
+          "zh": "新的",
+          "ipa": "/nu/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "photo-me",
+          "en": "me",
+          "zh": "我（宾格）",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "photo-air",
+          "en": "air",
+          "zh": "空气",
+          "ipa": "/ɛr/"
+        },
+        {
+          "id": "water",
+          "en": "water",
+          "zh": "水",
+          "ipa": "/ˈwɔtɚ/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "sun",
+          "en": "sun",
+          "zh": "太阳",
+          "ipa": "/sʌn/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；它指代的人或事物",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "cold",
+          "en": "cold",
+          "zh": "寒冷的",
+          "ipa": "/koʊld/"
+        },
+        {
+          "id": "photo-they",
+          "en": "they",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðeɪ/"
+        }
+      ]
+    },
+    {
+      "page": 49,
+      "title": "阅读时间：一棵苹果树的故事（二）",
+      "blocks": [
+        {
+          "title": "4：春天",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "My family like me.",
+              "zh": "我的家人喜欢我。"
+            },
+            {
+              "en": "I love the fresh air.",
+              "zh": "我喜欢新鲜空气。"
+            },
+            {
+              "en": "The flowers are so beautiful!",
+              "zh": "这些花真美！"
+            }
+          ]
+        },
+        {
+          "title": "5：结果",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "I am big now. I give apples to my family. We are all happy!",
+              "zh": "我现在长大了。我把苹果送给我的家人。我们都很开心！"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "photo-like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "photo-me",
+          "en": "me",
+          "zh": "我（宾格）",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "love",
+          "en": "love",
+          "zh": "爱",
+          "ipa": "/lʌv/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "fresh",
+          "en": "fresh",
+          "zh": "新鲜的",
+          "ipa": "/frɛʃ/"
+        },
+        {
+          "id": "photo-air",
+          "en": "air",
+          "zh": "空气",
+          "ipa": "/ɛr/"
+        },
+        {
+          "id": "photo-flowers",
+          "en": "flowers",
+          "zh": "花（复数）",
+          "ipa": "/ˈflaʊɚz/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（与 you、we、they 等连用）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-so",
+          "en": "so",
+          "zh": "这么；如此",
+          "ipa": "/soʊ/"
+        },
+        {
+          "id": "photo-beautiful",
+          "en": "beautiful",
+          "zh": "美丽的",
+          "ipa": "/ˈbjutəfəl/"
+        },
+        {
+          "id": "photo-am",
+          "en": "am",
+          "zh": "是（与 I 连用）",
+          "ipa": "/æm/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "now",
+          "en": "now",
+          "zh": "现在",
+          "ipa": "/naʊ/"
+        },
+        {
+          "id": "photo-give",
+          "en": "give",
+          "zh": "给予；给",
+          "ipa": "/ɡɪv/"
+        },
+        {
+          "id": "photo-apples",
+          "en": "apples",
+          "zh": "苹果（复数）",
+          "ipa": "/ˈæpəlz/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "向；到；不定式标记",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "photo-all",
+          "en": "all",
+          "zh": "全部；都",
+          "ipa": "/ɔl/"
+        },
+        {
+          "id": "happy",
+          "en": "happy",
+          "zh": "开心的",
+          "ipa": "/ˈhæpi/"
+        }
+      ]
+    }
+  ]
+}

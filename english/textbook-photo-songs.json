@@ -1,0 +1,3113 @@
+{
+  "unitId": "g3-upper-songs",
+  "title": "Songs and letter chants",
+  "pages": [
+    {
+      "page": 78,
+      "title": "附录 1：歌曲（一）",
+      "blocks": [
+        {
+          "title": "附录标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Appendix 1",
+              "zh": "附录 1"
+            },
+            {
+              "en": "Songs",
+              "zh": "歌曲"
+            }
+          ]
+        },
+        {
+          "title": "Unit 1：认识新朋友",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 1",
+              "zh": "第一单元"
+            },
+            {
+              "en": "Nice to meet you!",
+              "zh": "很高兴认识你！"
+            },
+            {
+              "en": "Nice to meet you. Nice to meet you.",
+              "zh": "很高兴认识你。很高兴认识你。"
+            },
+            {
+              "en": "Nice to meet you, my new friend.",
+              "zh": "很高兴认识你，我的新朋友。"
+            },
+            {
+              "en": "I am happy. Smile and say \"Hi!\"",
+              "zh": "我很开心。微笑着说“嗨！”"
+            },
+            {
+              "en": "Nice to meet you, my new friend.",
+              "zh": "很高兴认识你，我的新朋友。"
+            },
+            {
+              "en": "Nice to meet you. Nice to meet you.",
+              "zh": "很高兴认识你。很高兴认识你。"
+            },
+            {
+              "en": "Nice to meet you, my new friend.",
+              "zh": "很高兴认识你，我的新朋友。"
+            },
+            {
+              "en": "Shake my hand. Let's play a game now.",
+              "zh": "和我握握手。现在让我们玩个游戏吧。"
+            },
+            {
+              "en": "Nice to meet you, my new friend.",
+              "zh": "很高兴认识你，我的新朋友。"
+            }
+          ]
+        },
+        {
+          "title": "Unit 2：我的家庭",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 2",
+              "zh": "第二单元"
+            },
+            {
+              "en": "My family",
+              "zh": "我的家庭"
+            },
+            {
+              "en": "This is my mother. This is my father.",
+              "zh": "这是我的妈妈。这是我的爸爸。"
+            },
+            {
+              "en": "Where am I? Where am I?",
+              "zh": "我在哪里？我在哪里？"
+            },
+            {
+              "en": "I am with my sister. I am with my brother.",
+              "zh": "我和我的姐妹在一起。我和我的兄弟在一起。"
+            },
+            {
+              "en": "My family and I. My family and I.",
+              "zh": "我的家人和我。我的家人和我。"
+            },
+            {
+              "en": "This is my grandma. This is my grandpa.",
+              "zh": "这是我的奶奶（或外婆）。这是我的爷爷（或外公）。"
+            },
+            {
+              "en": "Where am I? Where am I?",
+              "zh": "我在哪里？我在哪里？"
+            },
+            {
+              "en": "I am with my aunt. I am with my uncle.",
+              "zh": "我和我的姑姑（或姨妈等）在一起。我和我的叔叔（或舅舅等）在一起。"
+            },
+            {
+              "en": "My family and I. My family and I.",
+              "zh": "我的家人和我。我的家人和我。"
+            }
+          ]
+        },
+        {
+          "title": "Unit 2：手指家庭歌",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Finger family song",
+              "zh": "手指家庭歌"
+            },
+            {
+              "en": "Daddy Finger, Daddy Finger, where are you?",
+              "zh": "爸爸手指，爸爸手指，你在哪里？"
+            },
+            {
+              "en": "This is my daddy.",
+              "zh": "这是我的爸爸。"
+            },
+            {
+              "en": "How do you do?",
+              "zh": "你好！"
+            },
+            {
+              "en": "Mummy Finger, Mummy Finger, where are you?",
+              "zh": "妈妈手指，妈妈手指，你在哪里？"
+            },
+            {
+              "en": "This is my mummy.",
+              "zh": "这是我的妈妈。"
+            },
+            {
+              "en": "How do you do?",
+              "zh": "你好！"
+            },
+            {
+              "en": "Grandpa Finger, Grandpa Finger, where are you?",
+              "zh": "爷爷手指，爷爷手指，你在哪里？"
+            },
+            {
+              "en": "This is my grandpa.",
+              "zh": "这是我的爷爷（或外公）。"
+            },
+            {
+              "en": "How do you do?",
+              "zh": "你好！"
+            },
+            {
+              "en": "Grandma Finger, Grandma Finger, where are you?",
+              "zh": "奶奶手指，奶奶手指，你在哪里？"
+            },
+            {
+              "en": "This is my grandma.",
+              "zh": "这是我的奶奶（或外婆）。"
+            },
+            {
+              "en": "How do you do?",
+              "zh": "你好！"
+            }
+          ]
+        },
+        {
+          "title": "Unit 3：动物歌（上）",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 3",
+              "zh": "第三单元"
+            },
+            {
+              "en": "Animal song",
+              "zh": "动物歌"
+            },
+            {
+              "en": "A dog says \"woof\". A cat says \"meow\".",
+              "zh": "狗汪汪叫，猫喵喵叫。"
+            },
+            {
+              "en": "I watch them run to the top of the hill,",
+              "zh": "我看着它们跑到山顶，"
+            },
+            {
+              "en": "And then run down again.",
+              "zh": "然后又跑下来。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-appendix",
+          "en": "appendix",
+          "zh": "附录",
+          "ipa": "/əˈpɛndɪks/"
+        },
+        {
+          "id": "photo-songs",
+          "en": "songs",
+          "zh": "歌曲（复数）",
+          "ipa": "/sɔŋz/"
+        },
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "photo-nice",
+          "en": "nice",
+          "zh": "令人愉快的；好的",
+          "ipa": "/naɪs/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "向；到；不定式标记",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "meet",
+          "en": "meet",
+          "zh": "遇见；认识",
+          "ipa": "/mit/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "new",
+          "en": "new",
+          "zh": "新的",
+          "ipa": "/nu/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-am",
+          "en": "am",
+          "zh": "是（与 I 连用）",
+          "ipa": "/æm/"
+        },
+        {
+          "id": "happy",
+          "en": "happy",
+          "zh": "开心的",
+          "ipa": "/ˈhæpi/"
+        },
+        {
+          "id": "photo-smile",
+          "en": "smile",
+          "zh": "微笑",
+          "ipa": "/smaɪl/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-say",
+          "en": "say",
+          "zh": "说",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-hi",
+          "en": "hi",
+          "zh": "嗨；你好",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "photo-shake",
+          "en": "shake",
+          "zh": "摇动；握（手）",
+          "ipa": "/ʃeɪk/"
+        },
+        {
+          "id": "hand",
+          "en": "hand",
+          "zh": "手",
+          "ipa": "/hænd/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "play",
+          "en": "play",
+          "zh": "玩；演奏",
+          "ipa": "/pleɪ/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-game",
+          "en": "game",
+          "zh": "游戏",
+          "ipa": "/ɡeɪm/"
+        },
+        {
+          "id": "now",
+          "en": "now",
+          "zh": "现在",
+          "ipa": "/naʊ/"
+        },
+        {
+          "id": "family",
+          "en": "family",
+          "zh": "家庭",
+          "ipa": "/ˈfæməli/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "mother",
+          "en": "mother",
+          "zh": "妈妈",
+          "ipa": "/ˈmʌðɚ/"
+        },
+        {
+          "id": "father",
+          "en": "father",
+          "zh": "爸爸",
+          "ipa": "/ˈfɑðɚ/"
+        },
+        {
+          "id": "where",
+          "en": "where",
+          "zh": "在哪里",
+          "ipa": "/wɛr/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "sister",
+          "en": "sister",
+          "zh": "姐妹",
+          "ipa": "/ˈsɪstɚ/"
+        },
+        {
+          "id": "brother",
+          "en": "brother",
+          "zh": "兄弟",
+          "ipa": "/ˈbrʌðɚ/"
+        },
+        {
+          "id": "photo-grandma",
+          "en": "grandma",
+          "zh": "奶奶；外婆",
+          "ipa": "/ˈɡrænmɑ/"
+        },
+        {
+          "id": "photo-grandpa",
+          "en": "grandpa",
+          "zh": "爷爷；外公",
+          "ipa": "/ˈɡrænpɑ/"
+        },
+        {
+          "id": "photo-aunt",
+          "en": "aunt",
+          "zh": "姑姑；姨妈；伯母；婶婶；舅妈",
+          "ipa": "/ænt/"
+        },
+        {
+          "id": "photo-uncle",
+          "en": "uncle",
+          "zh": "叔叔；伯伯；舅舅；姑父；姨父",
+          "ipa": "/ˈʌŋkəl/"
+        },
+        {
+          "id": "photo-finger",
+          "en": "finger",
+          "zh": "手指",
+          "ipa": "/ˈfɪŋɡɚ/"
+        },
+        {
+          "id": "photo-song",
+          "en": "song",
+          "zh": "歌曲",
+          "ipa": "/sɔŋ/"
+        },
+        {
+          "id": "photo-daddy",
+          "en": "daddy",
+          "zh": "爸爸（亲昵称呼）",
+          "ipa": "/ˈdædi/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（与 you、we、they 等连用）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句的助动词",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-mummy",
+          "en": "mummy",
+          "zh": "妈妈（亲昵称呼）",
+          "ipa": "/ˈmʌmi/"
+        },
+        {
+          "id": "animal",
+          "en": "animal",
+          "zh": "动物",
+          "ipa": "/ˈænəməl/"
+        },
+        {
+          "id": "dog",
+          "en": "dog",
+          "zh": "狗",
+          "ipa": "/dɔɡ/"
+        },
+        {
+          "id": "photo-says",
+          "en": "says",
+          "zh": "说；发出声音（say 的第三人称单数）",
+          "ipa": "/sɛz/"
+        },
+        {
+          "id": "photo-woof",
+          "en": "woof",
+          "zh": "汪汪（狗叫声）",
+          "ipa": "/wʊf/"
+        },
+        {
+          "id": "cat",
+          "en": "cat",
+          "zh": "猫",
+          "ipa": "/kæt/"
+        },
+        {
+          "id": "photo-meow",
+          "en": "meow",
+          "zh": "喵（猫叫声）",
+          "ipa": "/miˈaʊ/"
+        },
+        {
+          "id": "photo-watch",
+          "en": "watch",
+          "zh": "看；观看",
+          "ipa": "/wɑtʃ/"
+        },
+        {
+          "id": "photo-them",
+          "en": "them",
+          "zh": "他们；她们；它们（宾格）",
+          "ipa": "/ðɛm/"
+        },
+        {
+          "id": "photo-run",
+          "en": "run",
+          "zh": "跑",
+          "ipa": "/rʌn/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-top",
+          "en": "top",
+          "zh": "顶部；顶端",
+          "ipa": "/tɑp/"
+        },
+        {
+          "id": "photo-of",
+          "en": "of",
+          "zh": "……的",
+          "ipa": "/ʌv/"
+        },
+        {
+          "id": "photo-hill",
+          "en": "hill",
+          "zh": "小山",
+          "ipa": "/hɪl/"
+        },
+        {
+          "id": "then",
+          "en": "then",
+          "zh": "那时",
+          "ipa": "/ðɛn/"
+        },
+        {
+          "id": "photo-down",
+          "en": "down",
+          "zh": "向下",
+          "ipa": "/daʊn/"
+        },
+        {
+          "id": "photo-again",
+          "en": "again",
+          "zh": "又；再一次",
+          "ipa": "/əˈɡɛn/"
+        }
+      ]
+    },
+    {
+      "page": 79,
+      "title": "附录 1：歌曲（二）",
+      "blocks": [
+        {
+          "title": "附录标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Appendix 1",
+              "zh": "附录 1"
+            }
+          ]
+        },
+        {
+          "title": "Unit 3：动物歌（下）",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "A lion says \"roar\". A tiger says \"growl\".",
+              "zh": "狮子吼叫，老虎低吼。"
+            },
+            {
+              "en": "I watch them run to the top of the hill,",
+              "zh": "我看着它们跑到山顶，"
+            },
+            {
+              "en": "And then run down again.",
+              "zh": "然后又跑下来。"
+            }
+          ]
+        },
+        {
+          "title": "Unit 4：植物和我们",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 4",
+              "zh": "第四单元"
+            },
+            {
+              "en": "Plants and us",
+              "zh": "植物和我们"
+            },
+            {
+              "en": "I can water my plants.",
+              "zh": "我可以给我的植物浇水。"
+            },
+            {
+              "en": "I can give them sun.",
+              "zh": "我可以让它们晒太阳。"
+            },
+            {
+              "en": "I can help them grow.",
+              "zh": "我可以帮助它们生长。"
+            },
+            {
+              "en": "I help them grow alright!",
+              "zh": "我帮助它们好好生长！"
+            },
+            {
+              "en": "Plants can give me air.",
+              "zh": "植物可以给我空气。"
+            },
+            {
+              "en": "Plants can give me food.",
+              "zh": "植物可以给我食物。"
+            },
+            {
+              "en": "Plants can help me grow, grow, grow.",
+              "zh": "植物可以帮助我成长、成长、成长。"
+            },
+            {
+              "en": "They help me grow alright!",
+              "zh": "它们帮助我好好成长！"
+            },
+            {
+              "en": "We can help each other.",
+              "zh": "我们可以互相帮助。"
+            },
+            {
+              "en": "We can help so much.",
+              "zh": "我们能帮上很多忙。"
+            },
+            {
+              "en": "We can grow together.",
+              "zh": "我们可以一起成长。"
+            },
+            {
+              "en": "Together we grow up right!",
+              "zh": "我们一起好好长大！"
+            }
+          ]
+        },
+        {
+          "title": "Unit 5：颜色歌",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 5",
+              "zh": "第五单元"
+            },
+            {
+              "en": "Colour song",
+              "zh": "颜色歌"
+            },
+            {
+              "en": "Red and orange and yellow and green,",
+              "zh": "红色、橙色、黄色和绿色，"
+            },
+            {
+              "en": "Purple and then I see blue.",
+              "zh": "紫色，然后我看到了蓝色。"
+            },
+            {
+              "en": "I can see a rainbow, see a rainbow.",
+              "zh": "我能看到一道彩虹，看到一道彩虹。"
+            },
+            {
+              "en": "Can you see one too?",
+              "zh": "你也能看到一道吗？"
+            },
+            {
+              "en": "Red and yellow and then I see green,",
+              "zh": "红色、黄色，然后我看到了绿色，"
+            },
+            {
+              "en": "They can mean stop, wait and go.",
+              "zh": "它们可以表示停、等一等和走。"
+            },
+            {
+              "en": "Colours from the rainbow, from the rainbow.",
+              "zh": "彩虹里的颜色，彩虹里的颜色。"
+            },
+            {
+              "en": "What can they show?",
+              "zh": "它们可以表示什么？"
+            }
+          ]
+        },
+        {
+          "title": "Unit 6：数字歌",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 6",
+              "zh": "第六单元"
+            },
+            {
+              "en": "Numbers",
+              "zh": "数字"
+            },
+            {
+              "en": "How old are you, my friend?",
+              "zh": "你几岁了，我的朋友？"
+            },
+            {
+              "en": "I can count up from one to ten.",
+              "zh": "我能从一数到十。"
+            },
+            {
+              "en": "How old are you, my friend?",
+              "zh": "你几岁了，我的朋友？"
+            },
+            {
+              "en": "I can count back again.",
+              "zh": "我也能倒着数回来。"
+            },
+            {
+              "en": "How can numbers help us out?",
+              "zh": "数字可以怎样帮助我们？"
+            },
+            {
+              "en": "We can sort and solve and count.",
+              "zh": "我们可以分类、解决问题和计数。"
+            },
+            {
+              "en": "How can numbers help us out?",
+              "zh": "数字可以怎样帮助我们？"
+            },
+            {
+              "en": "We can help each other out!",
+              "zh": "我们可以互相帮忙！"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-appendix",
+          "en": "appendix",
+          "zh": "附录",
+          "ipa": "/əˈpɛndɪks/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-lion",
+          "en": "lion",
+          "zh": "狮子",
+          "ipa": "/ˈlaɪən/"
+        },
+        {
+          "id": "photo-says",
+          "en": "says",
+          "zh": "说；发出声音（say 的第三人称单数）",
+          "ipa": "/sɛz/"
+        },
+        {
+          "id": "photo-roar",
+          "en": "roar",
+          "zh": "吼叫",
+          "ipa": "/rɔr/"
+        },
+        {
+          "id": "photo-tiger",
+          "en": "tiger",
+          "zh": "老虎",
+          "ipa": "/ˈtaɪɡɚ/"
+        },
+        {
+          "id": "photo-growl",
+          "en": "growl",
+          "zh": "低吼",
+          "ipa": "/ɡraʊl/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-watch",
+          "en": "watch",
+          "zh": "看；观看",
+          "ipa": "/wɑtʃ/"
+        },
+        {
+          "id": "photo-them",
+          "en": "them",
+          "zh": "他们；她们；它们（宾格）",
+          "ipa": "/ðɛm/"
+        },
+        {
+          "id": "photo-run",
+          "en": "run",
+          "zh": "跑",
+          "ipa": "/rʌn/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "向；到；不定式标记",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-top",
+          "en": "top",
+          "zh": "顶部；顶端",
+          "ipa": "/tɑp/"
+        },
+        {
+          "id": "photo-of",
+          "en": "of",
+          "zh": "……的",
+          "ipa": "/ʌv/"
+        },
+        {
+          "id": "photo-hill",
+          "en": "hill",
+          "zh": "小山",
+          "ipa": "/hɪl/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "then",
+          "en": "then",
+          "zh": "那时",
+          "ipa": "/ðɛn/"
+        },
+        {
+          "id": "photo-down",
+          "en": "down",
+          "zh": "向下",
+          "ipa": "/daʊn/"
+        },
+        {
+          "id": "photo-again",
+          "en": "again",
+          "zh": "又；再一次",
+          "ipa": "/əˈɡɛn/"
+        },
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "photo-plants",
+          "en": "plants",
+          "zh": "植物（复数）",
+          "ipa": "/plænts/"
+        },
+        {
+          "id": "photo-us",
+          "en": "us",
+          "zh": "我们（宾格）",
+          "ipa": "/ʌs/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以；罐子",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "water",
+          "en": "water",
+          "zh": "水",
+          "ipa": "/ˈwɔtɚ/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "photo-give",
+          "en": "give",
+          "zh": "给予；给",
+          "ipa": "/ɡɪv/"
+        },
+        {
+          "id": "sun",
+          "en": "sun",
+          "zh": "太阳",
+          "ipa": "/sʌn/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "photo-grow",
+          "en": "grow",
+          "zh": "生长；种植",
+          "ipa": "/ɡroʊ/"
+        },
+        {
+          "id": "photo-alright",
+          "en": "alright",
+          "zh": "好地；顺利地",
+          "ipa": "/ɔlˈraɪt/"
+        },
+        {
+          "id": "photo-me",
+          "en": "me",
+          "zh": "我（宾格）",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "photo-air",
+          "en": "air",
+          "zh": "空气",
+          "ipa": "/ɛr/"
+        },
+        {
+          "id": "food",
+          "en": "food",
+          "zh": "食物",
+          "ipa": "/fud/"
+        },
+        {
+          "id": "photo-they",
+          "en": "they",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðeɪ/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "photo-each",
+          "en": "each",
+          "zh": "每一个",
+          "ipa": "/itʃ/"
+        },
+        {
+          "id": "photo-other",
+          "en": "other",
+          "zh": "另一个；其他的",
+          "ipa": "/ˈʌðɚ/"
+        },
+        {
+          "id": "photo-so",
+          "en": "so",
+          "zh": "这么；如此",
+          "ipa": "/soʊ/"
+        },
+        {
+          "id": "photo-much",
+          "en": "much",
+          "zh": "很多",
+          "ipa": "/mʌtʃ/"
+        },
+        {
+          "id": "together",
+          "en": "together",
+          "zh": "一起",
+          "ipa": "/təˈɡɛðɚ/"
+        },
+        {
+          "id": "photo-up",
+          "en": "up",
+          "zh": "向上",
+          "ipa": "/ʌp/"
+        },
+        {
+          "id": "photo-right",
+          "en": "right",
+          "zh": "正确地；好地",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "photo-colour",
+          "en": "colour",
+          "zh": "颜色（英式拼写）",
+          "ipa": "/ˈkʌlɚ/"
+        },
+        {
+          "id": "photo-song",
+          "en": "song",
+          "zh": "歌曲",
+          "ipa": "/sɔŋ/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "orange",
+          "en": "orange",
+          "zh": "橙色的；橙子",
+          "ipa": "/ˈɔrɪndʒ/"
+        },
+        {
+          "id": "yellow",
+          "en": "yellow",
+          "zh": "黄色的",
+          "ipa": "/ˈjɛloʊ/"
+        },
+        {
+          "id": "green",
+          "en": "green",
+          "zh": "绿色的",
+          "ipa": "/ɡrin/"
+        },
+        {
+          "id": "purple",
+          "en": "purple",
+          "zh": "紫色的",
+          "ipa": "/ˈpɝpəl/"
+        },
+        {
+          "id": "photo-see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "blue",
+          "en": "blue",
+          "zh": "蓝色的",
+          "ipa": "/blu/"
+        },
+        {
+          "id": "photo-rainbow",
+          "en": "rainbow",
+          "zh": "彩虹",
+          "ipa": "/ˈreɪnboʊ/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "one",
+          "en": "one",
+          "zh": "一",
+          "ipa": "/wʌn/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-mean",
+          "en": "mean",
+          "zh": "表示；意味着",
+          "ipa": "/min/"
+        },
+        {
+          "id": "stop",
+          "en": "stop",
+          "zh": "停下",
+          "ipa": "/stɑp/"
+        },
+        {
+          "id": "wait",
+          "en": "wait",
+          "zh": "等待",
+          "ipa": "/weɪt/"
+        },
+        {
+          "id": "photo-go",
+          "en": "go",
+          "zh": "走；去",
+          "ipa": "/ɡoʊ/"
+        },
+        {
+          "id": "photo-colours",
+          "en": "colours",
+          "zh": "颜色（复数，英式拼写）",
+          "ipa": "/ˈkʌlɚz/"
+        },
+        {
+          "id": "from",
+          "en": "from",
+          "zh": "来自",
+          "ipa": "/frʌm/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-show",
+          "en": "show",
+          "zh": "展示；表示",
+          "ipa": "/ʃoʊ/"
+        },
+        {
+          "id": "photo-numbers",
+          "en": "numbers",
+          "zh": "数字（复数）",
+          "ipa": "/ˈnʌmbɚz/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "old",
+          "en": "old",
+          "zh": "旧的；年老的",
+          "ipa": "/oʊld/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（与 you、we、they 等连用）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        },
+        {
+          "id": "photo-count",
+          "en": "count",
+          "zh": "数数；计数",
+          "ipa": "/kaʊnt/"
+        },
+        {
+          "id": "ten",
+          "en": "ten",
+          "zh": "十",
+          "ipa": "/tɛn/"
+        },
+        {
+          "id": "photo-back",
+          "en": "back",
+          "zh": "向后；往回",
+          "ipa": "/bæk/"
+        },
+        {
+          "id": "photo-out",
+          "en": "out",
+          "zh": "向外；（help out）帮忙",
+          "ipa": "/aʊt/"
+        },
+        {
+          "id": "photo-sort",
+          "en": "sort",
+          "zh": "分类",
+          "ipa": "/sɔrt/"
+        },
+        {
+          "id": "photo-solve",
+          "en": "solve",
+          "zh": "解决",
+          "ipa": "/sɑlv/"
+        }
+      ]
+    },
+    {
+      "page": 80,
+      "title": "附录 2：字母歌谣 A–H",
+      "blocks": [
+        {
+          "title": "附录标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Appendix 2",
+              "zh": "附录 2"
+            },
+            {
+              "en": "Chants in \"Letters and sounds\"",
+              "zh": "“字母与发音”中的歌谣"
+            }
+          ]
+        },
+        {
+          "title": "Unit 1：字母名歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 1",
+              "zh": "第一单元"
+            },
+            {
+              "en": "A, A, A. Show me an A!",
+              "zh": "A，A，A。给我看看一个 A！"
+            },
+            {
+              "en": "B, B, B. Show me a B!",
+              "zh": "B，B，B。给我看看一个 B！"
+            },
+            {
+              "en": "C, C, C. Show me a C!",
+              "zh": "C，C，C。给我看看一个 C！"
+            },
+            {
+              "en": "D, D, D. Show me a D!",
+              "zh": "D，D，D。给我看看一个 D！"
+            },
+            {
+              "en": "After me. A, B, C, D!",
+              "zh": "跟着我读。A、B、C、D！"
+            },
+            {
+              "en": "After me. A, B, C, D!",
+              "zh": "跟着我读。A、B、C、D！"
+            }
+          ]
+        },
+        {
+          "title": "A 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "A is for /æ/.",
+              "zh": "字母 A 可以发 /æ/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "A. Apple."
+            },
+            {
+              "en": "/æ/, /æ/, apple.",
+              "zh": "苹果",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Apple. Apple. Apple."
+            },
+            {
+              "en": "/æ/, /æ/, bag.",
+              "zh": "书包",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Bag. Bag. Bag."
+            },
+            {
+              "en": "I see an apple in a bag.",
+              "zh": "我看到书包里有一个苹果。"
+            }
+          ]
+        },
+        {
+          "title": "B 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "B is for /b/.",
+              "zh": "字母 B 可以发 /b/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "B. Bed."
+            },
+            {
+              "en": "/b/, /b/, bed.",
+              "zh": "床",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Bed. Bed. Bed."
+            },
+            {
+              "en": "/b/, /b/, Bob.",
+              "zh": "鲍勃（人名）",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Bob. Bob. Bob."
+            },
+            {
+              "en": "I see Bob in the bed.",
+              "zh": "我看到鲍勃在床上。"
+            }
+          ]
+        },
+        {
+          "title": "C 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "C is for /k/.",
+              "zh": "字母 C 可以发 /k/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "C. Cat."
+            },
+            {
+              "en": "/k/, /k/, cat.",
+              "zh": "猫",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Cat. Cat. Cat."
+            },
+            {
+              "en": "/k/, /k/, can.",
+              "zh": "罐子",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Can. Can. Can."
+            },
+            {
+              "en": "I see a cat and a can.",
+              "zh": "我看到一只猫和一个罐子。"
+            }
+          ]
+        },
+        {
+          "title": "D 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "D is for /d/.",
+              "zh": "字母 D 可以发 /d/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "D. Dog."
+            },
+            {
+              "en": "/d/, /d/, dog.",
+              "zh": "狗",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Dog. Dog. Dog."
+            },
+            {
+              "en": "/d/, /d/, sad.",
+              "zh": "难过的",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Sad. Sad. Sad."
+            },
+            {
+              "en": "The dog is sad.",
+              "zh": "这只狗很难过。"
+            }
+          ]
+        },
+        {
+          "title": "Unit 2：字母名歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 2",
+              "zh": "第二单元"
+            },
+            {
+              "en": "E, E, E. Show me an E!",
+              "zh": "E，E，E。给我看看一个 E！"
+            },
+            {
+              "en": "F, F, F. Show me an F!",
+              "zh": "F，F，F。给我看看一个 F！"
+            },
+            {
+              "en": "G, G, G. Show me a G!",
+              "zh": "G，G，G。给我看看一个 G！"
+            },
+            {
+              "en": "H, H, H. Show me an H!",
+              "zh": "H，H，H。给我看看一个 H！"
+            },
+            {
+              "en": "Say E, F, G and H!",
+              "zh": "说出 E、F、G 和 H！"
+            },
+            {
+              "en": "Say E, F, G and H!",
+              "zh": "说出 E、F、G 和 H！"
+            }
+          ]
+        },
+        {
+          "title": "E 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "E is for /e/.",
+              "zh": "字母 E 可以发 /e/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "E. Egg."
+            },
+            {
+              "en": "/e/, /e/, egg.",
+              "zh": "鸡蛋",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Egg. Egg. Egg."
+            },
+            {
+              "en": "/e/, /e/, nest.",
+              "zh": "鸟巢",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Nest. Nest. Nest."
+            },
+            {
+              "en": "I see an egg in the nest.",
+              "zh": "我看到鸟巢里有一个蛋。"
+            }
+          ]
+        },
+        {
+          "title": "F 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "F is for /f/.",
+              "zh": "字母 F 可以发 /f/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "F. Fish."
+            },
+            {
+              "en": "/f/, /f/, fish.",
+              "zh": "鱼",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Fish. Fish. Fish."
+            },
+            {
+              "en": "/f/, /f/, beef.",
+              "zh": "牛肉",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Beef. Beef. Beef."
+            },
+            {
+              "en": "I see fish and beef.",
+              "zh": "我看到鱼和牛肉。"
+            }
+          ]
+        },
+        {
+          "title": "G 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "G is for /ɡ/.",
+              "zh": "字母 G 可以发 /ɡ/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "G. Girl."
+            },
+            {
+              "en": "/ɡ/, /ɡ/, girl.",
+              "zh": "女孩",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Girl. Girl. Girl."
+            },
+            {
+              "en": "/ɡ/, /ɡ/, pig.",
+              "zh": "猪",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Pig. Pig. Pig."
+            },
+            {
+              "en": "The girl has a pig.",
+              "zh": "这个女孩有一头猪。"
+            }
+          ]
+        },
+        {
+          "title": "H 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "H is for /h/.",
+              "zh": "字母 H 可以发 /h/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "H. Hot."
+            },
+            {
+              "en": "/h/, /h/, hot.",
+              "zh": "热的",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Hot. Hot. Hot."
+            },
+            {
+              "en": "/h/, /h/, hat.",
+              "zh": "帽子",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Hat. Hat. Hat."
+            },
+            {
+              "en": "He is hot in the hat.",
+              "zh": "他戴着帽子，觉得很热。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-appendix",
+          "en": "appendix",
+          "zh": "附录",
+          "ipa": "/əˈpɛndɪks/"
+        },
+        {
+          "id": "photo-chants",
+          "en": "chants",
+          "zh": "歌谣（复数）",
+          "ipa": "/tʃænts/"
+        },
+        {
+          "id": "photo-in",
+          "en": "in",
+          "zh": "在……里",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "photo-letters",
+          "en": "letters",
+          "zh": "字母（复数）",
+          "ipa": "/ˈlɛtɚz/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-sounds",
+          "en": "sounds",
+          "zh": "声音；发音（复数）",
+          "ipa": "/saʊndz/"
+        },
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-show",
+          "en": "show",
+          "zh": "展示；表示",
+          "ipa": "/ʃoʊ/"
+        },
+        {
+          "id": "photo-me",
+          "en": "me",
+          "zh": "我（宾格）",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "photo-an",
+          "en": "an",
+          "zh": "一个（用于元音音素前）",
+          "ipa": "/ən/"
+        },
+        {
+          "id": "photo-b",
+          "en": "B",
+          "zh": "字母 B",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-c",
+          "en": "C",
+          "zh": "字母 C",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-d",
+          "en": "D",
+          "zh": "字母 D",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-after",
+          "en": "after",
+          "zh": "在……之后；跟着",
+          "ipa": "/ˈæftɚ/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-for",
+          "en": "for",
+          "zh": "表示；为了",
+          "ipa": "/fɔr/"
+        },
+        {
+          "id": "apple",
+          "en": "apple",
+          "zh": "苹果",
+          "ipa": "/ˈæpəl/"
+        },
+        {
+          "id": "photo-bag",
+          "en": "bag",
+          "zh": "书包；袋子",
+          "ipa": "/bæɡ/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "bed",
+          "en": "bed",
+          "zh": "床",
+          "ipa": "/bɛd/"
+        },
+        {
+          "id": "photo-bob",
+          "en": "Bob",
+          "zh": "鲍勃（人名）",
+          "ipa": "/bɑb/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "cat",
+          "en": "cat",
+          "zh": "猫",
+          "ipa": "/kæt/"
+        },
+        {
+          "id": "photo-can",
+          "en": "can",
+          "zh": "能；可以；罐子",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "dog",
+          "en": "dog",
+          "zh": "狗",
+          "ipa": "/dɔɡ/"
+        },
+        {
+          "id": "sad",
+          "en": "sad",
+          "zh": "难过的",
+          "ipa": "/sæd/"
+        },
+        {
+          "id": "photo-e",
+          "en": "E",
+          "zh": "字母 E",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-f",
+          "en": "F",
+          "zh": "字母 F",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-g",
+          "en": "G",
+          "zh": "字母 G",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-h",
+          "en": "H",
+          "zh": "字母 H",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "photo-say",
+          "en": "say",
+          "zh": "说",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "egg",
+          "en": "egg",
+          "zh": "鸡蛋",
+          "ipa": "/ɛɡ/"
+        },
+        {
+          "id": "photo-nest",
+          "en": "nest",
+          "zh": "鸟巢",
+          "ipa": "/nɛst/"
+        },
+        {
+          "id": "fish",
+          "en": "fish",
+          "zh": "鱼",
+          "ipa": "/fɪʃ/"
+        },
+        {
+          "id": "beef",
+          "en": "beef",
+          "zh": "牛肉",
+          "ipa": "/bif/"
+        },
+        {
+          "id": "girl",
+          "en": "girl",
+          "zh": "女孩",
+          "ipa": "/ɡɝl/"
+        },
+        {
+          "id": "photo-pig",
+          "en": "pig",
+          "zh": "猪",
+          "ipa": "/pɪɡ/"
+        },
+        {
+          "id": "photo-has",
+          "en": "has",
+          "zh": "有（have 的第三人称单数）",
+          "ipa": "/hæz/"
+        },
+        {
+          "id": "hot",
+          "en": "hot",
+          "zh": "热的",
+          "ipa": "/hɑt/"
+        },
+        {
+          "id": "photo-hat",
+          "en": "hat",
+          "zh": "帽子",
+          "ipa": "/hæt/"
+        },
+        {
+          "id": "photo-he",
+          "en": "he",
+          "zh": "他",
+          "ipa": "/hi/"
+        },
+        {
+          "id": "photo-letter-a",
+          "en": "A",
+          "zh": "字母 A",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-letter-i",
+          "en": "I",
+          "zh": "字母 I",
+          "ipa": "/aɪ/"
+        }
+      ]
+    },
+    {
+      "page": 81,
+      "title": "附录 2：字母歌谣 I–T",
+      "blocks": [
+        {
+          "title": "附录标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Appendix 2",
+              "zh": "附录 2"
+            }
+          ]
+        },
+        {
+          "title": "Unit 3：字母名歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 3",
+              "zh": "第三单元"
+            },
+            {
+              "en": "I, I, I. Show me an I!",
+              "zh": "I，I，I。给我看看一个 I！"
+            },
+            {
+              "en": "J, J, J. Show me a J!",
+              "zh": "J，J，J。给我看看一个 J！"
+            },
+            {
+              "en": "K, K, K. Show me a K!",
+              "zh": "K，K，K。给我看看一个 K！"
+            },
+            {
+              "en": "L, L, L. Show me an L!",
+              "zh": "L，L，L。给我看看一个 L！"
+            },
+            {
+              "en": "Say it well. I, J, K and L!",
+              "zh": "好好说出来。I、J、K 和 L！"
+            },
+            {
+              "en": "Say it well. I, J, K and L!",
+              "zh": "好好说出来。I、J、K 和 L！"
+            }
+          ]
+        },
+        {
+          "title": "I 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "I is for /ɪ/.",
+              "zh": "字母 I 可以发 /ɪ/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "I. Ill."
+            },
+            {
+              "en": "/ɪ/, /ɪ/, ill.",
+              "zh": "生病的",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Ill. Ill. Ill."
+            },
+            {
+              "en": "/ɪ/, /ɪ/, kid.",
+              "zh": "孩子",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Kid. Kid. Kid."
+            },
+            {
+              "en": "The kid is ill.",
+              "zh": "这个孩子生病了。"
+            }
+          ]
+        },
+        {
+          "title": "J 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "J is for /dʒ/.",
+              "zh": "字母 J 可以发 /dʒ/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "J. Job."
+            },
+            {
+              "en": "/dʒ/, /dʒ/, job.",
+              "zh": "工作",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Job. Job. Job."
+            },
+            {
+              "en": "/dʒ/, /dʒ/, jet.",
+              "zh": "喷气式飞机",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Jet. Jet. Jet."
+            },
+            {
+              "en": "His job is to fly a jet.",
+              "zh": "他的工作是驾驶喷气式飞机。"
+            }
+          ]
+        },
+        {
+          "title": "K 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "K is for /k/.",
+              "zh": "字母 K 可以发 /k/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "K. Kim."
+            },
+            {
+              "en": "/k/, /k/, Kim.",
+              "zh": "金（人名）",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Kim. Kim. Kim."
+            },
+            {
+              "en": "/k/, /k/, kite.",
+              "zh": "风筝",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Kite. Kite. Kite."
+            },
+            {
+              "en": "Kim has a kite.",
+              "zh": "金有一个风筝。"
+            }
+          ]
+        },
+        {
+          "title": "L 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "L is for /l/.",
+              "zh": "字母 L 可以发 /l/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "L. Leg."
+            },
+            {
+              "en": "/l/, /l/, leg.",
+              "zh": "腿",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Leg. Leg. Leg."
+            },
+            {
+              "en": "/l/, /l/, lion.",
+              "zh": "狮子",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Lion. Lion. Lion."
+            },
+            {
+              "en": "The lion has four legs.",
+              "zh": "狮子有四条腿。"
+            }
+          ]
+        },
+        {
+          "title": "Unit 4：字母名歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 4",
+              "zh": "第四单元"
+            },
+            {
+              "en": "M, M, M. Show me an M!",
+              "zh": "M，M，M。给我看看一个 M！"
+            },
+            {
+              "en": "N, N, N. Show me an N!",
+              "zh": "N，N，N。给我看看一个 N！"
+            },
+            {
+              "en": "O, O, O. Show me an O!",
+              "zh": "O，O，O。给我看看一个 O！"
+            },
+            {
+              "en": "P, P, P. Show me a P!",
+              "zh": "P，P，P。给我看看一个 P！"
+            },
+            {
+              "en": "Say it with me. M, N, O, P!",
+              "zh": "跟我一起说。M、N、O、P！"
+            },
+            {
+              "en": "Say it with me. M, N, O, P!",
+              "zh": "跟我一起说。M、N、O、P！"
+            }
+          ]
+        },
+        {
+          "title": "M 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "M is for /m/.",
+              "zh": "字母 M 可以发 /m/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "M. Map."
+            },
+            {
+              "en": "/m/, /m/, map.",
+              "zh": "地图",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Map. Map. Map."
+            },
+            {
+              "en": "/m/, /m/, mum.",
+              "zh": "妈妈",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Mum. Mum. Mum."
+            },
+            {
+              "en": "Mum has a map.",
+              "zh": "妈妈有一张地图。"
+            }
+          ]
+        },
+        {
+          "title": "N 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "N is for /n/.",
+              "zh": "字母 N 可以发 /n/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "N. New."
+            },
+            {
+              "en": "/n/, /n/, new.",
+              "zh": "新的",
+              "tip": "朗读用例词示范字母音。",
+              "say": "New. New. New."
+            },
+            {
+              "en": "/n/, /n/, fan.",
+              "zh": "风扇",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Fan. Fan. Fan."
+            },
+            {
+              "en": "The fan is new.",
+              "zh": "这个风扇是新的。"
+            }
+          ]
+        },
+        {
+          "title": "O 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "O is for /ɒ/.",
+              "zh": "字母 O 可以发 /ɒ/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "O. Orange."
+            },
+            {
+              "en": "/ɒ/, /ɒ/, orange.",
+              "zh": "橙子；橙色的",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Orange. Orange. Orange."
+            },
+            {
+              "en": "/ɒ/, /ɒ/, fox.",
+              "zh": "狐狸",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Fox. Fox. Fox."
+            },
+            {
+              "en": "The fox is orange.",
+              "zh": "这只狐狸是橙色的。"
+            }
+          ]
+        },
+        {
+          "title": "P 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "P is for /p/.",
+              "zh": "字母 P 可以发 /p/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "P. Pen."
+            },
+            {
+              "en": "/p/, /p/, pen.",
+              "zh": "钢笔",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Pen. Pen. Pen."
+            },
+            {
+              "en": "/p/, /p/, cup.",
+              "zh": "杯子",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Cup. Cup. Cup."
+            },
+            {
+              "en": "I see a pen and a cup.",
+              "zh": "我看到一支钢笔和一个杯子。"
+            }
+          ]
+        },
+        {
+          "title": "Unit 5：字母名歌谣（上）",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 5",
+              "zh": "第五单元"
+            },
+            {
+              "en": "Q, Q, Q. Show me a Q!",
+              "zh": "Q，Q，Q。给我看看一个 Q！"
+            },
+            {
+              "en": "R, R, R. Show me an R!",
+              "zh": "R，R，R。给我看看一个 R！"
+            },
+            {
+              "en": "S, S, S. Show me an S!",
+              "zh": "S，S，S。给我看看一个 S！"
+            },
+            {
+              "en": "T, T, T. Show me a T!",
+              "zh": "T，T，T。给我看看一个 T！"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-appendix",
+          "en": "appendix",
+          "zh": "附录",
+          "ipa": "/əˈpɛndɪks/"
+        },
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-show",
+          "en": "show",
+          "zh": "展示；表示",
+          "ipa": "/ʃoʊ/"
+        },
+        {
+          "id": "photo-me",
+          "en": "me",
+          "zh": "我（宾格）",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "photo-an",
+          "en": "an",
+          "zh": "一个（用于元音音素前）",
+          "ipa": "/ən/"
+        },
+        {
+          "id": "photo-j",
+          "en": "J",
+          "zh": "字母 J",
+          "ipa": "/dʒeɪ/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-k",
+          "en": "K",
+          "zh": "字母 K",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "photo-l",
+          "en": "L",
+          "zh": "字母 L",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "photo-say",
+          "en": "say",
+          "zh": "说",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；它指代的人或事物",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "photo-well",
+          "en": "well",
+          "zh": "好地",
+          "ipa": "/wɛl/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-for",
+          "en": "for",
+          "zh": "表示；为了",
+          "ipa": "/fɔr/"
+        },
+        {
+          "id": "photo-ill",
+          "en": "ill",
+          "zh": "生病的",
+          "ipa": "/ɪl/"
+        },
+        {
+          "id": "photo-kid",
+          "en": "kid",
+          "zh": "孩子",
+          "ipa": "/kɪd/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "job",
+          "en": "job",
+          "zh": "职业；工作",
+          "ipa": "/dʒɑb/"
+        },
+        {
+          "id": "photo-jet",
+          "en": "jet",
+          "zh": "喷气式飞机",
+          "ipa": "/dʒɛt/"
+        },
+        {
+          "id": "photo-his",
+          "en": "his",
+          "zh": "他的",
+          "ipa": "/hɪz/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "向；到；不定式标记",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-fly",
+          "en": "fly",
+          "zh": "飞；驾驶飞机",
+          "ipa": "/flaɪ/"
+        },
+        {
+          "id": "photo-kim",
+          "en": "Kim",
+          "zh": "金（人名）",
+          "ipa": "/kɪm/"
+        },
+        {
+          "id": "kite",
+          "en": "kite",
+          "zh": "风筝",
+          "ipa": "/kaɪt/"
+        },
+        {
+          "id": "photo-has",
+          "en": "has",
+          "zh": "有（have 的第三人称单数）",
+          "ipa": "/hæz/"
+        },
+        {
+          "id": "photo-leg",
+          "en": "leg",
+          "zh": "腿",
+          "ipa": "/lɛɡ/"
+        },
+        {
+          "id": "photo-lion",
+          "en": "lion",
+          "zh": "狮子",
+          "ipa": "/ˈlaɪən/"
+        },
+        {
+          "id": "four",
+          "en": "four",
+          "zh": "四",
+          "ipa": "/fɔr/"
+        },
+        {
+          "id": "photo-legs",
+          "en": "legs",
+          "zh": "腿（复数）",
+          "ipa": "/lɛɡz/"
+        },
+        {
+          "id": "photo-m",
+          "en": "M",
+          "zh": "字母 M",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-n",
+          "en": "N",
+          "zh": "字母 N",
+          "ipa": "/ɛn/"
+        },
+        {
+          "id": "photo-o",
+          "en": "O",
+          "zh": "字母 O",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-p",
+          "en": "P",
+          "zh": "字母 P",
+          "ipa": "/pi/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "map",
+          "en": "map",
+          "zh": "地图",
+          "ipa": "/mæp/"
+        },
+        {
+          "id": "photo-mum",
+          "en": "mum",
+          "zh": "妈妈",
+          "ipa": "/mʌm/"
+        },
+        {
+          "id": "new",
+          "en": "new",
+          "zh": "新的",
+          "ipa": "/nu/"
+        },
+        {
+          "id": "photo-fan",
+          "en": "fan",
+          "zh": "风扇",
+          "ipa": "/fæn/"
+        },
+        {
+          "id": "orange",
+          "en": "orange",
+          "zh": "橙色的；橙子",
+          "ipa": "/ˈɔrɪndʒ/"
+        },
+        {
+          "id": "photo-fox",
+          "en": "fox",
+          "zh": "狐狸",
+          "ipa": "/fɑks/"
+        },
+        {
+          "id": "photo-pen",
+          "en": "pen",
+          "zh": "钢笔",
+          "ipa": "/pɛn/"
+        },
+        {
+          "id": "photo-cup",
+          "en": "cup",
+          "zh": "杯子",
+          "ipa": "/kʌp/"
+        },
+        {
+          "id": "photo-see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-q",
+          "en": "Q",
+          "zh": "字母 Q",
+          "ipa": "/kju/"
+        },
+        {
+          "id": "photo-r",
+          "en": "R",
+          "zh": "字母 R",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-s",
+          "en": "S",
+          "zh": "字母 S",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-t",
+          "en": "T",
+          "zh": "字母 T",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "photo-letter-i",
+          "en": "I",
+          "zh": "字母 I",
+          "ipa": "/aɪ/"
+        }
+      ]
+    },
+    {
+      "page": 82,
+      "title": "附录 2：字母歌谣 U–Z",
+      "blocks": [
+        {
+          "title": "附录标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Appendix 2",
+              "zh": "附录 2"
+            }
+          ]
+        },
+        {
+          "title": "Unit 5：字母名歌谣（下）",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "U, U, U. Show me a U!",
+              "zh": "U，U，U。给我看看一个 U！"
+            },
+            {
+              "en": "That sounds good. Q, R, S, T, U!",
+              "zh": "听起来不错。Q、R、S、T、U！"
+            },
+            {
+              "en": "That sounds good. Q, R, S, T, U!",
+              "zh": "听起来不错。Q、R、S、T、U！"
+            }
+          ]
+        },
+        {
+          "title": "Q 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Q goes with u,",
+              "zh": "Q 和 u 在一起，",
+              "tip": "Q 通常和 u 搭配使用。"
+            },
+            {
+              "en": "/kw/, /kw/, quiet.",
+              "zh": "安静的",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Quiet. Quiet. Quiet."
+            },
+            {
+              "en": "/kw/, /kw/, queen.",
+              "zh": "女王",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Queen. Queen. Queen."
+            },
+            {
+              "en": "The queen is quiet.",
+              "zh": "女王很安静。"
+            }
+          ]
+        },
+        {
+          "title": "R 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "R is for /r/.",
+              "zh": "字母 R 可以发 /r/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "R. Red."
+            },
+            {
+              "en": "/r/, /r/, red.",
+              "zh": "红色的",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Red. Red. Red."
+            },
+            {
+              "en": "/r/, /r/, ruler.",
+              "zh": "尺子",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Ruler. Ruler. Ruler."
+            },
+            {
+              "en": "The ruler is red.",
+              "zh": "这把尺子是红色的。"
+            }
+          ]
+        },
+        {
+          "title": "S 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "S is for /s/.",
+              "zh": "字母 S 可以发 /s/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "S. See."
+            },
+            {
+              "en": "/s/, /s/, see.",
+              "zh": "看见",
+              "tip": "朗读用例词示范字母音。",
+              "say": "See. See. See."
+            },
+            {
+              "en": "/s/, /s/, bus.",
+              "zh": "公共汽车",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Bus. Bus. Bus."
+            },
+            {
+              "en": "I see a bus.",
+              "zh": "我看到一辆公共汽车。"
+            }
+          ]
+        },
+        {
+          "title": "T 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "T is for /t/.",
+              "zh": "字母 T 可以发 /t/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "T. Ted."
+            },
+            {
+              "en": "/t/, /t/, Ted.",
+              "zh": "泰德（人名）",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Ted. Ted. Ted."
+            },
+            {
+              "en": "/t/, /t/, sit.",
+              "zh": "坐",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Sit. Sit. Sit."
+            },
+            {
+              "en": "Sit down, Ted!",
+              "zh": "坐下，泰德！"
+            }
+          ]
+        },
+        {
+          "title": "U 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "U is for /ʌ/.",
+              "zh": "字母 U 可以发 /ʌ/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "U. Up."
+            },
+            {
+              "en": "/ʌ/, /ʌ/, up.",
+              "zh": "向上",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Up. Up. Up."
+            },
+            {
+              "en": "/ʌ/, /ʌ/, run.",
+              "zh": "跑",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Run. Run. Run."
+            },
+            {
+              "en": "Get up and run!",
+              "zh": "起身跑起来！"
+            }
+          ]
+        },
+        {
+          "title": "Unit 6：字母名歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Unit 6",
+              "zh": "第六单元"
+            },
+            {
+              "en": "V, V, V. Show me a V!",
+              "zh": "V，V，V。给我看看一个 V！"
+            },
+            {
+              "en": "W, W, W. Show me a W!",
+              "zh": "W，W，W。给我看看一个 W！"
+            },
+            {
+              "en": "X, X, X. Show me an X!",
+              "zh": "X，X，X。给我看看一个 X！"
+            },
+            {
+              "en": "Y, Y, Y. Show me a Y!",
+              "zh": "Y，Y，Y。给我看看一个 Y！"
+            },
+            {
+              "en": "Z, Z, Z. Show me a Z!",
+              "zh": "Z，Z，Z。给我看看一个 Z！"
+            },
+            {
+              "en": "Chant with me. V, W, X, Y, Z!",
+              "zh": "跟我一起说唱。V、W、X、Y、Z！"
+            },
+            {
+              "en": "Chant with me. V, W, X, Y, Z!",
+              "zh": "跟我一起说唱。V、W、X、Y、Z！"
+            }
+          ]
+        },
+        {
+          "title": "V 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "V is for /v/.",
+              "zh": "字母 V 可以发 /v/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "V. Van."
+            },
+            {
+              "en": "/v/, /v/, van.",
+              "zh": "厢式货车",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Van. Van. Van."
+            },
+            {
+              "en": "/v/, /v/, vet.",
+              "zh": "兽医",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Vet. Vet. Vet."
+            },
+            {
+              "en": "It's the vet's van.",
+              "zh": "这是兽医的厢式货车。"
+            }
+          ]
+        },
+        {
+          "title": "W 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "W is for /w/.",
+              "zh": "字母 W 可以发 /w/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "W. We."
+            },
+            {
+              "en": "/w/, /w/, we.",
+              "zh": "我们",
+              "tip": "朗读用例词示范字母音。",
+              "say": "We. We. We."
+            },
+            {
+              "en": "/w/, /w/, win.",
+              "zh": "获胜",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Win. Win. Win."
+            },
+            {
+              "en": "We win again!",
+              "zh": "我们又赢了！"
+            }
+          ]
+        },
+        {
+          "title": "X 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "X is for /ks/.",
+              "zh": "字母 X 可以发 /ks/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "X. Box."
+            },
+            {
+              "en": "/ks/, /ks/, box.",
+              "zh": "盒子",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Box. Box. Box."
+            },
+            {
+              "en": "/ks/, /ks/, six.",
+              "zh": "六",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Six. Six. Six."
+            },
+            {
+              "en": "Number six is on the box.",
+              "zh": "数字六在盒子上。"
+            }
+          ]
+        },
+        {
+          "title": "Y 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Y is for /j/.",
+              "zh": "字母 Y 可以发 /j/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Y. Yellow."
+            },
+            {
+              "en": "/j/, /j/, yellow.",
+              "zh": "黄色；黄色的",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Yellow. Yellow. Yellow."
+            },
+            {
+              "en": "/j/, /j/, yo-yo.",
+              "zh": "悠悠球",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Yo-yo. Yo-yo. Yo-yo."
+            },
+            {
+              "en": "It's a yellow yo-yo.",
+              "zh": "这是一个黄色的悠悠球。"
+            }
+          ]
+        },
+        {
+          "title": "Z 的字母音歌谣",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Z is for /z/.",
+              "zh": "字母 Z 可以发 /z/。",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Z. Zip."
+            },
+            {
+              "en": "/z/, /z/, Zip.",
+              "zh": "兹普（角色名）",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Zip. Zip. Zip."
+            },
+            {
+              "en": "/z/, /z/, quiz.",
+              "zh": "小测验",
+              "tip": "朗读用例词示范字母音。",
+              "say": "Quiz. Quiz. Quiz."
+            },
+            {
+              "en": "Zip has a quiz.",
+              "zh": "兹普有一个小测验。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-appendix",
+          "en": "appendix",
+          "zh": "附录",
+          "ipa": "/əˈpɛndɪks/"
+        },
+        {
+          "id": "photo-u",
+          "en": "U",
+          "zh": "字母 U",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-show",
+          "en": "show",
+          "zh": "展示；表示",
+          "ipa": "/ʃoʊ/"
+        },
+        {
+          "id": "photo-me",
+          "en": "me",
+          "zh": "我（宾格）",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一个",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-that",
+          "en": "that",
+          "zh": "那；那个",
+          "ipa": "/ðæt/"
+        },
+        {
+          "id": "photo-sounds",
+          "en": "sounds",
+          "zh": "声音；发音（复数）",
+          "ipa": "/saʊndz/"
+        },
+        {
+          "id": "photo-good",
+          "en": "good",
+          "zh": "好的",
+          "ipa": "/ɡʊd/"
+        },
+        {
+          "id": "photo-q",
+          "en": "Q",
+          "zh": "字母 Q",
+          "ipa": "/kju/"
+        },
+        {
+          "id": "photo-r",
+          "en": "R",
+          "zh": "字母 R",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-s",
+          "en": "S",
+          "zh": "字母 S",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-t",
+          "en": "T",
+          "zh": "字母 T",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "photo-goes",
+          "en": "goes",
+          "zh": "去；（goes with）与……搭配",
+          "ipa": "/ɡoʊz/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "quiet",
+          "en": "quiet",
+          "zh": "安静的",
+          "ipa": "/ˈkwaɪət/"
+        },
+        {
+          "id": "photo-queen",
+          "en": "queen",
+          "zh": "女王",
+          "ipa": "/kwin/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（与第三人称单数连用）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-for",
+          "en": "for",
+          "zh": "表示；为了",
+          "ipa": "/fɔr/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "photo-ruler",
+          "en": "ruler",
+          "zh": "尺子",
+          "ipa": "/ˈrulɚ/"
+        },
+        {
+          "id": "photo-see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "bus",
+          "en": "bus",
+          "zh": "公共汽车",
+          "ipa": "/bʌs/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-ted",
+          "en": "Ted",
+          "zh": "泰德（人名）",
+          "ipa": "/tɛd/"
+        },
+        {
+          "id": "sit",
+          "en": "sit",
+          "zh": "坐",
+          "ipa": "/sɪt/"
+        },
+        {
+          "id": "photo-down",
+          "en": "down",
+          "zh": "向下",
+          "ipa": "/daʊn/"
+        },
+        {
+          "id": "photo-up",
+          "en": "up",
+          "zh": "向上",
+          "ipa": "/ʌp/"
+        },
+        {
+          "id": "photo-run",
+          "en": "run",
+          "zh": "跑",
+          "ipa": "/rʌn/"
+        },
+        {
+          "id": "photo-get",
+          "en": "get",
+          "zh": "得到",
+          "ipa": "/ɡɛt/"
+        },
+        {
+          "id": "photo-and",
+          "en": "and",
+          "zh": "和；并且",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "photo-v",
+          "en": "V",
+          "zh": "字母 V",
+          "ipa": "/vi/"
+        },
+        {
+          "id": "photo-w",
+          "en": "W",
+          "zh": "字母 W",
+          "ipa": "/ˈdʌbəlju/"
+        },
+        {
+          "id": "photo-x",
+          "en": "X",
+          "zh": "字母 X",
+          "ipa": "/ɛks/"
+        },
+        {
+          "id": "photo-an",
+          "en": "an",
+          "zh": "一个（用于元音音素前）",
+          "ipa": "/ən/"
+        },
+        {
+          "id": "photo-y",
+          "en": "Y",
+          "zh": "字母 Y",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-z",
+          "en": "Z",
+          "zh": "字母 Z",
+          "ipa": "/zi/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "说唱歌谣",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-van",
+          "en": "van",
+          "zh": "厢式货车",
+          "ipa": "/væn/"
+        },
+        {
+          "id": "photo-vet",
+          "en": "vet",
+          "zh": "兽医",
+          "ipa": "/vɛt/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "photo-vet-s",
+          "en": "vet's",
+          "zh": "兽医的",
+          "ipa": "/vɛts/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "photo-win",
+          "en": "win",
+          "zh": "获胜",
+          "ipa": "/wɪn/"
+        },
+        {
+          "id": "photo-again",
+          "en": "again",
+          "zh": "又；再一次",
+          "ipa": "/əˈɡɛn/"
+        },
+        {
+          "id": "photo-box",
+          "en": "box",
+          "zh": "盒子",
+          "ipa": "/bɑks/"
+        },
+        {
+          "id": "six",
+          "en": "six",
+          "zh": "六",
+          "ipa": "/sɪks/"
+        },
+        {
+          "id": "photo-number",
+          "en": "number",
+          "zh": "数字",
+          "ipa": "/ˈnʌmbɚ/"
+        },
+        {
+          "id": "photo-on",
+          "en": "on",
+          "zh": "在……上",
+          "ipa": "/ɑn/"
+        },
+        {
+          "id": "yellow",
+          "en": "yellow",
+          "zh": "黄色的",
+          "ipa": "/ˈjɛloʊ/"
+        },
+        {
+          "id": "photo-yo-yo",
+          "en": "yo-yo",
+          "zh": "悠悠球",
+          "ipa": "/ˈjoʊjoʊ/"
+        },
+        {
+          "id": "photo-zip",
+          "en": "Zip",
+          "zh": "兹普（角色名）",
+          "ipa": "/zɪp/"
+        },
+        {
+          "id": "photo-quiz",
+          "en": "quiz",
+          "zh": "小测验",
+          "ipa": "/kwɪz/"
+        },
+        {
+          "id": "photo-has",
+          "en": "has",
+          "zh": "有（have 的第三人称单数）",
+          "ipa": "/hæz/"
+        },
+        {
+          "id": "photo-letter-i",
+          "en": "I",
+          "zh": "字母 I",
+          "ipa": "/aɪ/"
+        }
+      ]
+    }
+  ]
+}

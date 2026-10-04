@@ -1,0 +1,3605 @@
+{
+  "unitId": "g3-upper-u6",
+  "title": "Useful numbers",
+  "pages": [
+    {
+      "page": 62,
+      "title": "单元导入：Useful numbers",
+      "blocks": [
+        {
+          "title": "单元标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Unit 6",
+              "zh": "第六单元"
+            },
+            {
+              "en": "Useful numbers",
+              "zh": "有用的数字"
+            },
+            {
+              "en": "Why are numbers important?",
+              "zh": "为什么数字很重要？"
+            }
+          ]
+        },
+        {
+          "title": "球衣上的数字",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "3 7 9 6",
+              "zh": "球衣上的数字：3、7、9、6。",
+              "say": "three, seven, nine, six"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "useful",
+          "en": "useful",
+          "zh": "有用的",
+          "ipa": "/ˈjusfəl/"
+        },
+        {
+          "id": "photo-numbers",
+          "en": "numbers",
+          "zh": "数字（number 的复数）",
+          "ipa": "/ˈnʌmbɚz/"
+        },
+        {
+          "id": "why",
+          "en": "why",
+          "zh": "为什么",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-important",
+          "en": "important",
+          "zh": "重要的",
+          "ipa": "/ɪmˈpɔrtənt/"
+        },
+        {
+          "id": "photo-number",
+          "en": "number",
+          "zh": "数字；数量",
+          "ipa": "/ˈnʌmbɚ/"
+        }
+      ]
+    },
+    {
+      "page": 63,
+      "title": "观察、吟唱与歌曲",
+      "blocks": [
+        {
+          "title": "Look and think",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Look and think",
+              "zh": "看一看，想一想。"
+            },
+            {
+              "en": "What numbers do you see?",
+              "zh": "你看到了哪些数字？"
+            },
+            {
+              "en": "Where do you see numbers?",
+              "zh": "你在哪里看到数字？"
+            }
+          ]
+        },
+        {
+          "title": "Listen and chant",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，吟唱。"
+            },
+            {
+              "en": "One boy, two boys,",
+              "zh": "一个男孩，两个男孩，"
+            },
+            {
+              "en": "Three boys, four!",
+              "zh": "三个男孩，四个！"
+            },
+            {
+              "en": "Five boys, six boys,",
+              "zh": "五个男孩，六个男孩，"
+            },
+            {
+              "en": "Seven boys, more!",
+              "zh": "七个男孩，还有更多！"
+            }
+          ]
+        },
+        {
+          "title": "Listen and sing",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Listen and sing",
+              "zh": "听一听，唱一唱。"
+            },
+            {
+              "en": "Numbers",
+              "zh": "数字"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "think",
+          "en": "think",
+          "zh": "想；思考",
+          "ipa": "/θɪŋk/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-numbers",
+          "en": "numbers",
+          "zh": "数字（number 的复数）",
+          "ipa": "/ˈnʌmbɚz/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "where",
+          "en": "where",
+          "zh": "在哪里",
+          "ipa": "/wɛr/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "one",
+          "en": "one",
+          "zh": "一",
+          "ipa": "/wʌn/"
+        },
+        {
+          "id": "boy",
+          "en": "boy",
+          "zh": "男孩",
+          "ipa": "/bɔɪ/"
+        },
+        {
+          "id": "two",
+          "en": "two",
+          "zh": "二",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-boys",
+          "en": "boys",
+          "zh": "男孩（boy 的复数）",
+          "ipa": "/bɔɪz/"
+        },
+        {
+          "id": "three",
+          "en": "three",
+          "zh": "三",
+          "ipa": "/θri/"
+        },
+        {
+          "id": "four",
+          "en": "four",
+          "zh": "四",
+          "ipa": "/fɔr/"
+        },
+        {
+          "id": "five",
+          "en": "five",
+          "zh": "五",
+          "ipa": "/faɪv/"
+        },
+        {
+          "id": "six",
+          "en": "six",
+          "zh": "六",
+          "ipa": "/sɪks/"
+        },
+        {
+          "id": "seven",
+          "en": "seven",
+          "zh": "七",
+          "ipa": "/ˈsɛvən/"
+        },
+        {
+          "id": "photo-more",
+          "en": "more",
+          "zh": "更多；再；另外",
+          "ipa": "/mɔr/"
+        },
+        {
+          "id": "sing",
+          "en": "sing",
+          "zh": "唱歌",
+          "ipa": "/sɪŋ/"
+        },
+        {
+          "id": "photo-number",
+          "en": "number",
+          "zh": "数字；数量",
+          "ipa": "/ˈnʌmbɚ/"
+        }
+      ]
+    },
+    {
+      "page": 64,
+      "title": "A：何时使用数字？",
+      "blocks": [
+        {
+          "title": "A 部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "A",
+              "zh": "A部分"
+            },
+            {
+              "en": "When do we use numbers?",
+              "zh": "我们什么时候使用数字？"
+            }
+          ]
+        },
+        {
+          "title": "Let's talk",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "我们来说一说。"
+            },
+            {
+              "en": "Binbin, this is my brother, Sam.",
+              "zh": "斌斌，这是我的弟弟萨姆。"
+            },
+            {
+              "en": "Hi, Sam! This is my sister, Xinxin.",
+              "zh": "嗨，萨姆！这是我的妹妹欣欣。"
+            },
+            {
+              "en": "Hello, Xinxin!",
+              "zh": "你好，欣欣！"
+            },
+            {
+              "en": "Hi, Sam!",
+              "zh": "嗨，萨姆！"
+            },
+            {
+              "en": "How old are you?",
+              "zh": "你几岁了？"
+            },
+            {
+              "en": "I'm five years old.",
+              "zh": "我五岁了。"
+            },
+            {
+              "en": "Me too.",
+              "zh": "我也是。"
+            }
+          ]
+        },
+        {
+          "title": "Choose and role-play",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Choose and role-play",
+              "zh": "选一选，分角色说一说。"
+            },
+            {
+              "en": "Hello, Xiaoli! How old are you?",
+              "zh": "你好，小丽！你几岁了？"
+            },
+            {
+              "en": "I'm five years old.",
+              "zh": "我五岁了。"
+            },
+            {
+              "en": "Tim 3",
+              "zh": "蒂姆，3岁。",
+              "say": "Tim, three",
+              "tip": "人物卡上的数字表示年龄。"
+            },
+            {
+              "en": "Feifei 4",
+              "zh": "菲菲，4岁。",
+              "say": "Feifei, four"
+            },
+            {
+              "en": "Xiaoli 5",
+              "zh": "小丽，5岁。",
+              "say": "Xiaoli, five"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-a",
+          "en": "A",
+          "zh": "字母A（本页小写为a）",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "when",
+          "en": "when",
+          "zh": "什么时候；当……时",
+          "ipa": "/wɛn/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "use",
+          "en": "use",
+          "zh": "使用（动词）",
+          "ipa": "/juz/"
+        },
+        {
+          "id": "photo-numbers",
+          "en": "numbers",
+          "zh": "数字（number 的复数）",
+          "ipa": "/ˈnʌmbɚz/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-binbin",
+          "en": "Binbin",
+          "zh": "斌斌（人名，按中文读）",
+          "ipa": "/ˈbɪnbɪn/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "brother",
+          "en": "brother",
+          "zh": "兄弟",
+          "ipa": "/ˈbrʌðɚ/"
+        },
+        {
+          "id": "photo-sam",
+          "en": "Sam",
+          "zh": "萨姆（人名）",
+          "ipa": "/sæm/"
+        },
+        {
+          "id": "photo-hi",
+          "en": "hi",
+          "zh": "嗨；你好",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "sister",
+          "en": "sister",
+          "zh": "姐妹",
+          "ipa": "/ˈsɪstɚ/"
+        },
+        {
+          "id": "photo-xinxin",
+          "en": "Xinxin",
+          "zh": "欣欣（人名，英语近似读音）",
+          "ipa": "/ˈʃɪn ʃɪn/"
+        },
+        {
+          "id": "hello",
+          "en": "hello",
+          "zh": "你好",
+          "ipa": "/həˈloʊ/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "old",
+          "en": "old",
+          "zh": "旧的；年老的",
+          "ipa": "/oʊld/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-i-m",
+          "en": "I'm",
+          "zh": "我是（I am 的缩写）",
+          "ipa": "/aɪm/"
+        },
+        {
+          "id": "five",
+          "en": "five",
+          "zh": "五",
+          "ipa": "/faɪv/"
+        },
+        {
+          "id": "photo-years",
+          "en": "years",
+          "zh": "岁；年（year 的复数）",
+          "ipa": "/jɪrz/"
+        },
+        {
+          "id": "me",
+          "en": "me",
+          "zh": "我",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-choose",
+          "en": "choose",
+          "zh": "选择",
+          "ipa": "/tʃuz/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-role-play",
+          "en": "role-play",
+          "zh": "角色扮演",
+          "ipa": "/ˈroʊl pleɪ/"
+        },
+        {
+          "id": "photo-xiaoli",
+          "en": "Xiaoli",
+          "zh": "小丽（人名，英语近似读音）",
+          "ipa": "/ˌʃaʊˈli/"
+        },
+        {
+          "id": "photo-tim",
+          "en": "Tim",
+          "zh": "蒂姆（人名）",
+          "ipa": "/tɪm/"
+        },
+        {
+          "id": "photo-feifei",
+          "en": "Feifei",
+          "zh": "菲菲（人名，英语近似读音）",
+          "ipa": "/ˈfeɪ feɪ/"
+        },
+        {
+          "id": "photo-number",
+          "en": "number",
+          "zh": "数字；数量",
+          "ipa": "/ˈnʌmbɚ/"
+        },
+        {
+          "id": "year",
+          "en": "year",
+          "zh": "年；岁",
+          "ipa": "/jɪr/"
+        }
+      ]
+    },
+    {
+      "page": 65,
+      "title": "数字1–5与跳跃吟唱",
+      "blocks": [
+        {
+          "title": "Let's learn",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "我们来学一学。"
+            },
+            {
+              "en": "1, 2, ...",
+              "zh": "一、二……",
+              "say": "one, two"
+            },
+            {
+              "en": "one",
+              "zh": "一"
+            },
+            {
+              "en": "two",
+              "zh": "二"
+            },
+            {
+              "en": "three",
+              "zh": "三"
+            },
+            {
+              "en": "four",
+              "zh": "四"
+            },
+            {
+              "en": "five",
+              "zh": "五"
+            }
+          ]
+        },
+        {
+          "title": "Listen and chant",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，吟唱。"
+            },
+            {
+              "en": "Jump! Jump! Jump! One, two, three!",
+              "zh": "跳！跳！跳！一、二、三！"
+            },
+            {
+              "en": "Jump! Jump! Jump! Three, two, one!",
+              "zh": "跳！跳！跳！三、二、一！"
+            },
+            {
+              "en": "Four and five! Four and five!",
+              "zh": "四和五！四和五！"
+            },
+            {
+              "en": "Jump up high! Jump up high!",
+              "zh": "高高跳起！高高跳起！"
+            },
+            {
+              "en": "Five! Four! Three, two, one!",
+              "zh": "五！四！三、二、一！"
+            },
+            {
+              "en": "Jump! Jump! It's such fun!",
+              "zh": "跳！跳！真有趣！"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "one",
+          "en": "one",
+          "zh": "一",
+          "ipa": "/wʌn/"
+        },
+        {
+          "id": "two",
+          "en": "two",
+          "zh": "二",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "three",
+          "en": "three",
+          "zh": "三",
+          "ipa": "/θri/"
+        },
+        {
+          "id": "four",
+          "en": "four",
+          "zh": "四",
+          "ipa": "/fɔr/"
+        },
+        {
+          "id": "five",
+          "en": "five",
+          "zh": "五",
+          "ipa": "/faɪv/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "jump",
+          "en": "jump",
+          "zh": "跳",
+          "ipa": "/dʒʌmp/"
+        },
+        {
+          "id": "photo-up",
+          "en": "up",
+          "zh": "向上",
+          "ipa": "/ʌp/"
+        },
+        {
+          "id": "high",
+          "en": "high",
+          "zh": "高的；高高地",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "photo-such",
+          "en": "such",
+          "zh": "这样的；如此的",
+          "ipa": "/sʌtʃ/"
+        },
+        {
+          "id": "fun",
+          "en": "fun",
+          "zh": "乐趣",
+          "ipa": "/fʌn/"
+        }
+      ]
+    },
+    {
+      "page": 66,
+      "title": "Letters and sounds：Vv、Ww、Xx、Yy、Zz",
+      "blocks": [
+        {
+          "title": "字母与发音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Letters and sounds",
+              "zh": "字母与发音。"
+            },
+            {
+              "en": "Listen, repeat and chant.",
+              "zh": "听一听，跟读并吟唱。"
+            },
+            {
+              "en": "V v",
+              "zh": "字母V的大写和小写。",
+              "tip": "字母名称读 /vi/；v 的辅音音素是 /v/。"
+            },
+            {
+              "en": "W w",
+              "zh": "字母W的大写和小写。",
+              "tip": "字母名称读 /ˈdʌbəlju/；w 的辅音音素是 /w/。"
+            },
+            {
+              "en": "X x",
+              "zh": "字母X的大写和小写。",
+              "tip": "字母名称读 /ɛks/；本页 x 在 box、six 中发 /ks/。"
+            },
+            {
+              "en": "Y y",
+              "zh": "字母Y的大写和小写。",
+              "tip": "字母名称读 /waɪ/；本页 y 在 yellow、yo-yo 中发 /j/。"
+            },
+            {
+              "en": "Z z",
+              "zh": "字母Z的大写和小写。",
+              "tip": "美式字母名称读 /zi/；z 的辅音音素是 /z/。"
+            },
+            {
+              "en": "van",
+              "zh": "厢式货车；面包车"
+            },
+            {
+              "en": "vet",
+              "zh": "兽医"
+            },
+            {
+              "en": "we",
+              "zh": "我们"
+            },
+            {
+              "en": "win",
+              "zh": "赢"
+            },
+            {
+              "en": "box",
+              "zh": "盒子"
+            },
+            {
+              "en": "six",
+              "zh": "六"
+            },
+            {
+              "en": "yellow",
+              "zh": "黄色的"
+            },
+            {
+              "en": "yo-yo",
+              "zh": "悠悠球"
+            },
+            {
+              "en": "Zip",
+              "zh": "兹普（角色名）"
+            },
+            {
+              "en": "quiz",
+              "zh": "小测验"
+            },
+            {
+              "en": "Quiz",
+              "zh": "小测验"
+            },
+            {
+              "en": "6",
+              "zh": "六",
+              "say": "six"
+            },
+            {
+              "en": "20",
+              "zh": "二十",
+              "say": "twenty"
+            }
+          ]
+        },
+        {
+          "title": "辨认首音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Listen and circle the first sound.",
+              "zh": "听一听，圈出第一个音。"
+            },
+            {
+              "en": "i y g",
+              "zh": "字母选项：i、y、g。",
+              "say": "I, Y, G"
+            },
+            {
+              "en": "z s x",
+              "zh": "字母选项：z、s、x。",
+              "say": "Z, S, X"
+            },
+            {
+              "en": "m v w",
+              "zh": "字母选项：m、v、w。",
+              "say": "M, V, W"
+            },
+            {
+              "en": "w u v",
+              "zh": "字母选项：w、u、v。",
+              "say": "W, U, V"
+            }
+          ]
+        },
+        {
+          "title": "拼读",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Can you read the words?",
+              "zh": "你能读出这些单词吗？"
+            },
+            {
+              "en": "w e t → wet",
+              "zh": "把 w、e、t 三个音连起来，拼读 wet。",
+              "tip": "把 w、e、t 三个音连起来。朗读示范拼出的单词 wet，意思是“湿的”。",
+              "say": "wet"
+            },
+            {
+              "en": "vat",
+              "zh": "大桶；大缸",
+              "tip": "vat 读 /væt/，这里是容器名词。"
+            },
+            {
+              "en": "won",
+              "zh": "赢（win 的过去式）",
+              "tip": "won 读 /wʌn/，与 one 同音。"
+            },
+            {
+              "en": "yes",
+              "zh": "是的"
+            },
+            {
+              "en": "yum",
+              "zh": "真好吃！"
+            },
+            {
+              "en": "zig",
+              "zh": "急转；折线的一次转折"
+            }
+          ]
+        },
+        {
+          "title": "辨认尾音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Listen and circle the last sound.",
+              "zh": "听一听，圈出最后一个音。"
+            },
+            {
+              "en": "k x c",
+              "zh": "字母选项：k、x、c。",
+              "say": "K, X, C"
+            },
+            {
+              "en": "s z x",
+              "zh": "字母选项：s、z、x。",
+              "say": "S, Z, X"
+            },
+            {
+              "en": "10 20",
+              "zh": "十、二十",
+              "say": "ten, twenty"
+            }
+          ]
+        },
+        {
+          "title": "书写与字母表",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Write and say.",
+              "zh": "写一写，说一说。"
+            },
+            {
+              "en": "V v W w X x Y y Z z",
+              "zh": "练习书写字母V、W、X、Y、Z的大写和小写。"
+            },
+            {
+              "en": "Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz",
+              "zh": "26个字母的大写和小写。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letters",
+          "en": "letters",
+          "zh": "字母（letter 的复数）",
+          "ipa": "/ˈlɛtɚz/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-sounds",
+          "en": "sounds",
+          "zh": "音；发音（sound 的复数）",
+          "ipa": "/saʊndz/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-repeat",
+          "en": "repeat",
+          "zh": "跟读；重复",
+          "ipa": "/rɪˈpit/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-letter-v",
+          "en": "V",
+          "zh": "字母V（本页小写为v）",
+          "ipa": "/vi/"
+        },
+        {
+          "id": "photo-letter-w",
+          "en": "W",
+          "zh": "字母W（本页小写为w）",
+          "ipa": "/ˈdʌbəlju/"
+        },
+        {
+          "id": "photo-letter-x",
+          "en": "X",
+          "zh": "字母X（本页小写为x）",
+          "ipa": "/ɛks/"
+        },
+        {
+          "id": "photo-letter-y",
+          "en": "Y",
+          "zh": "字母Y（本页小写为y）",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-letter-z",
+          "en": "Z",
+          "zh": "字母Z（本页小写为z）",
+          "ipa": "/zi/"
+        },
+        {
+          "id": "photo-van",
+          "en": "van",
+          "zh": "厢式货车；面包车",
+          "ipa": "/væn/"
+        },
+        {
+          "id": "photo-vet",
+          "en": "vet",
+          "zh": "兽医",
+          "ipa": "/vɛt/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "win",
+          "en": "win",
+          "zh": "赢",
+          "ipa": "/wɪn/"
+        },
+        {
+          "id": "box",
+          "en": "box",
+          "zh": "盒子",
+          "ipa": "/bɑks/"
+        },
+        {
+          "id": "six",
+          "en": "six",
+          "zh": "六",
+          "ipa": "/sɪks/"
+        },
+        {
+          "id": "yellow",
+          "en": "yellow",
+          "zh": "黄色的",
+          "ipa": "/ˈjɛloʊ/"
+        },
+        {
+          "id": "photo-yo-yo",
+          "en": "yo-yo",
+          "zh": "悠悠球",
+          "ipa": "/ˈjoʊ joʊ/"
+        },
+        {
+          "id": "photo-zip",
+          "en": "Zip",
+          "zh": "兹普（角色名）",
+          "ipa": "/zɪp/"
+        },
+        {
+          "id": "photo-quiz",
+          "en": "quiz",
+          "zh": "小测验",
+          "ipa": "/kwɪz/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "first",
+          "en": "first",
+          "zh": "首先；第一",
+          "ipa": "/fɝst/"
+        },
+        {
+          "id": "photo-sound",
+          "en": "sound",
+          "zh": "音；声音",
+          "ipa": "/saʊnd/"
+        },
+        {
+          "id": "photo-letter-i",
+          "en": "I",
+          "zh": "字母I（本页小写为i）",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-letter-g",
+          "en": "G",
+          "zh": "字母G（本页小写为g）",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-letter-s",
+          "en": "S",
+          "zh": "字母S（本页小写为s）",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-letter-m",
+          "en": "M",
+          "zh": "字母M（本页小写为m）",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-letter-u",
+          "en": "U",
+          "zh": "字母U（本页小写为u）",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-words",
+          "en": "words",
+          "zh": "单词（word 的复数）",
+          "ipa": "/wɝdz/"
+        },
+        {
+          "id": "photo-letter-e",
+          "en": "E",
+          "zh": "字母E（本页小写为e）",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-letter-t",
+          "en": "T",
+          "zh": "字母T（本页小写为t）",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "wet",
+          "en": "wet",
+          "zh": "湿的",
+          "ipa": "/wɛt/"
+        },
+        {
+          "id": "photo-vat",
+          "en": "vat",
+          "zh": "大桶；大缸",
+          "ipa": "/væt/"
+        },
+        {
+          "id": "won",
+          "en": "won",
+          "zh": "赢（win 的过去式）",
+          "ipa": "/wʌn/"
+        },
+        {
+          "id": "photo-yes",
+          "en": "yes",
+          "zh": "是的",
+          "ipa": "/jɛs/"
+        },
+        {
+          "id": "photo-yum",
+          "en": "yum",
+          "zh": "真好吃（表示食物美味的感叹）",
+          "ipa": "/jʌm/"
+        },
+        {
+          "id": "photo-zig",
+          "en": "zig",
+          "zh": "急转；折线的一次转折",
+          "ipa": "/zɪɡ/"
+        },
+        {
+          "id": "photo-last-final",
+          "en": "last",
+          "zh": "最后的（the last sound 指最后一个音）",
+          "ipa": "/læst/"
+        },
+        {
+          "id": "photo-letter-k",
+          "en": "K",
+          "zh": "字母K（本页小写为k）",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "photo-letter-c",
+          "en": "C",
+          "zh": "字母C（本页小写为c）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-aa",
+          "en": "Aa",
+          "zh": "字母A（大写与小写）",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-bb",
+          "en": "Bb",
+          "zh": "字母B（大写与小写）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-cc",
+          "en": "Cc",
+          "zh": "字母C（大写与小写）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-dd",
+          "en": "Dd",
+          "zh": "字母D（大写与小写）",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-ee",
+          "en": "Ee",
+          "zh": "字母E（大写与小写）",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-ff",
+          "en": "Ff",
+          "zh": "字母F（大写与小写）",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-gg",
+          "en": "Gg",
+          "zh": "字母G（大写与小写）",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-hh",
+          "en": "Hh",
+          "zh": "字母H（大写与小写）",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "photo-ii",
+          "en": "Ii",
+          "zh": "字母I（大写与小写）",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-jj",
+          "en": "Jj",
+          "zh": "字母J（大写与小写）",
+          "ipa": "/dʒeɪ/"
+        },
+        {
+          "id": "photo-kk",
+          "en": "Kk",
+          "zh": "字母K（大写与小写）",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "photo-ll",
+          "en": "Ll",
+          "zh": "字母L（大写与小写）",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "photo-mm",
+          "en": "Mm",
+          "zh": "字母M（大写与小写）",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-nn",
+          "en": "Nn",
+          "zh": "字母N（大写与小写）",
+          "ipa": "/ɛn/"
+        },
+        {
+          "id": "photo-oo",
+          "en": "Oo",
+          "zh": "字母O（大写与小写）",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-pp",
+          "en": "Pp",
+          "zh": "字母P（大写与小写）",
+          "ipa": "/pi/"
+        },
+        {
+          "id": "photo-qq",
+          "en": "Qq",
+          "zh": "字母Q（大写与小写）",
+          "ipa": "/kju/"
+        },
+        {
+          "id": "photo-rr",
+          "en": "Rr",
+          "zh": "字母R（大写与小写）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-ss",
+          "en": "Ss",
+          "zh": "字母S（大写与小写）",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-tt",
+          "en": "Tt",
+          "zh": "字母T（大写与小写）",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "photo-uu",
+          "en": "Uu",
+          "zh": "字母U（大写与小写）",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-vv",
+          "en": "Vv",
+          "zh": "字母V（大写与小写）",
+          "ipa": "/vi/"
+        },
+        {
+          "id": "photo-ww",
+          "en": "Ww",
+          "zh": "字母W（大写与小写）",
+          "ipa": "/ˈdʌbəlju/"
+        },
+        {
+          "id": "photo-xx",
+          "en": "Xx",
+          "zh": "字母X（大写与小写）",
+          "ipa": "/ɛks/"
+        },
+        {
+          "id": "photo-yy",
+          "en": "Yy",
+          "zh": "字母Y（大写与小写）",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-zz",
+          "en": "Zz",
+          "zh": "字母Z（大写与小写）",
+          "ipa": "/zi/"
+        }
+      ]
+    },
+    {
+      "page": 67,
+      "title": "B：数字有多大用处？",
+      "blocks": [
+        {
+          "title": "B 部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "B",
+              "zh": "B部分"
+            },
+            {
+              "en": "How useful are numbers?",
+              "zh": "数字有多大用处？"
+            }
+          ]
+        },
+        {
+          "title": "Let's talk",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "我们来说一说。"
+            },
+            {
+              "en": "How many apples?",
+              "zh": "几个苹果？"
+            },
+            {
+              "en": "Two.",
+              "zh": "两个。"
+            },
+            {
+              "en": "How many bananas?",
+              "zh": "几根香蕉？"
+            },
+            {
+              "en": "Three. And one orange.",
+              "zh": "三根。还有一个橙子。"
+            },
+            {
+              "en": "OK.",
+              "zh": "好的。"
+            },
+            {
+              "en": "I have ten yuan.",
+              "zh": "我有十元。"
+            },
+            {
+              "en": "I have six yuan.",
+              "zh": "我有六元。"
+            },
+            {
+              "en": "Great! Let's go to the shop!",
+              "zh": "太好了！我们去商店吧！"
+            }
+          ]
+        },
+        {
+          "title": "Count and say",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Count and say",
+              "zh": "数一数，说一说。"
+            },
+            {
+              "en": "How many lions?",
+              "zh": "几只狮子？"
+            },
+            {
+              "en": "Two.",
+              "zh": "两只。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-b",
+          "en": "B",
+          "zh": "字母B（本页小写为b）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "useful",
+          "en": "useful",
+          "zh": "有用的",
+          "ipa": "/ˈjusfəl/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-numbers",
+          "en": "numbers",
+          "zh": "数字（number 的复数）",
+          "ipa": "/ˈnʌmbɚz/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-many",
+          "en": "many",
+          "zh": "许多",
+          "ipa": "/ˈmɛni/"
+        },
+        {
+          "id": "photo-apples",
+          "en": "apples",
+          "zh": "苹果（复数）",
+          "ipa": "/ˈæpəlz/"
+        },
+        {
+          "id": "two",
+          "en": "two",
+          "zh": "二",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-bananas",
+          "en": "bananas",
+          "zh": "香蕉（banana的复数）",
+          "ipa": "/bəˈnænəz/"
+        },
+        {
+          "id": "three",
+          "en": "three",
+          "zh": "三",
+          "ipa": "/θri/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "one",
+          "en": "one",
+          "zh": "一",
+          "ipa": "/wʌn/"
+        },
+        {
+          "id": "orange",
+          "en": "orange",
+          "zh": "橙色的；橙子",
+          "ipa": "/ˈɔrɪndʒ/"
+        },
+        {
+          "id": "photo-ok",
+          "en": "OK",
+          "zh": "好的；没关系",
+          "ipa": "/ˌoʊˈkeɪ/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "have",
+          "en": "have",
+          "zh": "有",
+          "ipa": "/hæv/"
+        },
+        {
+          "id": "ten",
+          "en": "ten",
+          "zh": "十",
+          "ipa": "/tɛn/"
+        },
+        {
+          "id": "photo-yuan",
+          "en": "yuan",
+          "zh": "元（人民币单位）",
+          "ipa": "/juˈɑn/"
+        },
+        {
+          "id": "six",
+          "en": "six",
+          "zh": "六",
+          "ipa": "/sɪks/"
+        },
+        {
+          "id": "photo-great",
+          "en": "great",
+          "zh": "了不起的；极好的",
+          "ipa": "/ɡreɪt/"
+        },
+        {
+          "id": "go",
+          "en": "go",
+          "zh": "去；走",
+          "ipa": "/ɡoʊ/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "shop",
+          "en": "shop",
+          "zh": "商店；购物",
+          "ipa": "/ʃɑp/"
+        },
+        {
+          "id": "photo-count",
+          "en": "count",
+          "zh": "数数",
+          "ipa": "/kaʊnt/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-lions",
+          "en": "lions",
+          "zh": "狮子（lion 的复数）",
+          "ipa": "/ˈlaɪənz/"
+        },
+        {
+          "id": "photo-number",
+          "en": "number",
+          "zh": "数字；数量",
+          "ipa": "/ˈnʌmbɚ/"
+        },
+        {
+          "id": "apple",
+          "en": "apple",
+          "zh": "苹果",
+          "ipa": "/ˈæpəl/"
+        },
+        {
+          "id": "banana",
+          "en": "banana",
+          "zh": "香蕉",
+          "ipa": "/bəˈnænə/"
+        },
+        {
+          "id": "lion",
+          "en": "lion",
+          "zh": "狮子",
+          "ipa": "/ˈlaɪən/"
+        }
+      ]
+    },
+    {
+      "page": 68,
+      "title": "数字6–10与身体数量吟唱",
+      "blocks": [
+        {
+          "title": "Let's learn",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "我们来学一学。"
+            },
+            {
+              "en": "That's ten yuan, please.",
+              "zh": "请付十元。"
+            },
+            {
+              "en": "Here you are.",
+              "zh": "给你。"
+            },
+            {
+              "en": "10.00",
+              "zh": "收银屏幕显示的金额：10.00元。",
+              "say": "ten yuan"
+            }
+          ]
+        },
+        {
+          "title": "价格与数字词",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "¥6",
+              "zh": "6元",
+              "say": "six yuan"
+            },
+            {
+              "en": "six",
+              "zh": "六"
+            },
+            {
+              "en": "¥7",
+              "zh": "7元",
+              "say": "seven yuan"
+            },
+            {
+              "en": "seven",
+              "zh": "七"
+            },
+            {
+              "en": "¥8",
+              "zh": "8元",
+              "say": "eight yuan"
+            },
+            {
+              "en": "eight",
+              "zh": "八"
+            },
+            {
+              "en": "¥9",
+              "zh": "9元",
+              "say": "nine yuan"
+            },
+            {
+              "en": "nine",
+              "zh": "九"
+            },
+            {
+              "en": "¥10",
+              "zh": "10元",
+              "say": "ten yuan"
+            },
+            {
+              "en": "ten",
+              "zh": "十"
+            }
+          ]
+        },
+        {
+          "title": "Listen and chant",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，吟唱。"
+            },
+            {
+              "en": "One head, two legs, ten toes.",
+              "zh": "一个头，两条腿，十个脚趾。"
+            },
+            {
+              "en": "I am a child.",
+              "zh": "我是一个孩子。"
+            },
+            {
+              "en": "One head, eight eyes, eight legs.",
+              "zh": "一个头，八只眼睛，八条腿。"
+            },
+            {
+              "en": "I am a spider.",
+              "zh": "我是一只蜘蛛。"
+            },
+            {
+              "en": "One head, four wings, six legs.",
+              "zh": "一个头，四只翅膀，六条腿。"
+            },
+            {
+              "en": "I am a bee.",
+              "zh": "我是一只蜜蜂。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "photo-that-s",
+          "en": "that's",
+          "zh": "那是；这就是（that is 的缩写）",
+          "ipa": "/ðæts/"
+        },
+        {
+          "id": "ten",
+          "en": "ten",
+          "zh": "十",
+          "ipa": "/tɛn/"
+        },
+        {
+          "id": "photo-yuan",
+          "en": "yuan",
+          "zh": "元（人民币单位）",
+          "ipa": "/juˈɑn/"
+        },
+        {
+          "id": "photo-please",
+          "en": "please",
+          "zh": "请",
+          "ipa": "/pliz/"
+        },
+        {
+          "id": "photo-here",
+          "en": "here",
+          "zh": "这里",
+          "ipa": "/hɪr/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "six",
+          "en": "six",
+          "zh": "六",
+          "ipa": "/sɪks/"
+        },
+        {
+          "id": "seven",
+          "en": "seven",
+          "zh": "七",
+          "ipa": "/ˈsɛvən/"
+        },
+        {
+          "id": "eight",
+          "en": "eight",
+          "zh": "八",
+          "ipa": "/eɪt/"
+        },
+        {
+          "id": "nine",
+          "en": "nine",
+          "zh": "九",
+          "ipa": "/naɪn/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "one",
+          "en": "one",
+          "zh": "一",
+          "ipa": "/wʌn/"
+        },
+        {
+          "id": "head",
+          "en": "head",
+          "zh": "头",
+          "ipa": "/hɛd/"
+        },
+        {
+          "id": "two",
+          "en": "two",
+          "zh": "二",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-legs",
+          "en": "legs",
+          "zh": "腿（leg 的复数）",
+          "ipa": "/lɛɡz/"
+        },
+        {
+          "id": "photo-toes",
+          "en": "toes",
+          "zh": "脚趾（toe 的复数）",
+          "ipa": "/toʊz/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-am",
+          "en": "am",
+          "zh": "是（用于 I）",
+          "ipa": "/æm/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "child",
+          "en": "child",
+          "zh": "孩子",
+          "ipa": "/tʃaɪld/"
+        },
+        {
+          "id": "photo-eyes",
+          "en": "eyes",
+          "zh": "眼睛（eye 的复数）",
+          "ipa": "/aɪz/"
+        },
+        {
+          "id": "photo-spider",
+          "en": "spider",
+          "zh": "蜘蛛",
+          "ipa": "/ˈspaɪdɚ/"
+        },
+        {
+          "id": "four",
+          "en": "four",
+          "zh": "四",
+          "ipa": "/fɔr/"
+        },
+        {
+          "id": "photo-wings",
+          "en": "wings",
+          "zh": "翅膀（wing 的复数）",
+          "ipa": "/wɪŋz/"
+        },
+        {
+          "id": "bee",
+          "en": "bee",
+          "zh": "蜜蜂",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "leg",
+          "en": "leg",
+          "zh": "腿",
+          "ipa": "/lɛɡ/"
+        },
+        {
+          "id": "photo-toe",
+          "en": "toe",
+          "zh": "脚趾",
+          "ipa": "/toʊ/"
+        },
+        {
+          "id": "eye",
+          "en": "eye",
+          "zh": "眼睛",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-wing",
+          "en": "wing",
+          "zh": "翅膀",
+          "ipa": "/wɪŋ/"
+        }
+      ]
+    },
+    {
+      "page": 69,
+      "title": "Start to read：数字用途与奇偶数",
+      "blocks": [
+        {
+          "title": "阅读图画",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Start to read",
+              "zh": "开始阅读。"
+            },
+            {
+              "en": "7:00",
+              "zh": "7点整",
+              "say": "seven o'clock"
+            },
+            {
+              "en": "It's seven o'clock. Hurry!",
+              "zh": "七点了。快点！"
+            },
+            {
+              "en": "One orange, two apples and three bananas.",
+              "zh": "一个橙子，两个苹果，三根香蕉。"
+            },
+            {
+              "en": "Happy birthday!",
+              "zh": "生日快乐！"
+            },
+            {
+              "en": "Three cuts. Let's eat!",
+              "zh": "切三刀。我们吃吧！"
+            },
+            {
+              "en": "Dogs don't eat cake, Sam!",
+              "zh": "狗不能吃蛋糕，萨姆！"
+            },
+            {
+              "en": "Oh, one more cut for the dog.",
+              "zh": "哦，再给狗切一刀。"
+            }
+          ]
+        },
+        {
+          "title": "圈出阅读中的数字词",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Circle the numbers you read in the text.",
+              "zh": "圈出你在文章中读到的数字词。"
+            },
+            {
+              "en": "one",
+              "zh": "一"
+            },
+            {
+              "en": "two",
+              "zh": "二"
+            },
+            {
+              "en": "three",
+              "zh": "三"
+            },
+            {
+              "en": "four",
+              "zh": "四"
+            },
+            {
+              "en": "five",
+              "zh": "五"
+            },
+            {
+              "en": "six",
+              "zh": "六"
+            },
+            {
+              "en": "seven",
+              "zh": "七"
+            },
+            {
+              "en": "eight",
+              "zh": "八"
+            },
+            {
+              "en": "nine",
+              "zh": "九"
+            },
+            {
+              "en": "ten",
+              "zh": "十"
+            }
+          ]
+        },
+        {
+          "title": "数字分组",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Say the numbers in each group.",
+              "zh": "说出每组中的数字。"
+            },
+            {
+              "en": "one ? five seven ?",
+              "zh": "一、空位、五、七、空位。",
+              "tip": "问号是练习中的空位；试着找出这一组的规律。"
+            },
+            {
+              "en": "odd",
+              "zh": "奇数"
+            },
+            {
+              "en": "? four six ? ?",
+              "zh": "空位、四、六、空位、空位。",
+              "tip": "问号是练习中的空位；试着找出这一组的规律。"
+            },
+            {
+              "en": "even",
+              "zh": "偶数"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "start",
+          "en": "start",
+          "zh": "开始",
+          "ipa": "/stɑrt/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "seven",
+          "en": "seven",
+          "zh": "七",
+          "ipa": "/ˈsɛvən/"
+        },
+        {
+          "id": "o-clock",
+          "en": "o'clock",
+          "zh": "整点的……点钟",
+          "ipa": "/əˈklɑk/"
+        },
+        {
+          "id": "photo-hurry",
+          "en": "hurry",
+          "zh": "快点；赶快",
+          "ipa": "/ˈhɝi/"
+        },
+        {
+          "id": "one",
+          "en": "one",
+          "zh": "一",
+          "ipa": "/wʌn/"
+        },
+        {
+          "id": "orange",
+          "en": "orange",
+          "zh": "橙色的；橙子",
+          "ipa": "/ˈɔrɪndʒ/"
+        },
+        {
+          "id": "two",
+          "en": "two",
+          "zh": "二",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-apples",
+          "en": "apples",
+          "zh": "苹果（复数）",
+          "ipa": "/ˈæpəlz/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "three",
+          "en": "three",
+          "zh": "三",
+          "ipa": "/θri/"
+        },
+        {
+          "id": "photo-bananas",
+          "en": "bananas",
+          "zh": "香蕉（banana的复数）",
+          "ipa": "/bəˈnænəz/"
+        },
+        {
+          "id": "happy",
+          "en": "happy",
+          "zh": "开心的",
+          "ipa": "/ˈhæpi/"
+        },
+        {
+          "id": "photo-birthday",
+          "en": "birthday",
+          "zh": "生日",
+          "ipa": "/ˈbɝθdeɪ/"
+        },
+        {
+          "id": "photo-cuts",
+          "en": "cuts",
+          "zh": "切割次数；切几刀（cut 的复数）",
+          "ipa": "/kʌts/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "eat",
+          "en": "eat",
+          "zh": "吃；吃（原形）",
+          "ipa": "/it/"
+        },
+        {
+          "id": "photo-dogs",
+          "en": "dogs",
+          "zh": "狗（dog 的复数）",
+          "ipa": "/dɔɡz/"
+        },
+        {
+          "id": "photo-don-t",
+          "en": "don't",
+          "zh": "不（do not 的缩写）",
+          "ipa": "/doʊnt/"
+        },
+        {
+          "id": "cake",
+          "en": "cake",
+          "zh": "蛋糕",
+          "ipa": "/keɪk/"
+        },
+        {
+          "id": "photo-sam",
+          "en": "Sam",
+          "zh": "萨姆（人名）",
+          "ipa": "/sæm/"
+        },
+        {
+          "id": "photo-oh",
+          "en": "oh",
+          "zh": "哦；哎呀",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-more",
+          "en": "more",
+          "zh": "更多；再；另外",
+          "ipa": "/mɔr/"
+        },
+        {
+          "id": "cut",
+          "en": "cut",
+          "zh": "切",
+          "ipa": "/kʌt/"
+        },
+        {
+          "id": "photo-for",
+          "en": "for",
+          "zh": "给；为了",
+          "ipa": "/fɔr/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "dog",
+          "en": "dog",
+          "zh": "狗",
+          "ipa": "/dɔɡ/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-numbers",
+          "en": "numbers",
+          "zh": "数字（number 的复数）",
+          "ipa": "/ˈnʌmbɚz/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "photo-text",
+          "en": "text",
+          "zh": "文章；文字",
+          "ipa": "/tɛkst/"
+        },
+        {
+          "id": "four",
+          "en": "four",
+          "zh": "四",
+          "ipa": "/fɔr/"
+        },
+        {
+          "id": "five",
+          "en": "five",
+          "zh": "五",
+          "ipa": "/faɪv/"
+        },
+        {
+          "id": "six",
+          "en": "six",
+          "zh": "六",
+          "ipa": "/sɪks/"
+        },
+        {
+          "id": "eight",
+          "en": "eight",
+          "zh": "八",
+          "ipa": "/eɪt/"
+        },
+        {
+          "id": "nine",
+          "en": "nine",
+          "zh": "九",
+          "ipa": "/naɪn/"
+        },
+        {
+          "id": "ten",
+          "en": "ten",
+          "zh": "十",
+          "ipa": "/tɛn/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-each",
+          "en": "each",
+          "zh": "每一个",
+          "ipa": "/itʃ/"
+        },
+        {
+          "id": "photo-group",
+          "en": "group",
+          "zh": "小组",
+          "ipa": "/ɡrup/"
+        },
+        {
+          "id": "photo-odd",
+          "en": "odd",
+          "zh": "奇数的",
+          "ipa": "/ɑd/"
+        },
+        {
+          "id": "photo-even-number",
+          "en": "even",
+          "zh": "偶数的；偶数",
+          "ipa": "/ˈivən/"
+        },
+        {
+          "id": "photo-number",
+          "en": "number",
+          "zh": "数字；数量",
+          "ipa": "/ˈnʌmbɚ/"
+        },
+        {
+          "id": "apple",
+          "en": "apple",
+          "zh": "苹果",
+          "ipa": "/ˈæpəl/"
+        },
+        {
+          "id": "banana",
+          "en": "banana",
+          "zh": "香蕉",
+          "ipa": "/bəˈnænə/"
+        }
+      ]
+    },
+    {
+      "page": 70,
+      "title": "C 项目：制作生日贺卡",
+      "blocks": [
+        {
+          "title": "项目标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "C",
+              "zh": "C部分"
+            },
+            {
+              "en": "Project: Make a birthday card",
+              "zh": "项目：制作一张生日贺卡。"
+            }
+          ]
+        },
+        {
+          "title": "活动1：听与圈选",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "It's Xinxin's birthday soon. Listen and circle.",
+              "zh": "欣欣的生日快到了。听一听，圈一圈。"
+            },
+            {
+              "en": "How many people are there?",
+              "zh": "有多少人？"
+            },
+            {
+              "en": "Three.",
+              "zh": "三人。"
+            },
+            {
+              "en": "Four.",
+              "zh": "四人。"
+            },
+            {
+              "en": "How old is Matt?",
+              "zh": "马特几岁了？"
+            },
+            {
+              "en": "Five.",
+              "zh": "五岁。"
+            },
+            {
+              "en": "Six.",
+              "zh": "六岁。"
+            }
+          ]
+        },
+        {
+          "title": "活动2：阅读邀请卡",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Read the card and circle the numbers.",
+              "zh": "读邀请卡，圈出数字。"
+            },
+            {
+              "en": "HAPPY BIRTHDAY",
+              "zh": "生日快乐"
+            },
+            {
+              "en": "YOU ARE INVITED",
+              "zh": "邀请你来参加"
+            },
+            {
+              "en": "to Xinxin's 6th birthday party!",
+              "zh": "欣欣的六岁生日聚会！",
+              "say": "to Xinxin's sixth birthday party",
+              "tip": "6th 是 sixth 的数字写法，表示“第六”；这里表示六岁生日。"
+            },
+            {
+              "en": "8/1",
+              "zh": "日期：8/1",
+              "say": "eight slash one",
+              "tip": "保留卡片印刷的日期写法；未据此强定月、日顺序。"
+            },
+            {
+              "en": "5 p.m.",
+              "zh": "下午5点",
+              "say": "five p m"
+            },
+            {
+              "en": "Xinxin's home",
+              "zh": "欣欣的家"
+            }
+          ]
+        },
+        {
+          "title": "阅读后问题与选项",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "How old is Xinxin now?",
+              "zh": "欣欣现在几岁？"
+            },
+            {
+              "en": "Five.",
+              "zh": "五岁。"
+            },
+            {
+              "en": "Seven.",
+              "zh": "七岁。"
+            },
+            {
+              "en": "What time is the party?",
+              "zh": "聚会在几点？"
+            },
+            {
+              "en": "5 p.m.",
+              "zh": "下午5点",
+              "say": "five p m"
+            },
+            {
+              "en": "6 p.m.",
+              "zh": "下午6点",
+              "say": "six p m"
+            },
+            {
+              "en": "What numbers do you see on the card?",
+              "zh": "你在卡片上看到了哪些数字？"
+            },
+            {
+              "en": "One.",
+              "zh": "一。"
+            },
+            {
+              "en": "Two.",
+              "zh": "二。"
+            },
+            {
+              "en": "Three.",
+              "zh": "三。"
+            },
+            {
+              "en": "Four.",
+              "zh": "四。"
+            },
+            {
+              "en": "Five.",
+              "zh": "五。"
+            },
+            {
+              "en": "Six.",
+              "zh": "六。"
+            },
+            {
+              "en": "Seven.",
+              "zh": "七。"
+            },
+            {
+              "en": "Eight.",
+              "zh": "八。"
+            },
+            {
+              "en": "Nine.",
+              "zh": "九。"
+            },
+            {
+              "en": "Ten.",
+              "zh": "十。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-c",
+          "en": "C",
+          "zh": "字母C（本页小写为c）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "project",
+          "en": "project",
+          "zh": "项目；课题",
+          "ipa": "/ˈprɑdʒɛkt/"
+        },
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-birthday",
+          "en": "birthday",
+          "zh": "生日",
+          "ipa": "/ˈbɝθdeɪ/"
+        },
+        {
+          "id": "card",
+          "en": "card",
+          "zh": "卡片；贺卡",
+          "ipa": "/kɑrd/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "photo-xinxin-s",
+          "en": "Xinxin's",
+          "zh": "欣欣的（名字后加 's 表示所属）",
+          "ipa": "/ˈʃɪn ʃɪnz/"
+        },
+        {
+          "id": "soon",
+          "en": "soon",
+          "zh": "很快",
+          "ipa": "/sun/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-many",
+          "en": "many",
+          "zh": "许多",
+          "ipa": "/ˈmɛni/"
+        },
+        {
+          "id": "people",
+          "en": "people",
+          "zh": "人们",
+          "ipa": "/ˈpipəl/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "there",
+          "en": "there",
+          "zh": "在那里；表示“有”",
+          "ipa": "/ðɛr/"
+        },
+        {
+          "id": "three",
+          "en": "three",
+          "zh": "三",
+          "ipa": "/θri/"
+        },
+        {
+          "id": "four",
+          "en": "four",
+          "zh": "四",
+          "ipa": "/fɔr/"
+        },
+        {
+          "id": "old",
+          "en": "old",
+          "zh": "旧的；年老的",
+          "ipa": "/oʊld/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-matt",
+          "en": "Matt",
+          "zh": "马特（人名）",
+          "ipa": "/mæt/"
+        },
+        {
+          "id": "five",
+          "en": "five",
+          "zh": "五",
+          "ipa": "/faɪv/"
+        },
+        {
+          "id": "six",
+          "en": "six",
+          "zh": "六",
+          "ipa": "/sɪks/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-numbers",
+          "en": "numbers",
+          "zh": "数字（number 的复数）",
+          "ipa": "/ˈnʌmbɚz/"
+        },
+        {
+          "id": "happy",
+          "en": "happy",
+          "zh": "开心的",
+          "ipa": "/ˈhæpi/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-invited",
+          "en": "invited",
+          "zh": "受邀的；被邀请（invite 的过去分词）",
+          "ipa": "/ɪnˈvaɪtɪd/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-sixth",
+          "en": "6th",
+          "zh": "第六；六岁生日中的“六”（sixth 的数字写法）",
+          "ipa": "/sɪksθ/"
+        },
+        {
+          "id": "party",
+          "en": "party",
+          "zh": "聚会",
+          "ipa": "/ˈpɑrti/"
+        },
+        {
+          "id": "photo-p-m",
+          "en": "p.m.",
+          "zh": "下午；晚上（从中午到午夜的时间标记）",
+          "ipa": "/ˌpiˈɛm/"
+        },
+        {
+          "id": "home",
+          "en": "home",
+          "zh": "家",
+          "ipa": "/hoʊm/"
+        },
+        {
+          "id": "photo-xinxin",
+          "en": "Xinxin",
+          "zh": "欣欣（人名，英语近似读音）",
+          "ipa": "/ˈʃɪn ʃɪn/"
+        },
+        {
+          "id": "now",
+          "en": "now",
+          "zh": "现在",
+          "ipa": "/naʊ/"
+        },
+        {
+          "id": "seven",
+          "en": "seven",
+          "zh": "七",
+          "ipa": "/ˈsɛvən/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "time",
+          "en": "time",
+          "zh": "时间",
+          "ipa": "/taɪm/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "on",
+          "en": "on",
+          "zh": "在……上面",
+          "ipa": "/ɑn/"
+        },
+        {
+          "id": "one",
+          "en": "one",
+          "zh": "一",
+          "ipa": "/wʌn/"
+        },
+        {
+          "id": "two",
+          "en": "two",
+          "zh": "二",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "eight",
+          "en": "eight",
+          "zh": "八",
+          "ipa": "/eɪt/"
+        },
+        {
+          "id": "nine",
+          "en": "nine",
+          "zh": "九",
+          "ipa": "/naɪn/"
+        },
+        {
+          "id": "ten",
+          "en": "ten",
+          "zh": "十",
+          "ipa": "/tɛn/"
+        },
+        {
+          "id": "photo-number",
+          "en": "number",
+          "zh": "数字；数量",
+          "ipa": "/ˈnʌmbɚ/"
+        },
+        {
+          "id": "invite",
+          "en": "invite",
+          "zh": "邀请",
+          "ipa": "/ɪnˈvaɪt/"
+        }
+      ]
+    },
+    {
+      "page": 71,
+      "title": "制作与赠送贺卡、自我检查",
+      "blocks": [
+        {
+          "title": "活动3：制作贺卡",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Make your birthday card.",
+              "zh": "制作你的生日贺卡。"
+            },
+            {
+              "en": "Happy Birthday, Xinxin!",
+              "zh": "生日快乐，欣欣！"
+            },
+            {
+              "en": "Matt",
+              "zh": "马特（贺卡的落款）"
+            }
+          ]
+        },
+        {
+          "title": "活动4：赠送贺卡",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Give your birthday card to a friend.",
+              "zh": "把你的生日贺卡送给一位朋友。"
+            },
+            {
+              "en": "Happy birthday!",
+              "zh": "生日快乐！"
+            },
+            {
+              "en": "Thanks!",
+              "zh": "谢谢！"
+            }
+          ]
+        },
+        {
+          "title": "Self-check",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Self-check",
+              "zh": "自我检查。"
+            },
+            {
+              "en": "I still need help",
+              "zh": "我仍然需要帮助。"
+            },
+            {
+              "en": "I can mostly do it",
+              "zh": "我大部分都能做到。"
+            },
+            {
+              "en": "I can do it!",
+              "zh": "我能做到！"
+            },
+            {
+              "en": "I can ask about age and number.",
+              "zh": "我能询问年龄和数量。"
+            },
+            {
+              "en": "I can count things with the numbers 1 to 10.",
+              "zh": "我能用1到10的数字数东西。",
+              "say": "I can count things with the numbers one to ten."
+            },
+            {
+              "en": "I can use the numbers 1 to 10 in different places.",
+              "zh": "我能在不同场合使用1到10的数字。",
+              "say": "I can use the numbers one to ten in different places."
+            },
+            {
+              "en": "I can read, write and say Vv, Ww, Xx, Yy and Zz.",
+              "zh": "我能认读、书写和说出字母V、W、X、Y、Z的大写和小写。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "photo-birthday",
+          "en": "birthday",
+          "zh": "生日",
+          "ipa": "/ˈbɝθdeɪ/"
+        },
+        {
+          "id": "card",
+          "en": "card",
+          "zh": "卡片；贺卡",
+          "ipa": "/kɑrd/"
+        },
+        {
+          "id": "happy",
+          "en": "happy",
+          "zh": "开心的",
+          "ipa": "/ˈhæpi/"
+        },
+        {
+          "id": "photo-xinxin",
+          "en": "Xinxin",
+          "zh": "欣欣（人名，英语近似读音）",
+          "ipa": "/ˈʃɪn ʃɪn/"
+        },
+        {
+          "id": "photo-matt",
+          "en": "Matt",
+          "zh": "马特（人名）",
+          "ipa": "/mæt/"
+        },
+        {
+          "id": "give",
+          "en": "give",
+          "zh": "给",
+          "ipa": "/ɡɪv/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        },
+        {
+          "id": "photo-thanks",
+          "en": "thanks",
+          "zh": "谢谢",
+          "ipa": "/θæŋks/"
+        },
+        {
+          "id": "photo-self-check",
+          "en": "self-check",
+          "zh": "自我检查",
+          "ipa": "/ˈsɛlf tʃɛk/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "still",
+          "en": "still",
+          "zh": "仍然",
+          "ipa": "/stɪl/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-mostly",
+          "en": "mostly",
+          "zh": "大部分；主要地",
+          "ipa": "/ˈmoʊstli/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；这件事",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "ask",
+          "en": "ask",
+          "zh": "问",
+          "ipa": "/æsk/"
+        },
+        {
+          "id": "about",
+          "en": "about",
+          "zh": "关于；大约",
+          "ipa": "/əˈbaʊt/"
+        },
+        {
+          "id": "photo-age",
+          "en": "age",
+          "zh": "年龄",
+          "ipa": "/eɪdʒ/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-number",
+          "en": "number",
+          "zh": "数字；数量",
+          "ipa": "/ˈnʌmbɚ/"
+        },
+        {
+          "id": "photo-count",
+          "en": "count",
+          "zh": "数数",
+          "ipa": "/kaʊnt/"
+        },
+        {
+          "id": "photo-things",
+          "en": "things",
+          "zh": "物品；事物（thing的复数）",
+          "ipa": "/θɪŋz/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和……一起；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-numbers",
+          "en": "numbers",
+          "zh": "数字（number 的复数）",
+          "ipa": "/ˈnʌmbɚz/"
+        },
+        {
+          "id": "use",
+          "en": "use",
+          "zh": "使用（动词）",
+          "ipa": "/juz/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "different",
+          "en": "different",
+          "zh": "不同的",
+          "ipa": "/ˈdɪfɚənt/"
+        },
+        {
+          "id": "photo-places",
+          "en": "places",
+          "zh": "地方；场合（place 的复数）",
+          "ipa": "/ˈpleɪsɪz/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-vv",
+          "en": "Vv",
+          "zh": "字母V（大写与小写）",
+          "ipa": "/vi/"
+        },
+        {
+          "id": "photo-ww",
+          "en": "Ww",
+          "zh": "字母W（大写与小写）",
+          "ipa": "/ˈdʌbəlju/"
+        },
+        {
+          "id": "photo-xx",
+          "en": "Xx",
+          "zh": "字母X（大写与小写）",
+          "ipa": "/ɛks/"
+        },
+        {
+          "id": "photo-yy",
+          "en": "Yy",
+          "zh": "字母Y（大写与小写）",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-zz",
+          "en": "Zz",
+          "zh": "字母Z（大写与小写）",
+          "ipa": "/zi/"
+        },
+        {
+          "id": "photo-thing",
+          "en": "thing",
+          "zh": "东西；物品",
+          "ipa": "/θɪŋ/"
+        },
+        {
+          "id": "place",
+          "en": "place",
+          "zh": "地方",
+          "ipa": "/pleɪs/"
+        }
+      ]
+    },
+    {
+      "page": 72,
+      "title": "Reading time：数字六的不同写法（上）",
+      "blocks": [
+        {
+          "title": "故事标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Reading time",
+              "zh": "阅读时间。"
+            }
+          ]
+        },
+        {
+          "title": "故事1：数卡片",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "How many cards?",
+              "zh": "几张卡片？"
+            },
+            {
+              "en": "Six.",
+              "zh": "六张。"
+            },
+            {
+              "en": "six",
+              "zh": "六（卡片上的英文写法）"
+            },
+            {
+              "en": "6",
+              "zh": "六（卡片上的数字写法）",
+              "say": "six"
+            }
+          ]
+        },
+        {
+          "title": "故事2：辨认数字",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "What's this?",
+              "zh": "这是什么？"
+            },
+            {
+              "en": "Six.",
+              "zh": "六。"
+            },
+            {
+              "en": "Right.",
+              "zh": "对。"
+            }
+          ]
+        },
+        {
+          "title": "故事3：罗马数字",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "What's this?",
+              "zh": "这是什么？"
+            },
+            {
+              "en": "VI",
+              "zh": "六（罗马数字）",
+              "say": "six",
+              "tip": "VI 是罗马数字6的写法。"
+            },
+            {
+              "en": "Hmm, six?",
+              "zh": "嗯，是六吗？"
+            },
+            {
+              "en": "You're right again.",
+              "zh": "你又答对了。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-reading",
+          "en": "reading",
+          "zh": "阅读（read 的 -ing 形式）",
+          "ipa": "/ˈridɪŋ/"
+        },
+        {
+          "id": "time",
+          "en": "time",
+          "zh": "时间",
+          "ipa": "/taɪm/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-many",
+          "en": "many",
+          "zh": "许多",
+          "ipa": "/ˈmɛni/"
+        },
+        {
+          "id": "photo-cards",
+          "en": "cards",
+          "zh": "卡片（复数）",
+          "ipa": "/kɑrdz/"
+        },
+        {
+          "id": "six",
+          "en": "six",
+          "zh": "六",
+          "ipa": "/sɪks/"
+        },
+        {
+          "id": "photo-what-s",
+          "en": "what's",
+          "zh": "是什么（what is 的缩写）",
+          "ipa": "/wʌts/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-right-correct",
+          "en": "right",
+          "zh": "正确的；对的",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "photo-vi",
+          "en": "VI",
+          "zh": "六（罗马数字，按数字含义读 six）",
+          "ipa": "/sɪks/"
+        },
+        {
+          "id": "photo-hmm",
+          "en": "hmm",
+          "zh": "嗯（思考或迟疑时的声音）",
+          "ipa": "/m̩/"
+        },
+        {
+          "id": "photo-you-re",
+          "en": "you're",
+          "zh": "你是；你答得（you are 的缩写）",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "photo-again",
+          "en": "again",
+          "zh": "再次；又一次",
+          "ipa": "/əˈɡɛn/"
+        },
+        {
+          "id": "card",
+          "en": "card",
+          "zh": "卡片；贺卡",
+          "ipa": "/kɑrd/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        }
+      ]
+    },
+    {
+      "page": 73,
+      "title": "Reading time：数字六的不同写法（下）",
+      "blocks": [
+        {
+          "title": "故事4：汉字数字",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "What's this?",
+              "zh": "这是什么？"
+            },
+            {
+              "en": "It's six in Chinese.",
+              "zh": "这是汉语里的“六”。"
+            }
+          ]
+        },
+        {
+          "title": "故事5：甲骨文数字",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "What about this?",
+              "zh": "那这个呢？"
+            },
+            {
+              "en": "I don't know.",
+              "zh": "我不知道。"
+            }
+          ]
+        },
+        {
+          "title": "故事6：认识甲骨文",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "This is six too. It's a jiaguwen number. Jiaguwen is over 3,000 years old!",
+              "zh": "这也是六。这是一个甲骨文数字。甲骨文已经有三千多年历史了！",
+              "say": "This is six too. It's a jiaguwen number. Jiaguwen is over three thousand years old!",
+              "tip": "jiaguwen 是“甲骨文”的汉语拼音写法。"
+            },
+            {
+              "en": "Wow!",
+              "zh": "哇！"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-what-s",
+          "en": "what's",
+          "zh": "是什么（what is 的缩写）",
+          "ipa": "/wʌts/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "six",
+          "en": "six",
+          "zh": "六",
+          "ipa": "/sɪks/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "chinese",
+          "en": "Chinese",
+          "zh": "中文；中国的；中国人",
+          "ipa": "/tʃaɪˈniz/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "about",
+          "en": "about",
+          "zh": "关于；大约",
+          "ipa": "/əˈbaʊt/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-don-t",
+          "en": "don't",
+          "zh": "不（do not 的缩写）",
+          "ipa": "/doʊnt/"
+        },
+        {
+          "id": "know",
+          "en": "know",
+          "zh": "知道",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-jiaguwen",
+          "en": "jiaguwen",
+          "zh": "甲骨文（汉语拼音，音标为英语近似读音）",
+          "ipa": "/ˌdʒjɑɡuˈwɛn/"
+        },
+        {
+          "id": "photo-number",
+          "en": "number",
+          "zh": "数字；数量",
+          "ipa": "/ˈnʌmbɚ/"
+        },
+        {
+          "id": "over",
+          "en": "over",
+          "zh": "超过；多于",
+          "ipa": "/ˈoʊvɚ/"
+        },
+        {
+          "id": "photo-years",
+          "en": "years",
+          "zh": "岁；年（year 的复数）",
+          "ipa": "/jɪrz/"
+        },
+        {
+          "id": "old",
+          "en": "old",
+          "zh": "旧的；年老的",
+          "ipa": "/oʊld/"
+        },
+        {
+          "id": "photo-wow",
+          "en": "wow",
+          "zh": "哇；呀",
+          "ipa": "/waʊ/"
+        },
+        {
+          "id": "year",
+          "en": "year",
+          "zh": "年；岁",
+          "ipa": "/jɪr/"
+        }
+      ]
+    }
+  ]
+}

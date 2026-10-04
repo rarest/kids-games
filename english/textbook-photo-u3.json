@@ -1,0 +1,3315 @@
+{
+  "unitId": "g3-upper-u3",
+  "title": "Our animal friends",
+  "pages": [
+    {
+      "page": 26,
+      "title": "单元导入：Our animal friends",
+      "blocks": [
+        {
+          "title": "单元标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Unit 3",
+              "zh": "第三单元"
+            },
+            {
+              "en": "Our animal friends",
+              "zh": "我们的动物朋友"
+            },
+            {
+              "en": "How are animals different?",
+              "zh": "动物有哪些不同？"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "photo-our",
+          "en": "our",
+          "zh": "我们的",
+          "ipa": "/aʊɚ/"
+        },
+        {
+          "id": "animal",
+          "en": "animal",
+          "zh": "动物",
+          "ipa": "/ˈænəməl/"
+        },
+        {
+          "id": "photo-friends",
+          "en": "friends",
+          "zh": "朋友（friend 的复数）",
+          "ipa": "/frɛndz/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-animals",
+          "en": "animals",
+          "zh": "动物（animal 的复数）",
+          "ipa": "/ˈænəməlz/"
+        },
+        {
+          "id": "different",
+          "en": "different",
+          "zh": "不同的",
+          "ipa": "/ˈdɪfɚənt/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        }
+      ]
+    },
+    {
+      "page": 27,
+      "title": "观察、吟唱与歌曲",
+      "blocks": [
+        {
+          "title": "Look and think",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Look and think",
+              "zh": "看一看，想一想。"
+            },
+            {
+              "en": "Whose hands are these?",
+              "zh": "这些是谁的手？"
+            },
+            {
+              "en": "What animals do you know?",
+              "zh": "你认识哪些动物？"
+            }
+          ]
+        },
+        {
+          "title": "Listen and chant",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，吟唱。"
+            },
+            {
+              "en": "So many animals,",
+              "zh": "这么多动物，"
+            },
+            {
+              "en": "Big, tall and small.",
+              "zh": "有大的、高的，还有小的。"
+            },
+            {
+              "en": "Pets and wild animals,",
+              "zh": "宠物和野生动物，"
+            },
+            {
+              "en": "We love them all.",
+              "zh": "我们全都喜爱。"
+            }
+          ]
+        },
+        {
+          "title": "Listen and sing",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Listen and sing",
+              "zh": "听一听，唱一唱。"
+            },
+            {
+              "en": "Animal song",
+              "zh": "动物歌曲"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "think",
+          "en": "think",
+          "zh": "想；思考",
+          "ipa": "/θɪŋk/"
+        },
+        {
+          "id": "whose",
+          "en": "whose",
+          "zh": "谁的",
+          "ipa": "/huz/"
+        },
+        {
+          "id": "photo-hands",
+          "en": "hands",
+          "zh": "手（hand 的复数）",
+          "ipa": "/hændz/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "these",
+          "en": "these",
+          "zh": "这些",
+          "ipa": "/ðiz/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-animals",
+          "en": "animals",
+          "zh": "动物（animal 的复数）",
+          "ipa": "/ˈænəməlz/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "know",
+          "en": "know",
+          "zh": "知道",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "so",
+          "en": "so",
+          "zh": "这么；那么",
+          "ipa": "/soʊ/"
+        },
+        {
+          "id": "photo-many",
+          "en": "many",
+          "zh": "许多的",
+          "ipa": "/ˈmɛni/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "tall",
+          "en": "tall",
+          "zh": "高的",
+          "ipa": "/tɔl/"
+        },
+        {
+          "id": "small",
+          "en": "small",
+          "zh": "小的",
+          "ipa": "/smɔl/"
+        },
+        {
+          "id": "photo-pets",
+          "en": "pets",
+          "zh": "宠物（pet 的复数）",
+          "ipa": "/pɛts/"
+        },
+        {
+          "id": "wild",
+          "en": "wild",
+          "zh": "野生的",
+          "ipa": "/waɪld/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "love",
+          "en": "love",
+          "zh": "爱",
+          "ipa": "/lʌv/"
+        },
+        {
+          "id": "them",
+          "en": "them",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðɛm/"
+        },
+        {
+          "id": "all",
+          "en": "all",
+          "zh": "所有；全部",
+          "ipa": "/ɔl/"
+        },
+        {
+          "id": "sing",
+          "en": "sing",
+          "zh": "唱歌",
+          "ipa": "/sɪŋ/"
+        },
+        {
+          "id": "animal",
+          "en": "animal",
+          "zh": "动物",
+          "ipa": "/ˈænəməl/"
+        },
+        {
+          "id": "song",
+          "en": "song",
+          "zh": "歌曲",
+          "ipa": "/sɔŋ/"
+        },
+        {
+          "id": "hand",
+          "en": "hand",
+          "zh": "手",
+          "ipa": "/hænd/"
+        },
+        {
+          "id": "pet",
+          "en": "pet",
+          "zh": "宠物",
+          "ipa": "/pɛt/"
+        }
+      ]
+    },
+    {
+      "page": 28,
+      "title": "A：你认识哪些宠物？",
+      "blocks": [
+        {
+          "title": "A 部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "A",
+              "zh": "A部分"
+            },
+            {
+              "en": "What pets do you know?",
+              "zh": "你认识哪些宠物？"
+            }
+          ]
+        },
+        {
+          "title": "Let's talk",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "我们来说一说。"
+            },
+            {
+              "en": "Good morning, Mike!",
+              "zh": "早上好，迈克！"
+            },
+            {
+              "en": "Good morning! Come in.",
+              "zh": "早上好！请进。"
+            },
+            {
+              "en": "I like your dog.",
+              "zh": "我喜欢你的狗。"
+            },
+            {
+              "en": "Thanks. Do you have a pet?",
+              "zh": "谢谢。你有宠物吗？"
+            },
+            {
+              "en": "No, I don't.",
+              "zh": "不，我没有。"
+            },
+            {
+              "en": "Yes, I do. I have a cat.",
+              "zh": "是的，我有。我有一只猫。"
+            }
+          ]
+        },
+        {
+          "title": "Do a survey",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Do a survey",
+              "zh": "做个调查。"
+            },
+            {
+              "en": "Do you have a pet?",
+              "zh": "你有宠物吗？"
+            },
+            {
+              "en": "Yes, I do. I have a dog.",
+              "zh": "是的，我有。我有一只狗。"
+            },
+            {
+              "en": "No, I don't.",
+              "zh": "不，我没有。"
+            }
+          ]
+        },
+        {
+          "title": "宠物调查表",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Name",
+              "zh": "名字"
+            },
+            {
+              "en": "Pet",
+              "zh": "宠物"
+            },
+            {
+              "en": "Sarah dog",
+              "zh": "萨拉：狗。",
+              "tip": "调查表中 Sarah 的宠物是 dog。"
+            },
+            {
+              "en": "Binbin –",
+              "zh": "斌斌：没有宠物。",
+              "tip": "表中的横线表示没有宠物。"
+            },
+            {
+              "en": "Guo Wei fish",
+              "zh": "郭伟：鱼。",
+              "tip": "调查表中 Guo Wei 的宠物是 fish。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-a",
+          "en": "A",
+          "zh": "字母A（本页小写为a）",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-pets",
+          "en": "pets",
+          "zh": "宠物（pet 的复数）",
+          "ipa": "/pɛts/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "know",
+          "en": "know",
+          "zh": "知道",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "good",
+          "en": "good",
+          "zh": "好的",
+          "ipa": "/ɡʊd/"
+        },
+        {
+          "id": "morning",
+          "en": "morning",
+          "zh": "早晨",
+          "ipa": "/ˈmɔrnɪŋ/"
+        },
+        {
+          "id": "photo-mike",
+          "en": "Mike",
+          "zh": "迈克（人名）",
+          "ipa": "/maɪk/"
+        },
+        {
+          "id": "photo-come",
+          "en": "come",
+          "zh": "来",
+          "ipa": "/kʌm/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "dog",
+          "en": "dog",
+          "zh": "狗",
+          "ipa": "/dɔɡ/"
+        },
+        {
+          "id": "photo-thanks",
+          "en": "thanks",
+          "zh": "谢谢",
+          "ipa": "/θæŋks/"
+        },
+        {
+          "id": "have",
+          "en": "have",
+          "zh": "有",
+          "ipa": "/hæv/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "pet",
+          "en": "pet",
+          "zh": "宠物",
+          "ipa": "/pɛt/"
+        },
+        {
+          "id": "photo-no",
+          "en": "no",
+          "zh": "不；不好",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "photo-don-t",
+          "en": "don't",
+          "zh": "不（do not 的缩写）",
+          "ipa": "/doʊnt/"
+        },
+        {
+          "id": "photo-yes",
+          "en": "yes",
+          "zh": "是的",
+          "ipa": "/jɛs/"
+        },
+        {
+          "id": "cat",
+          "en": "cat",
+          "zh": "猫",
+          "ipa": "/kæt/"
+        },
+        {
+          "id": "photo-survey",
+          "en": "survey",
+          "zh": "调查",
+          "ipa": "/ˈsɝveɪ/"
+        },
+        {
+          "id": "name",
+          "en": "name",
+          "zh": "名字",
+          "ipa": "/neɪm/"
+        },
+        {
+          "id": "photo-sarah",
+          "en": "Sarah",
+          "zh": "萨拉（人名）",
+          "ipa": "/ˈsɛrə/"
+        },
+        {
+          "id": "photo-binbin",
+          "en": "Binbin",
+          "zh": "斌斌（人名，英语近似读音）",
+          "ipa": "/ˈbɪn bɪn/"
+        },
+        {
+          "id": "photo-guo",
+          "en": "Guo",
+          "zh": "郭（姓氏，英语近似读音）",
+          "ipa": "/ɡwoʊ/"
+        },
+        {
+          "id": "photo-wei",
+          "en": "Wei",
+          "zh": "伟（人名，英语近似读音）",
+          "ipa": "/weɪ/"
+        },
+        {
+          "id": "fish",
+          "en": "fish",
+          "zh": "鱼；钓鱼",
+          "ipa": "/fɪʃ/"
+        }
+      ]
+    },
+    {
+      "page": 29,
+      "title": "宠物名称与动作",
+      "blocks": [
+        {
+          "title": "Let's learn",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "我们来学一学。"
+            },
+            {
+              "en": "Pet Shop",
+              "zh": "宠物店"
+            },
+            {
+              "en": "I like fish.",
+              "zh": "我喜欢鱼。"
+            },
+            {
+              "en": "I like cats.",
+              "zh": "我喜欢猫。"
+            },
+            {
+              "en": "I like birds.",
+              "zh": "我喜欢鸟。"
+            },
+            {
+              "en": "I like rabbits.",
+              "zh": "我喜欢兔子。"
+            },
+            {
+              "en": "I like my dog.",
+              "zh": "我喜欢我的狗。"
+            }
+          ]
+        },
+        {
+          "title": "Listen and do",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Listen and do",
+              "zh": "听一听，做一做。"
+            },
+            {
+              "en": "Run, run, run like a dog.",
+              "zh": "跑，跑，像小狗一样跑。",
+              "tip": "这里的 like 表示“像……一样”。"
+            },
+            {
+              "en": "Sleep, sleep, sleep like a cat.",
+              "zh": "睡，睡，像小猫一样睡。"
+            },
+            {
+              "en": "Sing, sing, sing like a bird.",
+              "zh": "唱，唱，像小鸟一样唱。"
+            },
+            {
+              "en": "Hop, hop, hop like a rabbit.",
+              "zh": "跳，跳，像兔子一样跳。"
+            },
+            {
+              "en": "Swim, swim, swim like a fish.",
+              "zh": "游，游，像小鱼一样游。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "pet",
+          "en": "pet",
+          "zh": "宠物",
+          "ipa": "/pɛt/"
+        },
+        {
+          "id": "shop",
+          "en": "shop",
+          "zh": "商店；购物",
+          "ipa": "/ʃɑp/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "fish",
+          "en": "fish",
+          "zh": "鱼；钓鱼",
+          "ipa": "/fɪʃ/"
+        },
+        {
+          "id": "photo-cats",
+          "en": "cats",
+          "zh": "猫（cat 的复数）",
+          "ipa": "/kæts/"
+        },
+        {
+          "id": "photo-birds",
+          "en": "birds",
+          "zh": "鸟（bird 的复数）",
+          "ipa": "/bɝdz/"
+        },
+        {
+          "id": "photo-rabbits",
+          "en": "rabbits",
+          "zh": "兔子（rabbit 的复数）",
+          "ipa": "/ˈræbɪts/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "dog",
+          "en": "dog",
+          "zh": "狗",
+          "ipa": "/dɔɡ/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "run",
+          "en": "run",
+          "zh": "跑；使运行",
+          "ipa": "/rʌn/"
+        },
+        {
+          "id": "photo-like-as",
+          "en": "like",
+          "zh": "像……一样（用于 run like a dog 等）",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "sleep",
+          "en": "sleep",
+          "zh": "睡觉",
+          "ipa": "/slip/"
+        },
+        {
+          "id": "cat",
+          "en": "cat",
+          "zh": "猫",
+          "ipa": "/kæt/"
+        },
+        {
+          "id": "sing",
+          "en": "sing",
+          "zh": "唱歌",
+          "ipa": "/sɪŋ/"
+        },
+        {
+          "id": "bird",
+          "en": "bird",
+          "zh": "鸟",
+          "ipa": "/bɝd/"
+        },
+        {
+          "id": "photo-hop",
+          "en": "hop",
+          "zh": "跳跃",
+          "ipa": "/hɑp/"
+        },
+        {
+          "id": "rabbit",
+          "en": "rabbit",
+          "zh": "兔子",
+          "ipa": "/ˈræbɪt/"
+        },
+        {
+          "id": "swim",
+          "en": "swim",
+          "zh": "游泳",
+          "ipa": "/swɪm/"
+        }
+      ]
+    },
+    {
+      "page": 30,
+      "title": "Letters and sounds：Ii、Jj、Kk、Ll",
+      "blocks": [
+        {
+          "title": "字母与发音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Letters and sounds",
+              "zh": "字母与发音。"
+            },
+            {
+              "en": "Listen, repeat and chant.",
+              "zh": "听一听，跟读并吟唱。"
+            },
+            {
+              "en": "I i",
+              "zh": "字母I的大写和小写。",
+              "tip": "字母名称读 /aɪ/；本页 i 在 ill、kid 中发 /ɪ/。"
+            },
+            {
+              "en": "J j",
+              "zh": "字母J的大写和小写。",
+              "tip": "字母名称读 /dʒeɪ/；j 的辅音音素是 /dʒ/。"
+            },
+            {
+              "en": "K k",
+              "zh": "字母K的大写和小写。",
+              "tip": "字母名称读 /keɪ/；k 的辅音音素是 /k/。"
+            },
+            {
+              "en": "L l",
+              "zh": "字母L的大写和小写。",
+              "tip": "字母名称读 /ɛl/；l 的辅音音素是 /l/。"
+            },
+            {
+              "en": "ill",
+              "zh": "生病的"
+            },
+            {
+              "en": "kid",
+              "zh": "小孩"
+            },
+            {
+              "en": "job",
+              "zh": "职业；工作"
+            },
+            {
+              "en": "jet",
+              "zh": "喷气式飞机"
+            },
+            {
+              "en": "Kim",
+              "zh": "金姆（人名）"
+            },
+            {
+              "en": "kite",
+              "zh": "风筝"
+            },
+            {
+              "en": "leg",
+              "zh": "腿"
+            },
+            {
+              "en": "lion",
+              "zh": "狮子"
+            }
+          ]
+        },
+        {
+          "title": "辨认首音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Listen and circle the first sound.",
+              "zh": "听一听，圈出第一个音。"
+            },
+            {
+              "en": "a e i",
+              "zh": "字母选项：a、e、i。"
+            },
+            {
+              "en": "g l b",
+              "zh": "字母选项：g、l、b。"
+            },
+            {
+              "en": "g k j",
+              "zh": "字母选项：g、k、j。"
+            },
+            {
+              "en": "b k d",
+              "zh": "字母选项：b、k、d。"
+            }
+          ]
+        },
+        {
+          "title": "拼读",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Can you read the words?",
+              "zh": "你能读出这些单词吗？"
+            },
+            {
+              "en": "b i g → big",
+              "zh": "把 b、i、g 三个音连起来，拼读 big。",
+              "tip": "朗读示范拼出的单词。",
+              "say": "big."
+            },
+            {
+              "en": "dig",
+              "zh": "挖；挖掘"
+            },
+            {
+              "en": "Jim",
+              "zh": "吉姆（人名）"
+            },
+            {
+              "en": "lab",
+              "zh": "实验室"
+            },
+            {
+              "en": "led",
+              "zh": "带领（lead 的过去式）",
+              "tip": "led 读 /lɛd/，是 lead 的过去式。"
+            }
+          ]
+        },
+        {
+          "title": "书写与字母表",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Write and say.",
+              "zh": "写一写，说一说。"
+            },
+            {
+              "en": "I i J j K k L l",
+              "zh": "练习书写字母I、J、K、L的大写和小写。"
+            },
+            {
+              "en": "Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz",
+              "zh": "26个字母的大写和小写。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letters",
+          "en": "letters",
+          "zh": "字母（letter 的复数）",
+          "ipa": "/ˈlɛtɚz/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-sounds",
+          "en": "sounds",
+          "zh": "音；发音（sound 的复数）",
+          "ipa": "/saʊndz/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-repeat",
+          "en": "repeat",
+          "zh": "跟读；重复",
+          "ipa": "/rɪˈpit/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-letter-i",
+          "en": "I",
+          "zh": "字母I（本页小写为i）",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-letter-j",
+          "en": "J",
+          "zh": "字母J（本页小写为j）",
+          "ipa": "/dʒeɪ/"
+        },
+        {
+          "id": "photo-letter-k",
+          "en": "K",
+          "zh": "字母K（本页小写为k）",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "photo-letter-l",
+          "en": "L",
+          "zh": "字母L（本页小写为l）",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "ill",
+          "en": "ill",
+          "zh": "生病的",
+          "ipa": "/ɪl/"
+        },
+        {
+          "id": "kid",
+          "en": "kid",
+          "zh": "小孩",
+          "ipa": "/kɪd/"
+        },
+        {
+          "id": "job",
+          "en": "job",
+          "zh": "职业；工作",
+          "ipa": "/dʒɑb/"
+        },
+        {
+          "id": "photo-jet",
+          "en": "jet",
+          "zh": "喷气式飞机",
+          "ipa": "/dʒɛt/"
+        },
+        {
+          "id": "photo-kim",
+          "en": "Kim",
+          "zh": "金姆（人名）",
+          "ipa": "/kɪm/"
+        },
+        {
+          "id": "kite",
+          "en": "kite",
+          "zh": "风筝",
+          "ipa": "/kaɪt/"
+        },
+        {
+          "id": "leg",
+          "en": "leg",
+          "zh": "腿",
+          "ipa": "/lɛɡ/"
+        },
+        {
+          "id": "lion",
+          "en": "lion",
+          "zh": "狮子",
+          "ipa": "/ˈlaɪən/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "first",
+          "en": "first",
+          "zh": "首先；第一",
+          "ipa": "/fɝst/"
+        },
+        {
+          "id": "photo-sound",
+          "en": "sound",
+          "zh": "音；声音",
+          "ipa": "/saʊnd/"
+        },
+        {
+          "id": "photo-letter-a",
+          "en": "A",
+          "zh": "字母A（本页小写为a）",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-letter-e",
+          "en": "E",
+          "zh": "字母E（本页小写为e）",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-letter-g",
+          "en": "G",
+          "zh": "字母G（本页小写为g）",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-letter-b",
+          "en": "B",
+          "zh": "字母B（本页小写为b）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-letter-d",
+          "en": "D",
+          "zh": "字母D（本页小写为d）",
+          "ipa": "/di/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-words",
+          "en": "words",
+          "zh": "单词（word 的复数）",
+          "ipa": "/wɝdz/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "photo-dig",
+          "en": "dig",
+          "zh": "挖；挖掘",
+          "ipa": "/dɪɡ/"
+        },
+        {
+          "id": "photo-jim",
+          "en": "Jim",
+          "zh": "吉姆（人名）",
+          "ipa": "/dʒɪm/"
+        },
+        {
+          "id": "photo-lab",
+          "en": "lab",
+          "zh": "实验室",
+          "ipa": "/læb/"
+        },
+        {
+          "id": "photo-led",
+          "en": "led",
+          "zh": "带领（lead 的过去式）",
+          "ipa": "/lɛd/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-aa",
+          "en": "Aa",
+          "zh": "字母A（大写与小写）",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-bb",
+          "en": "Bb",
+          "zh": "字母B（大写与小写）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-cc",
+          "en": "Cc",
+          "zh": "字母C（大写与小写）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-dd",
+          "en": "Dd",
+          "zh": "字母D（大写与小写）",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-ee",
+          "en": "Ee",
+          "zh": "字母E（大写与小写）",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-ff",
+          "en": "Ff",
+          "zh": "字母F（大写与小写）",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-gg",
+          "en": "Gg",
+          "zh": "字母G（大写与小写）",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-hh",
+          "en": "Hh",
+          "zh": "字母H（大写与小写）",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "photo-ii",
+          "en": "Ii",
+          "zh": "字母I（大写与小写）",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-jj",
+          "en": "Jj",
+          "zh": "字母J（大写与小写）",
+          "ipa": "/dʒeɪ/"
+        },
+        {
+          "id": "photo-kk",
+          "en": "Kk",
+          "zh": "字母K（大写与小写）",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "photo-ll",
+          "en": "Ll",
+          "zh": "字母L（大写与小写）",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "photo-mm",
+          "en": "Mm",
+          "zh": "字母M（大写与小写）",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-nn",
+          "en": "Nn",
+          "zh": "字母N（大写与小写）",
+          "ipa": "/ɛn/"
+        },
+        {
+          "id": "photo-oo",
+          "en": "Oo",
+          "zh": "字母O（大写与小写）",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-pp",
+          "en": "Pp",
+          "zh": "字母P（大写与小写）",
+          "ipa": "/pi/"
+        },
+        {
+          "id": "photo-qq",
+          "en": "Qq",
+          "zh": "字母Q（大写与小写）",
+          "ipa": "/kju/"
+        },
+        {
+          "id": "photo-rr",
+          "en": "Rr",
+          "zh": "字母R（大写与小写）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-ss",
+          "en": "Ss",
+          "zh": "字母S（大写与小写）",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-tt",
+          "en": "Tt",
+          "zh": "字母T（大写与小写）",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "photo-uu",
+          "en": "Uu",
+          "zh": "字母U（大写与小写）",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-vv",
+          "en": "Vv",
+          "zh": "字母V（大写与小写）",
+          "ipa": "/vi/"
+        },
+        {
+          "id": "photo-ww",
+          "en": "Ww",
+          "zh": "字母W（大写与小写）",
+          "ipa": "/ˈdʌbəlju/"
+        },
+        {
+          "id": "photo-xx",
+          "en": "Xx",
+          "zh": "字母X（大写与小写）",
+          "ipa": "/ɛks/"
+        },
+        {
+          "id": "photo-yy",
+          "en": "Yy",
+          "zh": "字母Y（大写与小写）",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-zz",
+          "en": "Zz",
+          "zh": "字母Z（大写与小写）",
+          "ipa": "/zi/"
+        },
+        {
+          "id": "photo-letter",
+          "en": "letter",
+          "zh": "字母",
+          "ipa": "/ˈlɛtɚ/"
+        },
+        {
+          "id": "word",
+          "en": "word",
+          "zh": "单词；言语",
+          "ipa": "/wɝd/"
+        },
+        {
+          "id": "photo-lead",
+          "en": "lead",
+          "zh": "带领（动词原形）",
+          "ipa": "/lid/"
+        }
+      ]
+    },
+    {
+      "page": 31,
+      "title": "B：你认识哪些野生动物？",
+      "blocks": [
+        {
+          "title": "B 部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "B",
+              "zh": "B部分"
+            },
+            {
+              "en": "What wild animals do you know?",
+              "zh": "你认识哪些野生动物？"
+            }
+          ]
+        },
+        {
+          "title": "Let's talk",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "我们来说一说。"
+            },
+            {
+              "en": "Let's go to the zoo!",
+              "zh": "我们去动物园吧！"
+            },
+            {
+              "en": "Great!",
+              "zh": "太好了！"
+            },
+            {
+              "en": "Look! What's this?",
+              "zh": "看！这是什么？"
+            },
+            {
+              "en": "It's a fox.",
+              "zh": "这是一只狐狸。"
+            },
+            {
+              "en": "Miss White, what's that?",
+              "zh": "怀特老师，那是什么？"
+            },
+            {
+              "en": "It's a red panda.",
+              "zh": "这是一只小熊猫。",
+              "tip": "red panda 是“小熊猫”，与 panda“大熊猫”不同。"
+            },
+            {
+              "en": "It's cute!",
+              "zh": "它真可爱！"
+            }
+          ]
+        },
+        {
+          "title": "Play with hand shadows",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Play with hand shadows",
+              "zh": "玩手影。"
+            },
+            {
+              "en": "What's that?",
+              "zh": "那是什么？"
+            },
+            {
+              "en": "It's a fox.",
+              "zh": "那是一只狐狸。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-b",
+          "en": "B",
+          "zh": "字母B（本页小写为b）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "wild",
+          "en": "wild",
+          "zh": "野生的",
+          "ipa": "/waɪld/"
+        },
+        {
+          "id": "photo-animals",
+          "en": "animals",
+          "zh": "动物（animal 的复数）",
+          "ipa": "/ˈænəməlz/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "know",
+          "en": "know",
+          "zh": "知道",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "go",
+          "en": "go",
+          "zh": "去；走；去（原形）",
+          "ipa": "/ɡoʊ/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "zoo",
+          "en": "zoo",
+          "zh": "动物园",
+          "ipa": "/zu/"
+        },
+        {
+          "id": "photo-great",
+          "en": "great",
+          "zh": "了不起的；极好的",
+          "ipa": "/ɡreɪt/"
+        },
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "photo-what-s",
+          "en": "what's",
+          "zh": "是什么（what is 的缩写）",
+          "ipa": "/wʌts/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "fox",
+          "en": "fox",
+          "zh": "狐狸",
+          "ipa": "/fɑks/"
+        },
+        {
+          "id": "miss",
+          "en": "Miss",
+          "zh": "女士；女老师的称呼",
+          "ipa": "/mɪs/"
+        },
+        {
+          "id": "photo-white",
+          "en": "White",
+          "zh": "怀特（姓氏）",
+          "ipa": "/waɪt/"
+        },
+        {
+          "id": "photo-that",
+          "en": "that",
+          "zh": "那；那个",
+          "ipa": "/ðæt/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "panda",
+          "en": "panda",
+          "zh": "大熊猫",
+          "ipa": "/ˈpændə/"
+        },
+        {
+          "id": "cute",
+          "en": "cute",
+          "zh": "可爱的",
+          "ipa": "/kjut/"
+        },
+        {
+          "id": "play",
+          "en": "play",
+          "zh": "玩；演奏",
+          "ipa": "/pleɪ/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和……一起；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "hand",
+          "en": "hand",
+          "zh": "手",
+          "ipa": "/hænd/"
+        },
+        {
+          "id": "photo-shadows",
+          "en": "shadows",
+          "zh": "影子（shadow 的复数）",
+          "ipa": "/ˈʃædoʊz/"
+        },
+        {
+          "id": "animal",
+          "en": "animal",
+          "zh": "动物",
+          "ipa": "/ˈænəməl/"
+        },
+        {
+          "id": "shadow",
+          "en": "shadow",
+          "zh": "影子",
+          "ipa": "/ˈʃædoʊ/"
+        }
+      ]
+    },
+    {
+      "page": 32,
+      "title": "野生动物名称与吟唱",
+      "blocks": [
+        {
+          "title": "Let's learn",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "我们来学一学。"
+            },
+            {
+              "en": "It's a panda.",
+              "zh": "这是一只大熊猫。"
+            },
+            {
+              "en": "It's a monkey.",
+              "zh": "这是一只猴子。"
+            },
+            {
+              "en": "It's a tiger.",
+              "zh": "这是一只老虎。"
+            },
+            {
+              "en": "It's an elephant.",
+              "zh": "这是一头大象。"
+            },
+            {
+              "en": "It's a lion.",
+              "zh": "这是一只狮子。"
+            },
+            {
+              "en": "ZOO",
+              "zh": "动物园"
+            }
+          ]
+        },
+        {
+          "title": "Listen and chant",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，吟唱。"
+            },
+            {
+              "en": "What's this? It's an elephant.",
+              "zh": "这是什么？这是一头大象。"
+            },
+            {
+              "en": "What's this? It's a monkey.",
+              "zh": "这是什么？这是一只猴子。"
+            },
+            {
+              "en": "What's this? It's a panda.",
+              "zh": "这是什么？这是一只大熊猫。"
+            },
+            {
+              "en": "What's this? It's a lion!",
+              "zh": "这是什么？这是一只狮子！"
+            },
+            {
+              "en": "What's this? It's a tiger!",
+              "zh": "这是什么？这是一只老虎！"
+            },
+            {
+              "en": "Run!",
+              "zh": "快跑！"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "panda",
+          "en": "panda",
+          "zh": "大熊猫",
+          "ipa": "/ˈpændə/"
+        },
+        {
+          "id": "monkey",
+          "en": "monkey",
+          "zh": "猴子",
+          "ipa": "/ˈmʌŋki/"
+        },
+        {
+          "id": "tiger",
+          "en": "tiger",
+          "zh": "老虎",
+          "ipa": "/ˈtaɪɡɚ/"
+        },
+        {
+          "id": "photo-an",
+          "en": "an",
+          "zh": "一个（用于元音音素前）",
+          "ipa": "/ən/"
+        },
+        {
+          "id": "elephant",
+          "en": "elephant",
+          "zh": "大象",
+          "ipa": "/ˈɛləfənt/"
+        },
+        {
+          "id": "lion",
+          "en": "lion",
+          "zh": "狮子",
+          "ipa": "/ˈlaɪən/"
+        },
+        {
+          "id": "zoo",
+          "en": "zoo",
+          "zh": "动物园",
+          "ipa": "/zu/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-what-s",
+          "en": "what's",
+          "zh": "是什么（what is 的缩写）",
+          "ipa": "/wʌts/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "run",
+          "en": "run",
+          "zh": "跑；使运行",
+          "ipa": "/rʌn/"
+        }
+      ]
+    },
+    {
+      "page": 33,
+      "title": "Start to read：动物的特点",
+      "blocks": [
+        {
+          "title": "阅读标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Start to read",
+              "zh": "开始阅读。"
+            },
+            {
+              "en": "Great animals",
+              "zh": "了不起的动物"
+            }
+          ]
+        },
+        {
+          "title": "长颈鹿",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "6 m",
+              "zh": "6米",
+              "say": "six meters",
+              "tip": "m 是米的单位符号。图中数据描述长颈鹿的高度。"
+            },
+            {
+              "en": "The giraffe is tall!",
+              "zh": "长颈鹿真高！"
+            }
+          ]
+        },
+        {
+          "title": "狮子",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "60 km/h",
+              "zh": "每小时60千米",
+              "say": "sixty kilometers per hour",
+              "tip": "km/h 表示千米每小时。图中数据描述狮子的速度。"
+            },
+            {
+              "en": "The lion is fast!",
+              "zh": "狮子跑得真快！"
+            }
+          ]
+        },
+        {
+          "title": "大象",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "3 m, 6 t",
+              "zh": "3米，6吨",
+              "say": "three meters, six metric tons",
+              "tip": "m 表示米，t 表示吨。图中数据分别描述大象的高度和体重。"
+            },
+            {
+              "en": "The elephant is big!",
+              "zh": "大象真大！"
+            }
+          ]
+        },
+        {
+          "title": "鱼",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "I like fish!",
+              "zh": "我喜欢鱼！"
+            },
+            {
+              "en": "8 cm",
+              "zh": "8厘米",
+              "say": "eight centimeters",
+              "tip": "cm 是厘米的单位符号。图中数据描述鱼的长度。"
+            },
+            {
+              "en": "The fish is small!",
+              "zh": "鱼真小！"
+            }
+          ]
+        },
+        {
+          "title": "圈选与分类",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Circle the animals you see in the pictures. Then group all of the animals with big, small, tall or fast.",
+              "zh": "圈出你在图片中看到的动物，再按“大、小、高、快”给所有动物分类。"
+            },
+            {
+              "en": "bird",
+              "zh": "鸟"
+            },
+            {
+              "en": "lion",
+              "zh": "狮子"
+            },
+            {
+              "en": "cat",
+              "zh": "猫"
+            },
+            {
+              "en": "monkey",
+              "zh": "猴子"
+            },
+            {
+              "en": "dog",
+              "zh": "狗"
+            },
+            {
+              "en": "panda",
+              "zh": "大熊猫"
+            },
+            {
+              "en": "elephant",
+              "zh": "大象"
+            },
+            {
+              "en": "rabbit",
+              "zh": "兔子"
+            },
+            {
+              "en": "fish",
+              "zh": "鱼"
+            },
+            {
+              "en": "tiger",
+              "zh": "老虎"
+            },
+            {
+              "en": "giraffe",
+              "zh": "长颈鹿"
+            },
+            {
+              "en": "big",
+              "zh": "大的"
+            },
+            {
+              "en": "small",
+              "zh": "小的"
+            },
+            {
+              "en": "tall",
+              "zh": "高的"
+            },
+            {
+              "en": "fast",
+              "zh": "快的"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "start",
+          "en": "start",
+          "zh": "开始",
+          "ipa": "/stɑrt/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-great",
+          "en": "great",
+          "zh": "了不起的；极好的",
+          "ipa": "/ɡreɪt/"
+        },
+        {
+          "id": "photo-animals",
+          "en": "animals",
+          "zh": "动物（animal 的复数）",
+          "ipa": "/ˈænəməlz/"
+        },
+        {
+          "id": "photo-unit-meter",
+          "en": "m",
+          "zh": "米（meter 的单位符号，按数值读 meters）",
+          "ipa": "/ˈmitɚz/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "giraffe",
+          "en": "giraffe",
+          "zh": "长颈鹿",
+          "ipa": "/dʒəˈræf/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "tall",
+          "en": "tall",
+          "zh": "高的",
+          "ipa": "/tɔl/"
+        },
+        {
+          "id": "photo-unit-kilometers-per-hour",
+          "en": "km/h",
+          "zh": "千米每小时（速度单位）",
+          "ipa": "/kɪˈlɑmətɚz pɚ ˈaʊɚ/"
+        },
+        {
+          "id": "lion",
+          "en": "lion",
+          "zh": "狮子",
+          "ipa": "/ˈlaɪən/"
+        },
+        {
+          "id": "fast",
+          "en": "fast",
+          "zh": "快的",
+          "ipa": "/fæst/"
+        },
+        {
+          "id": "photo-unit-tonne",
+          "en": "t",
+          "zh": "吨（metric ton 的单位符号）",
+          "ipa": "/ˈmɛtrɪk tʌnz/"
+        },
+        {
+          "id": "elephant",
+          "en": "elephant",
+          "zh": "大象",
+          "ipa": "/ˈɛləfənt/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "fish",
+          "en": "fish",
+          "zh": "鱼；钓鱼",
+          "ipa": "/fɪʃ/"
+        },
+        {
+          "id": "photo-unit-centimeter",
+          "en": "cm",
+          "zh": "厘米（centimeter 的单位符号）",
+          "ipa": "/ˈsɛntəˌmitɚz/"
+        },
+        {
+          "id": "small",
+          "en": "small",
+          "zh": "小的",
+          "ipa": "/smɔl/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "see",
+          "en": "see",
+          "zh": "看见；看见（原形）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "photo-pictures",
+          "en": "pictures",
+          "zh": "图片（picture 的复数）",
+          "ipa": "/ˈpɪktʃɚz/"
+        },
+        {
+          "id": "photo-then-sequence",
+          "en": "then",
+          "zh": "然后",
+          "ipa": "/ðɛn/"
+        },
+        {
+          "id": "photo-group",
+          "en": "group",
+          "zh": "小组",
+          "ipa": "/ɡrup/"
+        },
+        {
+          "id": "all",
+          "en": "all",
+          "zh": "所有；全部",
+          "ipa": "/ɔl/"
+        },
+        {
+          "id": "photo-of",
+          "en": "of",
+          "zh": "……的",
+          "ipa": "/ʌv/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和……一起；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "or",
+          "en": "or",
+          "zh": "或者",
+          "ipa": "/ɔr/"
+        },
+        {
+          "id": "bird",
+          "en": "bird",
+          "zh": "鸟",
+          "ipa": "/bɝd/"
+        },
+        {
+          "id": "cat",
+          "en": "cat",
+          "zh": "猫",
+          "ipa": "/kæt/"
+        },
+        {
+          "id": "monkey",
+          "en": "monkey",
+          "zh": "猴子",
+          "ipa": "/ˈmʌŋki/"
+        },
+        {
+          "id": "dog",
+          "en": "dog",
+          "zh": "狗",
+          "ipa": "/dɔɡ/"
+        },
+        {
+          "id": "panda",
+          "en": "panda",
+          "zh": "大熊猫",
+          "ipa": "/ˈpændə/"
+        },
+        {
+          "id": "rabbit",
+          "en": "rabbit",
+          "zh": "兔子",
+          "ipa": "/ˈræbɪt/"
+        },
+        {
+          "id": "tiger",
+          "en": "tiger",
+          "zh": "老虎",
+          "ipa": "/ˈtaɪɡɚ/"
+        },
+        {
+          "id": "animal",
+          "en": "animal",
+          "zh": "动物",
+          "ipa": "/ˈænəməl/"
+        },
+        {
+          "id": "picture",
+          "en": "picture",
+          "zh": "图画；图片",
+          "ipa": "/ˈpɪktʃɚ/"
+        }
+      ]
+    },
+    {
+      "page": 34,
+      "title": "C 项目：制作动物图画书",
+      "blocks": [
+        {
+          "title": "项目标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "C",
+              "zh": "C部分"
+            },
+            {
+              "en": "Project: Make an animal picture book",
+              "zh": "项目：制作一本动物图画书。"
+            }
+          ]
+        },
+        {
+          "title": "活动1：听与圈选",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "What animals do the children like? Listen and circle.",
+              "zh": "孩子们喜欢哪些动物？听一听，圈一圈。"
+            }
+          ]
+        },
+        {
+          "title": "活动2：分类",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Are these animals different? Think and group them.",
+              "zh": "这些动物有不同吗？想一想，把它们分类。"
+            },
+            {
+              "en": "bird",
+              "zh": "鸟"
+            },
+            {
+              "en": "cat",
+              "zh": "猫"
+            },
+            {
+              "en": "dog",
+              "zh": "狗"
+            },
+            {
+              "en": "elephant",
+              "zh": "大象"
+            },
+            {
+              "en": "fish",
+              "zh": "鱼"
+            },
+            {
+              "en": "giraffe",
+              "zh": "长颈鹿"
+            },
+            {
+              "en": "lion",
+              "zh": "狮子"
+            },
+            {
+              "en": "monkey",
+              "zh": "猴子"
+            },
+            {
+              "en": "panda",
+              "zh": "大熊猫"
+            },
+            {
+              "en": "rabbit",
+              "zh": "兔子"
+            },
+            {
+              "en": "tiger",
+              "zh": "老虎"
+            }
+          ]
+        },
+        {
+          "title": "分类框与单词卡",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Pets",
+              "zh": "宠物"
+            },
+            {
+              "en": "cat",
+              "zh": "猫"
+            },
+            {
+              "en": "Wild animals",
+              "zh": "野生动物"
+            },
+            {
+              "en": "panda",
+              "zh": "大熊猫"
+            },
+            {
+              "en": "Animals I like",
+              "zh": "我喜欢的动物"
+            },
+            {
+              "en": "cat",
+              "zh": "猫"
+            },
+            {
+              "en": "panda",
+              "zh": "大熊猫"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-c",
+          "en": "C",
+          "zh": "字母C（本页小写为c）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "project",
+          "en": "project",
+          "zh": "项目；课题",
+          "ipa": "/ˈprɑdʒɛkt/"
+        },
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-an",
+          "en": "an",
+          "zh": "一个（用于元音音素前）",
+          "ipa": "/ən/"
+        },
+        {
+          "id": "animal",
+          "en": "animal",
+          "zh": "动物",
+          "ipa": "/ˈænəməl/"
+        },
+        {
+          "id": "picture",
+          "en": "picture",
+          "zh": "图画；图片",
+          "ipa": "/ˈpɪktʃɚ/"
+        },
+        {
+          "id": "book",
+          "en": "book",
+          "zh": "书",
+          "ipa": "/bʊk/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-animals",
+          "en": "animals",
+          "zh": "动物（animal 的复数）",
+          "ipa": "/ˈænəməlz/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-children",
+          "en": "children",
+          "zh": "孩子们（child 的复数）",
+          "ipa": "/ˈtʃɪldrən/"
+        },
+        {
+          "id": "like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "these",
+          "en": "these",
+          "zh": "这些",
+          "ipa": "/ðiz/"
+        },
+        {
+          "id": "different",
+          "en": "different",
+          "zh": "不同的",
+          "ipa": "/ˈdɪfɚənt/"
+        },
+        {
+          "id": "think",
+          "en": "think",
+          "zh": "想；思考",
+          "ipa": "/θɪŋk/"
+        },
+        {
+          "id": "photo-group",
+          "en": "group",
+          "zh": "小组",
+          "ipa": "/ɡrup/"
+        },
+        {
+          "id": "them",
+          "en": "them",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðɛm/"
+        },
+        {
+          "id": "bird",
+          "en": "bird",
+          "zh": "鸟",
+          "ipa": "/bɝd/"
+        },
+        {
+          "id": "cat",
+          "en": "cat",
+          "zh": "猫",
+          "ipa": "/kæt/"
+        },
+        {
+          "id": "dog",
+          "en": "dog",
+          "zh": "狗",
+          "ipa": "/dɔɡ/"
+        },
+        {
+          "id": "elephant",
+          "en": "elephant",
+          "zh": "大象",
+          "ipa": "/ˈɛləfənt/"
+        },
+        {
+          "id": "fish",
+          "en": "fish",
+          "zh": "鱼；钓鱼",
+          "ipa": "/fɪʃ/"
+        },
+        {
+          "id": "giraffe",
+          "en": "giraffe",
+          "zh": "长颈鹿",
+          "ipa": "/dʒəˈræf/"
+        },
+        {
+          "id": "lion",
+          "en": "lion",
+          "zh": "狮子",
+          "ipa": "/ˈlaɪən/"
+        },
+        {
+          "id": "monkey",
+          "en": "monkey",
+          "zh": "猴子",
+          "ipa": "/ˈmʌŋki/"
+        },
+        {
+          "id": "panda",
+          "en": "panda",
+          "zh": "大熊猫",
+          "ipa": "/ˈpændə/"
+        },
+        {
+          "id": "rabbit",
+          "en": "rabbit",
+          "zh": "兔子",
+          "ipa": "/ˈræbɪt/"
+        },
+        {
+          "id": "tiger",
+          "en": "tiger",
+          "zh": "老虎",
+          "ipa": "/ˈtaɪɡɚ/"
+        },
+        {
+          "id": "photo-pets",
+          "en": "pets",
+          "zh": "宠物（pet 的复数）",
+          "ipa": "/pɛts/"
+        },
+        {
+          "id": "wild",
+          "en": "wild",
+          "zh": "野生的",
+          "ipa": "/waɪld/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "pet",
+          "en": "pet",
+          "zh": "宠物",
+          "ipa": "/pɛt/"
+        },
+        {
+          "id": "child",
+          "en": "child",
+          "zh": "孩子",
+          "ipa": "/tʃaɪld/"
+        }
+      ]
+    },
+    {
+      "page": 35,
+      "title": "制作图画书、交流与自我检查",
+      "blocks": [
+        {
+          "title": "活动3：制作图画书",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Make your animal picture book.",
+              "zh": "制作你的动物图画书。"
+            },
+            {
+              "en": "Step 1",
+              "zh": "第1步",
+              "say": "step one"
+            },
+            {
+              "en": "Choose one group from activity 2.",
+              "zh": "从活动2中选出一组。"
+            },
+            {
+              "en": "Animal Book",
+              "zh": "动物图画书"
+            },
+            {
+              "en": "Step 2",
+              "zh": "第2步",
+              "say": "step two"
+            },
+            {
+              "en": "Make your book.",
+              "zh": "制作你的图画书。"
+            },
+            {
+              "en": "tiger",
+              "zh": "老虎"
+            },
+            {
+              "en": "panda",
+              "zh": "大熊猫"
+            }
+          ]
+        },
+        {
+          "title": "活动4：分享图画书",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Share your animal picture book in class.",
+              "zh": "在课堂上分享你的动物图画书。"
+            },
+            {
+              "en": "This is my book. This is a monkey. It's cute. This is an ...",
+              "zh": "这是我的图画书。这是一只猴子。它很可爱。这是一头……",
+              "tip": "an 后面接元音音素开头的词；这里留空，继续介绍其他动物。"
+            },
+            {
+              "en": "monkey",
+              "zh": "猴子"
+            },
+            {
+              "en": "elephant",
+              "zh": "大象"
+            }
+          ]
+        },
+        {
+          "title": "Self-check",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Self-check",
+              "zh": "自我检查。"
+            },
+            {
+              "en": "I still need help",
+              "zh": "我仍然需要帮助。"
+            },
+            {
+              "en": "I can mostly do it",
+              "zh": "我大部分都能做到。"
+            },
+            {
+              "en": "I can do it!",
+              "zh": "我能做到！"
+            },
+            {
+              "en": "I can tell others about my pets.",
+              "zh": "我能向别人介绍我的宠物。"
+            },
+            {
+              "en": "I can talk about wild animals.",
+              "zh": "我能谈论野生动物。"
+            },
+            {
+              "en": "I can group different animals.",
+              "zh": "我能给不同的动物分类。"
+            },
+            {
+              "en": "I can read, write and say Ii, Jj, Kk and Ll.",
+              "zh": "我能认读、书写和说出字母I、J、K、L的大写和小写。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "animal",
+          "en": "animal",
+          "zh": "动物",
+          "ipa": "/ˈænəməl/"
+        },
+        {
+          "id": "picture",
+          "en": "picture",
+          "zh": "图画；图片",
+          "ipa": "/ˈpɪktʃɚ/"
+        },
+        {
+          "id": "book",
+          "en": "book",
+          "zh": "书",
+          "ipa": "/bʊk/"
+        },
+        {
+          "id": "photo-step",
+          "en": "step",
+          "zh": "步骤",
+          "ipa": "/stɛp/"
+        },
+        {
+          "id": "photo-choose",
+          "en": "choose",
+          "zh": "选择",
+          "ipa": "/tʃuz/"
+        },
+        {
+          "id": "one",
+          "en": "one",
+          "zh": "一",
+          "ipa": "/wʌn/"
+        },
+        {
+          "id": "photo-group",
+          "en": "group",
+          "zh": "小组",
+          "ipa": "/ɡrup/"
+        },
+        {
+          "id": "from",
+          "en": "from",
+          "zh": "来自",
+          "ipa": "/frʌm/"
+        },
+        {
+          "id": "photo-activity",
+          "en": "activity",
+          "zh": "活动",
+          "ipa": "/ækˈtɪvəti/"
+        },
+        {
+          "id": "tiger",
+          "en": "tiger",
+          "zh": "老虎",
+          "ipa": "/ˈtaɪɡɚ/"
+        },
+        {
+          "id": "panda",
+          "en": "panda",
+          "zh": "大熊猫",
+          "ipa": "/ˈpændə/"
+        },
+        {
+          "id": "share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "class",
+          "en": "class",
+          "zh": "班级；课",
+          "ipa": "/klæs/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "monkey",
+          "en": "monkey",
+          "zh": "猴子",
+          "ipa": "/ˈmʌŋki/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "cute",
+          "en": "cute",
+          "zh": "可爱的",
+          "ipa": "/kjut/"
+        },
+        {
+          "id": "photo-an",
+          "en": "an",
+          "zh": "一个（用于元音音素前）",
+          "ipa": "/ən/"
+        },
+        {
+          "id": "elephant",
+          "en": "elephant",
+          "zh": "大象",
+          "ipa": "/ˈɛləfənt/"
+        },
+        {
+          "id": "photo-self-check",
+          "en": "self-check",
+          "zh": "自我检查",
+          "ipa": "/ˈsɛlf tʃɛk/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "still",
+          "en": "still",
+          "zh": "仍然",
+          "ipa": "/stɪl/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-mostly",
+          "en": "mostly",
+          "zh": "大部分；主要地",
+          "ipa": "/ˈmoʊstli/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；这件事",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "tell",
+          "en": "tell",
+          "zh": "讲述；告诉",
+          "ipa": "/tɛl/"
+        },
+        {
+          "id": "photo-others",
+          "en": "others",
+          "zh": "其他人；别人",
+          "ipa": "/ˈʌðɚz/"
+        },
+        {
+          "id": "about",
+          "en": "about",
+          "zh": "关于；大约",
+          "ipa": "/əˈbaʊt/"
+        },
+        {
+          "id": "photo-pets",
+          "en": "pets",
+          "zh": "宠物（pet 的复数）",
+          "ipa": "/pɛts/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "wild",
+          "en": "wild",
+          "zh": "野生的",
+          "ipa": "/waɪld/"
+        },
+        {
+          "id": "photo-animals",
+          "en": "animals",
+          "zh": "动物（animal 的复数）",
+          "ipa": "/ˈænəməlz/"
+        },
+        {
+          "id": "different",
+          "en": "different",
+          "zh": "不同的",
+          "ipa": "/ˈdɪfɚənt/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-ii",
+          "en": "Ii",
+          "zh": "字母I（大写与小写）",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-jj",
+          "en": "Jj",
+          "zh": "字母J（大写与小写）",
+          "ipa": "/dʒeɪ/"
+        },
+        {
+          "id": "photo-kk",
+          "en": "Kk",
+          "zh": "字母K（大写与小写）",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "photo-ll",
+          "en": "Ll",
+          "zh": "字母L（大写与小写）",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "pet",
+          "en": "pet",
+          "zh": "宠物",
+          "ipa": "/pɛt/"
+        },
+        {
+          "id": "photo-other",
+          "en": "other",
+          "zh": "其他的；另一个",
+          "ipa": "/ˈʌðɚ/"
+        }
+      ]
+    },
+    {
+      "page": 36,
+      "title": "Reading time：鲸鱼母子的故事（上）",
+      "blocks": [
+        {
+          "title": "故事标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Reading time",
+              "zh": "阅读时间。"
+            }
+          ]
+        },
+        {
+          "title": "故事1：提问",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Mum, what makes us great?",
+              "zh": "妈妈，我们有什么了不起的地方？"
+            }
+          ]
+        },
+        {
+          "title": "故事2：体形",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "We are big.",
+              "zh": "我们的体形很大。"
+            },
+            {
+              "en": "Elephants are big too.",
+              "zh": "大象的体形也很大。"
+            }
+          ]
+        },
+        {
+          "title": "故事3：速度",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "We are fast.",
+              "zh": "我们游得快。"
+            },
+            {
+              "en": "Fish are fast too.",
+              "zh": "鱼也游得快。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-reading",
+          "en": "reading",
+          "zh": "阅读（read 的 -ing 形式）",
+          "ipa": "/ˈridɪŋ/"
+        },
+        {
+          "id": "time",
+          "en": "time",
+          "zh": "时间；次；回",
+          "ipa": "/taɪm/"
+        },
+        {
+          "id": "mum",
+          "en": "mum",
+          "zh": "妈妈（口语）",
+          "ipa": "/mʌm/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-makes",
+          "en": "makes",
+          "zh": "使成为（make 的第三人称单数）",
+          "ipa": "/meɪks/"
+        },
+        {
+          "id": "us",
+          "en": "us",
+          "zh": "我们",
+          "ipa": "/ʌs/"
+        },
+        {
+          "id": "photo-great",
+          "en": "great",
+          "zh": "了不起的；极好的",
+          "ipa": "/ɡreɪt/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "photo-elephants",
+          "en": "elephants",
+          "zh": "大象（elephant 的复数）",
+          "ipa": "/ˈɛləfənts/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "fast",
+          "en": "fast",
+          "zh": "快的",
+          "ipa": "/fæst/"
+        },
+        {
+          "id": "fish",
+          "en": "fish",
+          "zh": "鱼；钓鱼",
+          "ipa": "/fɪʃ/"
+        },
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "elephant",
+          "en": "elephant",
+          "zh": "大象",
+          "ipa": "/ˈɛləfənt/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        }
+      ]
+    },
+    {
+      "page": 37,
+      "title": "Reading time：鲸鱼母子的故事（下）",
+      "blocks": [
+        {
+          "title": "故事4：食量",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "We eat a lot.",
+              "zh": "我们吃得多。"
+            },
+            {
+              "en": "Pandas eat a lot too.",
+              "zh": "大熊猫也吃得多。"
+            }
+          ]
+        },
+        {
+          "title": "故事5：歌声",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "I know! We sing!",
+              "zh": "我知道了！我们会唱歌！"
+            },
+            {
+              "en": "Yes! We can sing nice songs.",
+              "zh": "是的！我们会唱好听的歌。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "eat",
+          "en": "eat",
+          "zh": "吃；吃（原形）",
+          "ipa": "/it/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-lot",
+          "en": "lot",
+          "zh": "许多；大量",
+          "ipa": "/lɑt/"
+        },
+        {
+          "id": "photo-pandas",
+          "en": "pandas",
+          "zh": "大熊猫（panda 的复数）",
+          "ipa": "/ˈpændəz/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "know",
+          "en": "know",
+          "zh": "知道",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "sing",
+          "en": "sing",
+          "zh": "唱歌",
+          "ipa": "/sɪŋ/"
+        },
+        {
+          "id": "photo-yes",
+          "en": "yes",
+          "zh": "是的",
+          "ipa": "/jɛs/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "nice",
+          "en": "nice",
+          "zh": "友好的；令人愉快的",
+          "ipa": "/naɪs/"
+        },
+        {
+          "id": "photo-songs",
+          "en": "songs",
+          "zh": "歌曲（song 的复数）",
+          "ipa": "/sɔŋz/"
+        },
+        {
+          "id": "panda",
+          "en": "panda",
+          "zh": "大熊猫",
+          "ipa": "/ˈpændə/"
+        },
+        {
+          "id": "song",
+          "en": "song",
+          "zh": "歌曲",
+          "ipa": "/sɔŋ/"
+        }
+      ]
+    }
+  ]
+}

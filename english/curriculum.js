@@ -1,3 +1,12 @@
+import PHOTO_U1 from './textbook-photo-u1.json' with {type:'json'};
+import PHOTO_U2 from './textbook-photo-u2.json' with {type:'json'};
+import PHOTO_U3 from './textbook-photo-u3.json' with {type:'json'};
+import PHOTO_U4 from './textbook-photo-u4.json' with {type:'json'};
+import PHOTO_U5 from './textbook-photo-u5.json' with {type:'json'};
+import PHOTO_U6 from './textbook-photo-u6.json' with {type:'json'};
+import PHOTO_REVISION from './textbook-photo-revision.json' with {type:'json'};
+import PHOTO_SONGS from './textbook-photo-songs.json' with {type:'json'};
+import PHOTO_APPENDICES from './textbook-photo-appendices.json' with {type:'json'};
 import CONTENT_G34 from './content-g34.json' with {type:'json'};
 import CONTENT_G56 from './content-g56.json' with {type:'json'};
 // Topic-based original practice; see SOURCES.md for textbook versions and scope.
@@ -716,5 +725,23 @@ for(const correctedBook of [...CONTENT_G34.books,...CONTENT_G56.books]){
   target.sentences=unique([...target.sentences,...corrected.sentences],s=>s.en);
   for(const sentence of target.sentences){const previous=previousSentences.find(s=>s.en===sentence.en);if(previous?.acceptedAnswers)sentence.acceptedAnswers=[...new Set([...previous.acceptedAnswers,...(sentence.acceptedAnswers||[])])];}
   target.grammar=unique([...target.grammar,...corrected.grammar],g=>g.prompt);
+ }
+}
+
+// These pages are transcribed from the user's physical 2026 printing, not web scans.
+const photoBook=BOOKS.find(book=>book.id==='g3-upper');
+photoBook.textbookEdition={firstEdition:'2024年7月第1版',printing:'2026年7月第1次印刷',isbn:'978-7-107-38250-5',source:'user-photos'};
+photoBook.edition='人教PEP · 2024年7月第1版 · 2026年7月第1次印刷';
+photoBook.units[2].title='Our animal friends';photoBook.units[2].zh='我们的动物朋友';
+const photoSections=[PHOTO_U1,PHOTO_U2,PHOTO_U3,PHOTO_U4,PHOTO_U5,PHOTO_U6,PHOTO_REVISION,PHOTO_SONGS,PHOTO_APPENDICES];
+photoBook.textbookPages=photoSections.flatMap(section=>section.pages).sort((a,b)=>a.page-b.page);
+for(const photoUnit of photoSections){
+ const unit=photoBook.units.find(unit=>unit.id===photoUnit.unitId);if(unit)unit.textbookPages=photoUnit.pages;
+ for(const page of photoUnit.pages)for(const word of page.words){
+  // Keep old question pools unchanged; page vocabulary still has its own meaning.
+  const same=Object.entries(WORDS).find(([id,w])=>w.en===word.en&&w.ipa===word.ipa);
+  if(same)word.id=same[0];
+  while(WORDS[word.id]&&WORDS[word.id].en!==word.en)word.id+='-variant';
+  if(!WORDS[word.id])WORDS[word.id]={en:word.en,zh:word.zh,ipa:word.ipa,...(word.say?{say:word.say}:{})};
  }
 }

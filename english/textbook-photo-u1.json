@@ -1,0 +1,3110 @@
+{
+  "unitId": "g3-upper-u1",
+  "title": "Making friends",
+  "pages": [
+    {
+      "page": 2,
+      "title": "单元导入：Making friends",
+      "blocks": [
+        {
+          "title": "单元标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Unit 1",
+              "zh": "第一单元"
+            },
+            {
+              "en": "Making friends",
+              "zh": "交朋友"
+            },
+            {
+              "en": "How do we make friends?",
+              "zh": "我们怎样交朋友？",
+              "tip": "make friends 是“交朋友”。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "photo-making",
+          "en": "making",
+          "zh": "交；制作（make 的 -ing 形式）",
+          "ipa": "/ˈmeɪkɪŋ/"
+        },
+        {
+          "id": "photo-friends",
+          "en": "friends",
+          "zh": "朋友（friend 的复数）",
+          "ipa": "/frɛndz/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "title": "观察、吟唱与歌曲",
+      "blocks": [
+        {
+          "title": "Look and think",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Look and think",
+              "zh": "看一看，想一想。"
+            },
+            {
+              "en": "Are they friends?",
+              "zh": "他们是朋友吗？"
+            },
+            {
+              "en": "What makes you a good friend?",
+              "zh": "怎样才能成为一位好朋友？"
+            }
+          ]
+        },
+        {
+          "title": "Listen and chant",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，吟唱。"
+            },
+            {
+              "en": "Hello! Hello!",
+              "zh": "你好！你好！"
+            },
+            {
+              "en": "What's your name?",
+              "zh": "你叫什么名字？"
+            },
+            {
+              "en": "Nice to meet you.",
+              "zh": "很高兴认识你。"
+            },
+            {
+              "en": "Let's play a game!",
+              "zh": "我们来玩个游戏吧！"
+            }
+          ]
+        },
+        {
+          "title": "Listen and sing",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Listen and sing",
+              "zh": "听一听，唱一唱。"
+            },
+            {
+              "en": "Nice to meet you!",
+              "zh": "很高兴认识你！"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "think",
+          "en": "think",
+          "zh": "想；思考",
+          "ipa": "/θɪŋk/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-they",
+          "en": "they",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðeɪ/"
+        },
+        {
+          "id": "photo-friends",
+          "en": "friends",
+          "zh": "朋友（friend 的复数）",
+          "ipa": "/frɛndz/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-makes",
+          "en": "makes",
+          "zh": "使成为（make 的第三人称单数）",
+          "ipa": "/meɪks/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "good",
+          "en": "good",
+          "zh": "好的",
+          "ipa": "/ɡʊd/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "hello",
+          "en": "hello",
+          "zh": "你好",
+          "ipa": "/həˈloʊ/"
+        },
+        {
+          "id": "photo-what-s",
+          "en": "what's",
+          "zh": "是什么（what is 的缩写）",
+          "ipa": "/wʌts/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "name",
+          "en": "name",
+          "zh": "名字",
+          "ipa": "/neɪm/"
+        },
+        {
+          "id": "nice",
+          "en": "nice",
+          "zh": "友好的；令人愉快的",
+          "ipa": "/naɪs/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "meet",
+          "en": "meet",
+          "zh": "遇见；认识",
+          "ipa": "/mit/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "play",
+          "en": "play",
+          "zh": "玩；演奏",
+          "ipa": "/pleɪ/"
+        },
+        {
+          "id": "game",
+          "en": "game",
+          "zh": "游戏",
+          "ipa": "/ɡeɪm/"
+        },
+        {
+          "id": "sing",
+          "en": "sing",
+          "zh": "唱歌",
+          "ipa": "/sɪŋ/"
+        },
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "title": "A：问候朋友",
+      "blocks": [
+        {
+          "title": "A 部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "A",
+              "zh": "A部分"
+            },
+            {
+              "en": "How do we greet friends?",
+              "zh": "我们怎样问候朋友？"
+            }
+          ]
+        },
+        {
+          "title": "Let's talk",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "我们来说一说。"
+            },
+            {
+              "en": "Hello! I'm Mike Black.",
+              "zh": "你好！我是迈克·布莱克。",
+              "tip": "I'm 是 I am 的缩写。"
+            },
+            {
+              "en": "Hi! My name is Wu Binbin.",
+              "zh": "嗨！我的名字叫吴斌斌。"
+            },
+            {
+              "en": "Nice to meet you.",
+              "zh": "很高兴认识你。"
+            },
+            {
+              "en": "Nice to meet you too.",
+              "zh": "我也很高兴认识你。",
+              "tip": "too 在这里表示“也”。"
+            }
+          ]
+        },
+        {
+          "title": "Role-play",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Role-play",
+              "zh": "角色扮演。"
+            },
+            {
+              "en": "Hello! My name is Sarah.",
+              "zh": "你好！我的名字叫萨拉。"
+            },
+            {
+              "en": "Hi! I'm John.",
+              "zh": "嗨！我是约翰。"
+            },
+            {
+              "en": "John Baker",
+              "zh": "约翰·贝克"
+            },
+            {
+              "en": "Wu Binbin",
+              "zh": "吴斌斌"
+            },
+            {
+              "en": "Sarah Miller",
+              "zh": "萨拉·米勒"
+            },
+            {
+              "en": "Chen Jie",
+              "zh": "陈杰"
+            },
+            {
+              "en": "Mike Black",
+              "zh": "迈克·布莱克"
+            },
+            {
+              "en": "(your name)",
+              "zh": "（你的名字）"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-a",
+          "en": "A",
+          "zh": "字母A（本页小写为a）",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "photo-greet",
+          "en": "greet",
+          "zh": "问候；打招呼",
+          "ipa": "/ɡrit/"
+        },
+        {
+          "id": "photo-friends",
+          "en": "friends",
+          "zh": "朋友（friend 的复数）",
+          "ipa": "/frɛndz/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "hello",
+          "en": "hello",
+          "zh": "你好",
+          "ipa": "/həˈloʊ/"
+        },
+        {
+          "id": "photo-i-m",
+          "en": "I'm",
+          "zh": "我是（I am 的缩写）",
+          "ipa": "/aɪm/"
+        },
+        {
+          "id": "photo-mike",
+          "en": "Mike",
+          "zh": "迈克（人名）",
+          "ipa": "/maɪk/"
+        },
+        {
+          "id": "photo-black",
+          "en": "Black",
+          "zh": "布莱克（姓氏）",
+          "ipa": "/blæk/"
+        },
+        {
+          "id": "photo-hi",
+          "en": "hi",
+          "zh": "嗨；你好",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "name",
+          "en": "name",
+          "zh": "名字",
+          "ipa": "/neɪm/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-wu",
+          "en": "Wu",
+          "zh": "吴（姓氏，英语近似读音）",
+          "ipa": "/wu/"
+        },
+        {
+          "id": "photo-binbin",
+          "en": "Binbin",
+          "zh": "斌斌（人名，英语近似读音）",
+          "ipa": "/ˈbɪn bɪn/"
+        },
+        {
+          "id": "nice",
+          "en": "nice",
+          "zh": "友好的；令人愉快的",
+          "ipa": "/naɪs/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "meet",
+          "en": "meet",
+          "zh": "遇见；认识",
+          "ipa": "/mit/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-role-play",
+          "en": "role-play",
+          "zh": "角色扮演",
+          "ipa": "/ˈroʊl pleɪ/"
+        },
+        {
+          "id": "photo-sarah",
+          "en": "Sarah",
+          "zh": "萨拉（人名）",
+          "ipa": "/ˈsɛrə/"
+        },
+        {
+          "id": "photo-john",
+          "en": "John",
+          "zh": "约翰（人名）",
+          "ipa": "/dʒɑn/"
+        },
+        {
+          "id": "photo-baker",
+          "en": "Baker",
+          "zh": "贝克（姓氏）",
+          "ipa": "/ˈbeɪkɚ/"
+        },
+        {
+          "id": "photo-miller",
+          "en": "Miller",
+          "zh": "米勒（姓氏）",
+          "ipa": "/ˈmɪlɚ/"
+        },
+        {
+          "id": "photo-chen",
+          "en": "Chen",
+          "zh": "陈（姓氏，英语近似读音）",
+          "ipa": "/tʃɛn/"
+        },
+        {
+          "id": "photo-jie",
+          "en": "Jie",
+          "zh": "杰（人名，英语近似读音）",
+          "ipa": "/dʒjɛ/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "title": "身体部位与动作",
+      "blocks": [
+        {
+          "title": "Let's learn",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "我们来学一学。"
+            },
+            {
+              "en": "Hello! My name is Mike Black.",
+              "zh": "你好！我的名字叫迈克·布莱克。"
+            },
+            {
+              "en": "Hi! I'm Sarah Miller.",
+              "zh": "嗨！我是萨拉·米勒。"
+            }
+          ]
+        },
+        {
+          "title": "身体部位图片标签",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "ear",
+              "zh": "耳朵"
+            },
+            {
+              "en": "eye",
+              "zh": "眼睛"
+            },
+            {
+              "en": "mouth",
+              "zh": "嘴巴"
+            },
+            {
+              "en": "hand",
+              "zh": "手"
+            },
+            {
+              "en": "arm",
+              "zh": "手臂"
+            }
+          ]
+        },
+        {
+          "title": "Listen and do",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Listen and do",
+              "zh": "听一听，做一做。"
+            },
+            {
+              "en": "Wave your hand. Hello!",
+              "zh": "挥挥你的手。你好！"
+            },
+            {
+              "en": "Look into my eyes. Hi!",
+              "zh": "看着我的眼睛。嗨！",
+              "tip": "eyes 是 eye 的复数；look into my eyes 表示“看着我的眼睛”。"
+            },
+            {
+              "en": "Point to your ear. Listen!",
+              "zh": "指向你的耳朵。听！"
+            },
+            {
+              "en": "Point to your mouth. Smile!",
+              "zh": "指向你的嘴巴。笑一笑！"
+            },
+            {
+              "en": "Wave your arm. Bye!",
+              "zh": "挥挥你的手臂。再见！"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "hello",
+          "en": "hello",
+          "zh": "你好",
+          "ipa": "/həˈloʊ/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "name",
+          "en": "name",
+          "zh": "名字",
+          "ipa": "/neɪm/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-mike",
+          "en": "Mike",
+          "zh": "迈克（人名）",
+          "ipa": "/maɪk/"
+        },
+        {
+          "id": "photo-black",
+          "en": "Black",
+          "zh": "布莱克（姓氏）",
+          "ipa": "/blæk/"
+        },
+        {
+          "id": "photo-hi",
+          "en": "hi",
+          "zh": "嗨；你好",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "photo-i-m",
+          "en": "I'm",
+          "zh": "我是（I am 的缩写）",
+          "ipa": "/aɪm/"
+        },
+        {
+          "id": "photo-sarah",
+          "en": "Sarah",
+          "zh": "萨拉（人名）",
+          "ipa": "/ˈsɛrə/"
+        },
+        {
+          "id": "photo-miller",
+          "en": "Miller",
+          "zh": "米勒（姓氏）",
+          "ipa": "/ˈmɪlɚ/"
+        },
+        {
+          "id": "ear",
+          "en": "ear",
+          "zh": "耳朵",
+          "ipa": "/ɪr/"
+        },
+        {
+          "id": "eye",
+          "en": "eye",
+          "zh": "眼睛",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "mouth",
+          "en": "mouth",
+          "zh": "嘴巴",
+          "ipa": "/maʊθ/"
+        },
+        {
+          "id": "hand",
+          "en": "hand",
+          "zh": "手",
+          "ipa": "/hænd/"
+        },
+        {
+          "id": "arm",
+          "en": "arm",
+          "zh": "手臂",
+          "ipa": "/ɑrm/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-wave",
+          "en": "wave",
+          "zh": "挥动",
+          "ipa": "/weɪv/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "into",
+          "en": "into",
+          "zh": "进入……里面",
+          "ipa": "/ˈɪntu/"
+        },
+        {
+          "id": "photo-eyes",
+          "en": "eyes",
+          "zh": "眼睛（eye 的复数）",
+          "ipa": "/aɪz/"
+        },
+        {
+          "id": "photo-point",
+          "en": "point",
+          "zh": "指向",
+          "ipa": "/pɔɪnt/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "smile",
+          "en": "smile",
+          "zh": "微笑",
+          "ipa": "/smaɪl/"
+        },
+        {
+          "id": "photo-bye",
+          "en": "bye",
+          "zh": "再见",
+          "ipa": "/baɪ/"
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "title": "Letters and sounds：字母与发音",
+      "blocks": [
+        {
+          "title": "字母与发音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Letters and sounds",
+              "zh": "字母与发音。"
+            },
+            {
+              "en": "Listen, repeat and chant.",
+              "zh": "听一听，跟读并吟唱。"
+            },
+            {
+              "en": "A a",
+              "zh": "字母A的大写和小写。",
+              "tip": "字母名称读 /eɪ/；本页 a 在 apple、bag 中发 /æ/。"
+            },
+            {
+              "en": "B b",
+              "zh": "字母B的大写和小写。",
+              "tip": "字母名称读 /bi/；b 的辅音音素是 /b/。"
+            },
+            {
+              "en": "C c",
+              "zh": "字母C的大写和小写。",
+              "tip": "字母名称读 /si/；本页 c 在 cat、can 中发 /k/。"
+            },
+            {
+              "en": "D d",
+              "zh": "字母D的大写和小写。",
+              "tip": "字母名称读 /di/；d 的辅音音素是 /d/。"
+            },
+            {
+              "en": "apple",
+              "zh": "苹果"
+            },
+            {
+              "en": "bag",
+              "zh": "包"
+            },
+            {
+              "en": "bed",
+              "zh": "床"
+            },
+            {
+              "en": "Bob",
+              "zh": "鲍勃"
+            },
+            {
+              "en": "cat",
+              "zh": "猫"
+            },
+            {
+              "en": "can",
+              "zh": "金属罐",
+              "tip": "图片中的 can 是名词“金属罐”，读 /kæn/。"
+            },
+            {
+              "en": "dog",
+              "zh": "狗"
+            },
+            {
+              "en": "sad",
+              "zh": "难过的"
+            }
+          ]
+        },
+        {
+          "title": "辨认首音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Listen and circle the first sound.",
+              "zh": "听一听，圈出第一个音。"
+            },
+            {
+              "en": "b d a",
+              "zh": "字母选项：b、d、a。"
+            },
+            {
+              "en": "c b a",
+              "zh": "字母选项：c、b、a。"
+            },
+            {
+              "en": "c b a",
+              "zh": "字母选项：c、b、a。"
+            },
+            {
+              "en": "d b a",
+              "zh": "字母选项：d、b、a。"
+            }
+          ]
+        },
+        {
+          "title": "拼读",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Can you read the words?",
+              "zh": "你能读出这些单词吗？"
+            },
+            {
+              "en": "d a b → dab",
+              "zh": "把 d、a、b 三个音连起来，拼读 dab。",
+              "tip": "朗读示范拼出的单词。",
+              "say": "dab."
+            },
+            {
+              "en": "bad",
+              "zh": "坏的；不好的"
+            },
+            {
+              "en": "cab",
+              "zh": "出租车"
+            },
+            {
+              "en": "dad",
+              "zh": "爸爸"
+            }
+          ]
+        },
+        {
+          "title": "书写与字母表",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Write and say.",
+              "zh": "写一写，说一说。"
+            },
+            {
+              "en": "A a B b C c D d",
+              "zh": "练习书写字母A、B、C、D的大写和小写。"
+            },
+            {
+              "en": "Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz",
+              "zh": "26个字母的大写和小写。",
+              "tip": "字母表中前四组为本页学习重点。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letters",
+          "en": "letters",
+          "zh": "字母（letter 的复数）",
+          "ipa": "/ˈlɛtɚz/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-sounds",
+          "en": "sounds",
+          "zh": "音；发音（sound 的复数）",
+          "ipa": "/saʊndz/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-repeat",
+          "en": "repeat",
+          "zh": "跟读；重复",
+          "ipa": "/rɪˈpit/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-letter-a",
+          "en": "A",
+          "zh": "字母A（本页小写为a）",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-letter-b",
+          "en": "B",
+          "zh": "字母B（本页小写为b）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-letter-c",
+          "en": "C",
+          "zh": "字母C（本页小写为c）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-letter-d",
+          "en": "D",
+          "zh": "字母D（本页小写为d）",
+          "ipa": "/di/"
+        },
+        {
+          "id": "apple",
+          "en": "apple",
+          "zh": "苹果",
+          "ipa": "/ˈæpəl/"
+        },
+        {
+          "id": "bag",
+          "en": "bag",
+          "zh": "包；袋子",
+          "ipa": "/bæɡ/"
+        },
+        {
+          "id": "bed",
+          "en": "bed",
+          "zh": "床",
+          "ipa": "/bɛd/"
+        },
+        {
+          "id": "photo-bob",
+          "en": "Bob",
+          "zh": "鲍勃（人名）",
+          "ipa": "/bɑb/"
+        },
+        {
+          "id": "cat",
+          "en": "cat",
+          "zh": "猫",
+          "ipa": "/kæt/"
+        },
+        {
+          "id": "can-container",
+          "en": "can",
+          "zh": "金属罐",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "dog",
+          "en": "dog",
+          "zh": "狗",
+          "ipa": "/dɔɡ/"
+        },
+        {
+          "id": "sad",
+          "en": "sad",
+          "zh": "难过的",
+          "ipa": "/sæd/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "first",
+          "en": "first",
+          "zh": "首先；第一",
+          "ipa": "/fɝst/"
+        },
+        {
+          "id": "photo-sound",
+          "en": "sound",
+          "zh": "音；声音",
+          "ipa": "/saʊnd/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-words",
+          "en": "words",
+          "zh": "单词（word 的复数）",
+          "ipa": "/wɝdz/"
+        },
+        {
+          "id": "photo-dab",
+          "en": "dab",
+          "zh": "轻拍；轻触",
+          "ipa": "/dæb/"
+        },
+        {
+          "id": "bad",
+          "en": "bad",
+          "zh": "坏的；令人不快的",
+          "ipa": "/bæd/"
+        },
+        {
+          "id": "photo-cab",
+          "en": "cab",
+          "zh": "出租车",
+          "ipa": "/kæb/"
+        },
+        {
+          "id": "dad",
+          "en": "dad",
+          "zh": "爸爸（口语）",
+          "ipa": "/dæd/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-aa",
+          "en": "Aa",
+          "zh": "字母A（大写与小写）",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-bb",
+          "en": "Bb",
+          "zh": "字母B（大写与小写）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-cc",
+          "en": "Cc",
+          "zh": "字母C（大写与小写）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-dd",
+          "en": "Dd",
+          "zh": "字母D（大写与小写）",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-ee",
+          "en": "Ee",
+          "zh": "字母E（大写与小写）",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-ff",
+          "en": "Ff",
+          "zh": "字母F（大写与小写）",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-gg",
+          "en": "Gg",
+          "zh": "字母G（大写与小写）",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-hh",
+          "en": "Hh",
+          "zh": "字母H（大写与小写）",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "photo-ii",
+          "en": "Ii",
+          "zh": "字母I（大写与小写）",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-jj",
+          "en": "Jj",
+          "zh": "字母J（大写与小写）",
+          "ipa": "/dʒeɪ/"
+        },
+        {
+          "id": "photo-kk",
+          "en": "Kk",
+          "zh": "字母K（大写与小写）",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "photo-ll",
+          "en": "Ll",
+          "zh": "字母L（大写与小写）",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "photo-mm",
+          "en": "Mm",
+          "zh": "字母M（大写与小写）",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-nn",
+          "en": "Nn",
+          "zh": "字母N（大写与小写）",
+          "ipa": "/ɛn/"
+        },
+        {
+          "id": "photo-oo",
+          "en": "Oo",
+          "zh": "字母O（大写与小写）",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-pp",
+          "en": "Pp",
+          "zh": "字母P（大写与小写）",
+          "ipa": "/pi/"
+        },
+        {
+          "id": "photo-qq",
+          "en": "Qq",
+          "zh": "字母Q（大写与小写）",
+          "ipa": "/kju/"
+        },
+        {
+          "id": "photo-rr",
+          "en": "Rr",
+          "zh": "字母R（大写与小写）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-ss",
+          "en": "Ss",
+          "zh": "字母S（大写与小写）",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-tt",
+          "en": "Tt",
+          "zh": "字母T（大写与小写）",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "photo-uu",
+          "en": "Uu",
+          "zh": "字母U（大写与小写）",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-vv",
+          "en": "Vv",
+          "zh": "字母V（大写与小写）",
+          "ipa": "/vi/"
+        },
+        {
+          "id": "photo-ww",
+          "en": "Ww",
+          "zh": "字母W（大写与小写）",
+          "ipa": "/ˈdʌbəlju/"
+        },
+        {
+          "id": "photo-xx",
+          "en": "Xx",
+          "zh": "字母X（大写与小写）",
+          "ipa": "/ɛks/"
+        },
+        {
+          "id": "photo-yy",
+          "en": "Yy",
+          "zh": "字母Y（大写与小写）",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-zz",
+          "en": "Zz",
+          "zh": "字母Z（大写与小写）",
+          "ipa": "/zi/"
+        },
+        {
+          "id": "photo-letter",
+          "en": "letter",
+          "zh": "字母",
+          "ipa": "/ˈlɛtɚ/"
+        },
+        {
+          "id": "word",
+          "en": "word",
+          "zh": "单词；言语",
+          "ipa": "/wɝd/"
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "title": "B：做一位好朋友",
+      "blocks": [
+        {
+          "title": "B 部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "B",
+              "zh": "B部分"
+            },
+            {
+              "en": "How can we be a good friend?",
+              "zh": "我们怎样成为一位好朋友？"
+            }
+          ]
+        },
+        {
+          "title": "Let's talk",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "我们来说一说。"
+            },
+            {
+              "en": "Oh no!",
+              "zh": "哎呀，不好！"
+            },
+            {
+              "en": "It's OK, Chen Jie. We can share.",
+              "zh": "没关系，陈杰。我们可以一起用。",
+              "tip": "share 在这里表示与别人共用物品。"
+            },
+            {
+              "en": "Thanks, Sarah.",
+              "zh": "谢谢你，萨拉。"
+            },
+            {
+              "en": "Hey, Sarah! We can share.",
+              "zh": "嘿，萨拉！我们可以一起用。"
+            },
+            {
+              "en": "Thank you, Chen Jie.",
+              "zh": "谢谢你，陈杰。"
+            }
+          ]
+        },
+        {
+          "title": "Look and match",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Look and match",
+              "zh": "看一看，连一连。"
+            },
+            {
+              "en": "We can share.",
+              "zh": "我们可以一起用。"
+            },
+            {
+              "en": "Nice to meet you.",
+              "zh": "很高兴认识你。"
+            },
+            {
+              "en": "Oh no!",
+              "zh": "哎呀，不好！"
+            },
+            {
+              "en": "Thank you.",
+              "zh": "谢谢你。"
+            },
+            {
+              "en": "Nice to meet you too.",
+              "zh": "我也很高兴认识你。"
+            },
+            {
+              "en": "It's OK.",
+              "zh": "没关系。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-b",
+          "en": "B",
+          "zh": "字母B（本页小写为b）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "photo-be",
+          "en": "be",
+          "zh": "是；成为（原形）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "good",
+          "en": "good",
+          "zh": "好的",
+          "ipa": "/ɡʊd/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-oh",
+          "en": "oh",
+          "zh": "哦；哎呀",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-no",
+          "en": "no",
+          "zh": "不；不好",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "photo-ok",
+          "en": "OK",
+          "zh": "好的；没关系",
+          "ipa": "/ˌoʊˈkeɪ/"
+        },
+        {
+          "id": "photo-chen",
+          "en": "Chen",
+          "zh": "陈（姓氏，英语近似读音）",
+          "ipa": "/tʃɛn/"
+        },
+        {
+          "id": "photo-jie",
+          "en": "Jie",
+          "zh": "杰（人名，英语近似读音）",
+          "ipa": "/dʒjɛ/"
+        },
+        {
+          "id": "share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "photo-thanks",
+          "en": "thanks",
+          "zh": "谢谢",
+          "ipa": "/θæŋks/"
+        },
+        {
+          "id": "photo-sarah",
+          "en": "Sarah",
+          "zh": "萨拉（人名）",
+          "ipa": "/ˈsɛrə/"
+        },
+        {
+          "id": "photo-hey",
+          "en": "hey",
+          "zh": "嘿（引起注意的招呼）",
+          "ipa": "/heɪ/"
+        },
+        {
+          "id": "photo-thank",
+          "en": "thank",
+          "zh": "感谢",
+          "ipa": "/θæŋk/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-match",
+          "en": "match",
+          "zh": "配对；连线",
+          "ipa": "/mætʃ/"
+        },
+        {
+          "id": "nice",
+          "en": "nice",
+          "zh": "友好的；令人愉快的",
+          "ipa": "/naɪs/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "meet",
+          "en": "meet",
+          "zh": "遇见；认识",
+          "ipa": "/mit/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "title": "做朋友的行动与吟唱",
+      "blocks": [
+        {
+          "title": "Let's learn",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "我们来学一学。"
+            },
+            {
+              "en": "I smile.",
+              "zh": "我微笑。"
+            },
+            {
+              "en": "I listen.",
+              "zh": "我倾听。"
+            },
+            {
+              "en": "I help.",
+              "zh": "我帮忙。"
+            },
+            {
+              "en": "I share.",
+              "zh": "我分享。"
+            }
+          ]
+        },
+        {
+          "title": "Listen and chant",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，吟唱。"
+            },
+            {
+              "en": "Am I a good friend? Yes, I am!",
+              "zh": "我是一位好朋友吗？是的，我是！"
+            },
+            {
+              "en": "I listen and say \"Hi!\" I smile too.",
+              "zh": "我倾听，也说“嗨！”我还会微笑。"
+            },
+            {
+              "en": "Am I a good friend? Yes, I am!",
+              "zh": "我是一位好朋友吗？是的，我是！"
+            },
+            {
+              "en": "I help and share. I play fair too.",
+              "zh": "我帮忙，也分享。我玩游戏时也遵守规则。",
+              "tip": "play fair 表示公平游戏、遵守规则。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "smile",
+          "en": "smile",
+          "zh": "微笑",
+          "ipa": "/smaɪl/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-am",
+          "en": "am",
+          "zh": "是（用于 I）",
+          "ipa": "/æm/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "good",
+          "en": "good",
+          "zh": "好的",
+          "ipa": "/ɡʊd/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        },
+        {
+          "id": "photo-yes",
+          "en": "yes",
+          "zh": "是的",
+          "ipa": "/jɛs/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-hi",
+          "en": "hi",
+          "zh": "嗨；你好",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "play",
+          "en": "play",
+          "zh": "玩；演奏",
+          "ipa": "/pleɪ/"
+        },
+        {
+          "id": "photo-fair",
+          "en": "fair",
+          "zh": "公平地；遵守规则地",
+          "ipa": "/fɛr/"
+        }
+      ]
+    },
+    {
+      "page": 9,
+      "title": "Start to read：好朋友海报",
+      "blocks": [
+        {
+          "title": "海报阅读",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Start to read",
+              "zh": "开始阅读。"
+            },
+            {
+              "en": "I am a good friend!",
+              "zh": "我是一位好朋友！"
+            },
+            {
+              "en": "I say \"Hi!\"",
+              "zh": "我说“嗨！”"
+            },
+            {
+              "en": "I listen.",
+              "zh": "我倾听。"
+            },
+            {
+              "en": "I share.",
+              "zh": "我分享。"
+            },
+            {
+              "en": "I help.",
+              "zh": "我帮忙。"
+            },
+            {
+              "en": "I am nice to my friends.",
+              "zh": "我友善地对待朋友。",
+              "tip": "be nice to 表示友善地对待。"
+            }
+          ]
+        },
+        {
+          "title": "圈出海报词语",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Circle the words you read in the poster.",
+              "zh": "圈出你在海报中读到的单词。"
+            },
+            {
+              "en": "arm",
+              "zh": "手臂"
+            },
+            {
+              "en": "ear",
+              "zh": "耳朵"
+            },
+            {
+              "en": "eye",
+              "zh": "眼睛"
+            },
+            {
+              "en": "hand",
+              "zh": "手"
+            },
+            {
+              "en": "mouth",
+              "zh": "嘴巴"
+            },
+            {
+              "en": "help",
+              "zh": "帮助"
+            },
+            {
+              "en": "listen",
+              "zh": "听；倾听"
+            },
+            {
+              "en": "say",
+              "zh": "说"
+            },
+            {
+              "en": "share",
+              "zh": "分享"
+            },
+            {
+              "en": "smile",
+              "zh": "微笑"
+            }
+          ]
+        },
+        {
+          "title": "自我观察",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Are you a good friend? Look and tick.",
+              "zh": "你是一位好朋友吗？看一看，打钩。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "start",
+          "en": "start",
+          "zh": "开始",
+          "ipa": "/stɑrt/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-am",
+          "en": "am",
+          "zh": "是（用于 I）",
+          "ipa": "/æm/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "good",
+          "en": "good",
+          "zh": "好的",
+          "ipa": "/ɡʊd/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-hi",
+          "en": "hi",
+          "zh": "嗨；你好",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "nice",
+          "en": "nice",
+          "zh": "友好的；令人愉快的",
+          "ipa": "/naɪs/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "photo-friends",
+          "en": "friends",
+          "zh": "朋友（friend 的复数）",
+          "ipa": "/frɛndz/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-words",
+          "en": "words",
+          "zh": "单词（word 的复数）",
+          "ipa": "/wɝdz/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "photo-poster",
+          "en": "poster",
+          "zh": "海报",
+          "ipa": "/ˈpoʊstɚ/"
+        },
+        {
+          "id": "arm",
+          "en": "arm",
+          "zh": "手臂",
+          "ipa": "/ɑrm/"
+        },
+        {
+          "id": "ear",
+          "en": "ear",
+          "zh": "耳朵",
+          "ipa": "/ɪr/"
+        },
+        {
+          "id": "eye",
+          "en": "eye",
+          "zh": "眼睛",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "hand",
+          "en": "hand",
+          "zh": "手",
+          "ipa": "/hænd/"
+        },
+        {
+          "id": "mouth",
+          "en": "mouth",
+          "zh": "嘴巴",
+          "ipa": "/maʊθ/"
+        },
+        {
+          "id": "smile",
+          "en": "smile",
+          "zh": "微笑",
+          "ipa": "/smaɪl/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-tick",
+          "en": "tick",
+          "zh": "打钩",
+          "ipa": "/tɪk/"
+        },
+        {
+          "id": "word",
+          "en": "word",
+          "zh": "单词；言语",
+          "ipa": "/wɝd/"
+        }
+      ]
+    },
+    {
+      "page": 10,
+      "title": "C 项目：制作交友思维导图",
+      "blocks": [
+        {
+          "title": "项目标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "C",
+              "zh": "C部分"
+            },
+            {
+              "en": "Project: Make a mind map of making friends",
+              "zh": "项目：制作一张关于交朋友的思维导图。"
+            }
+          ]
+        },
+        {
+          "title": "活动1：听与圈选",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "How can John make friends at school? Listen and circle.",
+              "zh": "约翰在学校怎样交朋友？听一听，圈一圈。"
+            }
+          ]
+        },
+        {
+          "title": "活动2：小组讨论",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "What do you do with your friends? Talk in your group.",
+              "zh": "你和朋友一起做什么？在小组里说一说。"
+            },
+            {
+              "en": "What do friends do?",
+              "zh": "朋友会做些什么？"
+            },
+            {
+              "en": "Smile.",
+              "zh": "微笑。"
+            },
+            {
+              "en": "Listen.",
+              "zh": "倾听。"
+            },
+            {
+              "en": "Play together.",
+              "zh": "一起玩。"
+            },
+            {
+              "en": "I say \"Hi!\"",
+              "zh": "我说“嗨！”"
+            },
+            {
+              "en": "I say \"Bye!\"",
+              "zh": "我说“再见！”"
+            },
+            {
+              "en": "I smile.",
+              "zh": "我微笑。"
+            },
+            {
+              "en": "I listen.",
+              "zh": "我倾听。"
+            },
+            {
+              "en": "I help.",
+              "zh": "我帮忙。"
+            },
+            {
+              "en": "I share.",
+              "zh": "我分享。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-c",
+          "en": "C",
+          "zh": "字母C（本页小写为c）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "project",
+          "en": "project",
+          "zh": "项目；课题",
+          "ipa": "/ˈprɑdʒɛkt/"
+        },
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-mind",
+          "en": "mind",
+          "zh": "思维；想法",
+          "ipa": "/maɪnd/"
+        },
+        {
+          "id": "map",
+          "en": "map",
+          "zh": "地图",
+          "ipa": "/mæp/"
+        },
+        {
+          "id": "photo-of",
+          "en": "of",
+          "zh": "……的",
+          "ipa": "/ʌv/"
+        },
+        {
+          "id": "photo-making",
+          "en": "making",
+          "zh": "交；制作（make 的 -ing 形式）",
+          "ipa": "/ˈmeɪkɪŋ/"
+        },
+        {
+          "id": "photo-friends",
+          "en": "friends",
+          "zh": "朋友（friend 的复数）",
+          "ipa": "/frɛndz/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-john",
+          "en": "John",
+          "zh": "约翰（人名）",
+          "ipa": "/dʒɑn/"
+        },
+        {
+          "id": "at",
+          "en": "at",
+          "zh": "在（某处）",
+          "ipa": "/æt/"
+        },
+        {
+          "id": "school",
+          "en": "school",
+          "zh": "学校",
+          "ipa": "/skul/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和……一起；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "photo-group",
+          "en": "group",
+          "zh": "小组",
+          "ipa": "/ɡrup/"
+        },
+        {
+          "id": "smile",
+          "en": "smile",
+          "zh": "微笑",
+          "ipa": "/smaɪl/"
+        },
+        {
+          "id": "play",
+          "en": "play",
+          "zh": "玩；演奏",
+          "ipa": "/pleɪ/"
+        },
+        {
+          "id": "together",
+          "en": "together",
+          "zh": "一起",
+          "ipa": "/təˈɡɛðɚ/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-hi",
+          "en": "hi",
+          "zh": "嗨；你好",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "photo-bye",
+          "en": "bye",
+          "zh": "再见",
+          "ipa": "/baɪ/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        }
+      ]
+    },
+    {
+      "page": 11,
+      "title": "思维导图、交流与自我检查",
+      "blocks": [
+        {
+          "title": "活动3：制作导图",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Use activity 2 to make your mind map.",
+              "zh": "用活动2的内容制作你的思维导图。"
+            },
+            {
+              "en": "Make friends",
+              "zh": "交朋友。"
+            }
+          ]
+        },
+        {
+          "title": "活动4：分享想法",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Share your ideas in class.",
+              "zh": "在课堂上分享你的想法。"
+            },
+            {
+              "en": "Friends listen. Friends help and share ...",
+              "zh": "朋友会倾听。朋友会帮忙和分享……"
+            }
+          ]
+        },
+        {
+          "title": "Self-check",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Self-check",
+              "zh": "自我检查。"
+            },
+            {
+              "en": "I still need help",
+              "zh": "我仍然需要帮助。"
+            },
+            {
+              "en": "I can mostly do it",
+              "zh": "我大部分都能做到。"
+            },
+            {
+              "en": "I can do it!",
+              "zh": "我能做到！"
+            },
+            {
+              "en": "I can greet people and show friendliness.",
+              "zh": "我能问候别人，并表达友好。"
+            },
+            {
+              "en": "I can say the names of body parts.",
+              "zh": "我能说出身体部位的名称。"
+            },
+            {
+              "en": "I can say different ways to be a good friend.",
+              "zh": "我能说出成为好朋友的不同做法。"
+            },
+            {
+              "en": "I can read, write and say Aa, Bb, Cc and Dd.",
+              "zh": "我能认读、书写和说出字母A、B、C、D的大写和小写。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "use",
+          "en": "use",
+          "zh": "使用（动词）",
+          "ipa": "/juz/"
+        },
+        {
+          "id": "photo-activity",
+          "en": "activity",
+          "zh": "活动",
+          "ipa": "/ækˈtɪvəti/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "photo-mind",
+          "en": "mind",
+          "zh": "思维；想法",
+          "ipa": "/maɪnd/"
+        },
+        {
+          "id": "map",
+          "en": "map",
+          "zh": "地图",
+          "ipa": "/mæp/"
+        },
+        {
+          "id": "photo-friends",
+          "en": "friends",
+          "zh": "朋友（friend 的复数）",
+          "ipa": "/frɛndz/"
+        },
+        {
+          "id": "share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "photo-ideas",
+          "en": "ideas",
+          "zh": "想法（idea 的复数）",
+          "ipa": "/aɪˈdiəz/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "class",
+          "en": "class",
+          "zh": "班级；课",
+          "ipa": "/klæs/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-self-check",
+          "en": "self-check",
+          "zh": "自我检查",
+          "ipa": "/ˈsɛlf tʃɛk/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "still",
+          "en": "still",
+          "zh": "仍然",
+          "ipa": "/stɪl/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-mostly",
+          "en": "mostly",
+          "zh": "大部分；主要地",
+          "ipa": "/ˈmoʊstli/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；这件事",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "photo-greet",
+          "en": "greet",
+          "zh": "问候；打招呼",
+          "ipa": "/ɡrit/"
+        },
+        {
+          "id": "people",
+          "en": "people",
+          "zh": "人们",
+          "ipa": "/ˈpipəl/"
+        },
+        {
+          "id": "show",
+          "en": "show",
+          "zh": "节目；展示",
+          "ipa": "/ʃoʊ/"
+        },
+        {
+          "id": "photo-friendliness",
+          "en": "friendliness",
+          "zh": "友好",
+          "ipa": "/ˈfrɛndlinəs/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-names",
+          "en": "names",
+          "zh": "名称；名字（name 的复数）",
+          "ipa": "/neɪmz/"
+        },
+        {
+          "id": "photo-of",
+          "en": "of",
+          "zh": "……的",
+          "ipa": "/ʌv/"
+        },
+        {
+          "id": "body",
+          "en": "body",
+          "zh": "身体",
+          "ipa": "/ˈbɑdi/"
+        },
+        {
+          "id": "photo-parts",
+          "en": "parts",
+          "zh": "部位；部分（part 的复数）",
+          "ipa": "/pɑrts/"
+        },
+        {
+          "id": "different",
+          "en": "different",
+          "zh": "不同的",
+          "ipa": "/ˈdɪfɚənt/"
+        },
+        {
+          "id": "photo-ways",
+          "en": "ways",
+          "zh": "方式；做法（way 的复数）",
+          "ipa": "/weɪz/"
+        },
+        {
+          "id": "photo-be",
+          "en": "be",
+          "zh": "是；成为（原形）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "good",
+          "en": "good",
+          "zh": "好的",
+          "ipa": "/ɡʊd/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "photo-aa",
+          "en": "Aa",
+          "zh": "字母A（大写与小写）",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-bb",
+          "en": "Bb",
+          "zh": "字母B（大写与小写）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-cc",
+          "en": "Cc",
+          "zh": "字母C（大写与小写）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-dd",
+          "en": "Dd",
+          "zh": "字母D（大写与小写）",
+          "ipa": "/di/"
+        },
+        {
+          "id": "idea",
+          "en": "idea",
+          "zh": "想法；主意",
+          "ipa": "/aɪˈdiə/"
+        },
+        {
+          "id": "name",
+          "en": "name",
+          "zh": "名字",
+          "ipa": "/neɪm/"
+        },
+        {
+          "id": "part",
+          "en": "part",
+          "zh": "角色；部分",
+          "ipa": "/pɑrt/"
+        },
+        {
+          "id": "way",
+          "en": "way",
+          "zh": "方式；道路",
+          "ipa": "/weɪ/"
+        }
+      ]
+    },
+    {
+      "page": 12,
+      "title": "Reading time：Zip 与 Zoom 的故事（上）",
+      "blocks": [
+        {
+          "title": "故事标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Reading time",
+              "zh": "阅读时间。"
+            }
+          ]
+        },
+        {
+          "title": "故事1：认识新朋友",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Zoom is my new friend.",
+              "zh": "祖姆是我的新朋友。"
+            },
+            {
+              "en": "SCHOOL",
+              "zh": "学校"
+            },
+            {
+              "en": "Hi! I'm Zip.",
+              "zh": "嗨！我是兹普。"
+            },
+            {
+              "en": "Hi! My name is Zoom.",
+              "zh": "嗨！我的名字叫祖姆。"
+            },
+            {
+              "en": "Nice to meet you.",
+              "zh": "很高兴认识你。"
+            },
+            {
+              "en": "Nice to meet you too.",
+              "zh": "我也很高兴认识你。"
+            }
+          ]
+        },
+        {
+          "title": "故事2：朋友很友善",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Zoom is nice.",
+              "zh": "祖姆很友善。"
+            }
+          ]
+        },
+        {
+          "title": "故事3：分享食物",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "We share food.",
+              "zh": "我们分享食物。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-reading",
+          "en": "reading",
+          "zh": "阅读（read 的 -ing 形式）",
+          "ipa": "/ˈridɪŋ/"
+        },
+        {
+          "id": "time",
+          "en": "time",
+          "zh": "时间；次；回",
+          "ipa": "/taɪm/"
+        },
+        {
+          "id": "photo-zoom",
+          "en": "Zoom",
+          "zh": "祖姆（角色名）",
+          "ipa": "/zum/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "new",
+          "en": "new",
+          "zh": "新的",
+          "ipa": "/nu/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        },
+        {
+          "id": "school",
+          "en": "school",
+          "zh": "学校",
+          "ipa": "/skul/"
+        },
+        {
+          "id": "photo-hi",
+          "en": "hi",
+          "zh": "嗨；你好",
+          "ipa": "/haɪ/"
+        },
+        {
+          "id": "photo-i-m",
+          "en": "I'm",
+          "zh": "我是（I am 的缩写）",
+          "ipa": "/aɪm/"
+        },
+        {
+          "id": "photo-zip",
+          "en": "Zip",
+          "zh": "兹普（角色名）",
+          "ipa": "/zɪp/"
+        },
+        {
+          "id": "name",
+          "en": "name",
+          "zh": "名字",
+          "ipa": "/neɪm/"
+        },
+        {
+          "id": "nice",
+          "en": "nice",
+          "zh": "友好的；令人愉快的",
+          "ipa": "/naɪs/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "meet",
+          "en": "meet",
+          "zh": "遇见；认识",
+          "ipa": "/mit/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-too",
+          "en": "too",
+          "zh": "也",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "food",
+          "en": "food",
+          "zh": "食物",
+          "ipa": "/fud/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        }
+      ]
+    },
+    {
+      "page": 13,
+      "title": "Reading time：Zip 与 Zoom 的故事（下）",
+      "blocks": [
+        {
+          "title": "故事4：一起玩",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "We play together.",
+              "zh": "我们一起玩。"
+            }
+          ]
+        },
+        {
+          "title": "故事5：关心与帮助",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "We listen with care and help each other.",
+              "zh": "我们用心倾听，互相帮助。",
+              "tip": "with care 表示用心地；each other 表示互相。"
+            },
+            {
+              "en": "Ouch! My mouth!",
+              "zh": "哎哟！我的嘴巴！"
+            },
+            {
+              "en": "Hold my hand.",
+              "zh": "握住我的手。"
+            }
+          ]
+        },
+        {
+          "title": "故事6：好朋友",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "We are good friends now.",
+              "zh": "我们现在是好朋友了。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-we",
+          "en": "we",
+          "zh": "我们",
+          "ipa": "/wi/"
+        },
+        {
+          "id": "play",
+          "en": "play",
+          "zh": "玩；演奏",
+          "ipa": "/pleɪ/"
+        },
+        {
+          "id": "together",
+          "en": "together",
+          "zh": "一起",
+          "ipa": "/təˈɡɛðɚ/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-with",
+          "en": "with",
+          "zh": "和……一起；用",
+          "ipa": "/wɪð/"
+        },
+        {
+          "id": "photo-care",
+          "en": "care",
+          "zh": "关心；用心",
+          "ipa": "/kɛr/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "photo-each",
+          "en": "each",
+          "zh": "每个",
+          "ipa": "/itʃ/"
+        },
+        {
+          "id": "photo-other",
+          "en": "other",
+          "zh": "其他的；另一个",
+          "ipa": "/ˈʌðɚ/"
+        },
+        {
+          "id": "photo-ouch",
+          "en": "ouch",
+          "zh": "哎哟（疼痛时的叫声）",
+          "ipa": "/aʊtʃ/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "mouth",
+          "en": "mouth",
+          "zh": "嘴巴",
+          "ipa": "/maʊθ/"
+        },
+        {
+          "id": "photo-hold",
+          "en": "hold",
+          "zh": "握住；抓住",
+          "ipa": "/hoʊld/"
+        },
+        {
+          "id": "hand",
+          "en": "hand",
+          "zh": "手",
+          "ipa": "/hænd/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "good",
+          "en": "good",
+          "zh": "好的",
+          "ipa": "/ɡʊd/"
+        },
+        {
+          "id": "photo-friends",
+          "en": "friends",
+          "zh": "朋友（friend 的复数）",
+          "ipa": "/frɛndz/"
+        },
+        {
+          "id": "now",
+          "en": "now",
+          "zh": "现在",
+          "ipa": "/naʊ/"
+        },
+        {
+          "id": "friend",
+          "en": "friend",
+          "zh": "朋友",
+          "ipa": "/frɛnd/"
+        }
+      ]
+    }
+  ]
+}

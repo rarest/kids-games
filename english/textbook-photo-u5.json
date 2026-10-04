@@ -1,0 +1,3249 @@
+{
+  "unitId": "g3-upper-u5",
+  "title": "The colourful world",
+  "pages": [
+    {
+      "page": 50,
+      "title": "单元导入：多彩的世界",
+      "blocks": [
+        {
+          "title": "单元标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Unit 5",
+              "zh": "第五单元"
+            },
+            {
+              "en": "The colourful world",
+              "zh": "多彩的世界"
+            },
+            {
+              "en": "Why are colours important?",
+              "zh": "颜色为什么重要？"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-unit",
+          "en": "unit",
+          "zh": "单元",
+          "ipa": "/ˈjunɪt/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "colourful",
+          "en": "colourful",
+          "zh": "多彩的",
+          "ipa": "/ˈkʌlɚfəl/"
+        },
+        {
+          "id": "world",
+          "en": "world",
+          "zh": "世界",
+          "ipa": "/wɝld/"
+        },
+        {
+          "id": "why",
+          "en": "why",
+          "zh": "为什么",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-colours",
+          "en": "colours",
+          "zh": "颜色（colour的复数）",
+          "ipa": "/ˈkʌlɚz/"
+        },
+        {
+          "id": "photo-important",
+          "en": "important",
+          "zh": "重要的",
+          "ipa": "/ɪmˈpɔrtənt/"
+        }
+      ]
+    },
+    {
+      "page": 51,
+      "title": "观察、吟唱与颜色歌曲",
+      "blocks": [
+        {
+          "title": "看一看，想一想",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Look and think",
+              "zh": "看一看，想一想。"
+            },
+            {
+              "en": "What colours do you see?",
+              "zh": "你看到了哪些颜色？"
+            },
+            {
+              "en": "What colours do you like?",
+              "zh": "你喜欢哪些颜色？"
+            }
+          ]
+        },
+        {
+          "title": "颜色歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，吟唱。"
+            },
+            {
+              "en": "The sun is orange.",
+              "zh": "太阳是橙色的。"
+            },
+            {
+              "en": "Grass is green.",
+              "zh": "草是绿色的。"
+            },
+            {
+              "en": "What about the sky and sea?",
+              "zh": "天空和大海呢？"
+            },
+            {
+              "en": "Roses are red.",
+              "zh": "玫瑰是红色的。"
+            },
+            {
+              "en": "Snow is white.",
+              "zh": "雪是白色的。"
+            },
+            {
+              "en": "Please, please tell me why!",
+              "zh": "请你，请你告诉我为什么！"
+            }
+          ]
+        },
+        {
+          "title": "颜色歌曲",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Listen and sing",
+              "zh": "听一听，唱一唱。"
+            },
+            {
+              "en": "Colour song",
+              "zh": "颜色歌"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "think",
+          "en": "think",
+          "zh": "想；思考",
+          "ipa": "/θɪŋk/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-colours",
+          "en": "colours",
+          "zh": "颜色（colour的复数）",
+          "ipa": "/ˈkʌlɚz/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "sun",
+          "en": "sun",
+          "zh": "太阳",
+          "ipa": "/sʌn/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "orange",
+          "en": "orange",
+          "zh": "橙色的；橙子",
+          "ipa": "/ˈɔrɪndʒ/"
+        },
+        {
+          "id": "grass",
+          "en": "grass",
+          "zh": "草",
+          "ipa": "/ɡræs/"
+        },
+        {
+          "id": "green",
+          "en": "green",
+          "zh": "绿色的",
+          "ipa": "/ɡrin/"
+        },
+        {
+          "id": "about",
+          "en": "about",
+          "zh": "关于；大约",
+          "ipa": "/əˈbaʊt/"
+        },
+        {
+          "id": "sky",
+          "en": "sky",
+          "zh": "天空",
+          "ipa": "/skaɪ/"
+        },
+        {
+          "id": "sea",
+          "en": "sea",
+          "zh": "海",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-roses",
+          "en": "roses",
+          "zh": "玫瑰（rose的复数）",
+          "ipa": "/ˈroʊzɪz/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "snow",
+          "en": "snow",
+          "zh": "雪；下雪",
+          "ipa": "/snoʊ/"
+        },
+        {
+          "id": "white",
+          "en": "white",
+          "zh": "白色；白色的",
+          "ipa": "/waɪt/"
+        },
+        {
+          "id": "photo-please",
+          "en": "please",
+          "zh": "请",
+          "ipa": "/pliz/"
+        },
+        {
+          "id": "tell",
+          "en": "tell",
+          "zh": "讲述；告诉",
+          "ipa": "/tɛl/"
+        },
+        {
+          "id": "me",
+          "en": "me",
+          "zh": "我",
+          "ipa": "/mi/"
+        },
+        {
+          "id": "why",
+          "en": "why",
+          "zh": "为什么",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "sing",
+          "en": "sing",
+          "zh": "唱歌",
+          "ipa": "/sɪŋ/"
+        },
+        {
+          "id": "colour",
+          "en": "colour",
+          "zh": "颜色",
+          "ipa": "/ˈkʌlɚ/"
+        },
+        {
+          "id": "song",
+          "en": "song",
+          "zh": "歌曲",
+          "ipa": "/sɔŋ/"
+        }
+      ]
+    },
+    {
+      "page": 52,
+      "title": "A部分：你看到了哪些颜色？",
+      "blocks": [
+        {
+          "title": "A部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "A",
+              "zh": "A部分"
+            },
+            {
+              "en": "What colours do you see?",
+              "zh": "你看到了哪些颜色？"
+            }
+          ]
+        },
+        {
+          "title": "谈论颜色",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "我们来说一说。"
+            },
+            {
+              "en": "What colour is it?",
+              "zh": "它是什么颜色的？"
+            },
+            {
+              "en": "It's orange.",
+              "zh": "它是橙色的。"
+            },
+            {
+              "en": "What colour is it?",
+              "zh": "它是什么颜色的？"
+            },
+            {
+              "en": "It's green.",
+              "zh": "它是绿色的。"
+            },
+            {
+              "en": "Look! Red and blue make purple.",
+              "zh": "看！红色和蓝色混合成紫色。"
+            },
+            {
+              "en": "Wow!",
+              "zh": "哇！"
+            }
+          ]
+        },
+        {
+          "title": "猜一猜，检查答案",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Guess and check",
+              "zh": "猜一猜，检查答案。"
+            },
+            {
+              "en": "What colour is it?",
+              "zh": "它是什么颜色的？"
+            },
+            {
+              "en": "It's green.",
+              "zh": "它是绿色的。"
+            },
+            {
+              "en": "Wow! Blue and yellow make green.",
+              "zh": "哇！蓝色和黄色混合成绿色。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-a",
+          "en": "A",
+          "zh": "字母A",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-colours",
+          "en": "colours",
+          "zh": "颜色（colour的复数）",
+          "ipa": "/ˈkʌlɚz/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "colour",
+          "en": "colour",
+          "zh": "颜色",
+          "ipa": "/ˈkʌlɚ/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；这件事",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "orange",
+          "en": "orange",
+          "zh": "橙色的；橙子",
+          "ipa": "/ˈɔrɪndʒ/"
+        },
+        {
+          "id": "green",
+          "en": "green",
+          "zh": "绿色的",
+          "ipa": "/ɡrin/"
+        },
+        {
+          "id": "photo-look",
+          "en": "look",
+          "zh": "看",
+          "ipa": "/lʊk/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "blue",
+          "en": "blue",
+          "zh": "蓝色的",
+          "ipa": "/blu/"
+        },
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "purple",
+          "en": "purple",
+          "zh": "紫色的",
+          "ipa": "/ˈpɝpəl/"
+        },
+        {
+          "id": "photo-wow",
+          "en": "wow",
+          "zh": "哇；呀",
+          "ipa": "/waʊ/"
+        },
+        {
+          "id": "photo-guess",
+          "en": "guess",
+          "zh": "猜",
+          "ipa": "/ɡɛs/"
+        },
+        {
+          "id": "check",
+          "en": "check",
+          "zh": "检查",
+          "ipa": "/tʃɛk/"
+        },
+        {
+          "id": "yellow",
+          "en": "yellow",
+          "zh": "黄色的",
+          "ipa": "/ˈjɛloʊ/"
+        }
+      ]
+    },
+    {
+      "page": 53,
+      "title": "认识自然界的颜色",
+      "blocks": [
+        {
+          "title": "学习颜色词语",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "我们来学一学。"
+            },
+            {
+              "en": "a brown bear",
+              "zh": "一只棕色的熊"
+            },
+            {
+              "en": "a yellow duck",
+              "zh": "一只黄色的鸭子"
+            },
+            {
+              "en": "a purple flower",
+              "zh": "一朵紫色的花"
+            },
+            {
+              "en": "green grass",
+              "zh": "绿色的草"
+            },
+            {
+              "en": "blue sea",
+              "zh": "蓝色的大海"
+            },
+            {
+              "en": "The world is colourful!",
+              "zh": "世界是多彩的！"
+            }
+          ]
+        },
+        {
+          "title": "颜色歌谣",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and chant",
+              "zh": "听一听，吟唱。"
+            },
+            {
+              "en": "I see colours here and there.",
+              "zh": "我在各处都能看到颜色。"
+            },
+            {
+              "en": "Purple flowers, green grass and blue sea.",
+              "zh": "紫色的花、绿色的草和蓝色的大海。"
+            },
+            {
+              "en": "I see colours here and there.",
+              "zh": "我在各处都能看到颜色。"
+            },
+            {
+              "en": "A big brown bear. What else can you see?",
+              "zh": "一只大棕熊。你还能看到什么？"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "brown",
+          "en": "brown",
+          "zh": "棕色；棕色的",
+          "ipa": "/braʊn/"
+        },
+        {
+          "id": "bear",
+          "en": "bear",
+          "zh": "熊",
+          "ipa": "/bɛr/"
+        },
+        {
+          "id": "yellow",
+          "en": "yellow",
+          "zh": "黄色的",
+          "ipa": "/ˈjɛloʊ/"
+        },
+        {
+          "id": "duck",
+          "en": "duck",
+          "zh": "鸭子",
+          "ipa": "/dʌk/"
+        },
+        {
+          "id": "purple",
+          "en": "purple",
+          "zh": "紫色的",
+          "ipa": "/ˈpɝpəl/"
+        },
+        {
+          "id": "flower",
+          "en": "flower",
+          "zh": "花",
+          "ipa": "/ˈflaʊɚ/"
+        },
+        {
+          "id": "green",
+          "en": "green",
+          "zh": "绿色的",
+          "ipa": "/ɡrin/"
+        },
+        {
+          "id": "grass",
+          "en": "grass",
+          "zh": "草",
+          "ipa": "/ɡræs/"
+        },
+        {
+          "id": "blue",
+          "en": "blue",
+          "zh": "蓝色的",
+          "ipa": "/blu/"
+        },
+        {
+          "id": "sea",
+          "en": "sea",
+          "zh": "海",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "world",
+          "en": "world",
+          "zh": "世界",
+          "ipa": "/wɝld/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "colourful",
+          "en": "colourful",
+          "zh": "多彩的",
+          "ipa": "/ˈkʌlɚfəl/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-colours",
+          "en": "colours",
+          "zh": "颜色（colour的复数）",
+          "ipa": "/ˈkʌlɚz/"
+        },
+        {
+          "id": "photo-here",
+          "en": "here",
+          "zh": "这里",
+          "ipa": "/hɪr/"
+        },
+        {
+          "id": "there",
+          "en": "there",
+          "zh": "在那里；表示“有”",
+          "ipa": "/ðɛr/"
+        },
+        {
+          "id": "photo-flowers",
+          "en": "flowers",
+          "zh": "花（flower的复数）",
+          "ipa": "/ˈflaʊɚz/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "else",
+          "en": "else",
+          "zh": "其他的",
+          "ipa": "/ɛls/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        }
+      ]
+    },
+    {
+      "page": 54,
+      "title": "字母与发音：Qq、Rr、Ss、Tt、Uu",
+      "blocks": [
+        {
+          "title": "字母与发音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Letters and sounds",
+              "zh": "字母与发音。"
+            },
+            {
+              "en": "Listen, repeat and chant.",
+              "zh": "听一听，跟读并吟唱。"
+            },
+            {
+              "en": "Q q",
+              "zh": "字母Q的大写和小写。",
+              "tip": "字母名称读 /kju/；quiet、queen 中 qu 发 /kw/。"
+            },
+            {
+              "en": "R r",
+              "zh": "字母R的大写和小写。",
+              "tip": "字母名称读 /ɑr/；r 的辅音音素是 /r/。"
+            },
+            {
+              "en": "S s",
+              "zh": "字母S的大写和小写。",
+              "tip": "字母名称读 /ɛs/；see、bus 中 s 发 /s/。"
+            },
+            {
+              "en": "T t",
+              "zh": "字母T的大写和小写。",
+              "tip": "字母名称读 /ti/；t 的辅音音素是 /t/。"
+            },
+            {
+              "en": "U u",
+              "zh": "字母U的大写和小写。",
+              "tip": "字母名称读 /ju/；up、run 中 u 发 /ʌ/。"
+            },
+            {
+              "en": "quiet",
+              "zh": "安静的"
+            },
+            {
+              "en": "queen",
+              "zh": "女王；王后"
+            },
+            {
+              "en": "red",
+              "zh": "红色；红色的"
+            },
+            {
+              "en": "ruler",
+              "zh": "尺子"
+            },
+            {
+              "en": "see",
+              "zh": "看见"
+            },
+            {
+              "en": "bus",
+              "zh": "公共汽车"
+            },
+            {
+              "en": "Ted",
+              "zh": "泰德（人名）"
+            },
+            {
+              "en": "sit",
+              "zh": "坐"
+            },
+            {
+              "en": "up",
+              "zh": "向上"
+            },
+            {
+              "en": "run",
+              "zh": "跑"
+            }
+          ]
+        },
+        {
+          "title": "圈出第一个音",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Listen and circle the first sound.",
+              "zh": "听一听，圈出第一个音。"
+            },
+            {
+              "en": "m r l",
+              "zh": "字母选项：m、r、l。"
+            },
+            {
+              "en": "t d j",
+              "zh": "字母选项：t、d、j。"
+            },
+            {
+              "en": "i o u",
+              "zh": "字母选项：i、o、u。"
+            },
+            {
+              "en": "b s d",
+              "zh": "字母选项：b、s、d。"
+            },
+            {
+              "en": "p qu k",
+              "zh": "字母选项：p、qu、k。",
+              "say": "P. Quiet. K.",
+              "tip": "qu 表示 /kw/ 音，朗读用 quiet 示范。"
+            }
+          ]
+        },
+        {
+          "title": "试着拼读",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Can you read the words?",
+              "zh": "你能读出这些单词吗？"
+            },
+            {
+              "en": "c u t → cut",
+              "zh": "把c、u、t三个音连起来，拼读cut。",
+              "tip": "朗读示范拼出的单词。",
+              "say": "cut."
+            },
+            {
+              "en": "quit",
+              "zh": "停止；退出"
+            },
+            {
+              "en": "rot",
+              "zh": "腐烂"
+            },
+            {
+              "en": "set",
+              "zh": "放；设置"
+            },
+            {
+              "en": "tap",
+              "zh": "轻拍；轻敲"
+            },
+            {
+              "en": "tub",
+              "zh": "浴盆；桶"
+            }
+          ]
+        },
+        {
+          "title": "书写与字母表",
+          "kind": "phonics",
+          "lines": [
+            {
+              "en": "Write and say.",
+              "zh": "写一写，说一说。"
+            },
+            {
+              "en": "Q q R r S s T t U u",
+              "zh": "练习书写字母Q、R、S、T、U的大写和小写。"
+            },
+            {
+              "en": "Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz",
+              "zh": "26个字母的大写和小写。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letters",
+          "en": "letters",
+          "zh": "字母（letter 的复数）",
+          "ipa": "/ˈlɛtɚz/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-sounds",
+          "en": "sounds",
+          "zh": "音；发音（sound 的复数）",
+          "ipa": "/saʊndz/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "photo-repeat",
+          "en": "repeat",
+          "zh": "跟读；重复",
+          "ipa": "/rɪˈpit/"
+        },
+        {
+          "id": "photo-chant",
+          "en": "chant",
+          "zh": "吟唱",
+          "ipa": "/tʃænt/"
+        },
+        {
+          "id": "photo-letter-q",
+          "en": "Q",
+          "zh": "字母Q",
+          "ipa": "/kju/"
+        },
+        {
+          "id": "photo-letter-r",
+          "en": "R",
+          "zh": "字母R",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-letter-s",
+          "en": "S",
+          "zh": "字母S",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-letter-t",
+          "en": "T",
+          "zh": "字母T",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "photo-letter-u",
+          "en": "U",
+          "zh": "字母U",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "quiet",
+          "en": "quiet",
+          "zh": "安静的",
+          "ipa": "/ˈkwaɪət/"
+        },
+        {
+          "id": "photo-queen",
+          "en": "queen",
+          "zh": "女王；王后",
+          "ipa": "/kwin/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "ruler",
+          "en": "ruler",
+          "zh": "直尺",
+          "ipa": "/ˈrulɚ/"
+        },
+        {
+          "id": "see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "bus",
+          "en": "bus",
+          "zh": "公共汽车",
+          "ipa": "/bʌs/"
+        },
+        {
+          "id": "photo-ted",
+          "en": "Ted",
+          "zh": "泰德（人名）",
+          "ipa": "/tɛd/"
+        },
+        {
+          "id": "sit",
+          "en": "sit",
+          "zh": "坐",
+          "ipa": "/sɪt/"
+        },
+        {
+          "id": "photo-up",
+          "en": "up",
+          "zh": "向上",
+          "ipa": "/ʌp/"
+        },
+        {
+          "id": "run",
+          "en": "run",
+          "zh": "跑",
+          "ipa": "/rʌn/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "first",
+          "en": "first",
+          "zh": "首先；第一",
+          "ipa": "/fɝst/"
+        },
+        {
+          "id": "photo-sound",
+          "en": "sound",
+          "zh": "音；声音",
+          "ipa": "/saʊnd/"
+        },
+        {
+          "id": "photo-letter-m",
+          "en": "M",
+          "zh": "字母M",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-letter-l",
+          "en": "L",
+          "zh": "字母L",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "photo-letter-d",
+          "en": "D",
+          "zh": "字母D",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-letter-j",
+          "en": "J",
+          "zh": "字母J",
+          "ipa": "/dʒeɪ/"
+        },
+        {
+          "id": "photo-letter-i",
+          "en": "I",
+          "zh": "字母I",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-letter-o",
+          "en": "O",
+          "zh": "字母O",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-letter-b",
+          "en": "B",
+          "zh": "字母B",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-letter-p",
+          "en": "P",
+          "zh": "字母P",
+          "ipa": "/pi/"
+        },
+        {
+          "id": "photo-qu",
+          "en": "qu",
+          "zh": "字母组合qu（发 /kw/；点读用 quiet 示范）",
+          "ipa": "/kw/",
+          "say": "quiet"
+        },
+        {
+          "id": "photo-letter-k",
+          "en": "K",
+          "zh": "字母K",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-words",
+          "en": "words",
+          "zh": "单词（word 的复数）",
+          "ipa": "/wɝdz/"
+        },
+        {
+          "id": "photo-letter-c",
+          "en": "C",
+          "zh": "字母C",
+          "ipa": "/si/"
+        },
+        {
+          "id": "cut",
+          "en": "cut",
+          "zh": "切",
+          "ipa": "/kʌt/"
+        },
+        {
+          "id": "photo-quit",
+          "en": "quit",
+          "zh": "停止；退出",
+          "ipa": "/kwɪt/"
+        },
+        {
+          "id": "photo-rot",
+          "en": "rot",
+          "zh": "腐烂",
+          "ipa": "/rɑt/"
+        },
+        {
+          "id": "photo-set",
+          "en": "set",
+          "zh": "放；设置",
+          "ipa": "/sɛt/"
+        },
+        {
+          "id": "photo-tap",
+          "en": "tap",
+          "zh": "轻拍；轻敲",
+          "ipa": "/tæp/"
+        },
+        {
+          "id": "photo-tub",
+          "en": "tub",
+          "zh": "浴盆；桶",
+          "ipa": "/tʌb/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-aa",
+          "en": "Aa",
+          "zh": "字母A（大写与小写）",
+          "ipa": "/eɪ/"
+        },
+        {
+          "id": "photo-bb",
+          "en": "Bb",
+          "zh": "字母B（大写与小写）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-cc",
+          "en": "Cc",
+          "zh": "字母C（大写与小写）",
+          "ipa": "/si/"
+        },
+        {
+          "id": "photo-dd",
+          "en": "Dd",
+          "zh": "字母D（大写与小写）",
+          "ipa": "/di/"
+        },
+        {
+          "id": "photo-ee",
+          "en": "Ee",
+          "zh": "字母E（大写与小写）",
+          "ipa": "/i/"
+        },
+        {
+          "id": "photo-ff",
+          "en": "Ff",
+          "zh": "字母F（大写与小写）",
+          "ipa": "/ɛf/"
+        },
+        {
+          "id": "photo-gg",
+          "en": "Gg",
+          "zh": "字母G（大写与小写）",
+          "ipa": "/dʒi/"
+        },
+        {
+          "id": "photo-hh",
+          "en": "Hh",
+          "zh": "字母H（大写与小写）",
+          "ipa": "/eɪtʃ/"
+        },
+        {
+          "id": "photo-ii",
+          "en": "Ii",
+          "zh": "字母I（大写与小写）",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-jj",
+          "en": "Jj",
+          "zh": "字母J（大写与小写）",
+          "ipa": "/dʒeɪ/"
+        },
+        {
+          "id": "photo-kk",
+          "en": "Kk",
+          "zh": "字母K（大写与小写）",
+          "ipa": "/keɪ/"
+        },
+        {
+          "id": "photo-ll",
+          "en": "Ll",
+          "zh": "字母L（大写与小写）",
+          "ipa": "/ɛl/"
+        },
+        {
+          "id": "photo-mm",
+          "en": "Mm",
+          "zh": "字母M（大写与小写）",
+          "ipa": "/ɛm/"
+        },
+        {
+          "id": "photo-nn",
+          "en": "Nn",
+          "zh": "字母N（大写与小写）",
+          "ipa": "/ɛn/"
+        },
+        {
+          "id": "photo-oo",
+          "en": "Oo",
+          "zh": "字母O（大写与小写）",
+          "ipa": "/oʊ/"
+        },
+        {
+          "id": "photo-pp",
+          "en": "Pp",
+          "zh": "字母P（大写与小写）",
+          "ipa": "/pi/"
+        },
+        {
+          "id": "photo-qq",
+          "en": "Qq",
+          "zh": "字母Q（大写与小写）",
+          "ipa": "/kju/"
+        },
+        {
+          "id": "photo-rr",
+          "en": "Rr",
+          "zh": "字母R（大写与小写）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-ss",
+          "en": "Ss",
+          "zh": "字母S（大写与小写）",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-tt",
+          "en": "Tt",
+          "zh": "字母T（大写与小写）",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "photo-uu",
+          "en": "Uu",
+          "zh": "字母U（大写与小写）",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "photo-vv",
+          "en": "Vv",
+          "zh": "字母V（大写与小写）",
+          "ipa": "/vi/"
+        },
+        {
+          "id": "photo-ww",
+          "en": "Ww",
+          "zh": "字母W（大写与小写）",
+          "ipa": "/ˈdʌbəlju/"
+        },
+        {
+          "id": "photo-xx",
+          "en": "Xx",
+          "zh": "字母X（大写与小写）",
+          "ipa": "/ɛks/"
+        },
+        {
+          "id": "photo-yy",
+          "en": "Yy",
+          "zh": "字母Y（大写与小写）",
+          "ipa": "/waɪ/"
+        },
+        {
+          "id": "photo-zz",
+          "en": "Zz",
+          "zh": "字母Z（大写与小写）",
+          "ipa": "/zi/"
+        }
+      ]
+    },
+    {
+      "page": 55,
+      "title": "B部分：颜色怎样帮助我们？",
+      "blocks": [
+        {
+          "title": "B部分主题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "B",
+              "zh": "B部分"
+            },
+            {
+              "en": "How do colours help us?",
+              "zh": "颜色怎样帮助我们？"
+            }
+          ]
+        },
+        {
+          "title": "谈论喜欢的颜色",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Let's talk",
+              "zh": "我们来说一说。"
+            },
+            {
+              "en": "What colours do you like?",
+              "zh": "你喜欢哪些颜色？"
+            },
+            {
+              "en": "I like red and pink.",
+              "zh": "我喜欢红色和粉色。"
+            },
+            {
+              "en": "OK. Let's draw some red and pink flowers.",
+              "zh": "好的。我们来画一些红色和粉色的花吧。"
+            },
+            {
+              "en": "And the birds?",
+              "zh": "那鸟呢？"
+            },
+            {
+              "en": "Let's draw some purple and brown birds.",
+              "zh": "我们来画一些紫色和棕色的鸟吧。"
+            }
+          ]
+        },
+        {
+          "title": "作品上的标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "THE COLOURFUL WORLD",
+              "zh": "多彩的世界"
+            }
+          ]
+        },
+        {
+          "title": "涂色并说一说",
+          "kind": "dialogue",
+          "lines": [
+            {
+              "en": "Colour and say",
+              "zh": "涂色并说一说。"
+            },
+            {
+              "en": "What colours do you like?",
+              "zh": "你喜欢哪些颜色？"
+            },
+            {
+              "en": "I like green and yellow.",
+              "zh": "我喜欢绿色和黄色。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-b",
+          "en": "B",
+          "zh": "字母B",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-how",
+          "en": "how",
+          "zh": "怎样；如何",
+          "ipa": "/haʊ/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-colours",
+          "en": "colours",
+          "zh": "颜色（colour的复数）",
+          "ipa": "/ˈkʌlɚz/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "us",
+          "en": "us",
+          "zh": "我们",
+          "ipa": "/ʌs/"
+        },
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "pink",
+          "en": "pink",
+          "zh": "粉色；粉色的",
+          "ipa": "/pɪŋk/"
+        },
+        {
+          "id": "photo-ok",
+          "en": "OK",
+          "zh": "好的；没关系",
+          "ipa": "/ˌoʊˈkeɪ/"
+        },
+        {
+          "id": "draw",
+          "en": "draw",
+          "zh": "画",
+          "ipa": "/drɔ/"
+        },
+        {
+          "id": "some",
+          "en": "some",
+          "zh": "一些",
+          "ipa": "/sʌm/"
+        },
+        {
+          "id": "photo-flowers",
+          "en": "flowers",
+          "zh": "花（flower的复数）",
+          "ipa": "/ˈflaʊɚz/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-birds",
+          "en": "birds",
+          "zh": "鸟（bird的复数）",
+          "ipa": "/bɝdz/"
+        },
+        {
+          "id": "purple",
+          "en": "purple",
+          "zh": "紫色的",
+          "ipa": "/ˈpɝpəl/"
+        },
+        {
+          "id": "brown",
+          "en": "brown",
+          "zh": "棕色；棕色的",
+          "ipa": "/braʊn/"
+        },
+        {
+          "id": "colourful",
+          "en": "colourful",
+          "zh": "多彩的",
+          "ipa": "/ˈkʌlɚfəl/"
+        },
+        {
+          "id": "world",
+          "en": "world",
+          "zh": "世界",
+          "ipa": "/wɝld/"
+        },
+        {
+          "id": "colour",
+          "en": "colour",
+          "zh": "颜色",
+          "ipa": "/ˈkʌlɚ/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "green",
+          "en": "green",
+          "zh": "绿色的",
+          "ipa": "/ɡrin/"
+        },
+        {
+          "id": "yellow",
+          "en": "yellow",
+          "zh": "黄色的",
+          "ipa": "/ˈjɛloʊ/"
+        }
+      ]
+    },
+    {
+      "page": 56,
+      "title": "颜色有用：学习与动作歌谣",
+      "blocks": [
+        {
+          "title": "学习颜色词语",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Let's learn",
+              "zh": "我们来学一学。"
+            },
+            {
+              "en": "Colours are useful!",
+              "zh": "颜色很有用！"
+            },
+            {
+              "en": "pink",
+              "zh": "粉色；粉色的"
+            },
+            {
+              "en": "orange",
+              "zh": "橙色；橙色的"
+            },
+            {
+              "en": "red",
+              "zh": "红色；红色的"
+            },
+            {
+              "en": "white",
+              "zh": "白色；白色的"
+            },
+            {
+              "en": "black",
+              "zh": "黑色；黑色的"
+            }
+          ]
+        },
+        {
+          "title": "听一听，做一做",
+          "kind": "chant",
+          "lines": [
+            {
+              "en": "Listen and do",
+              "zh": "听一听，做一做。"
+            },
+            {
+              "en": "Black, black, sit down.",
+              "zh": "黑色，黑色，坐下来。"
+            },
+            {
+              "en": "White, white, turn around.",
+              "zh": "白色，白色，转个圈。"
+            },
+            {
+              "en": "Pink and red, touch the ground.",
+              "zh": "粉色和红色，摸摸地面。"
+            },
+            {
+              "en": "Orange and red, jump up and down.",
+              "zh": "橙色和红色，上下跳。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-let-s",
+          "en": "let's",
+          "zh": "让我们（let us 的缩写）",
+          "ipa": "/lɛts/"
+        },
+        {
+          "id": "learn",
+          "en": "learn",
+          "zh": "学习",
+          "ipa": "/lɝn/"
+        },
+        {
+          "id": "photo-colours",
+          "en": "colours",
+          "zh": "颜色（colour的复数）",
+          "ipa": "/ˈkʌlɚz/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "useful",
+          "en": "useful",
+          "zh": "有用的",
+          "ipa": "/ˈjusfəl/"
+        },
+        {
+          "id": "pink",
+          "en": "pink",
+          "zh": "粉色；粉色的",
+          "ipa": "/pɪŋk/"
+        },
+        {
+          "id": "orange",
+          "en": "orange",
+          "zh": "橙色的；橙子",
+          "ipa": "/ˈɔrɪndʒ/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "white",
+          "en": "white",
+          "zh": "白色；白色的",
+          "ipa": "/waɪt/"
+        },
+        {
+          "id": "black",
+          "en": "black",
+          "zh": "黑色；黑色的",
+          "ipa": "/blæk/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "sit",
+          "en": "sit",
+          "zh": "坐",
+          "ipa": "/sɪt/"
+        },
+        {
+          "id": "photo-down",
+          "en": "down",
+          "zh": "向下；下来",
+          "ipa": "/daʊn/"
+        },
+        {
+          "id": "turn",
+          "en": "turn",
+          "zh": "转动",
+          "ipa": "/tɝn/"
+        },
+        {
+          "id": "photo-around",
+          "en": "around",
+          "zh": "周围；转一圈",
+          "ipa": "/əˈraʊnd/"
+        },
+        {
+          "id": "touch",
+          "en": "touch",
+          "zh": "触摸",
+          "ipa": "/tʌtʃ/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-ground",
+          "en": "ground",
+          "zh": "地面",
+          "ipa": "/ɡraʊnd/"
+        },
+        {
+          "id": "jump",
+          "en": "jump",
+          "zh": "跳",
+          "ipa": "/dʒʌmp/"
+        },
+        {
+          "id": "photo-up",
+          "en": "up",
+          "zh": "向上",
+          "ipa": "/ʌp/"
+        }
+      ]
+    },
+    {
+      "page": 57,
+      "title": "开始阅读：颜色会说话",
+      "blocks": [
+        {
+          "title": "颜色的含义",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Start to read",
+              "zh": "开始阅读。"
+            },
+            {
+              "en": "Colours can talk!",
+              "zh": "颜色会说话！"
+            },
+            {
+              "en": "It's red. Red can say \"No!\"",
+              "zh": "它是红色的。红色可以说“不！”"
+            },
+            {
+              "en": "It's green. Green can say \"Go!\"",
+              "zh": "它是绿色的。绿色可以说“走！”"
+            },
+            {
+              "en": "It's blue. Blue can say \"Use again!\"",
+              "zh": "它是蓝色的。蓝色可以说“再次使用！”"
+            },
+            {
+              "en": "It's yellow. Yellow can say \"Be careful!\"",
+              "zh": "它是黄色的。黄色可以说“小心！”"
+            }
+          ]
+        },
+        {
+          "title": "圈出图片中的颜色",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Circle the colours you see in the pictures.",
+              "zh": "圈出你在图片中看到的颜色。"
+            },
+            {
+              "en": "black",
+              "zh": "黑色"
+            },
+            {
+              "en": "blue",
+              "zh": "蓝色"
+            },
+            {
+              "en": "brown",
+              "zh": "棕色"
+            },
+            {
+              "en": "green",
+              "zh": "绿色"
+            },
+            {
+              "en": "orange",
+              "zh": "橙色"
+            },
+            {
+              "en": "pink",
+              "zh": "粉色"
+            },
+            {
+              "en": "purple",
+              "zh": "紫色"
+            },
+            {
+              "en": "red",
+              "zh": "红色"
+            },
+            {
+              "en": "white",
+              "zh": "白色"
+            },
+            {
+              "en": "yellow",
+              "zh": "黄色"
+            }
+          ]
+        },
+        {
+          "title": "阅读、思考与涂色",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Read, think and colour.",
+              "zh": "读一读，想一想，涂一涂。"
+            },
+            {
+              "en": "yellow + red =",
+              "zh": "黄色 + 红色 =",
+              "tip": "等号后是待涂色的空圆圈。"
+            },
+            {
+              "en": "blue + red =",
+              "zh": "蓝色 + 红色 =",
+              "tip": "等号后是待涂色的空圆圈。"
+            },
+            {
+              "en": "...",
+              "zh": "……"
+            },
+            {
+              "en": "What colour is it?",
+              "zh": "它是什么颜色的？"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "start",
+          "en": "start",
+          "zh": "开始",
+          "ipa": "/stɑrt/"
+        },
+        {
+          "id": "photo-to",
+          "en": "to",
+          "zh": "到；向；用于动词前",
+          "ipa": "/tu/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "photo-colours",
+          "en": "colours",
+          "zh": "颜色（colour的复数）",
+          "ipa": "/ˈkʌlɚz/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-no",
+          "en": "no",
+          "zh": "不；不好",
+          "ipa": "/noʊ/"
+        },
+        {
+          "id": "green",
+          "en": "green",
+          "zh": "绿色的",
+          "ipa": "/ɡrin/"
+        },
+        {
+          "id": "go",
+          "en": "go",
+          "zh": "去；走",
+          "ipa": "/ɡoʊ/"
+        },
+        {
+          "id": "blue",
+          "en": "blue",
+          "zh": "蓝色的",
+          "ipa": "/blu/"
+        },
+        {
+          "id": "use",
+          "en": "use",
+          "zh": "使用（动词）",
+          "ipa": "/juz/"
+        },
+        {
+          "id": "photo-again",
+          "en": "again",
+          "zh": "再次；又一次",
+          "ipa": "/əˈɡɛn/"
+        },
+        {
+          "id": "yellow",
+          "en": "yellow",
+          "zh": "黄色的",
+          "ipa": "/ˈjɛloʊ/"
+        },
+        {
+          "id": "photo-be",
+          "en": "be",
+          "zh": "是；成为（原形）",
+          "ipa": "/bi/"
+        },
+        {
+          "id": "photo-careful",
+          "en": "careful",
+          "zh": "小心的",
+          "ipa": "/ˈkɛrfəl/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "photo-pictures",
+          "en": "pictures",
+          "zh": "图片（picture的复数）",
+          "ipa": "/ˈpɪktʃɚz/"
+        },
+        {
+          "id": "black",
+          "en": "black",
+          "zh": "黑色；黑色的",
+          "ipa": "/blæk/"
+        },
+        {
+          "id": "brown",
+          "en": "brown",
+          "zh": "棕色；棕色的",
+          "ipa": "/braʊn/"
+        },
+        {
+          "id": "orange",
+          "en": "orange",
+          "zh": "橙色的；橙子",
+          "ipa": "/ˈɔrɪndʒ/"
+        },
+        {
+          "id": "pink",
+          "en": "pink",
+          "zh": "粉色；粉色的",
+          "ipa": "/pɪŋk/"
+        },
+        {
+          "id": "purple",
+          "en": "purple",
+          "zh": "紫色的",
+          "ipa": "/ˈpɝpəl/"
+        },
+        {
+          "id": "white",
+          "en": "white",
+          "zh": "白色；白色的",
+          "ipa": "/waɪt/"
+        },
+        {
+          "id": "think",
+          "en": "think",
+          "zh": "想；思考",
+          "ipa": "/θɪŋk/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "colour",
+          "en": "colour",
+          "zh": "颜色",
+          "ipa": "/ˈkʌlɚ/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；这件事",
+          "ipa": "/ɪt/"
+        }
+      ]
+    },
+    {
+      "page": 58,
+      "title": "C部分项目：制作颜色翻翻书",
+      "blocks": [
+        {
+          "title": "项目标题",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "C",
+              "zh": "C部分"
+            },
+            {
+              "en": "Project: Make a colour flip book",
+              "zh": "项目：制作一本颜色翻翻书"
+            }
+          ]
+        },
+        {
+          "title": "步骤1：听辨颜色",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Which colours do the children say? Listen and circle.",
+              "zh": "孩子们说了哪些颜色？听一听，圈一圈。"
+            }
+          ]
+        },
+        {
+          "title": "步骤2：匹配颜色标签",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Which colours match the things? Talk and add colour labels.",
+              "zh": "哪些颜色与这些物品相匹配？说一说，添加颜色标签。"
+            },
+            {
+              "en": "green",
+              "zh": "绿色"
+            },
+            {
+              "en": "What colour is it?",
+              "zh": "它是什么颜色的？"
+            },
+            {
+              "en": "It's green.",
+              "zh": "它是绿色的。"
+            },
+            {
+              "en": "black",
+              "zh": "黑色"
+            },
+            {
+              "en": "blue",
+              "zh": "蓝色"
+            },
+            {
+              "en": "brown",
+              "zh": "棕色"
+            },
+            {
+              "en": "orange",
+              "zh": "橙色"
+            },
+            {
+              "en": "pink",
+              "zh": "粉色"
+            },
+            {
+              "en": "purple",
+              "zh": "紫色"
+            },
+            {
+              "en": "red",
+              "zh": "红色"
+            },
+            {
+              "en": "white",
+              "zh": "白色"
+            },
+            {
+              "en": "yellow",
+              "zh": "黄色"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-letter-c",
+          "en": "C",
+          "zh": "字母C",
+          "ipa": "/si/"
+        },
+        {
+          "id": "project",
+          "en": "project",
+          "zh": "项目；课题",
+          "ipa": "/ˈprɑdʒɛkt/"
+        },
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "colour",
+          "en": "colour",
+          "zh": "颜色",
+          "ipa": "/ˈkʌlɚ/"
+        },
+        {
+          "id": "photo-flip",
+          "en": "flip",
+          "zh": "翻动",
+          "ipa": "/flɪp/"
+        },
+        {
+          "id": "book",
+          "en": "book",
+          "zh": "书",
+          "ipa": "/bʊk/"
+        },
+        {
+          "id": "which",
+          "en": "which",
+          "zh": "哪一个；哪一些",
+          "ipa": "/wɪtʃ/"
+        },
+        {
+          "id": "photo-colours",
+          "en": "colours",
+          "zh": "颜色（colour的复数）",
+          "ipa": "/ˈkʌlɚz/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-children",
+          "en": "children",
+          "zh": "孩子们（child的复数）",
+          "ipa": "/ˈtʃɪldrən/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "listen",
+          "en": "listen",
+          "zh": "听",
+          "ipa": "/ˈlɪsən/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "photo-circle",
+          "en": "circle",
+          "zh": "圈出；圆圈",
+          "ipa": "/ˈsɝkəl/"
+        },
+        {
+          "id": "photo-match",
+          "en": "match",
+          "zh": "配对；连线",
+          "ipa": "/mætʃ/"
+        },
+        {
+          "id": "photo-things",
+          "en": "things",
+          "zh": "物品；事物（thing的复数）",
+          "ipa": "/θɪŋz/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "add",
+          "en": "add",
+          "zh": "增加；补充说",
+          "ipa": "/æd/"
+        },
+        {
+          "id": "photo-labels",
+          "en": "labels",
+          "zh": "标签（label的复数）",
+          "ipa": "/ˈleɪbəlz/"
+        },
+        {
+          "id": "green",
+          "en": "green",
+          "zh": "绿色的",
+          "ipa": "/ɡrin/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；这件事",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "photo-it-s",
+          "en": "it's",
+          "zh": "它是；这是（it is 的缩写）",
+          "ipa": "/ɪts/"
+        },
+        {
+          "id": "black",
+          "en": "black",
+          "zh": "黑色；黑色的",
+          "ipa": "/blæk/"
+        },
+        {
+          "id": "blue",
+          "en": "blue",
+          "zh": "蓝色的",
+          "ipa": "/blu/"
+        },
+        {
+          "id": "brown",
+          "en": "brown",
+          "zh": "棕色；棕色的",
+          "ipa": "/braʊn/"
+        },
+        {
+          "id": "orange",
+          "en": "orange",
+          "zh": "橙色的；橙子",
+          "ipa": "/ˈɔrɪndʒ/"
+        },
+        {
+          "id": "pink",
+          "en": "pink",
+          "zh": "粉色；粉色的",
+          "ipa": "/pɪŋk/"
+        },
+        {
+          "id": "purple",
+          "en": "purple",
+          "zh": "紫色的",
+          "ipa": "/ˈpɝpəl/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "white",
+          "en": "white",
+          "zh": "白色；白色的",
+          "ipa": "/waɪt/"
+        },
+        {
+          "id": "yellow",
+          "en": "yellow",
+          "zh": "黄色的",
+          "ipa": "/ˈjɛloʊ/"
+        }
+      ]
+    },
+    {
+      "page": 59,
+      "title": "制作、展示翻翻书与自我检查",
+      "blocks": [
+        {
+          "title": "步骤3：制作你的书",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Make your book.",
+              "zh": "制作你的书。"
+            },
+            {
+              "en": "Step 1",
+              "zh": "第1步"
+            },
+            {
+              "en": "Choose the colours you like.",
+              "zh": "选择你喜欢的颜色。"
+            },
+            {
+              "en": "What colours do you like, Sarah?",
+              "zh": "萨拉，你喜欢哪些颜色？"
+            },
+            {
+              "en": "I like yellow, red and blue.",
+              "zh": "我喜欢黄色、红色和蓝色。"
+            },
+            {
+              "en": "Step 2",
+              "zh": "第2步"
+            },
+            {
+              "en": "Make your book.",
+              "zh": "制作你的书。"
+            }
+          ]
+        },
+        {
+          "title": "步骤4：在班级分享",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Share your book in class.",
+              "zh": "在班级里分享你的书。"
+            },
+            {
+              "en": "This is my book.",
+              "zh": "这是我的书。"
+            },
+            {
+              "en": "I like yellow, red and blue.",
+              "zh": "我喜欢黄色、红色和蓝色。"
+            },
+            {
+              "en": "Bananas are yellow.",
+              "zh": "香蕉是黄色的。"
+            },
+            {
+              "en": "Ducks are ...",
+              "zh": "鸭子是……"
+            }
+          ]
+        },
+        {
+          "title": "自我检查与三个程度",
+          "kind": "activity",
+          "lines": [
+            {
+              "en": "Self-check",
+              "zh": "自我检查"
+            },
+            {
+              "en": "I still need help",
+              "zh": "我还需要帮助。"
+            },
+            {
+              "en": "I can mostly do it",
+              "zh": "我大部分能做到。"
+            },
+            {
+              "en": "I can do it!",
+              "zh": "我能做到！"
+            },
+            {
+              "en": "I can tell others about the colours I see and like.",
+              "zh": "我能告诉别人我看见和喜欢的颜色。"
+            },
+            {
+              "en": "I can tell the colour of things.",
+              "zh": "我能说出物品的颜色。"
+            },
+            {
+              "en": "I can talk about what colours mean.",
+              "zh": "我能谈论颜色的含义。"
+            },
+            {
+              "en": "I can read, write and say Qq, Rr, Ss, Tt and Uu.",
+              "zh": "我能读、写、说Qq、Rr、Ss、Tt和Uu。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "make",
+          "en": "make",
+          "zh": "制作；使出现",
+          "ipa": "/meɪk/"
+        },
+        {
+          "id": "photo-your",
+          "en": "your",
+          "zh": "你的；你们的",
+          "ipa": "/jʊr/"
+        },
+        {
+          "id": "book",
+          "en": "book",
+          "zh": "书",
+          "ipa": "/bʊk/"
+        },
+        {
+          "id": "photo-step",
+          "en": "step",
+          "zh": "步骤",
+          "ipa": "/stɛp/"
+        },
+        {
+          "id": "photo-choose",
+          "en": "choose",
+          "zh": "选择",
+          "ipa": "/tʃuz/"
+        },
+        {
+          "id": "photo-the",
+          "en": "the",
+          "zh": "这；那（定冠词）",
+          "ipa": "/ðə/"
+        },
+        {
+          "id": "photo-colours",
+          "en": "colours",
+          "zh": "颜色（colour的复数）",
+          "ipa": "/ˈkʌlɚz/"
+        },
+        {
+          "id": "photo-you",
+          "en": "you",
+          "zh": "你；你们",
+          "ipa": "/ju/"
+        },
+        {
+          "id": "like",
+          "en": "like",
+          "zh": "喜欢",
+          "ipa": "/laɪk/"
+        },
+        {
+          "id": "photo-what",
+          "en": "what",
+          "zh": "什么",
+          "ipa": "/wʌt/"
+        },
+        {
+          "id": "photo-do",
+          "en": "do",
+          "zh": "做；疑问句中帮助提问",
+          "ipa": "/du/"
+        },
+        {
+          "id": "photo-sarah",
+          "en": "Sarah",
+          "zh": "萨拉（人名）",
+          "ipa": "/ˈsɛrə/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "yellow",
+          "en": "yellow",
+          "zh": "黄色的",
+          "ipa": "/ˈjɛloʊ/"
+        },
+        {
+          "id": "red",
+          "en": "red",
+          "zh": "红色的",
+          "ipa": "/rɛd/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "blue",
+          "en": "blue",
+          "zh": "蓝色的",
+          "ipa": "/blu/"
+        },
+        {
+          "id": "share",
+          "en": "share",
+          "zh": "分享",
+          "ipa": "/ʃɛr/"
+        },
+        {
+          "id": "in",
+          "en": "in",
+          "zh": "在……里面",
+          "ipa": "/ɪn/"
+        },
+        {
+          "id": "class",
+          "en": "class",
+          "zh": "班级；课",
+          "ipa": "/klæs/"
+        },
+        {
+          "id": "photo-this",
+          "en": "this",
+          "zh": "这；这个",
+          "ipa": "/ðɪs/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "photo-bananas",
+          "en": "bananas",
+          "zh": "香蕉（banana的复数）",
+          "ipa": "/bəˈnænəz/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-ducks",
+          "en": "ducks",
+          "zh": "鸭子（duck的复数）",
+          "ipa": "/dʌks/"
+        },
+        {
+          "id": "photo-self-check",
+          "en": "self-check",
+          "zh": "自我检查",
+          "ipa": "/ˈsɛlf tʃɛk/"
+        },
+        {
+          "id": "still",
+          "en": "still",
+          "zh": "仍然",
+          "ipa": "/stɪl/"
+        },
+        {
+          "id": "need",
+          "en": "need",
+          "zh": "需要",
+          "ipa": "/nid/"
+        },
+        {
+          "id": "help",
+          "en": "help",
+          "zh": "帮助",
+          "ipa": "/hɛlp/"
+        },
+        {
+          "id": "can",
+          "en": "can",
+          "zh": "可以；会",
+          "ipa": "/kæn/"
+        },
+        {
+          "id": "photo-mostly",
+          "en": "mostly",
+          "zh": "大部分；主要地",
+          "ipa": "/ˈmoʊstli/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；这件事",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "tell",
+          "en": "tell",
+          "zh": "讲述；告诉",
+          "ipa": "/tɛl/"
+        },
+        {
+          "id": "photo-others",
+          "en": "others",
+          "zh": "其他人；别人",
+          "ipa": "/ˈʌðɚz/"
+        },
+        {
+          "id": "about",
+          "en": "about",
+          "zh": "关于；大约",
+          "ipa": "/əˈbaʊt/"
+        },
+        {
+          "id": "see",
+          "en": "see",
+          "zh": "看见",
+          "ipa": "/si/"
+        },
+        {
+          "id": "colour",
+          "en": "colour",
+          "zh": "颜色",
+          "ipa": "/ˈkʌlɚ/"
+        },
+        {
+          "id": "photo-of",
+          "en": "of",
+          "zh": "……的",
+          "ipa": "/ʌv/"
+        },
+        {
+          "id": "photo-things",
+          "en": "things",
+          "zh": "物品；事物（thing的复数）",
+          "ipa": "/θɪŋz/"
+        },
+        {
+          "id": "talk",
+          "en": "talk",
+          "zh": "说话；交谈",
+          "ipa": "/tɔk/"
+        },
+        {
+          "id": "photo-mean",
+          "en": "mean",
+          "zh": "意思是；表示",
+          "ipa": "/min/"
+        },
+        {
+          "id": "read",
+          "en": "read",
+          "zh": "阅读（原形）",
+          "ipa": "/rid/"
+        },
+        {
+          "id": "write",
+          "en": "write",
+          "zh": "写",
+          "ipa": "/raɪt/"
+        },
+        {
+          "id": "say",
+          "en": "say",
+          "zh": "说；讲",
+          "ipa": "/seɪ/"
+        },
+        {
+          "id": "photo-qq",
+          "en": "Qq",
+          "zh": "字母Q（大写与小写）",
+          "ipa": "/kju/"
+        },
+        {
+          "id": "photo-rr",
+          "en": "Rr",
+          "zh": "字母R（大写与小写）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "photo-ss",
+          "en": "Ss",
+          "zh": "字母S（大写与小写）",
+          "ipa": "/ɛs/"
+        },
+        {
+          "id": "photo-tt",
+          "en": "Tt",
+          "zh": "字母T（大写与小写）",
+          "ipa": "/ti/"
+        },
+        {
+          "id": "photo-uu",
+          "en": "Uu",
+          "zh": "字母U（大写与小写）",
+          "ipa": "/ju/"
+        }
+      ]
+    },
+    {
+      "page": 60,
+      "title": "阅读时间：向日葵的故事（上）",
+      "blocks": [
+        {
+          "title": "阅读时间",
+          "kind": "heading",
+          "lines": [
+            {
+              "en": "Reading time",
+              "zh": "阅读时间"
+            }
+          ]
+        },
+        {
+          "title": "故事1：高高绿绿的向日葵",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "I am a sunflower.",
+              "zh": "我是一株向日葵。"
+            },
+            {
+              "en": "I am tall and green.",
+              "zh": "我长得高高的、绿绿的。"
+            }
+          ]
+        },
+        {
+          "title": "故事2：绿色与黄色",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Then I am green and yellow.",
+              "zh": "然后，我变成了绿色和黄色。"
+            }
+          ]
+        },
+        {
+          "title": "故事3：黄色的花与蜜蜂",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Now I am a big yellow flower.",
+              "zh": "现在我是一朵黄色的大花。"
+            },
+            {
+              "en": "Bees come.",
+              "zh": "蜜蜂来了。"
+            },
+            {
+              "en": "They are yellow and black.",
+              "zh": "它们是黄色和黑色的。"
+            },
+            {
+              "en": "I give them food.",
+              "zh": "我给它们食物。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "photo-reading",
+          "en": "reading",
+          "zh": "阅读（read 的 -ing 形式）",
+          "ipa": "/ˈridɪŋ/"
+        },
+        {
+          "id": "time",
+          "en": "time",
+          "zh": "时间",
+          "ipa": "/taɪm/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-am",
+          "en": "am",
+          "zh": "是（用于 I）",
+          "ipa": "/æm/"
+        },
+        {
+          "id": "photo-a",
+          "en": "a",
+          "zh": "一；一个（不定冠词）",
+          "ipa": "/ə/"
+        },
+        {
+          "id": "photo-sunflower",
+          "en": "sunflower",
+          "zh": "向日葵",
+          "ipa": "/ˈsʌnˌflaʊɚ/"
+        },
+        {
+          "id": "tall",
+          "en": "tall",
+          "zh": "高的",
+          "ipa": "/tɔl/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "green",
+          "en": "green",
+          "zh": "绿色的",
+          "ipa": "/ɡrin/"
+        },
+        {
+          "id": "then",
+          "en": "then",
+          "zh": "那时",
+          "ipa": "/ðɛn/"
+        },
+        {
+          "id": "yellow",
+          "en": "yellow",
+          "zh": "黄色的",
+          "ipa": "/ˈjɛloʊ/"
+        },
+        {
+          "id": "now",
+          "en": "now",
+          "zh": "现在",
+          "ipa": "/naʊ/"
+        },
+        {
+          "id": "big",
+          "en": "big",
+          "zh": "大的",
+          "ipa": "/bɪɡ/"
+        },
+        {
+          "id": "flower",
+          "en": "flower",
+          "zh": "花",
+          "ipa": "/ˈflaʊɚ/"
+        },
+        {
+          "id": "photo-bees",
+          "en": "bees",
+          "zh": "蜜蜂（bee的复数）",
+          "ipa": "/biz/"
+        },
+        {
+          "id": "photo-come",
+          "en": "come",
+          "zh": "来",
+          "ipa": "/kʌm/"
+        },
+        {
+          "id": "photo-they",
+          "en": "they",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðeɪ/"
+        },
+        {
+          "id": "photo-are",
+          "en": "are",
+          "zh": "是（用于 you、we、they 等）",
+          "ipa": "/ɑr/"
+        },
+        {
+          "id": "black",
+          "en": "black",
+          "zh": "黑色；黑色的",
+          "ipa": "/blæk/"
+        },
+        {
+          "id": "give",
+          "en": "give",
+          "zh": "给",
+          "ipa": "/ɡɪv/"
+        },
+        {
+          "id": "them",
+          "en": "them",
+          "zh": "他们；她们；它们",
+          "ipa": "/ðɛm/"
+        },
+        {
+          "id": "food",
+          "en": "food",
+          "zh": "食物",
+          "ipa": "/fud/"
+        }
+      ]
+    },
+    {
+      "page": 61,
+      "title": "阅读时间：向日葵的故事（下）",
+      "blocks": [
+        {
+          "title": "故事4：天气变冷",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "Now it is cold.",
+              "zh": "现在天气变冷了。"
+            },
+            {
+              "en": "I am green and brown.",
+              "zh": "我是绿色和棕色的。"
+            }
+          ]
+        },
+        {
+          "title": "故事5：新的生命",
+          "kind": "reading",
+          "lines": [
+            {
+              "en": "I am gone.",
+              "zh": "我已经凋谢了。"
+            },
+            {
+              "en": "But my children grow.",
+              "zh": "但我的孩子们长起来了。",
+              "tip": "children 在这里指由向日葵种子长出的新植株。"
+            }
+          ]
+        }
+      ],
+      "words": [
+        {
+          "id": "now",
+          "en": "now",
+          "zh": "现在",
+          "ipa": "/naʊ/"
+        },
+        {
+          "id": "photo-it",
+          "en": "it",
+          "zh": "它；这件事",
+          "ipa": "/ɪt/"
+        },
+        {
+          "id": "photo-is",
+          "en": "is",
+          "zh": "是（用于单数）",
+          "ipa": "/ɪz/"
+        },
+        {
+          "id": "cold",
+          "en": "cold",
+          "zh": "寒冷的",
+          "ipa": "/koʊld/"
+        },
+        {
+          "id": "photo-i",
+          "en": "I",
+          "zh": "我",
+          "ipa": "/aɪ/"
+        },
+        {
+          "id": "photo-am",
+          "en": "am",
+          "zh": "是（用于 I）",
+          "ipa": "/æm/"
+        },
+        {
+          "id": "green",
+          "en": "green",
+          "zh": "绿色的",
+          "ipa": "/ɡrin/"
+        },
+        {
+          "id": "and",
+          "en": "and",
+          "zh": "和；与",
+          "ipa": "/ænd/"
+        },
+        {
+          "id": "brown",
+          "en": "brown",
+          "zh": "棕色；棕色的",
+          "ipa": "/braʊn/"
+        },
+        {
+          "id": "photo-gone",
+          "en": "gone",
+          "zh": "离开了；消失了",
+          "ipa": "/ɡɔn/"
+        },
+        {
+          "id": "photo-but",
+          "en": "but",
+          "zh": "但是",
+          "ipa": "/bʌt/"
+        },
+        {
+          "id": "photo-my",
+          "en": "my",
+          "zh": "我的",
+          "ipa": "/maɪ/"
+        },
+        {
+          "id": "photo-children",
+          "en": "children",
+          "zh": "孩子们（child的复数）",
+          "ipa": "/ˈtʃɪldrən/"
+        },
+        {
+          "id": "photo-grow",
+          "en": "grow",
+          "zh": "生长；长大",
+          "ipa": "/ɡroʊ/"
+        }
+      ]
+    }
+  ]
+}
