@@ -7,6 +7,61 @@ const clickAt = async (b, x, y) => { for (const type of ['mousePressed', 'mouseR
 const click = async (b, selector) => { const r = await b.evaluate(`(()=>{const e=document.querySelector(${JSON.stringify(selector)});e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()`); await clickAt(b, r.x, r.y); };
 const saved = b => b.evaluate('JSON.parse(localStorage.getItem("memory-garden-v1"))');
 const card = async (b, index) => { const r = await b.evaluate(`JSON.parse(document.querySelector('#view').dataset.cards).find(c=>c.index===${index})`); assert.ok(r, `card ${index} must be visible`); await clickAt(b, r.x, r.y); };
+
+test('cards automatically shrink to fit the whole board and remain clickable as more cards are added', { timeout: 60000 }, async () => {
+  const b = await openBrowser();
+  try {
+    await b.size(390, 844, true); await b.navigate('games/memory.html');
+    await wait(b, 'document.body.dataset.ready === "true"');
+    await click(b, '#start'); await click(b, '[data-level="1"]');
+    await wait(b, 'view.dataset.phase === "playing"');
+    const spacing = () => b.evaluate('(()=>{const cards=JSON.parse(view.dataset.cards);return Math.abs(cards.find(c=>c.index===1).x-cards.find(c=>c.index===0).x)})()');
+    const firstSpacing = await spacing();
+    await click(b, '#pause'); await click(b, '#leave');
+    await click(b, '#start'); await click(b, '[data-level="10"]'); await click(b, '#confirm-unlock');
+    await wait(b, 'JSON.parse(view.dataset.cards).length >= 40');
+    const visible = await b.evaluate('(()=>{const r=view.getBoundingClientRect();return {cards:JSON.parse(view.dataset.cards),top:r.top,bottom:r.bottom}})()');
+    assert.equal(visible.cards.length, 40);
+    for (const c of visible.cards) assert.ok(c.x > 12 && c.x < 378 && c.y > visible.top + 100 && c.y < visible.bottom - 80, `card ${c.index} is clipped or hidden behind controls: ${JSON.stringify(c)}`);
+    const levelSpacing = await spacing(); assert.ok(levelSpacing < firstSpacing, 'more cards must have smaller visual size');
+    assert.ok(await b.evaluate('JSON.parse(view.dataset.resources).objects') > 0, 'small preview cards retain their raised symbols');
+    const preview = await b.call('Page.captureScreenshot', { format: 'png' }); await writeFile('/tmp/memory-adaptive-preview.png', Buffer.from(preview.data, 'base64'));
+    await wait(b, 'view.dataset.phase === "playing"');
+    await card(b, 39); assert.deepEqual((await saved(b)).session.selected, [39], 'a fitted last card can be selected directly');
+    const selected = (await saved(b)).session.cards[39].symbol;
+    const matching = (await saved(b)).session.cards.findIndex((c, i) => c.symbol === selected && i !== 39);
+    await card(b, matching);
+    await click(b, '#use-add'); await wait(b, 'JSON.parse(view.dataset.cards).length === 44');
+    assert.ok(await spacing() < levelSpacing, 'adding cards must recalculate and reduce the visual size');
+    await wait(b, 'view.dataset.phase === "playing"');
+    await card(b, 43); assert.deepEqual((await saved(b)).session.selected, [43], 'new final cards remain selectable');
+    for (const [width, height] of [[320, 568], [568, 320], [844, 390], [820, 1180], [1440, 900]]) {
+      await b.size(width, height, width < 1000);
+      const layout = await b.evaluate('(()=>{const r=view.getBoundingClientRect();return {cards:JSON.parse(view.dataset.cards),top:r.top,bottom:r.bottom,height:r.height}})()');
+      assert.equal(layout.cards.length, 44, `${width}x${height} keeps the whole board visible`);
+      for (const c of layout.cards) assert.ok(c.x > 8 && c.x < width - 8 && c.y > layout.top + (layout.height < 300 ? 40 : 100) && c.y < layout.bottom - (layout.height < 300 ? 70 : 80), `${width}x${height}: clipped card ${JSON.stringify(c)}`);
+    }
+    assert.deepEqual(b.errors, []);
+  } finally { b.close(); }
+});
+test('a matched sculpture stays face up when a paused board is restored', { timeout: 45000 }, async () => {
+  const b = await openBrowser();
+  try {
+    await b.size(390, 844, true); await b.navigate('games/memory.html'); await wait(b, 'document.body.dataset.ready === "true"');
+    await click(b, '#start'); await click(b, '[data-level="1"]'); await wait(b, 'view.dataset.phase === "playing"');
+    const pair = (await saved(b)).session.cards.flatMap((c, i) => c.symbol === 0 ? [i] : []);
+    await card(b, pair[0]); await card(b, pair[1]); await sleep(1400);
+    await click(b, '#pause'); await b.evaluate('document.getElementById("pause-dialog").style.visibility="hidden"');
+    const p = await b.evaluate(`JSON.parse(view.dataset.cards).find(c=>c.index===${pair[0]})`);
+    const capture = () => b.call('Page.captureScreenshot', { format: 'png', clip: { x: Math.floor(p.x - 38), y: Math.floor(p.y - 44), width: 76, height: 88, scale: 1 } });
+    const before = await capture();
+    await b.navigate('games/memory.html'); await wait(b, 'document.body.dataset.ready === "true"'); await click(b, '#continue');
+    await wait(b, 'document.body.dataset.mode === "paused"'); await b.evaluate('document.getElementById("pause-dialog").style.visibility="hidden"');
+    assert.equal((await saved(b)).session.cards[pair[0]].matched, true);
+    assert.equal((await capture()).data, before.data, 'restored matched card has the same face and sculpture');
+    assert.deepEqual(b.errors, []);
+  } finally { b.close(); }
+});
 // Removing actual raycast input, a first-clear receipt, or next-level unlock must break this visitor path.
 test('native 3D flips finish level one, award once, persist and unlock only the next level', { timeout: 60000 }, async () => {
   const b = await openBrowser();
