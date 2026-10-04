@@ -40,3 +40,14 @@ Cloud controller persists queue per owner+profile and revision with session snap
 - Plan approved by existing stage-2 design and user continuation.
 - Existing isolated worktree reused on fresh branch from origin/main 52480ec.
 - Mail configuration absent; user asked for sender/config location. No credentials printed.
+
+## Verified delivery preparation
+
+- Integrated latest main a25974f (existing rescue protective-pause fix); no main edits discarded.
+- Auth + family + client implemented and reviewed. Verified 724 full unit checks with actual PostgreSQL, plus 35 affected checks after cache version updates. Platform dependency audit reports zero advisories.
+- Two independent native browsers verified signup/test-mail verification/login, guest import, current-step resume, completed lesson and wrong-answer sync, siblings, offline conflict choice, blocked learning during profile loading, and logout restoring unchanged guest save. Blocked localStorage getter guest startup also passes.
+- Corrected unchanged-save false conflicts, continued-learning conflict snapshots, delayed import and child-switch races, and offline multi-tab overwrite/stale acknowledgement problems. Independent per-tab journals retain events and session choices. Final client scoped review reports no remaining P1/P2.
+- Actual encrypted dump/restore with real test auth and one profile/progress/event/import verified all 8 relevant table counts and exact course progress. Evidence stored under output/family-cloud/family-restore-check.json outside the deployed repo.
+- Daily encrypted offsite backup installed on this code host, separate from oci-cc-arm, with key/config outside Git and timer at 03:45 Asia/Shanghai. First actual production dump succeeded; local production daily/weekly backups remain active.
+- Durable production AUTH_SECRET configured outside docroot. Mail sender is still absent; pending only sender configuration and real verification/recovery mail delivery. No production verification bypass or artificial user account created.
+- Production deployment and public readback are the next actions. Email-dependent acceptance remains pending and must not be reported complete.
