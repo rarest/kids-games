@@ -197,3 +197,60 @@ test('local replay advances only its player and acted box, without stepping remo
  assert.ok(s.objects[0].x>x);assert.ok(s.players[0].x>5);assert.equal(s.players[0].hearts,3);
  assert.deepEqual(s.enemies,enemies);assert.deepEqual(s.players[1],remote);assert.deepEqual(s.objects[1],other);assert.equal(s.boss.active,false);assert.equal(s.score,0);
 });
+
+test('delayed teammate reversals correct smoothly instead of teleporting at each snapshot',()=>{
+ const {p,s,time}=setup();
+ s.players[1].vx=7.2;
+ time(200);p.receive(s,{epoch:1,ack:0,at:0});
+ time(250);const before={...p.render().players[1]};
+ for(let i=0;i<3;i++)stepGame(s,[neutral(),{...neutral(),move:-1}],1/60);
+ p.receive(s,{epoch:1,ack:0,at:50});
+ const after={...p.render().players[1]};
+ assert.ok(Math.abs(after.x-before.x)<.01,`snapshot teleported teammate from ${before.x} to ${after.x}`);
+ time(266);const next={...p.render().players[1]};
+ assert.ok(next.x<after.x,'the correction must start moving toward the new path');
+ assert.ok(after.x-next.x<.8,'correction must not be deferred as another one-frame teleport');
+ time(500);const expected=structuredClone(s);projectGeometry(expected,.25);
+ assert.ok(Math.abs(p.render().players[1].x-expected.players[1].x)<.001,'correction must settle on the current physical path');
+});
+
+test('teammate respawns and new epochs clear an in-flight visual correction',()=>{
+ const {p,s,time}=setup();s.players[1].vx=7.2;
+ time(200);p.receive(s,{epoch:1,ack:0,at:0});time(250);p.render();
+ s.players[1].vx=-7.2;s.players[1].x-=.36;p.receive(s,{epoch:1,ack:0,at:50});
+ s.players[1].lives--;s.players[1].x=30;s.players[1].vx=0;
+ time(260);p.receive(s,{epoch:1,ack:0,at:260});
+ assert.equal(p.render().players[1].x,30,'a respawn must not slide across the whole level');
+ s.players[1].x=5.9;time(270);p.receive(s,{epoch:2,ack:0,at:270});
+ assert.equal(p.render().players[1].x,5.9,'a new epoch must not inherit the previous correction');
+});
+
+test('a delayed local acknowledgement does not snap when held-input server ticks exceed two units of correction',()=>{
+ const {p,s,time}=setup();
+ for(let i=0;i<20;i++)p.advance({move:1},1/60);
+ const before={...p.render().players[0]};
+ // During an input gap the server keeps held movement active. Its world clock
+ // can advance 24 ticks while only five sequenced commands have been received.
+ for(let i=0;i<24;i++)stepGame(s,[{...neutral(),move:1},neutral()],1/60);
+ time(400);p.receive(s,{epoch:1,ack:5,at:200});
+ assert.ok(Math.abs(p.render().players[0].x-before.x)<.01,'a valid late ack must not abruptly pull the local player forward');
+ time(416);const next=p.render().players[0].x;
+ assert.ok(next>before.x&&next-before.x<.8,'catch-up starts without a one-frame jump');
+ time(700);assert.ok(p.render().players[0].x>before.x+2,'the correction must converge rather than hide the authoritative advance');
+ assert.equal(p.diagnostics().pending,15,'visual smoothing must not discard unacknowledged inputs');
+});
+
+test('walking off a moving platform cannot resurrect a suppressed teammate correction',()=>{
+ let now=200;
+ const p=module.createPrediction({slot:0,clock:{now:()=>now}});
+ const s=createGame({...fixture(),spawn:{x:5,y:3},platforms:[{id:'lift',kind:'moving',x:2,y:3,w:6,h:.65,axis:'x',range:0,speed:1}]},{players:2});
+ Object.assign(s.players[1],{x:6.3,y:3,vx:-7.2,grounded:true,groundId:'lift'});
+ p.receive(s,{epoch:1,ack:0,at:0});now=250;p.render();
+ Object.assign(s.players[1],{x:6.65,vx:7.2});
+ p.receive(s,{epoch:1,ack:0,at:50});
+ now=285;const grounded={...p.render().players[1]};
+ now=290;const airborne={...p.render().players[1]};
+ assert.equal(grounded.grounded,true);assert.equal(airborne.grounded,false);
+ assert.ok(airborne.x>=grounded.x,'the player must keep walking forward when leaving the platform');
+ assert.ok(airborne.x-grounded.x<.1,'leaving platform must preserve motion continuity');
+});

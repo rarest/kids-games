@@ -15,9 +15,9 @@ export function createPrediction({slot,clock={now:()=>performance.now()}}={}){
  if(slot!==0&&slot!==1)throw Error('Invalid player slot');
  let authority=null,replay=null,view=null,epoch=null,seq=0,ack=0,pending=[],history=[];
  let accumulator=0,held=neutral(),edges={jump:false,action:false},offset={x:0,y:0,at:0};
- let ownSample=null;
+ let ownSample=null,teammateSample=null,teammateOffset={x:0,y:0,at:0};
  let snapshotAt=0,objectOverlay=null,geometry=null,geometryLead=0;
- function reset(){pending=[];history=[];seq=0;ack=0;accumulator=0;held=neutral();edges={jump:false,action:false};offset={x:0,y:0,at:0};ownSample=null;objectOverlay=null;}
+ function reset(){pending=[];history=[];seq=0;ack=0;accumulator=0;held=neutral();edges={jump:false,action:false};offset={x:0,y:0,at:0};ownSample=null;teammateSample=null;teammateOffset={x:0,y:0,at:0};objectOverlay=null;}
  function simulate(command){
   const previousLink=replay.players[slot].carrying;
   stepLocal(replay,slot,command.input,STEP);
@@ -33,17 +33,28 @@ export function createPrediction({slot,clock={now:()=>performance.now()}}={}){
   if(!changed&&meta.ack<ack)return false;
   const newRun=authority!==state;
   const old=view?.players?.[slot],oldX=old?.x,oldY=old?.y;
+  const oldTeammate=view?.players?.[1-slot];
   if(changed)reset();
   authority=state;epoch=meta.epoch;ack=meta.ack;seq=Math.max(seq,ack);
   pending=pending.filter(c=>c.seq>ack);
   const now=clock.now(),sample=positions(state),hard=changed||discontinuity(ownSample,sample.players[slot]);
+  const teammateHard=changed||discontinuity(teammateSample,sample.players[1-slot]);
+  teammateSample=sample.players[1-slot];teammateOffset={x:0,y:0,at:now};
   snapshotAt=Number.isFinite(meta.at)?Math.min(now,meta.at):now;
   geometry=null;geometryLead=0;
   ownSample=sample.players[slot];history.push({at:now,positions:sample});if(history.length>MAX_HISTORY)history.shift();
   replay=cloneDynamic(state);replay._localObjectIds=new Set(objectOverlay?[objectOverlay.id]:[]);for(const command of pending)simulate(command);
   if(!view||newRun)view={};
   const own=replay.players[slot],dx=oldX-own.x,dy=oldY-own.y;
-  offset=!hard&&own.lives===state.players[slot].lives&&own.hearts===state.players[slot].hearts&&!state.players[slot].heldBy&&Number.isFinite(dx)&&Math.hypot(dx,dy)<2?{x:dx,y:dy,at:now}:{x:0,y:0,at:now};
+  offset=!hard&&own.lives===state.players[slot].lives&&own.hearts===state.players[slot].hearts&&!state.players[slot].heldBy&&Number.isFinite(dx)&&Number.isFinite(dy)?{x:dx,y:dy,at:now,duration:Math.min(240,Math.max(80,Math.hypot(dx,dy)*60))}:{x:0,y:0,at:now};
+  render(now);
+  const teammate=view.players[1-slot];
+  // A delayed direction change invalidates extrapolation, not the player's
+  // location. Blend that visual correction; never smooth respawns or ownership.
+  if(!teammateHard&&now-snapshotAt>STEP*1000&&active(authority)&&!teammate.heldBy&&oldTeammate){
+   const x=oldTeammate.x-teammate.x,y=oldTeammate.y-teammate.y;
+   if(Number.isFinite(x)&&Number.isFinite(y))teammateOffset={x,y,at:now};
+  }
   render(now);return true;
  }
  function advance(raw={},dt=0){
@@ -106,8 +117,17 @@ export function createPrediction({slot,clock={now:()=>performance.now()}}={}){
    }
    const own=view.players[slot],onMovingPlatform=own.grounded&&view.platforms.some(p=>p.id===own.groundId&&p.kind==='moving');
    // Smoothing must not slide feet away from a platform on the shared replay clock.
-   const weight=onMovingPlatform?0:Math.max(0,1-(now-offset.at)/80);
+   if(onMovingPlatform)offset={x:0,y:0,at:now};
+   const weight=onMovingPlatform?0:Math.max(0,1-(now-offset.at)/(offset.duration??80));
    if(predicted.lives===confirmed.lives&&predicted.hearts===confirmed.hearts&&!confirmed.heldBy){own.x+=offset.x*weight;own.y+=offset.y*weight;}
+  }
+  if(coherent){
+   const teammate=view.players[1-slot];
+   const onMovingPlatform=teammate.grounded&&view.platforms.some(p=>p.id===teammate.groundId&&p.kind==='moving');
+   // Discard rather than hide it: walking off must not revive an old correction.
+   if(onMovingPlatform)teammateOffset={x:0,y:0,at:now};
+   const weight=onMovingPlatform?0:Math.max(0,1-(now-teammateOffset.at)/120);
+   if(!teammate.heldBy){teammate.x+=teammateOffset.x*weight;teammate.y+=teammateOffset.y*weight;}
   }
   // A carrier's visual correction also moves its held body, never a released projectile.
   for(const player of view.players){
