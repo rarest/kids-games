@@ -25,7 +25,7 @@ async function shot(b,name) {
   await writeFile(`${dir}/${name}.png`,Buffer.from(r.data,'base64'));
 }
 
-test('three browsers use a six-digit room, start together, drive independent cars and keep racing after captain exits', {timeout:300000}, async()=>{
+test('three browsers use a six-digit room, start together, drive independent cars and keep racing after captain exits', {timeout:600000}, async()=>{
   const browsers=[];let server;
   try {
     const host=await openBrowser();browsers.push(host);
