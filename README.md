@@ -103,9 +103,10 @@ deploy/        自动部署组件
 - 进度保存到当前浏览器：继续游戏从区域起点恢复入口分数、收集物和生命；区域完成后保存分支解锁与下一站入口。最高分独立保留。
 - 联网双人：在首页创建或输入 6 位房间号加入，创建者控制奇奇、加入者控制蒂蒂。每台设备使用自己的 1P 键位、手柄或触屏。房主开始、重试和选择已解锁下一站；任一人暂停、断线、进入后台或 GPU 中断都会暂停队伍，恢复后由房主手动继续。短时重连保留原角色；退出结束房间。联网从 0 区开始，进度不覆盖本机存档；联网中的音乐、音效和画质设置只在本次房间生效，离房恢复本机选项。
 - 游戏 app 内双击不放大，长按和右键不打开网页菜单，操作不触发文字选择。
-- 自动画质根据实际帧耗时降低分辨率，最低为 0.5 倍，以减少慢设备上的绘制等待；完整场景和游戏规则保留。精细、流畅档仍可手动选择。
+- 联网镜头跟随本机角色，搭档离开画面时显示方向，避免两人分开后角色缩小。远端角色的位置纠正仅在绘制层平滑，不改变权威碰撞与奖励；复活、换区、举起关系和移动平台接触保持即时。
+- 自动画质根据实际帧耗时降低分辨率，最低为 0.5 倍；性能稳定后自动恢复分辨率。完整场景和游戏规则保留，精细、流畅档仍可手动选择。
 - 独立联网服务为 `rescue/server.mjs`，同源 WebSocket 路径 `/rescue-ws`，默认监听 `127.0.0.1:8788`；与射击服务独立。原生双浏览器回归：`npm run test:rescue-online`；其中延迟专项使用真实街区、双向各 100ms 加有序 ±10ms 抖动，记录可信按键到实际绘制及连续 60 秒动态流量，可复用测试工具见 `tests/rescue-online-harness.mjs`。
-- 游戏厅目录和松鼠页面 CSS/bundle 版本统一为 `20261003rescue-online2`。源码在 `rescue/`；本地 Three.js 0.186.1，资源许可见 `rescue/THIRD-PARTY-NOTICES.txt`。修改源码后执行 `npm run build:rescue` 并提交原始 esbuild 产物 `rescue/bundle.js`。
+- 游戏厅目录和松鼠页面 CSS/bundle 版本统一为 `20261004rescue-online5`。源码在 `rescue/`；本地 Three.js 0.186.1，资源许可见 `rescue/THIRD-PARTY-NOTICES.txt`。修改源码后执行 `npm run build:rescue` 并提交原始 esbuild 产物 `rescue/bundle.js`。
 - 门禁：`npm run test:unit`、`npm run test:browser`。占满关卡回归在 `tests/rescue-occupied.test.mjs`；其 D 区使用正常双人独立输入，其余区域单人。浏览器原生 C 区通关检查在 `tests/rescue-browser.mjs`。
 - 公网入口与真实操作验收：`GAMES_TEST_ORIGIN=https://games.nblord.com RESCUE_EVIDENCE_DIR=/tmp/rescue-main node --test tests/rescue-integration-browser.mjs`；把域名换为 `https://games.596996.xyz` 可验收另一入口。测试启动独立 Chromium，截图和状态 JSON 保存到指定目录。
 

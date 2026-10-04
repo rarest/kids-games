@@ -48,7 +48,7 @@ export function createQualityController(deviceDpr = 1) {
     samples: 0,
   };
   let slow = 0,
-    warmup = 0;
+    warmup = 0, fast = 0;
   q.set = (mode) => {
     if (!["auto", "high", "low"].includes(mode))
       throw new RangeError("画质必须为 high、auto 或 low");
@@ -61,6 +61,7 @@ export function createQualityController(deviceDpr = 1) {
     q.shadows = mode !== "low";
     slow = 0;
     warmup = 0;
+    fast = 0;
   };
   q.observe = (ms) => {
     if (!Number.isFinite(ms) || ms <= 0) return;
@@ -69,10 +70,17 @@ export function createQualityController(deviceDpr = 1) {
     warmup++;
     if (q.mode === "auto" && warmup > 30) {
       slow = ms > 28 ? slow + 1 : Math.max(0, slow - 2);
+      fast = ms < 20 ? fast + 1 : 0;
       if (slow >= 60) {
         q.dpr = Math.max(0.5, q.dpr * 0.75);
         q.shadows = false;
         slow = 0;
+        fast = 0;
+      } else if (fast >= 240) {
+        // A temporary slow period must not leave a fast device permanently blurry.
+        const normal = Math.min(deviceDpr,1.6);
+        q.dpr = Math.min(normal,q.dpr/.75);
+        fast = 0;
       }
     }
   };
@@ -493,7 +501,7 @@ export function createScene(canvas) {
     frame = null;
     currentTheme = null;
   }
-  function update(state, dt = 1 / 60) {
+  function update(state, dt = 1 / 60, focusPlayer = null) {
     if (disposed || contextLost) return;
     world.update(state, Math.max(0, Math.min(dt, 0.1)));
     if (currentTheme !== state.level.theme) {
@@ -502,10 +510,14 @@ export function createScene(canvas) {
       scene.background = new THREE.Color(palette.sky);
       scene.fog = new THREE.Fog(palette.fog, 40, 95);
     }
+    const selected = Number.isInteger(focusPlayer) ? state.players[focusPlayer] : null;
+    const focused = selected?.lives===0 ? state.players.find(p=>p.lives>0)??selected : selected;
     const targets = state.players
       .filter((p) => p.lives > 0)
+      .filter((p) => !focused || p.id===focused.id || p.id===focused.heldBy || p.heldBy===focused.id)
       .map((p) => ({ ...p }));
-    if (state.boss?.active && !state.boss.defeated)
+    if (state.boss?.active && !state.boss.defeated && (!focused ||
+      Math.hypot(state.boss.x-focused.x,state.boss.y-focused.y)<12))
       targets.push({ ...state.boss, lives: 1 });
     const desired = framePlayers(targets, width / height);
     if (!frame) frame = desired;

@@ -9,5 +9,6 @@ header{height:80px;padding:14px clamp(16px,4vw,60px);display:flex;justify-conten
 @media(max-height:500px) and (min-width:500px){header{height:58px}#stage{height:calc(100dvh - 92px);min-height:200px}#home{top:14px;left:25px}h1{font-size:27px;margin:8px 0}#home p{font-size:11px;margin-bottom:10px}.eyebrow{font-size:8px}.gift-note,.home-meta{display:none}.home-buttons{grid-template-columns:repeat(3,1fr);gap:6px;max-width:370px}.home-buttons .primary{grid-column:auto;font-size:13px;padding:10px}.home-buttons button{font-size:11px;padding:9px}footer{height:34px}#inventory{height:64px}body[data-mode=playing] #stage,body[data-mode=paused] #stage,body[data-mode=result] #stage{height:calc(100dvh - 122px);min-height:160px}#hud{top:6px}#hud h2{font-size:15px}#phase-banner{top:14px}#board-tools{bottom:7px}#board-location{bottom:63px}}
 @media(prefers-reduced-motion:reduce){button{transition:none}}
 #toast{pointer-events:none}
+#hall-link{min-height:48px;padding:3px 10px;border:1px solid #d7dfcf;border-radius:14px;background:#fffaf0;box-shadow:0 2px 0 #dce2d4}
 body[data-night=true] #hud{color:#f7f3e7;text-shadow:0 2px 8px #131b35}
 body[data-night=true] #theme-name,body[data-night=true] .score small{color:#d8e0ef}
