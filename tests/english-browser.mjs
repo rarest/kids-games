@@ -17,7 +17,7 @@ async function answer(b,wrong=false){
 test('English hub, live four-mode 3D, ten paused cards, coins and saved skins', {timeout:180000}, async()=>{
  const b=await openBrowser({chromeFlags:['--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required']});try{
   await b.size(1280,800);await b.navigate('games/english.html');await wait(b,'!!window.englishApp');await b.evaluate('localStorage.clear()');await b.navigate('games/english.html');await wait(b,'!!window.englishApp');
-  assert.equal(await b.evaluate('document.querySelectorAll(".subjects .subject").length'),3);await shot(b,'home-desktop');await b.evaluate('document.getElementById("englishButton").click()');assert.equal(await b.evaluate('document.querySelectorAll("[data-level]").length'),36);await shot(b,'courses-desktop');
+  assert.equal(await b.evaluate('document.querySelectorAll("[data-course-lesson]").length'),36);await shot(b,'home-desktop');await b.evaluate('document.getElementById("englishButton").click()');assert.equal(await b.evaluate('document.querySelectorAll("[data-level]").length'),36);await shot(b,'courses-desktop');
   await b.evaluate('document.getElementById("grade").value="6";document.getElementById("grade").dispatchEvent(new Event("change"));document.getElementById("term").value="下";document.getElementById("term").dispatchEvent(new Event("change"))');assert.equal(await b.evaluate('document.getElementById("unit").options.length'),4);assert.match(await b.evaluate('document.getElementById("edition").textContent'),/在用|复习/);
   await b.evaluate('document.getElementById("grade").value="3";document.getElementById("term").value="上";document.getElementById("grade").dispatchEvent(new Event("change"))');
   for(const mode of ['slide','parkour','bike','race']){
