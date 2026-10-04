@@ -62,7 +62,7 @@ test(
       await click(b, mutePosition.x, mutePosition.y);
       const before = Number(await b.evaluate("view.dataset.x"));
       await key(b, "ArrowUp");
-      await sleep(350);
+      await wait(b, `Number(view.dataset.x)>${before + 0.4}`);
       await key(b, "ArrowUp", false);
       assert.ok(
         Number(await b.evaluate("view.dataset.x")) > before + 0.4,

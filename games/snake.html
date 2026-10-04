@@ -162,6 +162,7 @@
     </div>
     <div class="board">
       <div class="board-title">📋 最近成绩</div>
+      <p id="storageNotice" hidden role="status">当前浏览器无法保存成绩，本次仍可正常游玩。</p>
       <ol id="ranks">
         <li><span class="rscore">—</span></li>
         <li><span class="rscore">—</span></li>
@@ -426,7 +427,13 @@
   const rankEls = [...document.querySelectorAll('#ranks .rscore')];
 
   // ---- 排行榜 Top 3（最高分在最上，最低在最下）----
-  let board = JSON.parse(localStorage.getItem('snakeBoard') || '[]');
+  let board = [];
+  try {
+    const saved = JSON.parse(localStorage.getItem('snakeBoard') || '[]');
+    if (Array.isArray(saved)) board = saved.filter(n => Number.isFinite(n) && n >= 0).slice(0, 3);
+  } catch (error) {
+    if (!(error instanceof SyntaxError)) document.getElementById('storageNotice').hidden = false;
+  }
   function renderBoard() {
     rankEls.forEach((el, i) => { el.textContent = board[i] != null ? board[i] : '—'; });
   }
@@ -434,7 +441,8 @@
     if (!s || s <= 0) return;
     board.unshift(s);              // 最新一局放最前，不分高低
     board = board.slice(0, 3);     // 只留最近 3 局
-    localStorage.setItem('snakeBoard', JSON.stringify(board));
+    try { localStorage.setItem('snakeBoard', JSON.stringify(board)); }
+    catch { document.getElementById('storageNotice').hidden = false; }
     renderBoard();
   }
   renderBoard();

@@ -164,6 +164,7 @@
   </div>
 
   <div class="stage" id="stage">
+    <p id="storageNotice" hidden role="status" style="position:absolute;bottom:8px;left:8px;right:8px;z-index:20;margin:0;padding:8px;background:#102c46;color:white;font-size:12px;pointer-events:none">当前浏览器无法保存成绩和设置，本次仍可正常游玩。</p>
     <canvas id="game"></canvas>
 
     <!-- Start / name overlay -->
@@ -230,11 +231,33 @@
   // ---------- Storage / Leaderboard ----------
   const LB_KEY = 'bigfish_leaderboard_v1';
   const NAME_KEY = 'bigfish_name';
-  function loadBoard() {
-    try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; }
-    catch { return []; }
+  function readSetting(key) {
+    try { return localStorage.getItem(key); }
+    catch { document.getElementById('storageNotice').hidden = false; return null; }
   }
-  function saveBoard(b) { localStorage.setItem(LB_KEY, JSON.stringify(b)); }
+  function writeSetting(key, value) {
+    try { localStorage.setItem(key, value); return true; }
+    catch { document.getElementById('storageNotice').hidden = false; return false; }
+  }
+  let sessionBoard = [], savePending = false;
+  function loadBoard() {
+    try {
+      const saved = JSON.parse(readSetting(LB_KEY));
+      if (Array.isArray(saved)) {
+        const valid = saved.filter(e => e && typeof e.name === 'string' && Number.isFinite(e.score) && e.score >= 0);
+        if (savePending) {
+          for (const entry of sessionBoard) {
+            const previous = valid.find(e => e.name === entry.name);
+            if (!previous) valid.push(entry);
+            else if (entry.score > previous.score) Object.assign(previous, entry);
+          }
+        }
+        sessionBoard = valid.sort((a, b) => b.score - a.score || (a.at || 0) - (b.at || 0));
+      }
+    } catch {}
+    return sessionBoard;
+  }
+  function saveBoard(b) { sessionBoard = b; savePending = !writeSetting(LB_KEY, JSON.stringify(b)); }
   // Keep best score per player name; sorted desc; top 10 shown.
   function submitScore(name, score) {
     const board = loadBoard();
@@ -278,7 +301,7 @@
   // ---------- Audio: Canon rock + SFX (WebAudio synth) ----------
   const Audio = (() => {
     let ctxA = null, master = null, musicGain = null, sfxGain = null;
-    let muted = localStorage.getItem('bigfish_muted') === '1';
+    let muted = readSetting('bigfish_muted') === '1';
     let musicTimer = null, started = false;
 
     function ensure() {
@@ -427,7 +450,7 @@
     }
     function setMuted(m) {
       muted = m;
-      localStorage.setItem('bigfish_muted', m ? '1' : '0');
+      writeSetting('bigfish_muted', m ? '1' : '0');
       if (master) master.gain.setTargetAtTime(m ? 0 : 0.9, ctxA.currentTime, 0.02);
     }
     function isMuted() { return muted; }
@@ -469,7 +492,7 @@
     level: 1,
     time: 0,
     spawnTimer: 0,
-    name: localStorage.getItem(NAME_KEY) || '',
+    name: readSetting(NAME_KEY) || '',
     input: { x: 0, y: 0 }, // direction vector toward target
     pointer: null,
   };
@@ -839,7 +862,7 @@
     let name = (nameInput.value || '').trim();
     if (!name) name = '玩家' + Math.floor(Math.random() * 1000);
     game.name = name.slice(0, 12);
-    localStorage.setItem(NAME_KEY, game.name);
+    writeSetting(NAME_KEY, game.name);
     resetGame();
     updateHud();
     game.state = 'playing';
