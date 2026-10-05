@@ -1,4 +1,4 @@
-import {familyAPI,familyRequest,avatars,escapeHTML as esc,selectedProfileKey,selectProfile,verifiedOwnerKey,clearFamilyIdentity,accountError} from './family-client.js?v=20261005username1';
+import {familyAPI,familyRequest,avatars,escapeHTML as esc,selectedProfileKey,selectProfile,verifiedOwnerKey,clearFamilyIdentity,accountError} from './family-client.js?v=20261005username2';
 const root=document.getElementById('accountRoot'),notice=document.getElementById('accountNotice');
 let user=null,profiles=[],status={enabled:false,mailReady:false},tab='login',editing=null,busy=false;
 const params=new URLSearchParams(location.search),resetToken=params.get('token');if(resetToken)tab='reset';

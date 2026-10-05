@@ -16,7 +16,7 @@ test('public classroom records actual standard speech, replays and receives real
   assert.ok(await b.evaluate('window.__liveStreams.every(s=>s.getTracks().every(t=>t.readyState==="ended"))'));
   await click(b,'[data-speaking-action=play]');await wait(b,'document.querySelector(".speaking-panel audio").currentTime>0');
   await click(b,'[data-speaking-action=submit]');await wait(b,'document.querySelectorAll(".speaking-word-feedback li").length===4');
-  const result=await b.evaluate('({summary:document.querySelector("[data-speaking-result]").textContent,words:Array.from(document.querySelectorAll(".speaking-word-feedback strong")).map(e=>e.textContent),score:Number(document.querySelector(".speaking-scores strong").textContent.match(/\d+/)[0])})');
+  const result=await b.evaluate('({summary:document.querySelector("[data-speaking-result]").textContent,words:Array.from(document.querySelectorAll(".speaking-word-feedback strong")).map(e=>e.textContent),score:Number(document.querySelector(".speaking-scores strong").textContent.match(/[0-9]+/)[0])})');
   assert.deepEqual(result.words,['This','is','my','family']);assert.ok(result.score>=60,JSON.stringify(result));
   if(process.env.ENGLISH_PUBLIC_EVIDENCE){writeFileSync(process.env.ENGLISH_PUBLIC_EVIDENCE+'.json',JSON.stringify(result,null,2));writeFileSync(process.env.ENGLISH_PUBLIC_EVIDENCE+'.png',Buffer.from((await b.call('Page.captureScreenshot',{format:'png'})).data,'base64'));}
   assert.ok(await b.evaluate('document.documentElement.scrollWidth<=innerWidth+1'));await click(b,'#closeStudy');assert.deepEqual(b.errors,[]);
