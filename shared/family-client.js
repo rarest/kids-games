@@ -11,7 +11,7 @@ export async function familyRequest(path,{method='GET',body}={}){
 }
 export const familyAPI={status:()=>familyRequest('/api/family/status'),session:()=>familyRequest('/api/auth/get-session'),profiles:()=>familyRequest('/api/family/profiles'),auth:(action,body)=>familyRequest(`/api/auth/${action}`,{method:'POST',body})};
 export function selectProfile(owner,id,storage=browserStorage()){storage.setItem(selectedProfileKey(owner),id);globalThis.dispatchEvent?.(new Event('family-profile-change'))}
-export function clearFamilyIdentity(storage=browserStorage()){storage.removeItem(verifiedOwnerKey);globalThis.dispatchEvent?.(new Event('family-logout'))}
+export function clearFamilyIdentity(storage=browserStorage()){const previous=storage.getItem(verifiedOwnerKey);storage.removeItem(verifiedOwnerKey);if(previous)globalThis.dispatchEvent?.(new Event('family-logout'))}
 export function accountError(error){
  const code=error.data?.code;
  if(code==='USERNAME_RECOVERY_UNAVAILABLE')return '用户名账号暂不支持邮件找回密码，请使用已有密码登录。';
