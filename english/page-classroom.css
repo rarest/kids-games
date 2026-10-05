@@ -40,3 +40,13 @@
  .page-line-actions{margin-top:10px}
  #textbookPageContent{scroll-margin-top:112px}
 }
+
+/* Keep question actions within reach on phones and tablets. */
+.page-answer-choices.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.page-answer-choices button{min-width:0}
+.page-question-footer{position:sticky;bottom:0;z-index:2;display:block;background:#fff;padding:12px 0 4px;margin-top:18px;box-shadow:0 -8px 12px #ffffffee}
+.page-question-actions{display:flex;gap:12px;justify-content:space-between;align-items:center}.page-question-actions .primary{min-width:130px;flex:1}.page-question-actions .text-button{flex-shrink:0}
+.page-practice-feedback{margin:12px 0;padding:10px 12px;line-height:1.5}.page-practice-feedback strong{display:block;font-size:16px}.page-practice-feedback span{display:block;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+@media(max-width:1024px){
+ .page-question-card{padding:18px 16px}.page-question-card h3{font-size:22px;line-height:1.5;margin:12px 0}.page-question-card>p{font-size:15px;margin:8px 0;line-height:1.6}.page-question-card>.listen-button{margin:0 0 10px}.page-answer-choices{gap:9px;margin:10px 0 14px}.page-answer-choices button{padding:11px 13px;font-size:17px;line-height:1.55;min-height:50px}.page-practice-picture svg{max-width:100px;margin:8px auto}.page-token-bank{gap:8px;margin:12px 0}.page-token-bank button{font-size:17px;padding:9px 12px}.page-sentence-picked{min-height:64px;padding:12px;font-size:18px;line-height:1.6}.page-question-footer{margin-top:12px}.page-question-footer button{min-height:48px}.page-question-actions{gap:8px}.page-question-actions .text-button{font-size:13px;padding:10px 2px}
+}
+@media(max-width:650px){.page-view-tabs{top:54px}#textbookPageContent{scroll-margin-top:126px}.page-question-card .course-kicker{font-size:12px;line-height:1.5}.page-question-card h3{font-size:20px}.page-question-card>.listen-button{font-size:15px}.page-answer-choices button{font-size:16px}.page-question-actions .primary{min-width:0;padding:12px}.study-dialog{overscroll-behavior:contain;scroll-padding-top:0}}

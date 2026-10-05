@@ -69,7 +69,7 @@ sudo rsync -a --delete \
   --exclude '.git' --exclude 'deploy' --exclude 'README.md' --exclude '.gitignore' \
   --exclude '.agents' --exclude '.superpowers' --exclude 'openspec' --exclude 'node_modules' --exclude 'output' \
   --exclude 'shooter/server.mjs' --exclude 'rescue/server.mjs' --exclude 'racing/server.mjs' \
-  --exclude 'platform' --exclude '.env' --exclude '.env.*' \
+  --exclude 'platform' --exclude 'miniprogram' --exclude '.env' --exclude '.env.*' \
   --exclude '.user.ini' --exclude '.well-known' \
   "$REPO_DIR"/ "$DOCROOT"/
 sudo chmod -R a+rX "$DOCROOT"

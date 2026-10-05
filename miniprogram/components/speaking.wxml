@@ -1,0 +1,14 @@
+<template name="speaking">
+ <view wx:if="{{speakingTarget}}" class="speaking">
+  <view class="subheading">跟读练习</view><view class="english">{{speakingTarget.en}}</view><view>{{speakingTarget.zh}}</view><view wx:if="{{speakingTarget.ipa}}" class="muted">{{speakingTarget.ipa}}</view>
+  <view wx:if="{{speakingTarget.say && speakingTarget.say !== speakingTarget.en}}" class="muted">跟读内容：{{speakingTarget.say}}</view>
+  <view class="muted">先听示范，再读一遍。录音只在本页暂存；点「提交练习反馈」才会发送到网站评分，退出本页即丢弃。</view>
+  <view class="row"><button bindtap="listenSpeaking" disabled="{{media.recording || media.requesting}}">听示范</button><button wx:if="{{!media.recording && !media.clip}}" class="primary" bindtap="record" disabled="{{media.requesting || media.assessing}}">{{media.requesting ? '等待授权…' : '开始录音'}}</button><button wx:if="{{media.recording}}" class="primary" bindtap="stopRecord">停止录音</button></view>
+  <view wx:if="{{media.clip}}" class="row"><button bindtap="replay" disabled="{{media.assessing}}">听我的录音</button><button bindtap="record" disabled="{{media.assessing}}">重新录音</button></view>
+  <button wx:if="{{media.clip}}" class="primary" bindtap="submitRecording" disabled="{{media.assessing}}">{{media.assessing ? '正在听你的声音…' : '提交练习反馈'}}</button>
+  <button wx:if="{{media.playing}}" bindtap="stopAudio">停止播放</button><button wx:if="{{media.clip || media.recording || media.requesting || media.assessing}}" bindtap="cancelRecording">丢弃本次录音</button>
+  <view class="notice" wx:if="{{media.message}}">{{media.message}}</view>
+  <view wx:if="{{media.result}}"><view class="score">本次反馈 {{media.result.score}} 分</view><view>准确度 {{media.result.accuracy}} · 完整度 {{media.result.completeness}}</view><view class="muted">练习反馈用于帮助跟读。</view><view wx:for="{{media.result.words}}" wx:key="index">{{item.word}} · {{item.score}}</view></view>
+  <view class="row"><button class="small" bindtap="openPrivacy">查看隐私说明</button><button class="small" bindtap="openMicSettings">麦克风设置</button></view>
+ </view>
+</template>

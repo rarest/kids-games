@@ -6,7 +6,7 @@ import {Pool} from '../platform/node_modules/pg/esm/index.mjs';
 import {ActivityStore} from '../platform/store.mjs';
 import {createApi} from '../platform/server.mjs';
 
-export async function startFixture({family=false,mail=true}={}) {
+export async function startFixture({family=false,mail=true,wechat}={}) {
   if (!process.env.PLATFORM_TEST_DATABASE_URL) throw new Error('A test database URL is required for local browser verification');
   const schema = `browser_${randomUUID().replaceAll('-', '')}`;
   const admin = new Pool({connectionString:process.env.PLATFORM_TEST_DATABASE_URL});
@@ -31,7 +31,7 @@ export async function startFixture({family=false,mail=true}={}) {
   if(family){
     const {createAuth,migrateAuth}=await import('../platform/auth.mjs');
     const {FamilyStore}=await import('../platform/family-store.mjs');
-    auth=createAuth({pool,secret:randomBytes(32).toString('hex'),publicOrigin:origin,sendMail:mail?async message=>{mailbox.push(message)}:undefined});
+    auth=createAuth({pool,secret:randomBytes(32).toString('hex'),publicOrigin:origin,...(wechat?{wechat}:{}),sendMail:mail?async message=>{mailbox.push(message)}:undefined});
     await migrateAuth(auth);
     familyStore=new FamilyStore({pool});await familyStore.migrate();
   }

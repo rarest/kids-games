@@ -8,6 +8,8 @@ import {fromNodeHeaders} from 'better-auth/node';
 import {createAuth, migrateAuth} from './auth.mjs';
 import {createMailer} from './mail.mjs';
 import {createPronunciation,MAX_WAV_BYTES} from './pronunciation.mjs';
+import {createWechat,isWechatAccount} from './wechat.mjs';
+import {createMiniprogram} from './miniprogram.mjs';
 
 const COOKIE = 'games_visitor';
 function visitorCookie(req, secret) {
@@ -37,10 +39,11 @@ async function jsonBody(req, maxLength = 8192) {
   } catch { throw problem(400, 'Invalid JSON'); }
 }
 
-export function createApi({store, secret, publicOrigin, auth, familyStore, mailReady = auth?.mailReady ?? false, trustProxy = false, pronunciation = createPronunciation(), getSpeechTarget}) {
+export function createApi({store, secret, publicOrigin, auth, familyStore, mailReady = auth?.mailReady ?? false, trustProxy = false, pronunciation = createPronunciation(), getSpeechTarget, wechat=auth?.wechat??createWechat()}) {
   if (!secret || secret.length < 32) throw new Error('A persistent visitor secret of at least 32 characters is required');
   const origin = new URL(publicOrigin).origin;
   const secure = origin.startsWith('https:');
+  const mini=createMiniprogram({auth,familyStore,wechat,pool:store.pool,origin});
   const buckets = new Map();
   function limited(key, limit) {
     const now = Date.now();
@@ -64,9 +67,9 @@ export function createApi({store, secret, publicOrigin, auth, familyStore, mailR
       const requireOrigin = () => {
         if (req.headers.origin !== origin || req.headers['sec-fetch-site'] === 'cross-site') throw problem(403, 'Origin not allowed');
       };
-      if (url.pathname === '/api/english/speech-status' && req.method === 'GET') return send(res,200,await pronunciation.status());
-      if (url.pathname === '/api/english/pronunciation' && req.method === 'POST') {
-        requireOrigin();
+      if (['/api/english/speech-status','/api/miniprogram/speech-status'].includes(url.pathname) && req.method === 'GET') return send(res,200,await pronunciation.status());
+      if (['/api/english/pronunciation','/api/miniprogram/pronunciation'].includes(url.pathname) && req.method === 'POST') {
+        if(url.pathname.startsWith('/api/english/'))requireOrigin();
         const targetId=url.searchParams.get('target');
         if(!targetId||targetId.length>200)throw problem(400,'Unknown practice target');
         const lookup=getSpeechTarget??(await import('../english/page-practice.js')).getTarget;
@@ -91,13 +94,47 @@ export function createApi({store, secret, publicOrigin, auth, familyStore, mailR
         res.setHeader('Cache-Control','no-store'); res.setHeader('X-Content-Type-Options','nosniff');
         res.end(Buffer.from(await response.arrayBuffer()));
       };
+      if(url.pathname.startsWith('/api/miniprogram/')) {
+        if(url.pathname==='/api/miniprogram/config'&&req.method==='GET')return send(res,200,mini.config());
+        if(!auth||!familyStore)throw problem(503,'Parent accounts unavailable');
+        if(['/api/miniprogram/login','/api/miniprogram/username','/api/miniprogram/link'].includes(url.pathname)&&limited(`mini-auth:${ipKey}`,10))throw problem(429,'Try again later');
+        if(url.pathname==='/api/miniprogram/login'&&req.method==='POST')return send(res,200,await mini.login((await jsonBody(req)).code));
+        if(url.pathname==='/api/miniprogram/username'&&req.method==='POST')return send(res,200,await mini.username(await jsonBody(req),authHeaders));
+        const session=await mini.session(authHeaders),owner=session.user.id;
+        if(url.pathname==='/api/miniprogram/session'&&req.method==='GET')return send(res,200,{user:mini.user(session.user)});
+        if(url.pathname==='/api/miniprogram/link'&&req.method==='POST')return send(res,200,await mini.link((await jsonBody(req)).code,session));
+        if(url.pathname==='/api/miniprogram/logout'&&req.method==='POST')return send(res,200,await mini.logout(session));
+        if(url.pathname==='/api/miniprogram/profiles') {
+          if(req.method==='GET')return send(res,200,{profiles:await familyStore.profiles(owner)});
+          if(req.method==='POST')return send(res,201,{profile:await familyStore.createProfile(owner,await jsonBody(req,512*1024))});
+        }
+        const profileMatch=url.pathname.match(/^\/api\/miniprogram\/profiles\/([^/]+)$/);
+        if(profileMatch) {
+          if(req.method==='PATCH')return send(res,200,{profile:await familyStore.updateProfile(owner,profileMatch[1],await jsonBody(req,512*1024))});
+          if(req.method==='DELETE')return send(res,200,await familyStore.deleteProfile(owner,profileMatch[1]));
+        }
+        const progressMatch=url.pathname.match(/^\/api\/miniprogram\/profiles\/([^/]+)\/progress\/english(\/import)?$/);
+        if(progressMatch) {
+          const id=progressMatch[1];
+          if(req.method==='GET'&&!progressMatch[2])return send(res,200,await familyStore.getProgress(owner,id));
+          if(req.method==='POST')return send(res,200,await (progressMatch[2]?familyStore.importProgress(owner,id,await jsonBody(req,512*1024)):familyStore.syncProgress(owner,id,await jsonBody(req,512*1024))));
+        }
+        throw problem(404,'Not found');
+      }
       if (url.pathname.startsWith('/api/auth/')) {
         if(mutation)requireOrigin();
         if(limited(`auth:${ipKey}`,40)) {res.setHeader('Retry-After','60');throw problem(429,'Try again later');}
         const emailPaths=['/sign-up/email','/request-password-reset','/reset-password','/send-verification-email','/verify-email','/change-email','/delete-user/callback'];
         if(!mailReady && emailPaths.some(path=>url.pathname==='/api/auth'+path || url.pathname.startsWith('/api/auth'+path+'/')))throw problem(503,'Email service unavailable');
         const body=mutation?await jsonBody(req,16384):undefined;
-        if(url.pathname==='/api/auth/delete-user' && !body?.password)throw problem(400,'Password required');
+        if(['/api/auth/link-social','/api/auth/unlink-account','/api/auth/delete-user'].includes(url.pathname)) {
+          const session=await auth.api.getSession({headers:authHeaders});if(!session)throw problem(401,'Parent session required');mini.fresh(session);
+          if(url.pathname==='/api/auth/delete-user') {
+            const accounts=await (await auth.$context).internalAdapter.findAccounts(session.user.id);
+            if((!isWechatAccount(session.user)||accounts.some(a=>a.providerId==='credential'))&&!body?.password)throw problem(400,'Password required');
+          }
+        }
+        if(['/api/auth/sign-in/social','/api/auth/link-social'].includes(url.pathname)&&['wechat','wechat-mp'].includes(body?.provider)&&(!wechat.webReady||body.provider!==wechat.webProvider))throw problem(503,'Web WeChat is not configured');
         return await handleAuth(url.pathname+url.search,body);
       }
       if (url.pathname==='/api/family/status' && req.method==='GET')return send(res,200,{enabled:!!(auth&&familyStore),mailReady:!!(auth&&familyStore&&mailReady)});
@@ -109,7 +146,9 @@ export function createApi({store, secret, publicOrigin, auth, familyStore, mailR
         const owner=session.user.id;
         if(url.pathname==='/api/family/account' && req.method==='DELETE') {
           const body=await jsonBody(req,16384);
-          if(typeof body.password!=='string'||!body.password)throw problem(400,'Password required');
+          mini.fresh(session);
+          const accounts=await (await auth.$context).internalAdapter.findAccounts(owner);
+          if((!isWechatAccount(session.user)||accounts.some(a=>a.providerId==='credential'))&&(typeof body.password!=='string'||!body.password))throw problem(400,'Password required');
           return await handleAuth('/api/auth/delete-user',{password:body.password},'POST');
         }
         if(url.pathname==='/api/family/export' && req.method==='GET')return send(res,200,await familyStore.exportAccount(owner));
