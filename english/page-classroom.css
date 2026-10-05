@@ -15,8 +15,28 @@
 
 .page-word-card>svg{display:block;max-width:160px;width:100%;height:auto;margin:0 auto 12px}
 
+/* Quiz audio buttons have a bottom margin; page controls share one row. */
+.textbook-controls>button{margin:0}
+
 .page-classroom-heading{padding:18px 22px;margin-bottom:18px}.page-classroom-heading h3{font-size:24px;line-height:1.5;margin:0 0 6px}.page-classroom-heading p{font-size:15px}.study-dialog .section-heading{position:sticky;top:-28px;background:#fbfcf7;z-index:4;padding:12px 0}.page-view-tabs{position:sticky;top:54px;z-index:3}
 @media(max-width:650px){.study-dialog .section-heading{top:-18px;margin-bottom:12px}.page-classroom-heading{padding:16px 18px}.page-classroom-heading h3{font-size:23px}.page-classroom-heading p{font-size:14px}.page-practice-layout .page-question-card{grid-row:1}.page-speaking-layout #pageSpeakingRoot{grid-row:1}.page-view-tabs{top:50px}}
 
 #textbookPageContent{scroll-margin-top:125px}
 @media(max-width:650px){.page-speaking-layout .page-learning-aside{grid-row:1;padding:16px 18px}.page-speaking-layout #pageSpeakingRoot{grid-row:2}.page-speaking-layout .page-learning-aside>p,.page-speaking-layout .page-learning-aside>h4,.page-speaking-layout .page-learning-aside>.course-kicker{display:none}.page-speaking-layout .page-practice-picture{display:none}}
+
+@media(max-width:650px){
+ .study-dialog .section-heading{padding:0 0 10px;margin-bottom:8px}
+ #studyContent>p:first-child{font-size:13px;line-height:1.6;margin:0 0 10px}
+ .page-classroom-heading{padding:7px 12px;margin-bottom:12px;border-radius:12px}
+ .page-classroom-heading h3{display:none}
+ .page-classroom-heading p{font-size:13px;line-height:1.7}
+ .textbook-controls{gap:8px;margin-bottom:12px}
+ .textbook-controls select{margin-top:5px;min-height:46px;font-size:14px}
+ .page-view-tabs{margin:12px 0;top:44px}
+ .page-view-tabs button{min-height:44px}
+ .textbook-block{padding:16px 14px}
+ .textbook-block h4{margin-bottom:8px}
+ .textbook-line{padding:12px 0}
+ .page-line-actions{margin-top:10px}
+ #textbookPageContent{scroll-margin-top:112px}
+}
