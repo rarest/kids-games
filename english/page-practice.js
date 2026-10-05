@@ -13,13 +13,14 @@ const allTargets=pages.flatMap(pageTargets);
 const targetsById=new Map(allTargets.map(target=>[target.id,target]));
 export function getTarget(id){return targetsById.get(id)??null;}
 const hash=text=>{let value=2166136261;for(const character of text)value=Math.imul(value^character.charCodeAt(0),16777619);return value>>>0;};
+export const normalizePracticeAnswer=value=>String(value).replace(/[.,!?]/g,'').trim().replace(/\s+/g,' ').toLowerCase();
 const senses=text=>text.replace(/[（(][^）)]*[）)]/g,'').split(/[；;,，、]/).map(sense=>sense.trim()).filter(Boolean);
 function options(target,kind,local){
  const key=kind==='listening'?'en':'zh',answer=target[key],candidates=[];
  const meanings=new Set(senses(target.zh));
  for(const other of [...local,...allTargets]){
-  if(other.kind!==target.kind||other.en===target.en||other[key]===answer||candidates.includes(other[key]))continue;
-  if(kind==='listening'&&(other.say??other.en)===(target.say??target.en))continue;
+  if(other.kind!==target.kind||other.en===target.en||normalizePracticeAnswer(other[key])===normalizePracticeAnswer(answer)||candidates.some(value=>normalizePracticeAnswer(value)===normalizePracticeAnswer(other[key])))continue;
+  if(kind==='listening'&&normalizePracticeAnswer(other.say??other.en)===normalizePracticeAnswer(target.say??target.en))continue;
   if(kind==='listening'&&target.ipa&&target.ipa===other.ipa)continue;
   if(kind==='meaning'&&senses(other.zh).some(sense=>meanings.has(sense)))continue;
   candidates.push(other[key]);if(candidates.length===3)break;

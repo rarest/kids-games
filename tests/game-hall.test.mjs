@@ -15,7 +15,7 @@ test('game hall preserves thirteen existing games and adds the 3D memory garden'
   assert.equal(new Set(context.window.GAMES.map(game=>game.file)).size,14,'all entries are unique');
   assert.equal(context.window.GAMES.find(game=>game.file==='games/memory.html')?.name,'记忆花园');
   const english=context.window.GAMES.find(game=>new URL(game.file,'https://games.test').pathname==='/games/english.html');
-  assert.equal(english?.name,'珠珠学习乐园');assert.ok(english.tags.includes('英语'));
+  assert.equal(english?.name,'珠珠英语课堂');assert.ok(english.tags.includes('英语'));
   await assert.doesNotReject(()=>readFile(new URL('../games/english.html',import.meta.url),'utf8'));
   const territory=context.window.GAMES.find(game=>game.file==='games/territory.html');
   assert.equal(territory?.name,'纸片领地');assert.ok(territory.tags.includes('圈地'));

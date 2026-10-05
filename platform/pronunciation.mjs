@@ -9,7 +9,7 @@ export function validateWav(audio){
 }
 function validScore(v){return typeof v==='number'&&Number.isFinite(v)&&v>=0&&v<=100;}
 export function validateResult(value,target,duration){
-  const words=(target.en??target.text??target.english).match(/[A-Za-z]+(?:['’-][A-Za-z]+)*|[0-9]+/g)??[];
+  const words=(target.say??target.en??target.text??target.english).match(/[A-Za-z]+(?:['’-][A-Za-z]+)*|[0-9]+/g)??[];
   if(!value||value.engine!=='local-phoneme'||!['score','accuracy','completeness'].every(k=>validScore(value[k]))||!Array.isArray(value.words)||value.words.length!==words.length||!Number.isFinite(value.duration)||Math.abs(value.duration-duration)>.1)throw problem(503,'Speech scoring unavailable');
   value.words.forEach((w,i)=>{if(w.word!==words[i]||!validScore(w.score)||!['None','Omission','Mispronunciation'].includes(w.errorType)||['expectedPhonemes','heardPhonemes'].some(k=>w[k]!==undefined&&(typeof w[k]!=='string'||w[k].length>500)))throw problem(503,'Invalid speech scoring response');});
   return{score:value.score,accuracy:value.accuracy,completeness:value.completeness,words:value.words.map(({word,score,errorType,expectedPhonemes,heardPhonemes})=>({word,score,errorType,...(expectedPhonemes!==undefined?{expectedPhonemes,heardPhonemes}:{})})),duration:value.duration,engine:'local-phoneme'};
@@ -19,7 +19,7 @@ export function createPronunciation({localUrl='',fetchImpl=fetch,perMinute=6,dai
   let health,healthAt=0,active=0,day='',total=0;const buckets=new Map();
   async function status(){if(!service)return{enabled:false,provider:null};if(health&&now()-healthAt<5000)return health;let enabled=false;try{const response=await fetchImpl(`${service}/health`,{signal:AbortSignal.timeout(2000)});const body=await response.json();enabled=response.ok&&body.ready===true&&body.engine==='local-phoneme';}catch{}healthAt=now();return health={enabled,provider:enabled?'local-phoneme':null};}
   async function assess({ip,target,audio}){
-    const reference=target?.en??target?.text??target?.english;if(typeof reference!=='string'||!reference.trim()||reference.length>1000||typeof target.id!=='string')throw problem(400,'Unknown practice target');
+    const reference=target?.say??target?.en??target?.text??target?.english;if(typeof reference!=='string'||!reference.trim()||reference.length>1000||typeof target.id!=='string')throw problem(400,'Unknown practice target');
     const {duration}=validateWav(audio);
     if(!(await status()).enabled)throw problem(503,'Speech scoring unavailable');
     const time=now(),currentDay=new Date(time).toISOString().slice(0,10);if(day!==currentDay){day=currentDay;total=0;}

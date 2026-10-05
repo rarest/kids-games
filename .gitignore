@@ -3,3 +3,6 @@ _dist/
 *.log
 
 node_modules/
+
+__pycache__/
+output/
