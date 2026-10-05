@@ -1,0 +1,25 @@
+[Unit]
+Description=Games local phoneme practice scorer
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/.local/share/games-speech
+ExecStart=/home/ubuntu/.local/share/games-speech/venv/bin/python /home/ubuntu/.local/share/games-speech/speech_inference.py
+Environment=SPEECH_MODEL_DIR=/home/ubuntu/.local/share/games-speech/model
+Environment=OMP_NUM_THREADS=4
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+MemoryMax=4G
+CPUQuota=300%
+TasksMax=64
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target

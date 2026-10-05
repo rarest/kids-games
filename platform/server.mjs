@@ -7,6 +7,7 @@ import {ActivityStore, problem} from './store.mjs';
 import {fromNodeHeaders} from 'better-auth/node';
 import {createAuth, migrateAuth} from './auth.mjs';
 import {createMailer} from './mail.mjs';
+import {createPronunciation,MAX_WAV_BYTES} from './pronunciation.mjs';
 
 const COOKIE = 'games_visitor';
 function visitorCookie(req, secret) {
@@ -36,7 +37,7 @@ async function jsonBody(req, maxLength = 8192) {
   } catch { throw problem(400, 'Invalid JSON'); }
 }
 
-export function createApi({store, secret, publicOrigin, auth, familyStore, mailReady = auth?.mailReady ?? false, trustProxy = false}) {
+export function createApi({store, secret, publicOrigin, auth, familyStore, mailReady = auth?.mailReady ?? false, trustProxy = false, pronunciation = createPronunciation(), getSpeechTarget}) {
   if (!secret || secret.length < 32) throw new Error('A persistent visitor secret of at least 32 characters is required');
   const origin = new URL(publicOrigin).origin;
   const secure = origin.startsWith('https:');
@@ -63,6 +64,21 @@ export function createApi({store, secret, publicOrigin, auth, familyStore, mailR
       const requireOrigin = () => {
         if (req.headers.origin !== origin || req.headers['sec-fetch-site'] === 'cross-site') throw problem(403, 'Origin not allowed');
       };
+      if (url.pathname === '/api/english/speech-status' && req.method === 'GET') return send(res,200,await pronunciation.status());
+      if (url.pathname === '/api/english/pronunciation' && req.method === 'POST') {
+        requireOrigin();
+        const targetId=url.searchParams.get('target');
+        if(!targetId||targetId.length>200)throw problem(400,'Unknown practice target');
+        const lookup=getSpeechTarget??(await import('../english/page-practice.js')).getTarget;
+        const target=lookup(targetId);if(!target)throw problem(400,'Unknown practice target');
+        if(!req.headers['content-type']?.toLowerCase().startsWith('audio/wav'))throw problem(415,'WAV required');
+        if(Number(req.headers['content-length'])>MAX_WAV_BYTES)throw problem(413,'Recording too large');
+        let length=0;const chunks=[];
+        for await(const chunk of req.iterator({destroyOnReturn:false})) {
+          length+=chunk.length;if(length>MAX_WAV_BYTES){req.resume();throw problem(413,'Recording too large');}chunks.push(chunk);
+        }
+        return send(res,200,await pronunciation.assess({ip:ipKey,target,audio:Buffer.concat(chunks)}));
+      }
       const authHeaders = fromNodeHeaders(req.headers);
       for (const key of ['x-forwarded-for','x-forwarded-host','x-forwarded-proto','forwarded','x-real-ip']) authHeaders.delete(key);
       authHeaders.set('x-real-ip', realIP ?? 'unknown');
@@ -160,7 +176,7 @@ async function main() {
     const {FamilyStore}=await import('./family-store.mjs');
     familyStore=new FamilyStore({pool}); await familyStore.migrate();
   }
-  const server = createApi({store, secret:VISITOR_SECRET, publicOrigin:PUBLIC_ORIGIN,auth,familyStore,mailReady:!!sendMail,trustProxy:true});
+  const server = createApi({store, secret:VISITOR_SECRET, publicOrigin:PUBLIC_ORIGIN,auth,familyStore,mailReady:!!sendMail,trustProxy:true,pronunciation:createPronunciation({localUrl:process.env.SPEECH_LOCAL_URL})});
   const cleanup = setInterval(() => store.prune().catch(() => console.error('[platform] cleanup unavailable')), 3600000); cleanup.unref();
   server.listen(Number(PORT), HOST, () => console.log(`[platform] listening on ${HOST}:${PORT}`));
   let stopping = false;
