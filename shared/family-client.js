@@ -12,4 +12,17 @@ export async function familyRequest(path,{method='GET',body}={}){
 export const familyAPI={status:()=>familyRequest('/api/family/status'),session:()=>familyRequest('/api/auth/get-session'),profiles:()=>familyRequest('/api/family/profiles'),auth:(action,body)=>familyRequest(`/api/auth/${action}`,{method:'POST',body})};
 export function selectProfile(owner,id,storage=browserStorage()){storage.setItem(selectedProfileKey(owner),id);globalThis.dispatchEvent?.(new Event('family-profile-change'))}
 export function clearFamilyIdentity(storage=browserStorage()){storage.removeItem(verifiedOwnerKey);globalThis.dispatchEvent?.(new Event('family-logout'))}
-export function accountError(error){if(error.status===401)return '登录已失效，请重新登录。';if(error.status===403)return '请先到邮箱完成验证，再回来登录。';if(error.status===409)return '这个孩子已有学习进度，请选择或新建一个空档案。';if(error.status===503&&(error.data?.error==='Email service unavailable'||error.message==='Email service unavailable'))return '邮件服务尚未配置，注册和密码找回暂不可用。';if(error.message==='Invalid email or password')return '邮箱或密码不正确。';return error.status&&error.status<500?'操作未完成，请检查填写内容后重试。':'连接暂时中断，请稍后再试。'}
+export function accountError(error){
+ const code=error.data?.code;
+ if(code==='USERNAME_RECOVERY_UNAVAILABLE')return '用户名账号暂不支持邮件找回密码，请使用已有密码登录。';
+ if(code==='INVALID_USERNAME_OR_PASSWORD'||error.message==='Invalid username or password')return '用户名或密码不正确。';
+ if(code==='INVALID_EMAIL_OR_PASSWORD'||error.message==='Invalid email or password')return '邮箱或密码不正确。';
+ if(['INVALID_USERNAME','USERNAME_TOO_SHORT','USERNAME_TOO_LONG'].includes(code))return '用户名需为6—64个字符，只能包含文字、数字、点、下划线或短横线。';
+ if(code==='USERNAME_IS_ALREADY_TAKEN')return '这个用户名已被使用，请换一个。';
+ if(code==='PASSWORD_TOO_SHORT')return '密码至少需要10个字符。';
+ if(error.status===401)return '登录已失效，请重新登录。';
+ if(error.status===403)return '请先到邮箱完成验证，再回来登录。';
+ if(error.status===409)return '这个孩子已有学习进度，请选择或新建一个空档案。';
+ if(error.status===503&&(error.data?.error==='Email service unavailable'||error.message==='Email service unavailable'))return '旧邮箱的邮件找回服务暂不可用。';
+ return error.status&&error.status<500?'操作未完成，请检查填写内容后重试。':'连接暂时中断，请稍后再试。';
+}
