@@ -98,7 +98,19 @@ console.log(JSON.stringify({words: WORDS, sentences: [...sentences, ...grammar, 
         if tokens and all(re.fullmatch(r"[A-Za-z]", token) for token in tokens):
             spoken = ". ".join(token.upper() for token in tokens) + "."
         clips[f"sentence:{sentence}"] = (spoken, f"sentence-{digest}.mp3")
-    filenames = [filename for _, filename in clips.values()]
+    # Page-specific Chinese meanings do not require duplicate recordings. IPA
+    # spelling differences also leave the spoken text unchanged for this voice.
+    for key, word in data["words"].items():
+        if not key.startswith("photo-game-"):
+            continue
+        equivalents = [(original_key, original) for original_key, original in data["words"].items()
+                       if not original_key.startswith("photo-game-") and original["en"] == word["en"]
+                       and original.get("say", original["en"]) == word.get("say", word["en"])]
+        equivalent = next((item for item in equivalents if item[1]["ipa"] == word["ipa"]),
+                          equivalents[0] if equivalents else None)
+        if equivalent:
+            clips[key] = clips[equivalent[0]]
+    filenames = [filename for key, (_, filename) in clips.items() if not key.startswith("photo-game-")]
     if len(filenames) != len(set(filenames)):
         raise ValueError("Audio filename collision")
     return clips
@@ -181,11 +193,17 @@ async def generate(args):
                     else:
                         await asyncio.sleep(2 ** attempt)
 
-    await asyncio.gather(*(produce(key, *value) for key, value in clips.items()))
+    unique_files = {}
+    for key, (text, filename) in clips.items():
+        unique_files.setdefault(filename, (key, text))
+    await asyncio.gather(*(produce(key, text, filename)
+                          for filename, (key, text) in unique_files.items()))
     if failures:
         # Preserve the existing complete manifest when generation is incomplete.
         print(json.dumps(failures, ensure_ascii=False), file=sys.stderr)
         return 1
+    for key, (_, filename) in clips.items():
+        completed[key] = filename
     temporary_manifest = manifest.with_suffix(".tmp.json")
     temporary_manifest.write_text(
         json.dumps(dict(sorted(completed.items())), ensure_ascii=False, indent=2) + "\n"
@@ -203,7 +221,7 @@ async def generate(args):
         "voice": VOICE, "expected": len(clips), "validated": len(completed),
         "generated": generated, "failed": len(failures),
         "removed": removed,
-        "bytes": sum((audio_dir / file).stat().st_size for file in completed.values()),
+        "bytes": sum((audio_dir / file).stat().st_size for file in set(completed.values())),
         "duration_seconds": round(sum(seconds), 3),
     }
     print(json.dumps(report), flush=True)

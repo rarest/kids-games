@@ -6,7 +6,7 @@ import {Pool} from '../platform/node_modules/pg/esm/index.mjs';
 import {ActivityStore} from '../platform/store.mjs';
 import {createApi} from '../platform/server.mjs';
 
-export async function startFixture({family=false}={}) {
+export async function startFixture({family=false,mail=true}={}) {
   if (!process.env.PLATFORM_TEST_DATABASE_URL) throw new Error('A test database URL is required for local browser verification');
   const schema = `browser_${randomUUID().replaceAll('-', '')}`;
   const admin = new Pool({connectionString:process.env.PLATFORM_TEST_DATABASE_URL});
@@ -31,10 +31,10 @@ export async function startFixture({family=false}={}) {
   if(family){
     const {createAuth,migrateAuth}=await import('../platform/auth.mjs');
     const {FamilyStore}=await import('../platform/family-store.mjs');
-    auth=createAuth({pool,secret:randomBytes(32).toString('hex'),publicOrigin:origin,sendMail:async message=>{mailbox.push(message)}});
+    auth=createAuth({pool,secret:randomBytes(32).toString('hex'),publicOrigin:origin,sendMail:mail?async message=>{mailbox.push(message)}:undefined});
     await migrateAuth(auth);
     familyStore=new FamilyStore({pool});await familyStore.migrate();
   }
-  api = createApi({store,secret:randomBytes(32).toString('hex'),publicOrigin:origin,auth,familyStore,mailReady:family});
+  api = createApi({store,secret:randomBytes(32).toString('hex'),publicOrigin:origin,auth,familyStore,mailReady:family&&mail});
   return {origin, mailbox, pool, async close(){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));await pool.end();await admin.query(`DROP SCHEMA ${schema} CASCADE`);await admin.end();}};
 }

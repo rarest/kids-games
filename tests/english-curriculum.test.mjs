@@ -103,7 +103,7 @@ test('grammar choices have exactly one declared answer and child-readable reason
 
 test('representative grammar answers follow agreement, articles and tense rules', () => {
   const correct = new Map([
-    ['I ___ your new friend.', 'am'],
+    ['I ___ a good friend!', 'am'],
     ['This is ___ apple.', 'an'],
     ['She ___ the dishes every evening.', 'washes'],
     ['There ___ two parks in my town.', 'are'],
@@ -136,8 +136,8 @@ test('Making friends includes body words for greeting gestures in the new unit',
   for (const word of ['friend', 'ear', 'hand', 'eye', 'mouth', 'arm']) {
     assert.ok(unit.words.includes(word), `Making friends needs ${word}`);
   }
-  assert.ok(!unit.words.includes('teacher'));
-  assert.ok(!unit.words.includes('class'));
+  const sourceWords=unit.textbookPages.flatMap(page=>page.words);
+  for(const id of unit.words)assert.ok(sourceWords.some(word=>word.en===WORDS[id].en&&word.zh===WORDS[id].zh));
   assert.ok(unit.sentences.some(sentence => /hand|ear|eye|mouth|arm/.test(sentence.en)));
 });
 
@@ -171,7 +171,7 @@ test('every official unit vocabulary entry is available in study and question po
  const {readFile}=await import('node:fs/promises');
  const inventories=await Promise.all(['g34','g56'].map(async group=>JSON.parse(await readFile(new URL(`../english/content-${group}.json`,import.meta.url),'utf8'))));
  const entries=inventories.flatMap(i=>i.books).flatMap(b=>b.units);assert.equal(entries.length,46);
- for(const entry of entries){const unit=BOOKS.flatMap(b=>b.units).find(u=>u.id===entry.id);assert.ok(unit,entry.id);assert.ok(entry.words.length>0,entry.id);assert.equal(unit.coverage.status,entry.coverage.status);assert.match(entry.coverage.source,/^https:\/\//);assert.ok(entry.coverage.basis);assert.deepEqual(unit.textbookWords,entry.words.map(w=>w.id));for(const w of entry.words){assert.ok(unit.words.includes(w.id),`${unit.id}: ${w.en} missing from quiz pool`);assert.equal(WORDS[w.id].en,w.en);assert.ok(WORDS[w.id].zh);assert.ok(WORDS[w.id].ipa);}assert.ok(unit.sentences.length>3,`${unit.id}: original three sentences are insufficient`);assert.ok(unit.grammar.length>2,`${unit.id}: multiple sentence patterns need grammar practice`);}
+ for(const entry of entries){const unit=BOOKS.flatMap(b=>b.units).find(u=>u.id===entry.id);assert.ok(unit,entry.id);assert.ok(entry.words.length>0,entry.id);if(entry.id.startsWith('g3-upper-')){assert.equal(unit.coverage.source,'user-photos');assert.equal(unit.coverage.status,'complete');}else{assert.equal(unit.coverage.status,entry.coverage.status);assert.match(entry.coverage.source,/^https:\/\//);}assert.ok(unit.coverage.basis);assert.deepEqual(unit.textbookWords,entry.words.map(w=>w.id));for(const w of entry.words){if(entry.id.startsWith('g3-upper-'))continue;assert.ok(unit.words.some(id=>WORDS[id].en===w.en),`${unit.id}: ${w.en} missing from quiz pool`);assert.equal(WORDS[w.id].en,w.en);assert.ok(WORDS[w.id].zh);assert.ok(WORDS[w.id].ipa);}assert.ok(unit.sentences.length>3,`${unit.id}: original three sentences are insufficient`);assert.ok(unit.grammar.length>2,`${unit.id}: multiple sentence patterns need grammar practice`);}
 });
 
 

@@ -1,0 +1,213 @@
+[
+  {
+    "fixture": "family",
+    "reference": "This is my family.",
+    "seconds": 0.96,
+    "result": {
+      "score": 92,
+      "accuracy": 92,
+      "completeness": 92,
+      "words": [
+        {
+          "word": "This",
+          "score": 100,
+          "errorType": "None",
+          "expectedPhonemes": "ð ɪ s",
+          "heardPhonemes": "ð ɪ s"
+        },
+        {
+          "word": "is",
+          "score": 100,
+          "errorType": "None",
+          "expectedPhonemes": "ɪ z",
+          "heardPhonemes": "ɪ z"
+        },
+        {
+          "word": "my",
+          "score": 100,
+          "errorType": "None",
+          "expectedPhonemes": "m aɪ",
+          "heardPhonemes": "m aɪ"
+        },
+        {
+          "word": "family",
+          "score": 83,
+          "errorType": "None",
+          "expectedPhonemes": "f æ m ɪ l i",
+          "heardPhonemes": "f æ m l i"
+        }
+      ],
+      "engine": "local-phoneme",
+      "duration": 2.184
+    }
+  },
+  {
+    "fixture": "friends",
+    "reference": "How do we make friends?",
+    "seconds": 0.97,
+    "result": {
+      "score": 93,
+      "accuracy": 93,
+      "completeness": 93,
+      "words": [
+        {
+          "word": "How",
+          "score": 100,
+          "errorType": "None",
+          "expectedPhonemes": "h aʊ",
+          "heardPhonemes": "h aʊ"
+        },
+        {
+          "word": "do",
+          "score": 100,
+          "errorType": "None",
+          "expectedPhonemes": "d u",
+          "heardPhonemes": "d u"
+        },
+        {
+          "word": "we",
+          "score": 100,
+          "errorType": "None",
+          "expectedPhonemes": "w i",
+          "heardPhonemes": "w i"
+        },
+        {
+          "word": "make",
+          "score": 100,
+          "errorType": "None",
+          "expectedPhonemes": "m eɪ k",
+          "heardPhonemes": "m eɪ k"
+        },
+        {
+          "word": "friends",
+          "score": 83,
+          "errorType": "None",
+          "expectedPhonemes": "f ɹ ɛ n d z",
+          "heardPhonemes": "f ɹ ɛ n z"
+        }
+      ],
+      "engine": "local-phoneme",
+      "duration": 2.232
+    }
+  },
+  {
+    "fixture": "cat",
+    "reference": "cat",
+    "seconds": 0.858,
+    "result": {
+      "score": 67,
+      "accuracy": 67,
+      "completeness": 100,
+      "words": [
+        {
+          "word": "cat",
+          "score": 67,
+          "errorType": "Mispronunciation",
+          "expectedPhonemes": "k æ t",
+          "heardPhonemes": "k eɪ t"
+        }
+      ],
+      "engine": "local-phoneme",
+      "duration": 1.872
+    }
+  },
+  {
+    "fixture": "dog",
+    "reference": "dog",
+    "seconds": 0.843,
+    "result": {
+      "score": 100,
+      "accuracy": 100,
+      "completeness": 100,
+      "words": [
+        {
+          "word": "dog",
+          "score": 100,
+          "errorType": "None",
+          "expectedPhonemes": "d ɑ ɡ",
+          "heardPhonemes": "d ɑ ɡ"
+        }
+      ],
+      "engine": "local-phoneme",
+      "duration": 1.872
+    }
+  },
+  {
+    "fixture": "dog",
+    "reference": "cat",
+    "seconds": 0.846,
+    "result": {
+      "score": 0,
+      "accuracy": 0,
+      "completeness": 100,
+      "words": [
+        {
+          "word": "cat",
+          "score": 0,
+          "errorType": "Mispronunciation",
+          "expectedPhonemes": "k æ t",
+          "heardPhonemes": "d ɑ ɡ"
+        }
+      ],
+      "engine": "local-phoneme",
+      "duration": 1.872
+    }
+  },
+  {
+    "fixture": "family",
+    "reference": "How do we make friends?",
+    "seconds": 0.946,
+    "result": {
+      "score": 13,
+      "accuracy": 13,
+      "completeness": 80,
+      "words": [
+        {
+          "word": "How",
+          "score": 0,
+          "errorType": "Mispronunciation",
+          "expectedPhonemes": "h aʊ",
+          "heardPhonemes": "ð"
+        },
+        {
+          "word": "do",
+          "score": 0,
+          "errorType": "Mispronunciation",
+          "expectedPhonemes": "d u",
+          "heardPhonemes": "ɪ s"
+        },
+        {
+          "word": "we",
+          "score": 0,
+          "errorType": "Mispronunciation",
+          "expectedPhonemes": "w i",
+          "heardPhonemes": "ɪ z"
+        },
+        {
+          "word": "make",
+          "score": 33,
+          "errorType": "Mispronunciation",
+          "expectedPhonemes": "m eɪ k",
+          "heardPhonemes": "m aɪ"
+        },
+        {
+          "word": "friends",
+          "score": 17,
+          "errorType": "Mispronunciation",
+          "expectedPhonemes": "f ɹ ɛ n d z",
+          "heardPhonemes": "f æ m l i"
+        }
+      ],
+      "engine": "local-phoneme",
+      "duration": 2.184
+    }
+  },
+  {
+    "fixture": "silent",
+    "status": 422
+  },
+  {
+    "fixture": "white-noise",
+    "status": 422
+  }
+]
