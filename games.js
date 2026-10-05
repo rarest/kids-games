@@ -11,7 +11,7 @@ window.GAMES = [
   },
   {
     id: "english",
-    file: "games/english.html?v=20261005speaking2",
+    file: "games/english.html?v=20261006layout1",
     emoji: "🔵",
     name: "珠珠英语课堂",
     desc: "三年级上册照片课本，逐页词句练习、美式听读、录音回听与发音反馈",

@@ -73,6 +73,7 @@ export function wordArt(word){
  const aliases={apples:'apple',bananas:'banana',grapes:'grape',oranges:'orange',cats:'cat',dogs:'dog',birds:'bird',rabbits:'rabbit',ducks:'duck',pandas:'panda',monkeys:'monkey',tigers:'tiger',elephants:'elephant',lions:'lion',bears:'bear',foxes:'fox',flowers:'flower',trees:'tree',eggs:'egg',kites:'kite','red panda':'red-panda','red pandas':'red-panda',van:'photo-van'};
  const label=(word.en??word.id.replace(/^(?:photo-(?:game-)?)+/,'').replace(/-variant/g,'')).toLowerCase();
  const id=aliases[label]??label;
+ if(id==='name')return picture('<rect x="28" y="42" width="184" height="106" rx="14" fill="#fff" stroke="#8caf9d" stroke-width="3"/><path d="M42 42h156q14 0 14 14v20H28V56q0-14 14-14" fill="#5d8e7d"/><text x="120" y="65" text-anchor="middle" fill="#fff" font-size="16" font-family="sans-serif">My name is</text><text x="120" y="124" text-anchor="middle" fill="#284f43" font-size="38" font-weight="700" font-family="sans-serif">Mike</text>','名字：写着 Mike 的姓名牌');
  const colors={red:'#ef4444',blue:'#2563eb',yellow:'#facc15',green:'#22c55e',purple:'#9333ea',orange:'#f97316',pink:'#f472b6',brown:'#92400e',black:'#111827',white:'#ffffff'};
  const colorNames={red:'红色',blue:'蓝色',yellow:'黄色',green:'绿色',purple:'紫色',orange:'橙色',pink:'粉色',brown:'棕色',black:'黑色',white:'白色'};
  if(colors[id]&&(id!=='orange'||word.visual==='🟠'||/橙色/.test(word.zh??'')))return picture(`<circle cx="120" cy="91" r="54" fill="${colors[id]}" stroke="#c6c6c6" stroke-width="2"/>`,`${colorNames[id]}：${id} 色样`);
