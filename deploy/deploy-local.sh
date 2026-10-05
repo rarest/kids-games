@@ -67,7 +67,7 @@ fi
 
 sudo rsync -a --delete \
   --exclude '.git' --exclude 'deploy' --exclude 'README.md' --exclude '.gitignore' \
-  --exclude '.agents' --exclude '.superpowers' --exclude 'openspec' --exclude 'node_modules' \
+  --exclude '.agents' --exclude '.superpowers' --exclude 'openspec' --exclude 'node_modules' --exclude 'output' \
   --exclude 'shooter/server.mjs' --exclude 'rescue/server.mjs' --exclude 'racing/server.mjs' \
   --exclude 'platform' --exclude '.env' --exclude '.env.*' \
   --exclude '.user.ini' --exclude '.well-known' \
@@ -109,6 +109,11 @@ done
 if [ -f deploy/games-platform.service ] && [ -f platform/package-lock.json ]; then
   PLATFORM_CONFIG="${PLATFORM_DEPLOY_CONFIG:-$HOME/.config/games-platform/app.env}"
   if [ ! -f "$PLATFORM_CONFIG" ]; then echo 'Platform configuration missing outside docroot' >&2; exit 1; fi
+  SPEECH_CONFIGURED=false
+  if awk -F= '$1=="SPEECH_LOCAL_URL" && length($2)>0 {found=1} END {exit !found}' "$PLATFORM_CONFIG"; then
+    SPEECH_CONFIGURED=true
+    bash deploy/deploy-speech.sh "$STATE_DIR"
+  fi
   PLATFORM_DEPENDENCIES="$(sha256sum platform/package.json platform/package-lock.json | sha256sum | cut -d' ' -f1)"
   if [ ! -f "$STATE_DIR/platform-dependencies" ] || [ "$(cat "$STATE_DIR/platform-dependencies")" != "$PLATFORM_DEPENDENCIES" ] || [ ! -d platform/node_modules/pg ]; then
     npm ci --prefix platform --omit=dev --ignore-scripts --no-audit --no-fund
@@ -122,12 +127,13 @@ const paths=['deploy/games-platform.service',
  ...readdirSync('platform/migrations').filter(name=>name.endsWith('.sql')).map(name=>`platform/migrations/${name}`)];
 if(existsSync('english')){
  for(const name of readdirSync('english')){
-  if(['core.js','curriculum.js','course-curriculum.js','course-engine.js'].includes(name)||/^(textbook-photo-|content-g).*\.json$/.test(name))paths.push(`english/${name}`);
+  if(['core.js','curriculum.js','course-curriculum.js','course-engine.js','page-practice.js'].includes(name)||/^(textbook-photo-|content-g).*\.json$/.test(name))paths.push(`english/${name}`);
  }
 }
 console.log(createHash('sha256').update(JSON.stringify(paths.sort().map(name=>[name,readFileSync(name,'utf8')]))).digest('hex'));
 JS
 )"
+  PLATFORM_RUNTIME="$PLATFORM_RUNTIME:$(sha256sum "$PLATFORM_CONFIG" | cut -d' ' -f1)"
   PLATFORM_UNIT_CHANGED=false
   for UNIT in games-platform.service games-platform-backup.service games-platform-backup.timer; do
     if ! cmp -s "deploy/$UNIT" "$UNIT_DIR/$UNIT"; then
@@ -141,6 +147,12 @@ JS
     systemctl --user start games-platform.service
   elif $PLATFORM_UNIT_CHANGED || [ ! -f "$STATE_DIR/platform-runtime" ] || [ "$(cat "$STATE_DIR/platform-runtime")" != "$PLATFORM_RUNTIME:$PLATFORM_DEPENDENCIES" ]; then
     systemctl --user restart games-platform.service
+  fi
+  if $SPEECH_CONFIGURED; then
+    curl -fsS --retry 10 --retry-connrefused --retry-all-errors --retry-delay 1 --max-time 2 http://127.0.0.1:8790/api/english/speech-status | node --input-type=module -e '
+let raw="";for await(const chunk of process.stdin)raw+=chunk;
+const value=JSON.parse(raw);if(value.enabled!==true||value.provider!=="local-phoneme")process.exit(1);
+'
   fi
   printf '%s\n' "$PLATFORM_RUNTIME:$PLATFORM_DEPENDENCIES" > "$STATE_DIR/platform-runtime"
   systemctl --user start games-platform-backup.timer
