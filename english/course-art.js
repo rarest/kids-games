@@ -70,11 +70,18 @@ function picture(body,label){
  return `<svg viewBox="0 0 240 180" role="img" aria-label="${label}"><rect x="5" y="5" width="230" height="170" rx="30" fill="#f5f3e9"/><circle cx="194" cy="38" r="19" fill="#eeeadb"/><circle cx="42" cy="52" r="12" fill="#e7eee1"/><ellipse cx="120" cy="163" rx="80" ry="7" fill="#d5d9c8" opacity=".45"/>${body}</svg>`;
 }
 export function wordArt(word){
- if(word.id==='orange'){
-  if(word.visual==='🟠')return picture('<circle cx="120" cy="91" r="54" fill="#dfad70"/><path d="M88 60q12-10 27-11" fill="none" stroke="#f0cda3" stroke-width="6" stroke-linecap="round"/>','橙色：一块橙色的圆形色样');
+ const aliases={apples:'apple',bananas:'banana',grapes:'grape',oranges:'orange',cats:'cat',dogs:'dog',birds:'bird',rabbits:'rabbit',ducks:'duck',pandas:'panda',monkeys:'monkey',tigers:'tiger',elephants:'elephant',lions:'lion',bears:'bear',foxes:'fox',flowers:'flower',trees:'tree',eggs:'egg',kites:'kite','red panda':'red-panda','red pandas':'red-panda',van:'photo-van'};
+ const label=(word.en??word.id.replace(/^(?:photo-(?:game-)?)+/,'').replace(/-variant/g,'')).toLowerCase();
+ const id=aliases[label]??label;
+ const colors={red:'#ef4444',blue:'#2563eb',yellow:'#facc15',green:'#22c55e',purple:'#9333ea',orange:'#f97316',pink:'#f472b6',brown:'#92400e',black:'#111827',white:'#ffffff'};
+ const colorNames={red:'红色',blue:'蓝色',yellow:'黄色',green:'绿色',purple:'紫色',orange:'橙色',pink:'粉色',brown:'棕色',black:'黑色',white:'白色'};
+ if(colors[id]&&(id!=='orange'||word.visual==='🟠'||/橙色/.test(word.zh??'')))return picture(`<circle cx="120" cy="91" r="54" fill="${colors[id]}" stroke="#c6c6c6" stroke-width="2"/>`,`${colorNames[id]}：${id} 色样`);
+ const numbers={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12};
+ if(numbers[id])return picture(`<text x="120" y="120" text-anchor="middle" fill="#405970" font-size="84" font-family="sans-serif">${numbers[id]}</text>`,`数字 ${numbers[id]}：${id}`);
+ if(id==='orange'){
   return picture('<circle cx="120" cy="104" r="48" fill="#e0b074"/><path d="M119 59q4-20 19-31" fill="none" stroke="#8c9160" stroke-width="5" stroke-linecap="round"/><path d="M133 42q28-24 46-3q-19 23-46 3" fill="#98ac79"/><path d="M90 83q8-11 19-13" fill="none" stroke="#f1cc9a" stroke-width="6" stroke-linecap="round"/>','橙子：圆形橙色果实和绿叶');
  }
- if(word.id==='water'&&word.zh?.includes('浇水'))return picture('<path d="M41 86h60v54H41z" fill="#9aafb7"/><path d="M100 97l50-25 7 9-49 34" fill="#9aafb7"/><path d="M43 99q-36-33-19 9q6 15 20 12" stroke="#8a9da4" stroke-width="8" fill="none"/><path d="M157 89l12 21m-19-18 9 27m-16-23 3 29" stroke="#bbd1d4" stroke-width="3" stroke-linecap="round"/><path d="M182 153v-39m-2 15q-32-25-34-6q10 19 34 6m6-12q31-27 38-9q-8 23-38 9" stroke="#8da373" stroke-width="4" fill="#a3b68b"/><path d="M160 158h45" stroke="#b29b7e" stroke-width="7" stroke-linecap="round"/>','给植物浇水：浇水壶、水滴和幼苗');
- const definition=animalPictures[word.id]??plantPictures[word.id]??objectPictures[word.id];
+ if(id==='water'&&word.zh?.includes('浇水'))return picture('<path d="M41 86h60v54H41z" fill="#9aafb7"/><path d="M100 97l50-25 7 9-49 34" fill="#9aafb7"/><path d="M43 99q-36-33-19 9q6 15 20 12" stroke="#8a9da4" stroke-width="8" fill="none"/><path d="M157 89l12 21m-19-18 9 27m-16-23 3 29" stroke="#bbd1d4" stroke-width="3" stroke-linecap="round"/><path d="M182 153v-39m-2 15q-32-25-34-6q10 19 34 6m6-12q31-27 38-9q-8 23-38 9" stroke="#8da373" stroke-width="4" fill="#a3b68b"/><path d="M160 158h45" stroke="#b29b7e" stroke-width="7" stroke-linecap="round"/>','给植物浇水：浇水壶、水滴和幼苗');
+ const definition=animalPictures[id]??plantPictures[id]??objectPictures[id];
  return definition?picture(definition[1],definition[0]):'';
 }

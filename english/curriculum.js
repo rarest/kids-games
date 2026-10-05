@@ -738,10 +738,41 @@ photoBook.textbookPages=photoSections.flatMap(section=>section.pages).sort((a,b)
 for(const photoUnit of photoSections){
  const unit=photoBook.units.find(unit=>unit.id===photoUnit.unitId);if(unit)unit.textbookPages=photoUnit.pages;
  for(const page of photoUnit.pages)for(const word of page.words){
-  // Keep old question pools unchanged; page vocabulary still has its own meaning.
+  // Page IDs stay stable for existing guided lessons and recordings.
   const same=Object.entries(WORDS).find(([id,w])=>w.en===word.en&&w.ipa===word.ipa);
   if(same)word.id=same[0];
   while(WORDS[word.id]&&WORDS[word.id].en!==word.en)word.id+='-variant';
   if(!WORDS[word.id])WORDS[word.id]={en:word.en,zh:word.zh,ipa:word.ipa,...(word.say?{say:word.say}:{})};
  }
+}
+
+// New grade-three rounds use photographed, page-specific senses. Shared WORDS
+// entries stay unchanged for the other seven books and historical saved rounds.
+for(const unit of photoBook.units){
+ const words=[],wordSources={},sentences=[],grammar=[],seenWords=new Map(),seenSentences=new Set();
+ for(const page of unit.textbookPages){
+  for(const [index,word] of page.words.entries()){
+   const sense=JSON.stringify([word.en,word.zh,word.ipa]);if(seenWords.has(sense))continue;
+   let id=word.id;
+   if(WORDS[id]?.zh!==word.zh||WORDS[id]?.ipa!==word.ipa){
+    id=`photo-game-${word.id}`;
+    while(WORDS[id]&&JSON.stringify([WORDS[id].en,WORDS[id].zh,WORDS[id].ipa])!==sense)id+='-variant';
+    WORDS[id]={en:word.en,zh:word.zh,ipa:word.ipa,...(word.say?{say:word.say}:{})};
+   }
+   seenWords.set(sense,id);words.push(id);wordSources[id]={sourcePage:page.page,targetId:`p${page.page}-word-${index}`};
+  }
+  for(const [blockIndex,block] of page.blocks.entries())for(const [lineIndex,line] of block.lines.entries()){
+   if(!['dialogue','reading','chant','song','activity'].includes(block.kind)||! /^[A-Z].*[.!?]$/.test(line.en)||/\.{2}|___|\//.test(line.en)||line.en.replace(/[.,!?]/g,'').split(/\s+/).length<2||seenSentences.has(line.en))continue;
+   seenSentences.add(line.en);
+   const provenance={sourcePage:page.page,targetId:`p${page.page}-line-${blockIndex}-${lineIndex}`};
+   sentences.push({...line,...provenance,tip:`课本第${page.page}页原句：${line.zh}。先听完整句子，再按课本的顺序排列单词。`});
+   const match=line.en.match(/\b(?:am|is|are|have|has|can|like|love|my|your|a|an|the)\b/i)??line.en.match(/\b[A-Za-z]+\b/);
+   if(!match)continue;
+   const answer=match[0],alternatives=[...new Set(page.words.map(word=>word.en).filter(en=>/^[A-Za-z]+$/.test(en)&&en.toLowerCase()!==answer.toLowerCase()))].slice(0,3);
+   if(alternatives.length<2)continue;
+   grammar.push({...provenance,prompt:line.en.slice(0,match.index)+'___'+line.en.slice(match.index+answer.length),options:[answer,...alternatives],answer,context:`按课本第${page.page}页原句补全：${line.zh}`,explanation:`课本原句是“${line.en}”，意思是“${line.zh}”；这里应填 ${answer}。`});
+  }
+ }
+ unit.words=words;unit.wordSources=wordSources;unit.sentences=sentences;unit.grammar=grammar;
+ unit.coverage={status:'complete',source:'user-photos',basis:'用户提供的2026年7月印刷课本逐页词汇与原句',pages:unit.textbookPages.map(page=>page.page)};
 }
