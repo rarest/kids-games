@@ -1,0 +1,1 @@
+{"pages":["pages/home/home","pages/lesson/lesson","pages/page/page","pages/account/account"],"window":{"navigationBarTitleText":"英语小课堂","navigationBarBackgroundColor":"#f7f5ef","navigationBarTextStyle":"black","backgroundColor":"#f7f5ef"},"style":"v2","sitemapLocation":"sitemap.json","permission":{"scope.record":{"desc":"用于孩子主动开启的英语跟读录音与回听"}},"__usePrivacyCheck__":true}

@@ -17,10 +17,15 @@
     "test:english": "node --test tests/english-core.test.mjs tests/english-curriculum.test.mjs tests/english-audio.test.mjs tests/english-textbook.test.mjs tests/english-audio-reader.test.mjs tests/english-course-engine.test.mjs tests/english-course-curriculum.test.mjs && node --test tests/english-browser.mjs && node --test tests/english-save-audio-browser.mjs && node --test tests/english-study-browser.mjs && node --test tests/english-scenes-browser.mjs && node --test tests/english-textbook-browser.mjs && node --test tests/english-course-browser.mjs",
     "test:racing-online": "node --test tests/racing-online-*.test.mjs tests/racing-server.test.mjs tests/racing-deploy.test.mjs && node --test tests/racing-online-browser.mjs",
     "test:catalog": "node --test tests/catalog-browser.mjs",
-    "test:startup": "node --test --test-concurrency=1 tests/startup-failure-browser.mjs tests/classic-storage-browser.mjs"
+    "test:startup": "node --test --test-concurrency=1 tests/startup-failure-browser.mjs tests/classic-storage-browser.mjs",
+    "build:miniprogram": "node scripts/build-miniprogram-content.mjs",
+    "test:miniprogram": "node --test tests/miniprogram-*.test.mjs",
+    "check:miniprogram": "node scripts/check-miniprogram.mjs"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "2.6.2",
     "esbuild": "^0.25.12",
+    "miniprogram-compiler": "0.2.3",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "three": "0.186.1"
