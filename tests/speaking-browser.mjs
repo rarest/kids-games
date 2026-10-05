@@ -13,8 +13,11 @@ test('native microphone PCM is replayable and uploads only after explicit scorin
  try{
   await b.size(390,844,true);await prepare(b);
   assert.equal(await b.evaluate('document.querySelector("[data-speaking-action=stop]").hidden'),true);
+  await b.evaluate(`(async()=>{window.__demo=new Audio('/english/audio/nice.mp3');window.__demo.loop=true;await window.__demo.play();window.__speaking.destroy();window.__speaking=window.__speakingModule.mountSpeaking({root:document.getElementById('speakingRoot'),target:{id:'p4-word-0',page:4,kind:'word',en:'Hello',zh:'你好'},stopAudio:()=>window.__demo.pause(),onResult:r=>{window.__result=r;}});})()`);
+  await wait(b,'window.__demo.currentTime>0');
   await b.evaluate('document.querySelector("[data-speaking-action=record]").click()');
   await wait(b,'!document.querySelector("[data-speaking-action=stop]").hidden');await sleep(1400);
+  assert.equal(await b.evaluate('window.__demo.paused'),true);
   await b.evaluate('document.querySelector("[data-speaking-action=stop]").click()');
   assert.equal(await b.evaluate('window.__uploads.length'),0);
   assert.equal(await b.evaluate('window.__streams.every(stream=>stream.getTracks().every(track=>track.readyState==="ended"))'),true);
@@ -28,8 +31,8 @@ test('native microphone PCM is replayable and uploads only after explicit scorin
   assert.ok(upload.bytes.length>16000);assert.match(await b.evaluate('document.querySelector("[data-speaking-result]").textContent'),/发音贴合度.*80/);
   assert.equal(await b.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),true);
   assert.equal(await b.evaluate('Array.from(document.querySelectorAll("button")).filter(e=>!e.hidden).every(e=>e.getBoundingClientRect().height>=44)'),true);
-  await b.evaluate('window.__answer={error:"no_speech"};document.querySelector("[data-speaking-action=submit]").click()');
-  await wait(b,'document.querySelector("[data-speaking-status]").textContent.includes("声音")');
+  await b.evaluate('window.__answer={error:"No clear speech detected. Please retry"};document.querySelector("[data-speaking-action=submit]").click()');
+  await wait(b,'document.querySelector("[data-speaking-status]").textContent.includes("声音")&&!document.querySelector("[data-speaking-action=submit]").disabled');
   assert.equal(await b.evaluate('document.querySelector("[data-speaking-result]").textContent'), '');
   await b.evaluate('window.__answer={score:100,accuracy:99,completeness:100,words:[],duration:1,engine:"local-phoneme"};document.querySelector("[data-speaking-action=submit]").click()');
   await wait(b,'document.querySelector("[data-speaking-status]").textContent.includes("有效反馈")');
@@ -38,6 +41,12 @@ test('native microphone PCM is replayable and uploads only after explicit scorin
   await wait(b,'!!window.__lateScore');
   await b.evaluate(`window.__speaking.destroy();window.__speaking=window.__speakingModule.mountSpeaking({root:document.getElementById('speakingRoot'),target:{id:'p5-word-0',page:5,kind:'word',en:'World',zh:'世界'}});window.__lateScore(new Response(JSON.stringify({score:100,accuracy:100,completeness:100,words:[{word:'Hello',score:100}],duration:1,engine:'local-phoneme'})));`);
   await sleep(200);assert.equal(await b.evaluate('window.__result'),null);assert.equal(await b.evaluate('document.querySelector("[data-speaking-result]").textContent'),'');assert.equal(await b.evaluate('document.querySelector(".speaking-target").textContent'),'World');
+  await b.evaluate(`window.__speaking.destroy();window.__speaking=window.__speakingModule.mountSpeaking({root:document.getElementById('speakingRoot'),target:{id:'p6-line-0-0',page:6,kind:'sentence',en:'d a b',say:'dab.',zh:'拼读'},speak:target=>{window.__spoken=target;}});`);
+  assert.equal(await b.evaluate('document.querySelector(".speaking-target").textContent'),'d a b');
+  assert.equal(await b.evaluate('document.querySelector(".speaking-spoken-target").textContent'),'跟读内容：dab.');
+  await b.evaluate('document.querySelector("[data-speaking-action=listen]").click()');await wait(b,'!!window.__spoken');assert.equal(await b.evaluate('window.__spoken.say'),'dab.');
+  await b.evaluate('window.__spoken=null;document.querySelector("[data-speaking-action=listen]").click();window.__speaking.destroy()');
+  await sleep(50);assert.equal(await b.evaluate('window.__spoken'),null);
   await b.evaluate('window.__speaking.destroy()');assert.deepEqual(b.errors,[]);
  }finally{b.close();}
 });

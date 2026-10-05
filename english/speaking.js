@@ -12,17 +12,17 @@ export function validateAssessment(value) {
 
 function serviceMessage(body, status) {
   const code = String(body?.error || body?.code || '').toLowerCase();
-  if (/no_speech|no_result|unrecognized|silence|too_short/.test(code)) return '这次没有听清声音。请靠近麦克风，读完后再点停止。';
+  if (/no_speech|no_result|unrecognized|silence|too_short/.test(code) || status === 422) return '这次没有听清声音。请靠近麦克风，读完后再点停止。';
   if (/busy|limit|rate/.test(code) || status === 429) return '练习的小伙伴有点多。请稍等一会，再点得分。';
   if (/unavailable|not_ready/.test(code) || status === 503) return '评分服务暂时没有准备好。你仍然可以录音、回听和重录。';
   return '这次没有取得反馈。请检查网络，稍后再点得分。';
 }
 
-export function mountSpeaking({root, target, speak = () => {}, onResult = () => {}, onError = () => {}}) {
+export function mountSpeaking({root, target, speak = () => {}, stopAudio = () => {}, onResult = () => {}, onError = () => {}}) {
   if (!root || !target?.id || !target?.en) throw new Error('Speaking practice requires a root and textbook target');
   const panel = document.createElement('section');
   panel.className = 'speaking-panel'; panel.setAttribute('aria-label', '跟读练习');
-  panel.innerHTML = `<div class="speaking-heading"><span class="speaking-page"></span><h3 class="speaking-target"></h3><p class="speaking-meaning"></p><p class="speaking-ipa"></p></div>
+  panel.innerHTML = `<div class="speaking-heading"><span class="speaking-page"></span><h3 class="speaking-target"></h3><p class="speaking-meaning"></p><p class="speaking-ipa"></p><p class="speaking-spoken-target" hidden></p></div>
     <p class="speaking-instruction">先听一遍，再自己读。录好后听听自己的声音，准备好了就点「得分」。</p>
     <div class="speaking-controls">
       <button type="button" data-speaking-action="listen">🔊 听示范</button>
@@ -45,6 +45,10 @@ export function mountSpeaking({root, target, speak = () => {}, onResult = () => 
   get('.speaking-target').textContent = target.en;
   get('.speaking-meaning').textContent = target.zh || '';
   get('.speaking-ipa').textContent = target.ipa || ''; get('.speaking-ipa').hidden = !target.ipa;
+  if (typeof target.say === 'string' && target.say.trim() !== target.en.trim()) {
+    get('.speaking-spoken-target').textContent = `跟读内容：${target.say}`;
+    get('.speaking-spoken-target').hidden = false;
+  }
   const status = get('[data-speaking-status]'), result = get('[data-speaking-result]');
   const meter = get('.speaking-meter'), canvas = get('canvas'), time = get('.speaking-time'), player = get('audio');
   const context = canvas.getContext('2d');
@@ -100,7 +104,7 @@ export function mountSpeaking({root, target, speak = () => {}, onResult = () => 
   async function startRecording() {
     if (dead || state === 'requesting' || state === 'recording' || state === 'assessing') return;
     epoch++; const token = epoch;
-    dropClip(); state = 'requesting'; message('请允许使用麦克风，然后开始读。最多可以录 20 秒。'); update();
+    dropClip(); stopAudio(); state = 'requesting'; message('请允许使用麦克风，然后开始读。最多可以录 20 秒。'); update();
     try {
       const started = await recorder.start();
       if (dead || token !== epoch || !started) return;
@@ -126,6 +130,7 @@ export function mountSpeaking({root, target, speak = () => {}, onResult = () => 
   async function play() {
     if (!clip || dead) return;
     if (!player.paused) { pausePlayback(); return; }
+    stopAudio();
     const token = epoch;
     try {
       await player.play();
@@ -184,7 +189,7 @@ export function mountSpeaking({root, target, speak = () => {}, onResult = () => 
     }
   }
   const actions = {record: startRecording, stop: stopRecording, cancel, retry: () => { cancel(); startRecording(); }, play, submit: assess, refresh: checkReadiness,
-    listen: () => { pausePlayback(); Promise.resolve().then(() => speak(target, target.wordId)).catch(error => { if (!dead) { message('示范音频暂时播放不了，请稍后再试。'); reportError(error); } }); }};
+    listen: () => { const token = epoch; pausePlayback(); stopAudio(); Promise.resolve().then(() => { if (!dead && token === epoch && state !== 'requesting' && state !== 'recording') return speak(target, target.wordId); }).catch(error => { if (!dead && token === epoch) { message('示范音频暂时播放不了，请稍后再试。'); reportError(error); } }); }};
   panel.addEventListener('click', event => {
     const button = event.target.closest('[data-speaking-action]');
     if (button && panel.contains(button) && !button.disabled) actions[button.dataset.speakingAction]?.();
