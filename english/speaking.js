@@ -166,7 +166,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     try {
       await player.play();
       if (dead || token !== epoch) return;
-      buttons.play.textContent = 'Ⅱ 暂停录音';
+      buttons.play.textContent = '暂停回放';
     } catch (error) { if (!dead && token === epoch) { message('暂时播放不了录音。可以再点一次回听。'); reportError(error); } }
   }
   player.addEventListener('ended', pausePlayback);
