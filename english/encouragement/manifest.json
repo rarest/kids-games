@@ -1,0 +1,9 @@
+{
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "clips": {
+    "three": "连对三题，真棒！",
+    "five": "连对五题，继续加油！",
+    "recovered": "你做到了，真棒！",
+    "done": "这一轮完成啦！休息一下吧。"
+  }
+}
