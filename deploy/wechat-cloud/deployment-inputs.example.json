@@ -1,0 +1,39 @@
+{
+  "purpose": "人工核对清单，不是腾讯云 CLI 或 API 的配置格式",
+  "status": "prepared_only_not_deployed",
+  "product": "微信云托管，勿套用云开发套餐计价",
+  "environment": {
+    "id": "REPLACE_AFTER_OWNER_CREATES_ENVIRONMENT",
+    "owner": "THIS_MINIPROGRAM",
+    "region": "REPLACE_WITH_AVAILABLE_MAINLAND_REGION",
+    "billing": "按量付费；开通前核对控制台单价、余额及告警"
+  },
+  "api": {
+    "serviceName": "zhuzhu-api",
+    "dockerfile": "deploy/wechat-cloud/Dockerfile",
+    "buildContext": ".",
+    "containerPort": 8080,
+    "initialSizingCandidate": {"cpuCores": 0.25, "memoryGiB": 0.5, "minInstances": 1, "maxInstances": 1},
+    "publicAccess": false,
+    "healthPath": "/api/health",
+    "note": "规格待真实内存与延迟验证；此模板不提供云端评分或教材JSON路由"
+  },
+  "database": {
+    "engine": "PostgreSQL",
+    "connection": "PRIVATE_DATABASE_URL_REQUIRED",
+    "prohibit": "不以微信云托管默认MySQL直接替换，不使用容器临时目录持久化数据库",
+    "migration": "先独立副本验证与备份恢复；启动现有API会执行迁移"
+  },
+  "media": {
+    "storage": "同一小程序直属云托管环境的对象存储",
+    "manifestTool": "node deploy/wechat-cloud/media-manifest.mjs",
+    "destination": "上传后将每个源路径映射到真实cloud fileID",
+    "permission": "教材公开读；禁止客户端覆盖/删除教材；核查文件元数据"
+  },
+  "speech": {
+    "status": "REQUIRES_SEPARATE_DESIGN",
+    "modelSizeBytesApprox": 1260000000,
+    "existingLocalUrlRequirement": "http://127.0.0.1:8769",
+    "callContainerCompatibility": "原始WAV超过100KiB及超过15秒同步评分均须改造"
+  }
+}

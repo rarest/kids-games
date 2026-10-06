@@ -40,12 +40,21 @@ function repairRecording(data){
 }
 const serverCodes={'Invalid WAV recording':'INVALID_WAV','Truncated WAV recording':'INVALID_WAV','Invalid WAV format':'INVALID_WAV','Invalid WAV data':'INVALID_WAV','16 kHz mono PCM WAV required':'INVALID_WAV','Recording must last 0.15 to 20 seconds':'INVALID_WAV','Unknown practice target':'UNKNOWN_TARGET','Recording too large':'RECORDING_TOO_LARGE','WAV required':'INVALID_WAV'};
 function createMedia(wx,{onState=()=>{},onDiagnostic=diagnostic=>console.warn('Pronunciation submission failed',diagnostic)}={}){
- const state={playing:false,recording:false,requesting:false,assessing:false,clip:false,result:null,message:'',diagnostic:null};
- let epoch=0,playEpoch=0,dead=false,target=null,audio=null,file=null,task=null,capture=false,discard=false,recorder=null;
+ const state={playing:false,paused:false,source:'',recording:false,requesting:false,assessing:false,clip:false,result:null,message:'',diagnostic:null};
+ let epoch=0,playEpoch=0,playKey='',pendingNext=null,dead=false,target=null,audio=null,file=null,task=null,capture=false,discard=false,recorder=null;
  const emit=()=>{if(!dead)onState({...state})};
  const unlink=path=>{if(path)wx.getFileSystemManager().unlink({filePath:path,fail(){}})};
- function stopAudio(){playEpoch++;if(audio){const old=audio;audio=null;old.stop();old.destroy()}state.playing=false;emit()}
- function play(paths){stopAudio();if(state.recording||state.requesting)return;const current=playEpoch,queue=paths.filter(Boolean);function next(){if(dead||current!==playEpoch)return;const path=queue.shift();if(!path){state.playing=false;emit();return}const player=wx.createInnerAudioContext();audio=player;player.src=url(path);player.onEnded(()=>{player.destroy();if(audio===player)audio=null;next()});player.onError(()=>{if(current!==playEpoch)return;stopAudio();state.message='这段声音暂时无法播放，请重试。';emit()});state.playing=true;emit();player.play()}next()}
+ function stopAudio(){playEpoch++;playKey='';pendingNext=null;if(audio){const old=audio;audio=null;old.stop();old.destroy()}Object.assign(state,{playing:false,paused:false,source:''});emit()}
+ function play(paths,source=''){stopAudio();if(dead||state.recording||state.requesting)return;const current=playEpoch,queue=paths.filter(Boolean);playKey=JSON.stringify([source,queue]);state.source=source;function next(){if(dead||current!==playEpoch)return;const path=queue.shift();if(!path){Object.assign(state,{playing:false,paused:false,source:''});playKey='';emit();return}const player=wx.createInnerAudioContext();audio=player;player.src=url(path);player.onEnded(()=>{if(dead||current!==playEpoch||audio!==player)return;audio=null;player.destroy();if(state.paused)pendingNext=next;else next()});player.onError(()=>{if(dead||current!==playEpoch||audio!==player)return;stopAudio();state.message='这段声音暂时无法播放，请重试。';emit()});state.playing=true;state.paused=false;emit();player.play()}next()}
+ function toggleAudio(paths,source=''){
+  if(dead||state.recording||state.requesting||state.assessing)return;
+  if((audio||pendingNext)&&playKey===JSON.stringify([source,paths.filter(Boolean)])){
+   if(state.playing){audio.pause();state.playing=false;state.paused=true}
+   else if(state.paused){state.paused=false;if(pendingNext){const next=pendingNext;pendingNext=null;next()}else{audio.play();state.playing=true}}
+   emit();return;
+  }
+  play(paths,source);
+ }
  function detach(){if(!recorder)return;recorder.offStart(onStart);recorder.offStop(onStop);recorder.offError(onError)}
  function onStart(){if(!capture)return;if(dead||discard){recorder.stop();return}state.requesting=false;state.recording=true;state.message='正在录音，读完后点停止。最长20秒。';emit()}
  function onStop(result){if(!capture)return;capture=false;if(owners.get(recorder)===api)owners.delete(recorder);state.recording=false;state.requesting=false;if(dead||discard){unlink(result.tempFilePath)}else{unlink(file);file=result.tempFilePath;state.clip=!!file&&result.duration>=250;state.result=null;state.message=state.clip?'可以先回听，准备好了再提交练习反馈。':'录音太短，请读完后再停止。'}if(dead)detach();emit()}
@@ -73,6 +82,6 @@ function createMedia(wx,{onState=()=>{},onDiagnostic=diagnostic=>console.warn('P
    state.message=error.status===503?'评分服务尚未准备好，仍可录音和回听。':error.status===422?'这次没有听清，请靠近麦克风再读一次。':error.status===429?'请求较多，请稍后再提交。':code==='WAV_LENGTH_MISMATCH'||code==='WAV_TOO_SHORT'||code==='FILE_READ_FAILED'?'录音文件没有保存完整，请重新录音。':code==='INVALID_WAV'||code==='WAV_HEADER_INVALID'||code==='FILE_NOT_BINARY'?'这部手机的录音格式暂不兼容，请重新录音。':code==='RECORDING_TOO_LARGE'||error.status===413?'录音文件太大，请缩短到20秒内再录一次。':code==='UNKNOWN_TARGET'?'这句练习内容已更新，请返回后重新打开。':code==='REQUEST_TIMEOUT'?'提交超时，请检查网络后再提交。':code==='REQUEST_FAILED'?'录音没有传到服务器，请检查网络后再提交。':code==='INVALID_RESULT'?'评分反馈格式异常，请稍后再提交。':'评分请求失败，请稍后再提交。';
   }finally{if(current===epoch&&!dead){task=null;state.assessing=false;emit()}}
  }
- const api={state,play,stopAudio,record,stopRecord,submit,cancel,replay:()=>file&&play([file]),setTarget(next){cancel();target=next},destroy(){cancel();dead=true;if(!capture)detach()}};return api;
+ const api={state,play,toggleAudio,stopAudio,record,stopRecord,submit,cancel,replay:()=>file&&toggleAudio([file],'replay'),setTarget(next){cancel();target=next},destroy(){cancel();dead=true;if(!capture)detach()}};return api;
 }
 module.exports={createMedia,validResult};

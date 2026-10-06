@@ -1,0 +1,21 @@
+# Dockerfile-specific allowlist. Build context is the repository root.
+**
+!package.json
+!platform/
+!platform/package.json
+!platform/package-lock.json
+!platform/*.mjs
+!platform/migrations/
+!platform/migrations/*.sql
+!english/
+!english/core.js
+!english/course-engine.js
+!english/course-curriculum.js
+!english/curriculum.js
+!english/page-practice.js
+!english/textbook-photo-*.json
+!english/content-g*.json
+!deploy/
+!deploy/wechat-cloud/
+!deploy/wechat-cloud/Dockerfile
+!deploy/wechat-cloud/Dockerfile.dockerignore
