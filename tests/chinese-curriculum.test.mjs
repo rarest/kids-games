@@ -138,7 +138,7 @@ test('所有配套栏目保留核图后的原文块数及指导首尾', async ()
   const counts={
     '第一单元':4,'我的暑假生活':7,'猜猜他是谁':8,'梳理与交流、词句段运用':17,'所见':1,
     '第二单元':4,'写日记':10,'理解词语的方法与季节词语':13,'狂、罚、笛、湿等字':3,'舟夜书所见':1,'上学路上的观察':2,'秋分过后的准备':6,
-    '第三单元':3,'名字里的故事':8,'续写故事':6,'预测、识字、对话与修改符号':20,'待人处世':4,
+    '第三单元':3,'名字里的故事':8,'续写故事':6,'预测、识字、对话与修改符号':23,'待人处世':4,
     '第四单元':4,'我来编童话':10,'童话想象、识字和词句':17,'团结合作':3,'在那奇妙的王国里':13,
     '第五单元':3,'留心和细致观察':7,'身边的观察':3,'我们眼中的缤纷世界':6,'我家的小狗':12,'我爱故乡的杨梅':11,
     '第六单元':4,'这儿真美':10,'关键语句与词句段运用':20,'早发白帝城':1,
@@ -179,4 +179,21 @@ test('所有配套栏目保留核图后的原文块数及指导首尾', async ()
     assert.ok(original[0].startsWith(first),`${title}原文开头`);
     assert.ok(original.at(-1).endsWith(last),`${title}原文结尾`);
   }
+});
+
+test('p44印刷修改符号保留错误原句及改正增补删除的对应关系', async () => {
+  await assert.doesNotReject(async () => { curriculum ??= await import('../chinese/curriculum.js'); });
+  const examples=curriculum.COURSE.units.flatMap(u=>u.extras).find(e=>e.title==='预测、识字、对话与修改符号').examples;
+  for (const sentence of ['李老师以经走了。','他穿着一件灰色的上衣，一顶蓝色的帽子。','菜园里种了很多蔬菜，有土豆、黄瓜、西瓜和西红柿。']) assert.ok(examples.includes(sentence),`有意错误原句：${sentence}`);
+  for (const relation of [
+    '表示改正 / 李老师以经走了。 / 以 → 已',
+    '表示增补 / 他穿着一件灰色的上衣，一顶蓝色的帽子。 / ， → 戴着 → 一顶',
+    '表示删除 / 菜园里种了很多蔬菜，有土豆、黄瓜、西瓜和西红柿。 / 西瓜',
+  ]) assert.ok(examples.includes(relation),`印刷修改对象及所属原句：${relation}`);
+});
+
+test('p56口字族保留共同中心及三组连接关系', async () => {
+  await assert.doesNotReject(async () => { curriculum ??= await import('../chinese/curriculum.js'); });
+  const examples=curriculum.COURSE.units.flatMap(u=>u.extras).find(e=>e.title==='童话想象、识字和词句').examples;
+  assert.ok(examples.includes('口 → 咬 叼 嚼 咽 啃 吞 含 / 口 → 叫 喊 嚷 吼 吵 啼 唤 / 口 → 啪 哗 吱 嗡 嘟 呜 喵'));
 });
