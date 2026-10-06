@@ -1,6 +1,7 @@
 const {origin}=require('../config.js');
+const {absolute}=require('./view.js');
 const owners=new WeakMap();
-const url=path=>path.startsWith('/english/')?origin+path:path;
+const url=path=>path.startsWith('/english/')?absolute(path):path;
 function validResult(r){const score=n=>Number.isFinite(n)&&n>=0&&n<=100;return r?.engine==='local-phoneme'&&score(r.score)&&score(r.accuracy)&&score(r.completeness)&&r.duration>0&&r.duration<=20&&Array.isArray(r.words)&&r.words.length&&r.words.every(w=>typeof w.word==='string'&&w.word.trim()&&score(w.score))}
 function recordingInfo(data){
  if(Object.prototype.toString.call(data)!=='[object ArrayBuffer]')return{code:'FILE_NOT_BINARY'};

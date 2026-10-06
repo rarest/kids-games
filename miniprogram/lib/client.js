@@ -1,4 +1,5 @@
 const {origin}=require('../config.js');
+const bundled=require('./bundled-content.js');
 const copy=value=>JSON.parse(JSON.stringify(value));
 const empty=()=>({version:1,lessons:{},items:{},session:null});
 const wire=value=>{if(!value)return null;const {steps,...rest}=copy(value);return rest};
@@ -54,7 +55,7 @@ function createClient(wx,{onChange=()=>{}}={}){
  function savePageHistory(page,data){write(pageKey(page),data)}
  function pageCursor(page){return read(pageKey(page)+':cursor')}
  function savePageCursor(page,data){write(pageKey(page)+':cursor',data)}
- async function content(path){return new Promise((resolve,reject)=>wx.request({url:origin+'/english/miniprogram-data/'+path,timeout:15000,success:r=>r.statusCode===200?resolve(r.data):reject(new Error('教材暂时无法加载，请重试。')),fail:()=>reject(new Error('网络未连接，请重试。'))}))}
+ async function content(path){const local=bundled.content(path);if(local!==undefined)return local;return new Promise((resolve,reject)=>wx.request({url:origin+'/english/miniprogram-data/'+path,timeout:15000,success:r=>r.statusCode===200?resolve(r.data):reject(new Error('教材暂时无法加载，请重试。')),fail:()=>reject(new Error('网络未连接，请重试。'))}))}
  return {request,restore,refresh,username:(username,password)=>login('/username',{username,password}),wechatLogin:async()=>login('/login',{code:await loginCode()}),link:async()=>request('/link',{method:'POST',body:{code:await loginCode()}}),logout:async()=>{try{await request('/logout',{method:'POST',body:{}})}finally{clearIdentity()}},selectProfile,progress,saveProgress,flush,resolveConflict,importGuest,pageHistory,savePageHistory,pageCursor,savePageCursor,content,guest(){generation++;profile=null;active=null;notify()},get user(){return user},get profile(){return profile},get conflict(){return active?.conflict},get pending(){return active?.dirty||active?.events?.length},get identity(){return user&&profile?user.id+':'+profile.id:'guest'},get selected(){return user?read(`mini-profile-v1:${user.id}`):null}};
 }
 module.exports={createClient,message,wire};
