@@ -35,6 +35,7 @@
 - [ ] 阅读每屏一段；选择题保存选项并反馈；非评分步骤需要显式visited或selfReported；advance不得越过未完成步骤。表达和背诵仅记录尝试。
 - [ ] 理解题和字词题正确选项位置用稳定顺序分散，不能一律第一项；重建步骤仍完全一致，干扰项不能与正确释义等价。
 - [ ] complete验证每步答案并幂等startedAt:review身份，review不能完成未学课。服务端将复用引擎完整校验。
+- [ ] 将掌握计数抽为小导出recordItemAnswer(progress,itemKey,correct,{hinted=false,now=Date.now()}={})，本地首次答题与服务端合法事件回放复用同一算法，避免复制。
 - [ ] node --test tests/chinese-engine.test.mjs通过后提交。
 
 ### Task 3: 家庭学科隔离
