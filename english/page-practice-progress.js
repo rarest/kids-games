@@ -34,7 +34,7 @@ function validCursor(page,cursor,answers){
  const end=Math.min(cursor.start+PRACTICE_ROUND_SIZE,questions.length),index=questions.findIndex(q=>q.id===cursor.questionId);
  if(index<cursor.start||index>=end)return null;
  if(cursor.completed&&(index!==end-1||questions.slice(cursor.start,end).some(q=>answers[q.id]?.lastCorrect!==true)))return null;
- return {questionId:cursor.questionId,start:cursor.start,completed:cursor.completed};
+ return {questionId:cursor.questionId,start:cursor.start,completed:cursor.completed,...(cursor.retry===true&&answers[cursor.questionId]?.lastCorrect===false?{retry:true}:{})};
 }
 export function recordPracticeCursor(state,page,cursor){
  if(!plain(state)||state.version!==1||!plain(state.answers))return state;

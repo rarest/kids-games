@@ -41,15 +41,20 @@ def assess(data,text,ipa=""):
     signal=np.pad(np.asarray(signal,dtype=np.float32),(1600,1600))
     x=((signal-signal.mean())/np.sqrt(signal.var()+1e-7))[None,:]
     logits=SESSION.run(None,{INPUT:x.astype(np.float32)})[0][0]
-    ids=logits.argmax(-1);heard=[];previous=-1
-    for current in ids:
-        current=int(current)
-        if current!=previous and current!=BLANK:
+    ids=logits.argmax(-1);heard=[];confidence=[]
+    probabilities=np.exp(logits-logits.max(axis=-1,keepdims=True))
+    probabilities/=probabilities.sum(axis=-1,keepdims=True)
+    start=0
+    while start<len(ids):
+        current=int(ids[start]);end=start+1
+        while end<len(ids) and ids[end]==current:end+=1
+        if current!=BLANK:
             p=ID_TO_PHONEME[str(current)]
-            if p not in {'<unk>','|','<s>','</s>','<pad>'}:heard.append(p)
-        previous=current
+            if p not in {'<unk>','|','<s>','</s>','<pad>'}:
+                heard.append(p);confidence.append(float(probabilities[start:end,current].mean()))
+        start=end
     if len(heard)<1 or np.count_nonzero(ids!=BLANK)<2:raise ValueError('No speech phonemes detected')
-    result=align_score(reference(text,ipa),heard);result['duration']=round(duration,4)
+    result=align_score(reference(text,ipa),heard,confidence);result['duration']=round(duration,4)
     return result
 
 class Handler(BaseHTTPRequestHandler):

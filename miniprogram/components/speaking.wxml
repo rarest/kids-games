@@ -11,6 +11,6 @@
   <button class="discard-button small" wx:if="{{media.clip || media.recording || media.requesting || media.assessing}}" bindtap="cancelRecording">丢弃本次录音</button>
   <view class="muted recording-privacy">点提交才发送录音评分，退出本页会清除。</view>
   <button class="small speaking-help-toggle" bindtap="toggleSpeakingHelp">{{showSpeakingHelp ? '收起帮助 −' : '家长帮助 · 隐私与麦克风 ＋'}}</button>
-  <view wx:if="{{showSpeakingHelp}}" class="row speaking-settings"><button class="small" bindtap="openPrivacy">隐私说明</button><button class="small" bindtap="openMicSettings">麦克风设置</button></view>
+  <view wx:if="{{showSpeakingHelp}}" class="row speaking-settings"><button class="small" bindtap="openPrivacy">隐私说明</button><button class="small" bindtap="openMicSettings">麦克风设置</button><button class="small" bindtap="toggleEncouragementSound">鼓励声音：{{encourageMuted ? '关' : '开'}}</button></view>
  </view>
 </template>

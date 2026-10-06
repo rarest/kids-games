@@ -2,7 +2,7 @@
 <view class="shell page-shell action-shell">
  <view wx:if="{{loading}}">正在加载课本…</view><view class="error" wx:if="{{error}}">{{error}}</view><button wx:if="{{error}}" bindtap="load">重试</button>
  <view wx:if="{{page && !loading}}">
-  <view class="classroom-header"><view class="eyebrow">珠珠英语课堂 · 课本第 {{page.page}} 页</view><view class="heading">{{page.title}}</view></view>
+  <view class="classroom-header"><button class="small encourage-sound" bindtap="toggleEncouragementSound">鼓励声音：{{encourageMuted ? '关' : '开'}}</button><view class="eyebrow">珠珠英语课堂 · 课本第 {{page.page}} 页</view><view class="heading">{{page.title}}</view></view>
   <view class="row page-navigation"><button data-delta="-1" bindtap="changePage" disabled="{{page.page === 2 || mediaLocked}}">上一页</button><picker class="page-picker" range="{{pageChoices}}" value="{{pagePickerIndex}}" bindchange="selectPage" disabled="{{mediaLocked}}"><view class="picker">第 {{page.page}} 页 ▾</view></picker><button data-delta="1" bindtap="changePage" disabled="{{page.page === 91 || mediaLocked}}">下一页</button></view>
   <view class="tabs"><button class="{{tab === 'read' ? 'selected' : ''}}" data-tab="read" bindtap="switchTab" disabled="{{mediaLocked}}">逐页听读</button><button class="{{tab === 'practice' ? 'selected' : ''}}" data-tab="practice" bindtap="switchTab" disabled="{{mediaLocked}}">本页练习</button><button class="{{tab === 'speak' ? 'selected' : ''}}" data-tab="speak" bindtap="switchTab" disabled="{{mediaLocked}}">跟读录音</button></view>
   <view wx:if="{{tab === 'read'}}" class="page-reading">
@@ -18,14 +18,14 @@
    <view wx:if="{{question}}"><view class="step-count"><text>想一想，选一选</text><text>{{questionIndex}} / {{questions.length}}</text></view><progress class="progress" percent="{{(questionIndex - 1) * 100 / questions.length}}" activeColor="#355e46"/><view class="subheading">{{question.prompt}}</view><view class="row"><button bindtap="listenQuestion">{{media.source === 'question' && media.playing ? '暂停原句' : media.source === 'question' && media.paused ? '继续原句' : '听题目原句'}}</button></view>
     <button wx:for="{{question.choices}}" wx:key="*this" class="choice {{feedback.selected === item ? (feedback.correct ? 'answer-correct' : 'answer-retry') : ''}}" data-answer="{{item}}" bindtap="answer" disabled="{{feedback.correct}}"><text>{{item}}</text><text wx:if="{{feedback.selected === item}}" class="choice-marker">{{feedback.correct ? '✓ 答对了' : '↻ 再试试'}}</text></button>
     <view wx:if="{{question.kind === 'order'}}"><view class="tokens"><button wx:for="{{picked}}" wx:key="position" data-index="{{item.position}}" bindtap="removeToken" disabled="{{feedback.correct}}">{{item.text}}</button><view wx:if="{{!picked.length}}" class="muted">按顺序点词块</view></view><view class="tokens"><button wx:for="{{tokens}}" wx:key="index" data-index="{{item.index}}" bindtap="pick" disabled="{{item.selected || feedback.correct}}">{{item.text}}</button></view><button bindtap="checkSentence" disabled="{{picked.length !== tokens.length || feedback.correct}}">检查这句话</button></view>
-    <view wx:if="{{feedback}}" class="notice {{feedback.correct ? 'feedback-correct' : 'feedback-retry'}}">{{feedback.text}}</view>
+    <view wx:if="{{feedback}}" class="notice {{feedback.correct ? 'feedback-correct' : 'feedback-retry'}}">{{encouragement || feedback.text}}</view>
    </view>
    <view wx:if="{{practiceFinished}}" class="finished-round"><view class="finished-star">★</view><view class="subheading">这一轮练完了</view><view>休息一下，也可以挑一个词跟读。</view><view class="muted">练习记录保存在当前孩子的这台设备。</view></view>
   </view>
   <view wx:if="{{tab === 'speak'}}" class="panel speaking-panel">
    <view class="step-count"><text>选一个词或句子</text><text>{{speakingIndex + 1}} / {{speakingTargets.length}}</text></view>
    <picker range="{{speakingTargets}}" range-key="en" value="{{speakingIndex}}" bindchange="selectSpeakingTarget" disabled="{{mediaLocked}}"><view class="picker target-picker">第 {{speakingIndex + 1}} 个词句 <text>换一个 ▾</text></view></picker>
-   <template is="speaking" data="{{speakingTarget, media, showSpeakingHelp}}"/>
+   <template is="speaking" data="{{speakingTarget, media, showSpeakingHelp, encourageMuted}}"/>
    <view wx:if="{{!speakingTargets.length}}" class="muted">这一页没有可录音的词句，可以继续听读。</view>
   </view>
   <view class="bottom-actions">
