@@ -19,8 +19,8 @@ test('guided reading keeps every listen and speaking control separate and clicka
   for(const [width,height,touch] of [[2048,1054,false],[1024,768,true],[768,1024,true],[390,700,true],[320,568,true]]){
    await b.size(width,height,touch);
    await b.evaluate('window.englishCourse.replaceProgress(window.__readingProgress);window.englishCourse.start()');
-   await wait(b,'document.querySelectorAll(".course-reading>div").length===5');
-   const rows=await b.evaluate(`Array.from(document.querySelectorAll('.course-reading>div')).map(row=>{const box=e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}},listen=row.querySelector('[data-course-line]'),read=row.querySelector('[data-course-speaking]');return{listen:box(listen),read:box(read),text:box(row.querySelector('strong')),zh:box(row.querySelector('p'))}})`);
+   await wait(b,'document.querySelectorAll(".course-reading>div").length===4');
+   const rows=[];for(const count of [4,1]){assert.equal(await b.evaluate('document.querySelectorAll(".course-reading>div").length'),count);rows.push(...await b.evaluate(`Array.from(document.querySelectorAll('.course-reading>div')).map(row=>{const box=e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}},listen=row.querySelector('[data-course-line]'),read=row.querySelector('[data-course-speaking]');return{listen:box(listen),read:box(read),text:box(row.querySelector('strong')),zh:box(row.querySelector('p'))}})`));if(count===4)await press(b,'#courseNext',touch);else await press(b,'#courseReadingPrevious',touch)}
    const overlaps=(a,c)=>Math.min(a.right,c.right)>Math.max(a.left,c.left)+1&&Math.min(a.bottom,c.bottom)>Math.max(a.top,c.top)+1;
    for(const row of rows){
     assert.ok(!overlaps(row.listen,row.read),`${width}px: listening and speaking buttons overlap: ${JSON.stringify(row)}`);

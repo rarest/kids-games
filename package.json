@@ -14,13 +14,14 @@
     "build:rescue": "esbuild rescue/game.js --bundle --format=esm --minify --legal-comments=none --outfile=rescue/bundle.js",
     "test:rescue-online": "node --test tests/rescue-online-browser.mjs && node --test tests/rescue-online-latency-browser.mjs && node --test tests/rescue-online-collision-browser.mjs && node --test tests/rescue-shared-world-browser.mjs && node --test tests/rescue-online-motion-browser.mjs && node --test tests/rescue-online-stop-browser.mjs && node --test tests/rescue-online-pause-browser.mjs && node --test tests/rescue-online-presentation-browser.mjs",
     "build:english": "esbuild english/main.js --bundle --format=esm --minify --legal-comments=none --outfile=english/bundle.js",
-    "test:english": "node --test tests/english-core.test.mjs tests/english-curriculum.test.mjs tests/english-audio.test.mjs tests/english-textbook.test.mjs tests/english-audio-reader.test.mjs tests/english-course-engine.test.mjs tests/english-course-curriculum.test.mjs && node --test tests/english-browser.mjs && node --test tests/english-save-audio-browser.mjs && node --test tests/english-study-browser.mjs && node --test tests/english-scenes-browser.mjs && node --test tests/english-textbook-browser.mjs && node --test tests/english-course-browser.mjs",
+    "test:english": "node --test tests/english-core.test.mjs tests/english-curriculum.test.mjs tests/english-audio.test.mjs tests/english-textbook.test.mjs tests/english-audio-reader.test.mjs tests/english-course-engine.test.mjs tests/english-course-curriculum.test.mjs && node --test tests/english-browser.mjs && node --test tests/english-save-audio-browser.mjs && node --test tests/english-study-browser.mjs && node --test tests/english-scenes-browser.mjs && node --test tests/english-textbook-browser.mjs && node --test tests/english-course-browser.mjs && npm run test:english-interaction",
     "test:racing-online": "node --test tests/racing-online-*.test.mjs tests/racing-server.test.mjs tests/racing-deploy.test.mjs && node --test tests/racing-online-browser.mjs",
     "test:catalog": "node --test tests/catalog-browser.mjs",
     "test:startup": "node --test --test-concurrency=1 tests/startup-failure-browser.mjs tests/classic-storage-browser.mjs",
     "build:miniprogram": "node scripts/build-miniprogram-content.mjs",
     "test:miniprogram": "node --test tests/miniprogram-*.test.mjs",
-    "check:miniprogram": "node scripts/check-miniprogram.mjs"
+    "check:miniprogram": "node scripts/check-miniprogram.mjs",
+    "test:english-interaction": "node --test tests/english-guided-responsive-browser.mjs tests/english-reading-layout-browser.mjs tests/english-practice-rounds-browser.mjs tests/english-speaking-flow-browser.mjs tests/page-practice-touch-browser.mjs tests/page-classroom-layout-browser.mjs tests/page-classroom-auth-race-browser.mjs"
   },
   "devDependencies": {
     "@resvg/resvg-js": "2.6.2",

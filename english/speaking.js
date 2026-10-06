@@ -13,9 +13,9 @@ export function validateAssessment(value) {
 function serviceMessage(body, status) {
   const code = String(body?.error || body?.code || '').toLowerCase();
   if (/no_speech|no_result|unrecognized|silence|too_short/.test(code) || status === 422) return '这次没有听清声音。请靠近麦克风，读完后再点停止。';
-  if (/busy|limit|rate/.test(code) || status === 429) return '练习的小伙伴有点多。请稍等一会，再点得分。';
+  if (/busy|limit|rate/.test(code) || status === 429) return '练习的小伙伴有点多。请稍等一会，再点看发音反馈。';
   if (/unavailable|not_ready/.test(code) || status === 503) return '评分服务暂时没有准备好。你仍然可以录音、回听和重录。';
-  return '这次没有取得反馈。请检查网络，稍后再点得分。';
+  return '这次没有取得反馈。请检查网络，稍后再点看发音反馈。';
 }
 
 export function mountSpeaking({root, target, speak = () => {}, stopAudio = () => {}, onResult = () => {}, onError = () => {}}) {
@@ -23,7 +23,8 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
   const panel = document.createElement('section');
   panel.className = 'speaking-panel'; panel.setAttribute('aria-label', '跟读练习');
   panel.innerHTML = `<div class="speaking-heading"><span class="speaking-page"></span><h3 class="speaking-target"></h3><p class="speaking-meaning"></p><p class="speaking-ipa"></p><p class="speaking-spoken-target" hidden></p></div>
-    <p class="speaking-instruction">先听一遍，再自己读。录好后听听自己的声音，准备好了就点「得分」。</p>
+    <p class="speaking-instruction">先听示范，再录一遍自己的声音。录好后可以回听，再看发音反馈。</p>
+    <p class="speaking-status" data-speaking-status role="status" aria-live="polite">正在查看评分服务…</p>
     <div class="speaking-controls">
       <button type="button" data-speaking-action="listen">🔊 听示范</button>
       <button type="button" data-speaking-action="record" class="speaking-primary">🎙 开始录音</button>
@@ -31,13 +32,12 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
       <button type="button" data-speaking-action="play" hidden>▶ 听我的录音</button>
       <button type="button" data-speaking-action="retry" hidden>再读一次</button>
       <button type="button" data-speaking-action="cancel" hidden>取消</button>
-      <button type="button" data-speaking-action="submit" disabled class="speaking-score-button">✨ 得分</button>
+      <button type="button" data-speaking-action="submit" hidden disabled class="speaking-score-button">✨ 看发音反馈</button>
       <button type="button" data-speaking-action="refresh" hidden>检查评分服务</button>
     </div>
     <div class="speaking-meter" hidden><canvas width="640" height="64" aria-hidden="true"></canvas><span class="speaking-time">0.0 / 20 秒</span></div>
-    <p class="speaking-status" data-speaking-status role="status" aria-live="polite">正在查看评分服务…</p>
     <div class="speaking-result" data-speaking-result aria-live="polite"></div>
-    <p class="speaking-parent-note">家长提示：录音只在本页暂存。点击「得分」才会发送到我们网站的服务器，不保存录音；退出本页就丢弃。自动反馈用于跟读练习。</p>
+    <details class="speaking-parent-details"><summary>家长提示：录音与自动反馈</summary><p class="speaking-parent-note">录音只在本页暂存。点击「看发音反馈」才会发送到我们网站的服务器，不保存录音；退出本页就丢弃。自动反馈用于跟读练习。</p></details>
     <audio hidden preload="metadata"></audio>`;
   const get = selector => panel.querySelector(selector);
   const buttons = Object.fromEntries(Array.from(panel.querySelectorAll('[data-speaking-action]'), button => [button.dataset.speakingAction, button]));
@@ -65,12 +65,15 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     buttons.stop.hidden = !capturing;
     buttons.play.hidden = !clip; buttons.play.disabled = capturing || asking;
     buttons.retry.hidden = !clip; buttons.retry.disabled = assessing;
-    buttons.cancel.hidden = state === 'idle' && !clip;
+    buttons.cancel.hidden = state === 'idle' || state === 'recorded';
+    buttons.listen.hidden = capturing || asking || assessing;
+    buttons.submit.hidden = !clip || capturing || asking;
     buttons.submit.disabled = !clip || clip.duration < 0.25 || !available || capturing || asking || assessing;
-    buttons.submit.textContent = assessing ? '正在听你的声音…' : '✨ 得分';
+    buttons.submit.textContent = assessing ? '正在听你的声音…' : '✨ 看发音反馈';
     buttons.refresh.hidden = available || checkingReadiness || capturing || asking;
     buttons.refresh.disabled = assessing;
-    buttons.listen.disabled = capturing || asking;
+    buttons.listen.disabled = capturing || asking || assessing;
+    panel.dataset.speakingState = state;
     meter.hidden = !capturing && !clip;
     time.textContent = `${shownDuration.toFixed(1)} / 20 秒`;
     panel.setAttribute('aria-busy', assessing ? 'true' : 'false');
@@ -124,7 +127,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     clipURL = URL.createObjectURL(clip.blob); player.src = clipURL; shownDuration = clip.duration;
     message(clip.duration < 0.25 ? '录音太短了。请点「再读一次」，读完后再停止。' :
       clip.rms < 0.0005 ? '没有听到明显的声音。可以先回听，再靠近麦克风读一次。' :
-      available ? '录好了！先听听自己的声音，再点「得分」。' : '录好了！可以听自己的录音。评分服务暂时没有准备好。');
+      available ? '录好了！先听听自己的声音，再点「看发音反馈」。' : '录好了！可以听自己的录音。评分服务暂时没有准备好。');
     update();
   }
   async function play() {
@@ -144,15 +147,21 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     const encouragement = document.createElement('p'); encouragement.className = 'speaking-encouragement';
     encouragement.textContent = value.score >= 80 ? '读得很认真！听一听示范，继续练习吧。' : '你已经完成一次练习！听听示范，再慢慢读一遍。';
     result.append(encouragement);
+    const headline = document.createElement('p'); headline.className = 'speaking-score-summary'; headline.textContent = `这次练习 ${Math.round(value.score)} 分`; result.append(headline);
+    const weakest = value.words.reduce((a, b) => b.score < a.score ? b : a);
+    const nextPractice = document.createElement('p'); nextPractice.className = 'speaking-next-practice';
+    nextPractice.textContent = weakest.score < 80 ? `下一小步：再听示范，练一练 ${weakest.word}。` : '下一小步：换一个词或句子，继续读一读。'; result.append(nextPractice);
+    const details = document.createElement('details'); details.className = 'speaking-score-details';
+    const summary = document.createElement('summary'); summary.textContent = '看看每个词的反馈'; details.append(summary); result.append(details);
     const scores = document.createElement('div'); scores.className = 'speaking-scores';
     for (const [label, number] of [['练习得分', value.score], ['发音贴合度', value.accuracy], ['完成度', value.completeness]]) {
       const item = document.createElement('p'), title = document.createElement('span'), score = document.createElement('strong');
       title.textContent = label; score.textContent = `${Math.round(number)}${label === '练习得分' ? ' 分' : '%'}`;
       item.append(title, score); scores.append(item);
     }
-    result.append(scores);
+    details.append(scores);
     const note = document.createElement('p'); note.className = 'speaking-feedback-note';
-    note.textContent = '发音贴合度比较录音与示范的音素（声音单位）。这是自动练习反馈，专有名字的发音可能需要老师帮助。'; result.append(note);
+    note.textContent = '发音贴合度比较录音与示范的音素（声音单位）。这是自动练习反馈，专有名字的发音可能需要老师帮助。'; details.append(note);
     const words = document.createElement('ul'); words.className = 'speaking-word-feedback';
     for (const word of value.words) {
       const row = document.createElement('li'), title = document.createElement('strong'), hint = document.createElement('span');
@@ -160,7 +169,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
       hint.textContent = `${Math.round(word.score)}% · ${word.score >= 80 ? '继续保持' : word.errorType === 'omission' || word.errorType === 'Omission' ? '再把这个词读完整' : '听听这个词，再试一次'}`;
       row.append(title, hint); words.append(row);
     }
-    result.append(words);
+    details.append(words);
   }
   async function assess() {
     if (dead || buttons.submit.disabled || state === 'assessing') return;
@@ -181,7 +190,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
       try { onResult(value); } catch {}
     } catch (error) {
       if (dead || token !== epoch) return;
-      message(error.name === 'AbortError' ? '这次等得有点久。请稍后再点得分，录音还在。' : error instanceof TypeError ? '网络暂时没有连上。录音还在，可以稍后再点得分。' : error.message || '这次没有取得反馈，请稍后再试。');
+      message(error.name === 'AbortError' ? '这次等得有点久。请稍后再点看发音反馈，录音还在。' : error instanceof TypeError ? '网络暂时没有连上。录音还在，可以稍后再点看发音反馈。' : error.message || '这次没有取得反馈，请稍后再试。');
       reportError(error);
     } finally {
       clearTimeout(timeout);
@@ -205,7 +214,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
       if (dead) return;
       available = body.enabled === true && body.provider === 'local-phoneme';
       if (state === 'idle') message(available ? '听一遍示范，准备好了就开始录音。' : '评分服务暂时没有准备好。你可以先录音和回听。');
-      else if (state === 'recorded') message(available ? '录好了！先回听，准备好了就点「得分」。' : '评分服务暂时没有准备好。你仍然可以回听和重录。');
+      else if (state === 'recorded') message(available ? '录好了！先回听，准备好了就点「看发音反馈」。' : '评分服务暂时没有准备好。你仍然可以回听和重录。');
     } catch {
       if (!dead) { available = false; if (state === 'idle' || state === 'recorded') message('评分服务暂时没有连上。你可以先录音和回听。'); }
     } finally { checkingReadiness = false; update(); }

@@ -18,7 +18,7 @@ test('guided English course has a picture and audio lesson that resumes without 
 
 async function completeInUI(b,{wrongFirst=false}={}){
  let wrong=false;
- for(let n=0;n<100;n++){
+ for(let n=0;n<160;n++){
   const step=await b.evaluate('window.englishCourse.session?.steps[window.englishCourse.session.index]');
   if(!step)return;
   if(['listen','meaning','check'].includes(step.kind)){
