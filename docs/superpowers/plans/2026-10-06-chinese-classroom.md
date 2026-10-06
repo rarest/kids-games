@@ -21,10 +21,10 @@
 **Files:** chinese/curriculum.js、chinese/content-u1.js 至 content-u8.js、chinese/appendices.js、chinese/SOURCES.md、tests/chinese-curriculum.test.mjs。
 **Interfaces:** curriculum.js exports COURSE={id:'pep3-cn-2026-v1',edition,units}, LESSONS。Unit={id:'u1',number,title,description,pages,extras:[{kind,title,pages,prompt,hints,examples?}]}。Lesson={id:'cn-1',number,unitId,title,pages:number[],genre,goal,preview:{prompt,hint},paragraphs:[{text,page}],words:[{text,pinyin,meaning,example,page}],questions:[{id:'cn-1:q1',prompt,choices:string[],answer:string,hint,explanation,page}],expression:{prompt,hints:string[]},recite:{required:boolean,parts:string[]},recognize:string[],write:string[]}。words至少3项，questions至少3题且每题唯一正确选项，正文全文逐段，古诗可每首一段。appendices exports RECOGNIZE,WRITE,WORDS（课号分组数组，按表核对）。
 
-- [ ] 先创建测试，动态import放入assert.doesNotReject，运行node --test tests/chinese-curriculum.test.mjs，确认失败是模块缺失。
-- [ ] 看图逐页转录正文，原文与原创引导分字段；标题、页码、课后背诵要求、全部附录核对。不能删长篇、只录选段、用同一套通用题替代理解。
-- [ ] 独立期待样例：LESSONS.find(l=>l.number===11).title为宝葫芦的秘密（节选）；第24课一定要争气；第9课为犟龟，p34保留上传版本的婚礼取消结尾与印刷省略号，不擅自补写故事。每课包含相应全部正文。
-- [ ] 运行内容测试；记录具体源图页码和校对结论；提交仅此任务文件。
+- [x] 先创建测试，动态import放入assert.doesNotReject，运行node --test tests/chinese-curriculum.test.mjs，确认失败是模块缺失。
+- [x] 看图逐页转录正文，原文与原创引导分字段；标题、页码、课后背诵要求、全部附录核对。不能删长篇、只录选段、用同一套通用题替代理解。
+- [x] 独立期待样例：LESSONS.find(l=>l.number===11).title为宝葫芦的秘密（节选）；第24课一定要争气；第9课为犟龟，p34保留上传版本的婚礼取消结尾与印刷省略号，不擅自补写故事。每课包含相应全部正文。
+- [x] 运行内容测试；记录具体源图页码和校对结论；提交仅此任务文件。
 
 ### Task 2: 学习引擎与存档
 
