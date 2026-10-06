@@ -16,7 +16,7 @@ test('当前教材26课具有完整学习接口与唯一答案', async () => {
   assert.equal(COURSE.id, 'pep3-cn-2026-v1');
   assert.equal(COURSE.units.length, 8);
   assert.equal(LESSONS.length, 26);
-  const expected = ['大青树下的小学','花的学校','不懂就要问','古诗三首','铺满金色巴掌的水泥道','秋天的雨','听听，秋的声音','总也倒不了的老屋','犟龟','小狗学叫','宝葫芦的秘密（节选）','在牛肚子里旅行','一块奶酪','搭船的鸟','金色的草地','富饶的西沙群岛','海滨小城','美丽的小兴安岭','香港，璀璨的明珠','古诗三首','大自然的声音','父亲、树林和鸟','司马光','一定要争气','手术台就是阵地','一个粗瓷大碗'];
+  const expected = ['大青树下的小学','花的学校','不懂就要问','古诗三首','铺满金色巴掌的水泥道','秋天的雨','听听，秋的声音','总也倒不了的老屋','犟龟','小狗学叫','宝葫芦的秘密（节选）','在牛肚子里旅行','一块奶酪','搭船的鸟','金色的草地','富饶的西沙群岛','海滨小城','美丽的小兴安岭','香港，璀璨的明珠','古诗三首','大自然的声音','读不完的大书','司马光','一定要争气','手术台就是阵地','一个粗瓷大碗'];
   assert.deepEqual(LESSONS.map(l=>l.title), expected);
   for (const lesson of LESSONS) {
     assert.equal(lesson.id, `cn-${lesson.number}`);
@@ -56,4 +56,26 @@ test('三份附录按课号分组且覆盖教材各250项', async () => {
     assert.equal(groups.flatMap(g=>g.items).length, 250, key);
     for (const group of groups) { assert.ok(Number.isInteger(group.lesson)); assert.ok(group.items.length); }
   }
+});
+
+test('答案位置变化，孩子必须按内容选而非一直点击第一项', async () => {
+  await assert.doesNotReject(async () => { curriculum ??= await import('../chinese/curriculum.js'); });
+  assert.deepEqual(new Set(curriculum.LESSONS.flatMap(l=>l.questions.map(q=>q.choices.indexOf(q.answer)))), new Set([0,1,2]));
+});
+
+test('当前书的背诵要求和完整单元拓展供学习界面读取', async () => {
+  await assert.doesNotReject(async () => { curriculum ??= await import('../chinese/curriculum.js'); });
+  assert.deepEqual(curriculum.LESSONS.filter(l=>l.recite.required).map(l=>l.number),[4,6,20,21,23]);
+  assert.deepEqual(curriculum.LESSONS.find(l=>l.number===4).recite.dictation,['山行']);
+  assert.deepEqual(curriculum.LESSONS.find(l=>l.number===20).recite.dictation,['望天门山']);
+  for (const u of curriculum.COURSE.units) {
+    assert.ok(u.extras.some(e=>e.kind==='习作'));
+    for (const e of u.extras) assert.ok(e.title && e.prompt && e.hints.length && e.pages.length);
+  }
+  const extras=curriculum.COURSE.units.flatMap(u=>u.extras);
+  assert.deepEqual(extras.filter(e=>e.kind==='例文').map(e=>e.title),['我家的小狗','我爱故乡的杨梅']);
+  assert.match(extras.find(e=>e.title==='我家的小狗').examples.join(''),/还是骂了火车一顿/);
+  assert.match(extras.find(e=>e.title==='我爱故乡的杨梅').examples.join(''),/牙齿已经被它酸倒了/);
+  assert.match(extras.find(e=>e.title==='秋分过后的准备').examples.join(''),/金翅雀/);
+  assert.match(extras.find(e=>e.title==='瀑布').examples.join(''),/如烟，如雾，如尘/);
 });
