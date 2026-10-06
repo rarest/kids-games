@@ -43,10 +43,10 @@
 **Files:** platform/chinese-progress.mjs、family-store.mjs、server.mjs、migrations/003-subjects.sql、english/course-cloud.js、deploy/deploy-local.sh、相关测试。
 **Interfaces:** 家庭getProgress/syncProgress/importProgress增加最后参数subject='english'；语文endpoint progress/chinese。Chinese codec和English codec同签名sanitize/sanitizeSession/normalizeEvent/replay、CONTENT_VERSION。createCourseCloud增加subject、contentVersion、guestKey、profileKey、emptyProgress可选项，默认保持英语。
 
-- [ ] 写测试证明英语/语文同时更新不冲突、互不回放，导入按科为空、导出两科、非法学科拒绝、非拥有者404。运行看见缺语文行为失败。
-- [ ] 事务迁移约束扩大到english/chinese与两版本，不删数据；migrate重跑安全；事件查询按版本。语文课程文件纳入platform部署指纹。
-- [ ] 真实PostgreSQL临时schema执行覆盖测试，既有English/cloud/auth相关测试保持通过。
-- [ ] 提交相关文件。
+- [x] 写测试证明英语/语文同时更新不冲突、互不回放，导入按科为空、导出两科、非法学科拒绝、非拥有者404。运行看见缺语文行为失败。
+- [x] 事务迁移约束扩大到english/chinese与两版本，不删数据；migrate重跑安全；事件查询按版本。语文课程文件纳入platform部署指纹。
+- [x] 真实PostgreSQL临时schema执行覆盖测试，既有English/cloud/auth相关测试保持通过。
+- [x] 提交相关文件。
 
 ### Task 4: 三端课堂与听读
 
