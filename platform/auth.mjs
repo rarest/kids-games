@@ -40,7 +40,7 @@ export function createAuth({pool, secret, publicOrigin, sendMail, wechat=createW
     user:{modelName:'family_user',additionalFields:{wechatAccount:{type:'boolean',defaultValue:false,input:false}},deleteUser:{enabled:true}},
     session:{modelName:'family_session', expiresIn:60*60*24*7, updateAge:60*60*24, freshAge:300, cookieCache:{enabled:false}},
     account:{modelName:'family_account',accountLinking:{enabled:true,disableImplicitLinking:true,allowDifferentEmails:true,trustedProviders:[],allowUnlinkingAll:false}}, verification:{modelName:'family_verification'},
-    emailAndPassword:{enabled:true, requireEmailVerification:true, minPasswordLength:10, maxPasswordLength:128, autoSignIn:false, revokeSessionsOnPasswordReset:true,
+    emailAndPassword:{enabled:true, requireEmailVerification:true, minPasswordLength:6, maxPasswordLength:128, autoSignIn:false, revokeSessionsOnPasswordReset:true,
       sendResetPassword:async ({user,url})=>deliver(user,url,'游戏大厅：重置家长密码','点击链接重置密码：')},
     emailVerification:{sendOnSignUp:true, sendOnSignIn:true, autoSignInAfterVerification:false,
       sendVerificationEmail:async ({user,url})=>deliver(user,url,'游戏大厅：验证家长邮箱','点击链接验证邮箱：')},

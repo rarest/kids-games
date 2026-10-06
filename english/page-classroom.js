@@ -13,7 +13,7 @@ export function mountPageClassroom({root,pages,speak,stopAudio,onError=()=>{},st
  const tabs=root.querySelector('.page-view-tabs'),studyContent=root.closest('#studyContent'),dialog=root.closest('.study-dialog');
  const fixedTabs=!!(tabs&&studyContent&&dialog);
  if(fixedTabs)dialog.insertBefore(tabs,studyContent);
- const api={get page(){return current},get targets(){return pageTargets(current)},get question(){return questions[index]},get index(){return index},goPage,openSpeaking:id=>chooseView('speaking',id),destroy};window.englishPagePractice=api;
+ const api={get page(){return current},get targets(){return pageTargets(current)},get question(){return questions[index]},get index(){return index},goPage,canLeave:()=>!speaking||speaking.canLeave(),openSpeaking:id=>chooseView('speaking',id),destroy};window.englishPagePractice=api;
  function save(){if(!storage||!savePractice({setItem:(_key,value)=>storage.setItem(storageKey,value)},progress))onError('本页练习暂时无法保存，当前页面仍可继续。')}
  function clearSpeaking(){speaking?.destroy();speaking=null}
  const roundEnd=()=>Math.min(roundStart+PRACTICE_ROUND_SIZE,questions.length);
@@ -30,8 +30,8 @@ export function mountPageClassroom({root,pages,speak,stopAudio,onError=()=>{},st
   else {index=Math.max(0,questions.findIndex(q=>progress.answers[q.id]?.lastCorrect!==true));roundStart=index;roundDone=false;}
  }
  function scrollToQuestion(){body.scrollIntoView({block:'start',behavior:'instant'})}
- function chooseView(next,targetId){stopAudio();clearSpeaking();view=next;selectedTarget=targetId||selectedTarget;render();scrollToQuestion();}
- function goPage(number){const next=pages.find(page=>page.page===Number(number));if(!next)return;stopAudio();clearSpeaking();current=next;selector.value=String(next.page);selectedTarget=null;restorePosition();render();}
+ function chooseView(next,targetId){if(speaking&&!speaking.canLeave()){const targetSelector=body.querySelector('#pageSpeakingTarget');if(targetSelector)targetSelector.value=selectedTarget;return;}stopAudio();clearSpeaking();view=next;selectedTarget=targetId||selectedTarget;render();scrollToQuestion();}
+ function goPage(number){if(speaking&&!speaking.canLeave()){selector.value=String(current.page);return;}const next=pages.find(page=>page.page===Number(number));if(!next)return;stopAudio();clearSpeaking();current=next;selector.value=String(next.page);selectedTarget=null;restorePosition();render();}
  function directory(action='practice',open=false){return `<details class="page-target-directory" ${open?'open':''}><summary>本页词句目录 · ${pageTargets(current).length} 项</summary><div>${pageTargets(current).map(target=>`<button data-page-${action}="${esc(target.id)}"><strong>${esc(target.en)}</strong><span>${esc(target.zh)}</span></button>`).join('')}</div></details>`}
  function artwork(target){if(target.kind!=='word')return '';const source=current.words.find(word=>word.en===target.en&&word.zh===target.zh);return wordArt(source||{id:target.wordId,en:target.en,zh:target.zh});}
  function renderPractice(){
@@ -56,7 +56,7 @@ export function mountPageClassroom({root,pages,speak,stopAudio,onError=()=>{},st
   body.innerHTML=`<div class="page-speaking-layout"><aside class="page-learning-aside"><span class="course-kicker">开口，每次一小步</span><h4>本页朗读 ${targets.length} 项</h4><p>先听示范，录下自己的声音。回放听一遍，再请网站给练习反馈。</p><label>选择一个词或句子<select id="pageSpeakingTarget">${targets.map(item=>`<option value="${esc(item.id)}" ${item.id===target.id?'selected':''}>${esc(item.en)}</option>`).join('')}</select></label>${artwork(target)?`<div class="page-practice-picture">${artwork(target)}</div>`:''}</aside><div id="pageSpeakingRoot"></div></div>`;
   speaking=mountSpeaking({root:body.querySelector('#pageSpeakingRoot'),target,speak,stopAudio,onResult:()=>{},onError});
  }
- function render(){if(destroyed)return;for(const button of tabs?.querySelectorAll('[data-page-view]')||[])button.setAttribute('aria-pressed',String(button.dataset.pageView===view));const position=pages.indexOf(current);root.querySelector('#previousTextbookPage').disabled=position===0;root.querySelector('#nextTextbookPage').disabled=position===pages.length-1;
+ function render(){if(destroyed)return;const pageListen=root.querySelector('#readTextbookPage');if(pageListen)pageListen.hidden=view!=='reading';for(const button of tabs?.querySelectorAll('[data-page-view]')||[])button.setAttribute('aria-pressed',String(button.dataset.pageView===view));const position=pages.indexOf(current);root.querySelector('#previousTextbookPage').disabled=position===0;root.querySelector('#nextTextbookPage').disabled=position===pages.length-1;
   if(view==='practice')renderPractice();else if(view==='speaking')renderSpeaking();else body.innerHTML=textbookPage(current,esc);
  }
  function answer(value){const q=questions[index];const correct=normalized(value)===normalized(q.answer);progress=recordPractice(progress,q.id,correct);feedback={correct,selected:value};savePosition({afterAnswer:correct});renderPractice();}

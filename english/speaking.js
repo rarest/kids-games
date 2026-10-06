@@ -53,7 +53,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
   const meter = get('.speaking-meter'), canvas = get('canvas'), time = get('.speaking-time'), player = get('audio');
   const context = canvas.getContext('2d');
   let dead = false, epoch = 0, state = 'idle', available = false, checkingReadiness = false, clip = null, clipURL = null, assessmentController;
-  let levels = [], shownDuration = 0;
+  let levels = [], shownDuration = 0, hasFeedback = false;
   const readinessController = new AbortController();
   const message = text => { if (!dead) status.textContent = text; };
   const reportError = error => { try { onError(error); } catch {} };
@@ -65,7 +65,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     buttons.stop.hidden = !capturing;
     buttons.play.hidden = !clip; buttons.play.disabled = capturing || asking;
     buttons.retry.hidden = !clip; buttons.retry.disabled = assessing;
-    buttons.cancel.hidden = state === 'idle' || state === 'recorded';
+    buttons.cancel.hidden = state === 'idle';
     buttons.listen.hidden = capturing || asking || assessing;
     buttons.submit.hidden = !clip || capturing || asking;
     buttons.submit.disabled = !clip || clip.duration < 0.25 || !available || capturing || asking || assessing;
@@ -94,11 +94,12 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
   function dropClip() {
     pausePlayback(); player.removeAttribute('src'); player.load();
     if (clipURL) URL.revokeObjectURL(clipURL);
-    clipURL = null; clip = null; shownDuration = 0; levels = []; result.replaceChildren();
+    clipURL = null; clip = null; shownDuration = 0; levels = []; hasFeedback = false; result.replaceChildren();
   }
   const recorder = new MicrophoneRecorder({
-    onProgress({duration, level}) { if (dead || state !== 'recording') return; shownDuration = duration; levels.push(level); drawMeter(); update(); },
-    onLimit() { if (state === 'recording') stopRecording(); }
+    onProgress({duration, level}) { if (dead || state !== 'recording') return; shownDuration = duration; levels.push(level); drawMeter(); if(duration>=1.5&&levels.every(value=>value<0.003))message('声音比较小，请靠近麦克风。读完后点「停止录音」。');else if(level>=0.003)message('收到你的声音了！读完后点「停止录音」。'); update(); },
+    onLimit() { if (state === 'recording') stopRecording(); },
+    onError(error) {if(dead)return;state='idle';message(error.message);reportError(error);update();}
   });
   function cancel() {
     epoch++; assessmentController?.abort(); recorder.cancel(); dropClip(); state = 'idle';
@@ -116,7 +117,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
       if (dead || token !== epoch) return;
       state = 'idle';
       message(error.name === 'NotAllowedError' ? '还没有获得麦克风权限。请在浏览器里允许麦克风，再开始录音。' :
-        error.name === 'NotFoundError' ? '没有找到麦克风。请连接麦克风后再试。' : '暂时不能录音。请检查麦克风和浏览器权限后再试。');
+        error.name === 'NotFoundError' ? '没有找到麦克风。请连接麦克风后再试。' : error.message?.startsWith('这个浏览器') || error.message?.startsWith('麦克风音频') ? error.message : '暂时不能录音。请检查麦克风和浏览器权限后再试。');
       reportError(error); update();
     }
   }
@@ -126,9 +127,9 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     if (!clip) { cancel(); return; }
     clipURL = URL.createObjectURL(clip.blob); player.src = clipURL; shownDuration = clip.duration;
     message(clip.duration < 0.25 ? '录音太短了。请点「再读一次」，读完后再停止。' :
-      clip.rms < 0.0005 ? '没有听到明显的声音。可以先回听，再靠近麦克风读一次。' :
-      available ? '录好了！先听听自己的声音，再点「看发音反馈」。' : '录好了！可以听自己的录音。评分服务暂时没有准备好。');
-    update();
+      clip.rms < 0.003 ? '没有听到明显的声音。可以先回听，再靠近麦克风读一次。' :
+      available ? '录好了！点黄色「看发音反馈」按钮，查看这次结果。' : '录好了！可以听自己的录音。评分服务暂时没有准备好。');
+    update(); buttons.submit.scrollIntoView({block:'nearest',behavior:'instant'});
   }
   async function play() {
     if (!clip || dead) return;
@@ -186,7 +187,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
         if (response.status === 503) available = false;
         throw new Error(serviceMessage(body, response.status));
       }
-      const value = validateAssessment(body); showResult(value); message('这次练习有反馈了！可以回听，或者再读一次。');
+      const value = validateAssessment(body); hasFeedback = true; showResult(value); result.scrollIntoView({block:'nearest',behavior:'instant'}); message('这次练习有反馈了！可以回听，或者再读一次。');
       try { onResult(value); } catch {}
     } catch (error) {
       if (dead || token !== epoch) return;
@@ -225,5 +226,5 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     window.removeEventListener('pagehide', destroy); window.removeEventListener('beforeunload', destroy); panel.remove();
   }
   window.addEventListener('pagehide', destroy); window.addEventListener('beforeunload', destroy);
-  return {destroy};
+  return {destroy,canLeave(){if(state==='requesting'||state==='recording'||state==='assessing'||clip&&!hasFeedback){message('先完成这次录音和反馈，或点「取消」丢弃录音，再切换。');return false;}return true;}};
 }

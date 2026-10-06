@@ -21,10 +21,26 @@ test('duration cannot exceed 20 seconds and silence stays silent',async()=>{
 });
 
 test('permission granted after cancellation stops the late microphone tracks',async()=>{
- const oldNavigator=Object.getOwnPropertyDescriptor(globalThis,'navigator');let grant,stops=0;
+ const oldNavigator=Object.getOwnPropertyDescriptor(globalThis,'navigator'),oldContext=globalThis.AudioContext;let grant,stops=0;globalThis.AudioContext=class{resume(){return Promise.resolve()}close(){return Promise.resolve()}};
  Object.defineProperty(globalThis,'navigator',{configurable:true,value:{mediaDevices:{getUserMedia:()=>new Promise(r=>{grant=r;})}}});
  try{
   const recorder=new MicrophoneRecorder();const started=recorder.start();recorder.cancel();
   grant({getTracks:()=>[{stop(){stops++;}}]});assert.equal(await started,false);assert.equal(stops,1);
- }finally{if(oldNavigator)Object.defineProperty(globalThis,'navigator',oldNavigator);else delete globalThis.navigator;}
+ }finally{if(oldNavigator)Object.defineProperty(globalThis,'navigator',oldNavigator);else delete globalThis.navigator;globalThis.AudioContext=oldContext;}
+});
+
+test('audio engine is unlocked inside the record gesture before waiting for microphone permission',async()=>{
+ const nav=Object.getOwnPropertyDescriptor(globalThis,'navigator'),ctx=globalThis.AudioContext;let grant,stops=0;const order=[];
+ const node=()=>({connect(){},disconnect(){},gain:{value:1}});
+ class Context{sampleRate=48000;state='running';constructor(){order.push('context')}resume(){order.push('resume');return Promise.resolve()}createMediaStreamSource(){return node()}createScriptProcessor(){return node()}createGain(){return node()}close(){return Promise.resolve()}}
+ Object.defineProperty(globalThis,'navigator',{configurable:true,value:{mediaDevices:{getUserMedia:()=>{order.push('permission');return new Promise(r=>grant=r)}}}});globalThis.AudioContext=Context;
+ try{const recorder=new MicrophoneRecorder(),pending=recorder.start();assert.deepEqual(order,['context','resume','permission']);grant({getTracks:()=>[{stop(){stops++}}]});assert.equal(await pending,true);recorder.cancel();assert.equal(stops,1)}finally{if(nav)Object.defineProperty(globalThis,'navigator',nav);else delete globalThis.navigator;globalThis.AudioContext=ctx}
+});
+
+test('a started audio engine that sends no samples releases the microphone and reports a recoverable error',async()=>{
+ const saved={navigator:Object.getOwnPropertyDescriptor(globalThis,'navigator'),context:globalThis.AudioContext,timer:globalThis.setTimeout,clear:globalThis.clearTimeout};let stops=0,error;const timers=new Map(),node=()=>({connect(){},disconnect(){},gain:{value:1}});
+ globalThis.setTimeout=(fn,delay)=>{timers.set(delay,fn);return delay};globalThis.clearTimeout=id=>timers.delete(id);
+ globalThis.AudioContext=class{sampleRate=48000;resume(){return Promise.resolve()}createMediaStreamSource(){return node()}createScriptProcessor(){return node()}createGain(){return node()}close(){return Promise.resolve()}};
+ Object.defineProperty(globalThis,'navigator',{configurable:true,value:{mediaDevices:{getUserMedia:async()=>({getTracks:()=>[{stop(){stops++}}]})}}});
+ try{const recorder=new MicrophoneRecorder({onError:e=>error=e});assert.equal(await recorder.start(),true);timers.get(4000)();assert.equal(recorder.recording,false);assert.equal(stops,1);assert.match(error.message,/麦克风没有传来声音/);assert.equal(timers.size,0)}finally{if(saved.navigator)Object.defineProperty(globalThis,'navigator',saved.navigator);else delete globalThis.navigator;globalThis.AudioContext=saved.context;globalThis.setTimeout=saved.timer;globalThis.clearTimeout=saved.clear}
 });

@@ -29,7 +29,8 @@ test('oral lesson captures real audio, preserves its score and saves only an hon
   assert.equal(await b.evaluate('window.__streams.every(stream=>stream.getTracks().every(track=>track.readyState==="ended"))'),true);
   await b.evaluate('window.__course.replaceProgress({version:1,lessons:{},items:{},session:window.__session});window.__course.start();document.querySelector("[data-speaking-action=record]").click()');
   await wait(b,'!document.querySelector("[data-speaking-action=stop]").hidden');
-  await b.evaluate('document.getElementById("courseOpenPage").click()');assert.equal(await b.evaluate('window.__streams.every(stream=>stream.getTracks().every(track=>track.readyState==="ended"))'),true);
+  await b.evaluate('document.getElementById("courseOpenPage").click()');assert.equal(await b.evaluate('window.__streams.at(-1).getTracks().some(track=>track.readyState==="live")'),true,'changing pages must not silently discard a recording');
+  await b.evaluate('document.querySelector("[data-speaking-action=cancel]").click();document.getElementById("courseOpenPage").click()');assert.equal(await b.evaluate('window.__streams.every(stream=>stream.getTracks().every(track=>track.readyState==="ended"))'),true);
   await b.evaluate('window.__course.resumeSpeaking();document.querySelector("[data-speaking-action=record]").click()');
   await wait(b,'!document.querySelector("[data-speaking-action=stop]").hidden');
   await b.evaluate('window.__course.home()');assert.equal(await b.evaluate('window.__streams.every(stream=>stream.getTracks().every(track=>track.readyState==="ended"))'),true);

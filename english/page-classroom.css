@@ -68,3 +68,5 @@ html:has(.study-dialog[open]),body:has(.study-dialog[open]){overflow:hidden;over
  .page-answer-choices.compact .selected-wrong .page-answer-mark::after{content:'↻'}
  .page-question-footer{margin-top:10px;padding-top:10px}
 }
+
+.page-scene{display:block;width:100%;max-height:220px;object-fit:cover;border-radius:18px;margin:0 0 16px}.page-support-words{margin-top:16px;border-top:1px solid #dce5d5}.page-support-words summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-size:15px;color:#486e51}.page-support-words summary::before{content:'＋';margin-right:8px}.page-support-words[open] summary::before{content:'−'}

@@ -263,3 +263,5 @@ body:has(#courseRoot) .topbar .brand{color:#3c6557}
 
 .course-unit-picture{display:block;width:100%;padding:0;margin:0;border:0;background:transparent;border-radius:22px 22px 0 0;box-shadow:none;cursor:pointer}
 .course-unit-picture:hover{background:transparent}
+
+.course-choice.selected-correct{background:#e8f2df;border-color:#6b9759;color:#285132}.course-choice.selected-wrong{background:#fff0e1;border-color:#cf9861;color:#77502d}.course-answer-mark{display:block;font-size:13px;font-weight:650;margin-top:4px}

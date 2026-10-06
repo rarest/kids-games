@@ -19,7 +19,7 @@ export function accountError(error){
  if(code==='INVALID_EMAIL_OR_PASSWORD'||error.message==='Invalid email or password')return '邮箱或密码不正确。';
  if(['INVALID_USERNAME','USERNAME_TOO_SHORT','USERNAME_TOO_LONG'].includes(code))return '用户名需为6—64个字符，只能包含文字、数字、点、下划线或短横线。';
  if(code==='USERNAME_IS_ALREADY_TAKEN')return '这个用户名已被使用，请换一个。';
- if(code==='PASSWORD_TOO_SHORT')return '密码至少需要10个字符。';
+ if(code==='PASSWORD_TOO_SHORT')return '密码至少需要6个字符。';
  if(error.status===401)return '登录已失效，请重新登录。';
  if(error.status===403)return '请先到邮箱完成验证，再回来登录。';
  if(error.status===409)return '这个孩子已有学习进度，请选择或新建一个空档案。';
