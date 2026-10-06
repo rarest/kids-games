@@ -1,6 +1,6 @@
 /* The close control stays outside the single scrolling study region. */
 html:has(.study-dialog[open]),body:has(.study-dialog[open]){overflow:hidden;overscroll-behavior:none}
-.study-dialog{width:min(1220px,calc(100% - 24px));height:92dvh;max-height:92dvh;padding:24px;overflow:hidden;background:#fbfcf7;color:#28473b}
+.study-dialog{width:min(1220px,calc(100% - 24px));max-width:calc(100% - 12px);height:92dvh;max-height:92dvh;padding:24px;overflow:hidden;background:#fbfcf7;color:#28473b}
 .study-dialog[open]{display:flex;flex-direction:column;gap:14px}
 .study-dialog>.section-heading{position:static;flex:0 0 auto;align-items:center;margin:0;gap:16px;padding:0 0 12px;border-bottom:1px solid #dce8d4;background:#fbfcf7}
 .study-dialog .section-heading h2{font-size:23px;line-height:1.45;margin:0;min-width:0;overflow-wrap:anywhere}
@@ -45,4 +45,26 @@ html:has(.study-dialog[open]),body:has(.study-dialog[open]){overflow:hidden;over
  .page-reading-grid{grid-template-columns:1fr;gap:16px}.textbook-block{padding:16px 13px;border-radius:15px;margin-bottom:16px}.textbook-line{padding:12px 0}.textbook-line strong{font-size:20px;line-height:1.65}.textbook-line p{font-size:15px;line-height:1.7}.page-word-panel{padding:16px 13px}.textbook-words{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.page-word-card{padding:12px 10px}.page-word-card .study-word strong{font-size:18px}.page-word-card .study-word small,.page-word-card .study-word span{font-size:14px}.page-word-card>.text-button{font-size:13px}
  .page-practice-layout,.page-speaking-layout{grid-template-columns:1fr;gap:16px}.page-practice-layout .page-question-card{grid-row:1}.page-practice-layout .page-learning-aside{grid-row:2}.page-learning-aside{padding:16px}.page-question-card{padding:16px 12px;border-radius:16px}.page-question-card .course-kicker{font-size:12px;line-height:1.5}.page-question-card h3{font-size:20px;line-height:1.5;margin:12px 0}.page-question-card>p{font-size:14px;margin:8px 0;line-height:1.6}.page-question-card>.listen-button{font-size:15px;margin-bottom:10px}.page-answer-choices{gap:8px;margin:10px 0 12px}.page-answer-choices button{padding:10px;font-size:16px;line-height:1.55;min-height:50px}.page-practice-picture svg{max-width:88px;margin:8px auto}.page-token-bank{gap:7px;margin:12px 0}.page-token-bank button{font-size:17px;padding:9px 12px}.page-sentence-picked{font-size:18px;padding:10px;min-height:64px}.page-question-footer{margin-top:12px}.page-question-actions{gap:8px}.page-question-actions .primary{min-width:0;padding:12px}.page-question-actions .text-button{font-size:13px;padding:10px 2px}
  .page-speaking-layout .page-learning-aside{grid-row:1;padding:12px 14px}.page-speaking-layout #pageSpeakingRoot{grid-row:2}.page-speaking-layout .page-learning-aside>p,.page-speaking-layout .page-learning-aside>h4,.page-speaking-layout .page-learning-aside>.course-kicker,.page-speaking-layout .page-practice-picture{display:none}.page-round-actions{display:grid;gap:10px}
+}
+/* Narrow phones keep source controls and short choices inside the usable height. */
+@media(max-width:360px){
+ #studyContent>p:first-child,.page-classroom-heading{display:none}
+ .textbook-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:12px}
+ .textbook-controls label{grid-column:1/-1;min-width:0;font-size:13px}
+ .textbook-controls select{margin-top:4px;min-height:44px}
+ .textbook-controls .page-nav{display:contents}
+ .textbook-controls button{min-height:44px;padding:8px 5px;font-size:12px;white-space:normal}
+ #showBookPages{grid-column:1/-1;grid-row:3}
+ #readTextbookPage,#stopTextbookReading{grid-column:3;grid-row:2}
+ .textbook-controls:has(#stopTextbookReading:not([hidden])) #readTextbookPage{visibility:hidden}
+ .page-question-card{padding:14px 10px}
+ .page-question-card h3{margin:8px 0;font-size:20px;line-height:1.5}
+ .page-question-card .page-task-instruction{display:none}
+ .page-question-card>.listen-button{min-height:44px;margin-bottom:8px}
+ .page-answer-choices{margin:8px 0 10px;gap:8px}
+ .page-answer-choices.compact button{position:relative;padding-right:26px}
+ .page-answer-choices.compact .page-answer-mark{position:absolute;right:8px;top:50%;transform:translateY(-50%);margin:0;font-size:0;line-height:1}
+ .page-answer-choices.compact .page-answer-mark::after{content:'✓';font-size:16px;font-weight:800}
+ .page-answer-choices.compact .selected-wrong .page-answer-mark::after{content:'↻'}
+ .page-question-footer{margin-top:10px;padding-top:10px}
 }

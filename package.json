@@ -21,7 +21,7 @@
     "build:miniprogram": "node scripts/build-miniprogram-content.mjs",
     "test:miniprogram": "node --test tests/miniprogram-*.test.mjs",
     "check:miniprogram": "node scripts/check-miniprogram.mjs",
-    "test:english-interaction": "node --test tests/english-guided-responsive-browser.mjs tests/english-reading-layout-browser.mjs tests/english-practice-rounds-browser.mjs tests/english-speaking-flow-browser.mjs tests/page-practice-touch-browser.mjs tests/page-classroom-layout-browser.mjs tests/page-classroom-auth-race-browser.mjs"
+    "test:english-interaction": "node --test tests/english-guided-responsive-browser.mjs tests/english-reading-layout-browser.mjs tests/english-practice-rounds-browser.mjs tests/english-practice-rounds-small-screen-browser.mjs tests/english-speaking-flow-browser.mjs tests/page-practice-touch-browser.mjs tests/page-classroom-layout-browser.mjs tests/page-classroom-auth-race-browser.mjs"
   },
   "devDependencies": {
     "@resvg/resvg-js": "2.6.2",
