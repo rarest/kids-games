@@ -1,7 +1,9 @@
 const {origin}=require('../config.js');
-const absolute=path=>path?origin+path:'';
+const {assets}=require('./bundled-content.js');
+const absolute=path=>path?(assets[path]||(/^https?:\/\//.test(path)?path:origin+path)):'';
 const mediaItem=item=>({...item,imageURL:absolute(item.image)});
 function mediaHandlers(){return {
+ toggleSpeakingHelp(){this.setData({showSpeakingHelp:!this.data.showSpeakingHelp})},
  listenTarget(event){const target=this.targets.find(t=>t.id===event.currentTarget.dataset.id);if(target?.audio&&target.speakable!==false)this.media.toggleAudio([target.audio],target.id)},
  chooseTarget(event){const target=this.targets.find(t=>t.id===event.currentTarget.dataset.id);if(!target||target.speakable===false||!target.audio)return;this.media.setTarget(target);this.setData({speakingTarget:target})},
  toggleSpeakingAudio(){this.listenSpeaking()},

@@ -4,11 +4,12 @@
   <button class="account-button small" style="width:auto;margin:0" bindtap="account">家长与档案</button>
  </view>
  <view class="profile-line"><text>{{profileName}}</text><text class="sync-label">{{sync}}</text></view>
+ <view wx:if="{{!sessionReady && !loading}}" class="notice startup-notice">正在恢复学习档案，课本已经为你准备好。</view>
  <view wx:if="{{loading}}" class="notice">正在为你打开课本…</view>
  <view wx:if="{{error}}" class="notice error"><view>{{error}}</view><button bindtap="load">再试一次</button></view>
  <view wx:if="{{recommended && !loading}}" class="today-card">
   <view class="today-art-wrap"><image class="today-art" src="{{recommended.imageURL}}" mode="aspectFit" aria-label="{{recommended.unitTitle}}单元插画"/><view class="today-badge">{{recommended.resuming ? '接着上次学' : recommended.reviewing ? '今天再回忆' : '今天学这一课'}}</view></view>
-  <view class="today-content"><view class="eyebrow">UNIT {{recommended.unitNumber}} · {{recommended.unitTitle}}</view><view class="today-title">{{recommended.title}}</view><view class="today-goal">{{recommended.goal}}</view><view class="today-meta"><text>{{recommended.minutes}} 分钟</text><text>课本 {{recommended.pagesLabel}} 页</text></view><button class="primary today-start" style="width:100%;margin:0" data-id="{{recommended.id}}" bindtap="openLesson">{{recommended.resuming ? '接着学' : recommended.reviewing ? '再练一课' : '开始今天的一课'}} <text>→</text></button></view>
+  <view class="today-content"><view class="eyebrow">UNIT {{recommended.unitNumber}} · {{recommended.unitTitle}}</view><view class="today-title">{{recommended.title}}</view><view class="today-goal">{{recommended.goal}}</view><view class="today-meta"><text>{{recommended.minutes}} 分钟</text><text>课本 {{recommended.pagesLabel}} 页</text></view><button class="primary today-start" style="width:100%;margin:0" data-id="{{recommended.id}}" bindtap="openLesson" disabled="{{!sessionReady}}">{{recommended.resuming ? '接着学' : recommended.reviewing ? '再练一课' : '开始今天的一课'}} <text>→</text></button></view>
  </view>
  <view wx:if="{{catalog && !loading}}">
   <view class="section-heading"><view><view class="subheading">六个小世界</view><view class="muted">选一幅画，打开这一单元</view></view><view class="completion-pill">已学 {{completedCount}} / {{lessonCount}} 课</view></view>
@@ -19,11 +20,11 @@
      <view class="unit-summary"><view class="unit-title">{{item.zh}}</view><view class="unit-english">{{item.title}}</view><view class="unit-bottom"><text>{{item.completedCount}} / {{item.lessonCount}} 课</text><text class="unit-expand-label">{{expandedUnit === item.id ? '收起 −' : '选课 +'}} </text></view></view>
     </button>
     <view wx:if="{{expandedUnit === item.id}}" class="unit-lessons">
-     <button wx:for="{{item.lessons}}" wx:for-item="lesson" wx:key="id" class="lesson-choice" style="width:100%;margin:0" data-id="{{lesson.id}}" bindtap="openLesson"><view class="lesson-order {{lesson.completed ? 'is-complete' : ''}}">{{lesson.completed ? '✓' : lesson.number}}</view><view class="lesson-label"><view>{{lesson.title}}</view><view class="muted">{{lesson.minutes}} 分钟 · {{lesson.completed ? '已完成 · 可再练' : '课本 ' + lesson.pagesLabel + ' 页'}}</view></view><view class="lesson-arrow" aria-hidden="true"><view class="lesson-arrow-mark"></view></view></button>
+     <button wx:for="{{item.lessons}}" wx:for-item="lesson" wx:key="id" class="lesson-choice" style="width:100%;margin:0" data-id="{{lesson.id}}" bindtap="openLesson" disabled="{{!sessionReady}}"><view class="lesson-order {{lesson.completed ? 'is-complete' : ''}}">{{lesson.completed ? '✓' : lesson.number}}</view><view class="lesson-label"><view>{{lesson.title}}</view><view class="muted">{{lesson.minutes}} 分钟 · {{lesson.completed ? '已完成 · 可再练' : '课本 ' + lesson.pagesLabel + ' 页'}}</view></view><view class="lesson-arrow" aria-hidden="true"><view class="lesson-arrow-mark"></view></view></button>
     </view>
    </view>
   </view>
-  <view class="textbook-card"><view class="textbook-heading"><view class="book-mark">Aa</view><view><view class="subheading">按课本页码学习</view><view class="muted">听读、练习、跟读，选一页就出发</view></view></view><view class="page-picker-row"><button class="page-picker page-picker-button" style="width:auto;margin:0" bindtap="openPageDirectory" aria-label="选择课本页码"><view class="picker"><view class="picker-page"><text>第 {{selectedPage.page}} 页</text><view class="picker-arrow" aria-hidden="true"><view class="picker-arrow-mark"></view></view></view><view class="picker-title">{{selectedPage.title}}</view></view></button><button class="primary open-page" style="width:88px;margin:0" bindtap="openSelectedPage">打开</button></view></view>
+  <view class="textbook-card"><view class="textbook-heading"><view class="book-mark">Aa</view><view><view class="subheading">按课本页码学习</view><view class="muted">听读、练习、跟读，选一页就出发</view></view></view><view class="page-picker-row"><button class="page-picker page-picker-button" style="width:auto;margin:0" bindtap="openPageDirectory" aria-label="选择课本页码"><view class="picker"><view class="picker-page"><text>第 {{selectedPage.page}} 页</text><view class="picker-arrow" aria-hidden="true"><view class="picker-arrow-mark"></view></view></view><view class="picker-title">{{selectedPage.title}}</view></view></button><button class="primary open-page" style="width:88px;margin:0" bindtap="openSelectedPage" disabled="{{!sessionReady}}">打开</button></view></view>
   <view class="home-footer">先听一听，再试着说。每一次尝试都算数。</view>
  </view>
 </view>

@@ -18,7 +18,7 @@
     "test:racing-online": "node --test tests/racing-online-*.test.mjs tests/racing-server.test.mjs tests/racing-deploy.test.mjs && node --test tests/racing-online-browser.mjs",
     "test:catalog": "node --test tests/catalog-browser.mjs",
     "test:startup": "node --test --test-concurrency=1 tests/startup-failure-browser.mjs tests/classic-storage-browser.mjs",
-    "build:miniprogram": "node scripts/build-miniprogram-content.mjs",
+    "build:miniprogram": "node scripts/build-miniprogram-content.mjs && node scripts/build-miniprogram-bundle.mjs",
     "test:miniprogram": "node --test tests/miniprogram-*.test.mjs",
     "check:miniprogram": "node scripts/check-miniprogram.mjs",
     "test:english-interaction": "node --test tests/english-guided-responsive-browser.mjs tests/english-reading-layout-browser.mjs tests/english-practice-rounds-browser.mjs tests/english-practice-rounds-small-screen-browser.mjs tests/english-speaking-flow-browser.mjs tests/page-practice-touch-browser.mjs tests/page-classroom-layout-browser.mjs tests/page-classroom-auth-race-browser.mjs tests/english-web-three-device-browser.mjs"
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@resvg/resvg-js": "2.6.2",
     "esbuild": "^0.25.12",
+    "fflate": "0.8.3",
     "miniprogram-compiler": "0.2.3",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

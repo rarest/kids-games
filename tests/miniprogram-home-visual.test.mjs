@@ -6,11 +6,11 @@ import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url);
 const catalog=JSON.parse(readFileSync(new URL('../english/miniprogram-data/catalog.json',import.meta.url)));
 const source=readFileSync(new URL('../miniprogram/pages/home/home.js',import.meta.url),'utf8');
-function home(progress={lessons:{},session:null}) {
+function home(progress={lessons:{},session:null},ready=Promise.resolve()) {
  let definition;
  const navigations=[];
  const client={profile:null,progress:()=>progress,content:async()=>catalog};
- const app={client,ready:Promise.resolve()};
+ const app={client,ready};
  vm.runInNewContext(source,{Page:value=>definition=value,getApp:()=>app,wx:{navigateTo:({url})=>navigations.push(url)},require:path=>require(new URL('../miniprogram/pages/home/'+path,import.meta.url).pathname)});
  const page={...definition,data:structuredClone(definition.data),setData(value){Object.assign(this.data,value)}};
  return {page,navigations,setProgress(value){progress=value}};
@@ -39,7 +39,26 @@ test('unit expansion and page picker open the selected textbook page',async()=>{
  assert.equal(h.page.data.selectedPage.page,17);
  h.page.openSelectedPage();
  assert.equal(h.navigations[0],'/pages/page/page?page=17');
- assert.equal(h.page.data.units[1].imageURL,'https://games.nblord.com/english/illustrations/u2.webp');
+ assert.equal(h.page.data.units[1].imageURL,'/assets/units/u2.webp');
+});
+test('catalog paints before account restoration but lesson entry waits for the correct child',async()=>{
+ let finish;const ready=new Promise(resolve=>finish=resolve),h=home(undefined,ready);
+ const showing=h.page.onShow();await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(h.page.data.loading,false);
+ assert.equal(h.page.data.units.length,6);
+ assert.equal(h.page.data.sessionReady,false);
+ h.page.openLesson({currentTarget:{dataset:{id:'g3-upper-u1-l1'}}});
+ assert.equal(h.navigations.length,0);
+ finish();await showing;assert.equal(h.page.data.sessionReady,true);
+ h.page.openLesson({currentTarget:{dataset:{id:'g3-upper-u1-l1'}}});
+ assert.equal(h.navigations.length,1);
+});
+test('a hidden home ignores late catalog and account restoration callbacks',async()=>{
+ let finish;const ready=new Promise(resolve=>finish=resolve),h=home(undefined,ready);
+ const showing=h.page.onShow();h.page.onHide();finish();await showing;
+ assert.equal(h.page.data.sessionReady,false);
+ await h.page.onShow();assert.equal(h.page.data.sessionReady,true);
+ assert.equal(h.page.data.units.length,6);
 });
 test('completed curriculum offers a review lesson and profile changes clear completion display',async()=>{
  const lessons=Object.fromEntries(catalog.units.flatMap(unit=>unit.lessons).map(lesson=>[lesson.id,{completed:true}]));
@@ -69,7 +88,7 @@ async function lessonDisplay(id){
 }
 test('guided scenes use unit illustration while story scenes preserve story-specific art',async()=>{
  const unit=await lessonDisplay('g3-upper-u3-l1');
- assert.equal(unit.page.data.lesson.imageURL,'https://games.nblord.com/english/illustrations/u3.webp');
+ assert.equal(unit.page.data.lesson.imageURL,'/assets/units/u3.webp');
  const story=await lessonDisplay('g3-upper-u3-l6');
- assert.equal(story.page.data.lesson.imageURL,'https://games.nblord.com'+story.lesson.image);
+ assert.equal(story.page.data.lesson.imageURL,require('../miniprogram/lib/view.js').absolute(story.lesson.image));
 });
