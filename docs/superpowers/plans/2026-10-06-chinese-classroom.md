@@ -52,14 +52,14 @@
 
 **Files:** shared/classroom-nav.js/css、games/classroom.html、games/chinese.html、chinese/main.js/css/art.js/audio.js/family.js、英语品牌修改、games.js、index.html、account.html、shared/account.js、package.json、tests/chinese-browser.mjs及相关目录/账号验收。
 
-- [ ] native输入测试先访问缺页失败；覆盖320/390/768/1024/1366屏宽与touch点击，真实英语切换后回到语文仍续学。
-- [ ] 建立纸面插画式8单元首页、今日小课、单目标卡片、目录模态、字词/理解、提示重试、表达、自评背诵、错题复习、退出续学。所有原文按顺序可读，学习过程不会揭露听力答案。
-- [ ] 目录中可打开全部单元配套内容，以及按课号分组的识字、写字、词语附录；词语可听读，已学蓝字与新识字区分显示，不让附录仅停留在数据文件。
-- [ ] 接入共享账号与语文cloud；访客进度不可自动混入孩子；冲突显式选择，pagehide本地先保存。
-- [ ] 游戏厅课程卡与家长中心入口、导出文件名、档案/删除说明采用两科学习措辞；默认课入口为统一学科首页，既有英语地址保留。
-- [ ] 普通话固定音频逐段；本地备用朗读明确标识。不得将英语评分后端当中文评分。
-- [ ] node --test tests/chinese-browser.mjs与English三端相关浏览器验证，再构建两bundle提交。
-- [ ] 修正主线已复现的测试夹具兼容性错误：english-course-save/speaking按事件类型保存click/toggle监听，而非让toggle覆盖click；wechat-cloud-media-manifest识别bundled-content的包内资源路径，并反查对应原始sourcePath。保留原业务断言、不跳过失败测试、不修改小程序业务；原生英语和打包资源检查仍需通过。
+- [x] native输入测试先访问缺页失败；覆盖320/390/768/1024/1366屏宽与touch点击，真实英语切换后回到语文仍续学。
+- [x] 建立纸面插画式8单元首页、今日小课、单目标卡片、目录模态、字词/理解、提示重试、表达、自评背诵、错题复习、退出续学。所有原文按顺序可读，学习过程不会揭露听力答案。
+- [x] 目录中可打开全部单元配套内容，以及按课号分组的识字、写字、词语附录；词语可听读，已学蓝字与新识字区分显示，不让附录仅停留在数据文件。
+- [x] 接入共享账号与语文cloud；访客进度不可自动混入孩子；冲突显式选择，pagehide本地先保存。
+- [x] 游戏厅课程卡与家长中心入口、导出文件名、档案/删除说明采用两科学习措辞；默认课入口为统一学科首页，既有英语地址保留。
+- [x] 普通话固定音频逐段；本地备用朗读明确标识。不得将英语评分后端当中文评分。
+- [x] node --test tests/chinese-browser.mjs与English三端相关浏览器验证，再构建两bundle提交。
+- [x] 修正主线已复现的测试夹具兼容性错误：english-course-save/speaking按事件类型保存click/toggle监听，而非让toggle覆盖click；wechat-cloud-media-manifest识别bundled-content的包内资源路径，并反查对应原始sourcePath。保留原业务断言、不跳过失败测试、不修改小程序业务；原生英语和打包资源检查仍需通过。
 
 ### Task 5: 审查与上线
 
