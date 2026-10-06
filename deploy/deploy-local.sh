@@ -130,6 +130,11 @@ if(existsSync('english')){
   if(['core.js','curriculum.js','course-curriculum.js','course-engine.js','page-practice.js'].includes(name)||/^(textbook-photo-|content-g).*\.json$/.test(name))paths.push(`english/${name}`);
  }
 }
+if(existsSync('chinese')){
+ for(const name of readdirSync('chinese')){
+  if(['engine.js','curriculum.js','appendices.js'].includes(name)||/^content-u[1-8]\.js$/.test(name))paths.push(`chinese/${name}`);
+ }
+}
 console.log(createHash('sha256').update(JSON.stringify(paths.sort().map(name=>[name,readFileSync(name,'utf8')]))).digest('hex'));
 JS
 )"

@@ -139,8 +139,10 @@ test('imports retain original English snapshot, deduplicate by source/profile, r
   await store.syncProgress('parent-a',occupied.id,{baseRevision:0,session:null,events:[answer()]});
   await assert.rejects(store.importProgress('parent-a',occupied.id,{...request,importId:randomUUID()}),failure(409));
   const exported=await store.exportAccount('parent-a');
-  assert.equal(exported.profiles.length,2); assert.equal(exported.progress.length,2);
-  assert.ok(exported.progress.every(item=>item.gameId==='english' && item.profileId!==other.id));
+  assert.equal(exported.profiles.length,2); assert.equal(exported.progress.length,4);
+  assert.equal(exported.progress.filter(item=>item.gameId==='english').length,2);
+  assert.equal(exported.progress.filter(item=>item.gameId==='chinese').length,2);
+  assert.ok(exported.progress.every(item=>item.profileId!==other.id));
   assert.ok(!JSON.stringify(exported).includes('password'));
   await pool.query("DELETE FROM family_user WHERE id='parent-a'");
   for(const table of ['player_profiles','game_progress','learning_events','save_imports']) assert.equal(Number((await pool.query(`SELECT count(*) FROM ${table}`)).rows[0].count),table==='player_profiles'?1:0);
