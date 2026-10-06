@@ -33,6 +33,7 @@
 
 - [ ] 测试未完成课不能complete、错答再答不丢首次错误、hinted不能提高掌握、北京时间复习间隔、未知原型键和注入步骤剔除、恢复重建steps。
 - [ ] 阅读每屏一段；选择题保存选项并反馈；非评分步骤需要显式visited或selfReported；advance不得越过未完成步骤。表达和背诵仅记录尝试。
+- [ ] 理解题和字词题正确选项位置用稳定顺序分散，不能一律第一项；重建步骤仍完全一致，干扰项不能与正确释义等价。
 - [ ] complete验证每步答案并幂等startedAt:review身份，review不能完成未学课。服务端将复用引擎完整校验。
 - [ ] node --test tests/chinese-engine.test.mjs通过后提交。
 
