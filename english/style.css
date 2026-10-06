@@ -6,6 +6,8 @@
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 /* Status text must not intercept the child's visible Continue button. */
 .toast{pointer-events:none}
+/* Legacy play already fills the viewport below its own topbar. */
+body:has(>#play:not([hidden]))>.classroom-nav{display:none}
 
 .study-grammar{background:#f3f7ff;padding:15px;border-radius:12px;margin-top:12px;line-height:1.7}.study-choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.study-explanation{font-size:13px;color:#355d86}.study-word strong{overflow-wrap:anywhere}.study-word span{overflow-wrap:anywhere}.study-word{min-width:0}.study-dialog h3{margin-top:26px}
 
