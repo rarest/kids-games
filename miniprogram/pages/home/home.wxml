@@ -4,7 +4,7 @@
   <button class="account-button small" style="width:auto;margin:0" bindtap="account">家长与档案</button>
  </view>
  <view class="profile-line"><text>{{profileName}}</text><text class="sync-label">{{sync}}</text></view>
- <view wx:if="{{!sessionReady && !loading}}" class="notice startup-notice">正在恢复学习档案，课本已经为你准备好。</view>
+ <view wx:if="{{!sessionReady && !loading && !error}}" class="notice startup-notice"><view>正在恢复学习档案…</view><view class="startup-help">课本已准备好，也可以先学。访客进度保存在此设备。</view><button class="small startup-guest" style="width:auto;margin:12px 0 0" bindtap="useGuestStartup">先以访客学习 →</button></view>
  <view wx:if="{{loading}}" class="notice">正在为你打开课本…</view>
  <view wx:if="{{error}}" class="notice error"><view>{{error}}</view><button bindtap="load">再试一次</button></view>
  <view wx:if="{{recommended && !loading}}" class="today-card">
