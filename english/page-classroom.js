@@ -1,6 +1,6 @@
 import {pageTargets,makePractice,normalizePracticeAnswer} from './page-practice.js';
 import {PRACTICE_KEY,PRACTICE_ROUND_SIZE,loadPractice,savePractice,recordPractice,recordPracticeCursor} from './page-practice-progress.js';
-import {textbookPage} from './textbook.js';
+import {textbookPage,textbookUnit} from './textbook.js';
 import {wordArt} from './course-art.js';
 import {mountSpeaking} from './speaking.js';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -13,7 +13,13 @@ export function mountPageClassroom({root,pages,speak,stopAudio,onError=()=>{},st
  const tabs=root.querySelector('.page-view-tabs'),studyContent=root.closest('#studyContent'),dialog=root.closest('.study-dialog');
  const fixedTabs=!!(tabs&&studyContent&&dialog);
  if(fixedTabs)dialog.insertBefore(tabs,studyContent);
- const api={get page(){return current},get targets(){return pageTargets(current)},get question(){return questions[index]},get index(){return index},goPage,canLeave:()=>!speaking||speaking.canLeave(),openSpeaking:id=>chooseView('speaking',id),destroy};window.englishPagePractice=api;
+ const picker=document.createElement('dialog');picker.id='pagePicker';picker.className='page-picker-dialog';picker.setAttribute('aria-labelledby','pagePickerTitle');document.body.append(picker);
+ const groups=new Map();for(const page of pages){const unit=textbookUnit(page),key=unit?.id||'other';if(!groups.has(key))groups.set(key,{label:unit?.zh||'复习与附录',pages:[]});groups.get(key).pages.push(page);}
+ picker.innerHTML=`<div class="page-picker-heading"><h2 id="pagePickerTitle">选择课本页码</h2><button type="button" id="closePagePicker" class="secondary">关闭</button></div><label class="page-picker-filter">按单元找一找<select id="pagePickerUnit"><option value="all">全册目录 · ${pages.length} 页</option>${Array.from(groups,([key,group])=>`<option value="${esc(key)}">${esc(group.label)}</option>`).join('')}</select></label><div class="page-picker-list">${Array.from(groups,([key,group])=>`<section data-picker-group="${esc(key)}"><h3>${esc(group.label)}</h3>${group.pages.map(page=>`<button type="button" data-pick-page="${page.page}" aria-pressed="false"><span class="page-picker-number">${page.page}</span><span class="page-picker-title">${esc(page.title)}</span><span class="page-picker-check" aria-hidden="true">✓</span></button>`).join('')}</section>`).join('')}</div>`;
+ picker.addEventListener('click',event=>{const button=event.target.closest('button');if(!button)return;if(button.id==='closePagePicker')picker.close();else if(button.dataset.pickPage){goPage(Number(button.dataset.pickPage));if(String(current.page)===button.dataset.pickPage){picker.close();scrollToQuestion();}}});
+ picker.addEventListener('change',event=>{if(event.target.id==='pagePickerUnit')for(const section of picker.querySelectorAll('[data-picker-group]'))section.hidden=event.target.value!=='all'&&section.dataset.pickerGroup!==event.target.value;picker.querySelector('.page-picker-list').scrollTop=0;});
+ picker.addEventListener('close',()=>root.querySelector('#openPagePicker')?.focus({preventScroll:true}));
+ const api={get page(){return current},get targets(){return pageTargets(current)},get question(){return questions[index]},get index(){return index},goPage,canLeave:allowLeave,openSpeaking:id=>chooseView('speaking',id),destroy};window.englishPagePractice=api;
  function save(){if(!storage||!savePractice({setItem:(_key,value)=>storage.setItem(storageKey,value)},progress))onError('本页练习暂时无法保存，当前页面仍可继续。')}
  function clearSpeaking(){speaking?.destroy();speaking=null}
  const roundEnd=()=>Math.min(roundStart+PRACTICE_ROUND_SIZE,questions.length);
@@ -29,9 +35,10 @@ export function mountPageClassroom({root,pages,speak,stopAudio,onError=()=>{},st
   if(cursor){index=questions.findIndex(q=>q.id===cursor.questionId);roundStart=cursor.start;roundDone=cursor.completed;}
   else {index=Math.max(0,questions.findIndex(q=>progress.answers[q.id]?.lastCorrect!==true));roundStart=index;roundDone=false;}
  }
- function scrollToQuestion(){body.scrollIntoView({block:'start',behavior:'instant'})}
- function chooseView(next,targetId){if(speaking&&!speaking.canLeave()){const targetSelector=body.querySelector('#pageSpeakingTarget');if(targetSelector)targetSelector.value=selectedTarget;return;}stopAudio();clearSpeaking();view=next;selectedTarget=targetId||selectedTarget;render();scrollToQuestion();}
- function goPage(number){if(speaking&&!speaking.canLeave()){selector.value=String(current.page);return;}const next=pages.find(page=>page.page===Number(number));if(!next)return;stopAudio();clearSpeaking();current=next;selector.value=String(next.page);selectedTarget=null;restorePosition();render();}
+ function allowLeave(){if(!speaking||speaking.canLeave())return true;const status=body.querySelector('[data-speaking-status]');if(status){status.tabIndex=-1;status.scrollIntoView({block:'center',behavior:'instant'});status.focus({preventScroll:true});}return false;}
+ function scrollToQuestion(){const scroller=root.closest('#studyContent');if(scroller)scroller.scrollTop+=body.getBoundingClientRect().top-scroller.getBoundingClientRect().top;else body.scrollIntoView({block:'start',behavior:'instant'});const heading=body.querySelector('.page-question-card h3,.speaking-target');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}}
+ function chooseView(next,targetId){if(!allowLeave()){const targetSelector=body.querySelector('#pageSpeakingTarget');if(targetSelector)targetSelector.value=selectedTarget;return;}stopAudio();clearSpeaking();view=next;selectedTarget=targetId||selectedTarget;render();scrollToQuestion();}
+ function goPage(number){if(!allowLeave()){selector.value=String(current.page);return;}const next=pages.find(page=>page.page===Number(number));if(!next)return;stopAudio();clearSpeaking();current=next;selector.value=String(next.page);selectedTarget=null;restorePosition();render();}
  function directory(action='practice',open=false){return `<details class="page-target-directory" ${open?'open':''}><summary>本页词句目录 · ${pageTargets(current).length} 项</summary><div>${pageTargets(current).map(target=>`<button data-page-${action}="${esc(target.id)}"><strong>${esc(target.en)}</strong><span>${esc(target.zh)}</span></button>`).join('')}</div></details>`}
  function artwork(target){if(target.kind!=='word')return '';const source=current.words.find(word=>word.en===target.en&&word.zh===target.zh);return wordArt(source||{id:target.wordId,en:target.en,zh:target.zh});}
  function renderPractice(){
@@ -56,11 +63,11 @@ export function mountPageClassroom({root,pages,speak,stopAudio,onError=()=>{},st
   body.innerHTML=`<div class="page-speaking-layout"><aside class="page-learning-aside"><span class="course-kicker">开口，每次一小步</span><h4>本页朗读 ${targets.length} 项</h4><p>先听示范，录下自己的声音。回放听一遍，再请网站给练习反馈。</p><label>选择一个词或句子<select id="pageSpeakingTarget">${targets.map(item=>`<option value="${esc(item.id)}" ${item.id===target.id?'selected':''}>${esc(item.en)}</option>`).join('')}</select></label>${artwork(target)?`<div class="page-practice-picture">${artwork(target)}</div>`:''}</aside><div id="pageSpeakingRoot"></div></div>`;
   speaking=mountSpeaking({root:body.querySelector('#pageSpeakingRoot'),target,speak,stopAudio,onResult:()=>{},onError});
  }
- function render(){if(destroyed)return;const pageListen=root.querySelector('#readTextbookPage');if(pageListen)pageListen.hidden=view!=='reading';for(const button of tabs?.querySelectorAll('[data-page-view]')||[])button.setAttribute('aria-pressed',String(button.dataset.pageView===view));const position=pages.indexOf(current);root.querySelector('#previousTextbookPage').disabled=position===0;root.querySelector('#nextTextbookPage').disabled=position===pages.length-1;
+ function render(){if(destroyed)return;const label=root.querySelector('.page-picker-current');if(label)label.innerHTML=`<strong>第 ${current.page} 页</strong><span>${esc(current.title)}</span>`;for(const button of picker.querySelectorAll('[data-pick-page]'))button.setAttribute('aria-pressed',String(Number(button.dataset.pickPage)===current.page));const pageListen=root.querySelector('#readTextbookPage');if(pageListen)pageListen.hidden=view!=='reading';for(const button of tabs?.querySelectorAll('[data-page-view]')||[])button.setAttribute('aria-pressed',String(button.dataset.pageView===view));const position=pages.indexOf(current);root.querySelector('#previousTextbookPage').disabled=position===0;root.querySelector('#nextTextbookPage').disabled=position===pages.length-1;
   if(view==='practice')renderPractice();else if(view==='speaking')renderSpeaking();else body.innerHTML=textbookPage(current,esc);
  }
  function answer(value){const q=questions[index];const correct=normalized(value)===normalized(q.answer);progress=recordPractice(progress,q.id,correct);feedback={correct,selected:value};savePosition({afterAnswer:correct});renderPractice();}
- function jumpTo(next){stopAudio();index=next;roundStart=next;roundDone=false;paused=false;feedback=null;picked=[];view='practice';savePosition();renderPractice();scrollToQuestion();}
+ function jumpTo(next){stopAudio();index=next;roundStart=next;roundDone=false;paused=false;feedback=null;picked=[];view='practice';savePosition();render();scrollToQuestion();}
  function click(event){const button=event.target.closest('button');if(!button||button.disabled||(!root.contains(button)&&!tabs?.contains(button))||destroyed)return;
   if(button.dataset.pageView){event.stopPropagation();chooseView(button.dataset.pageView);return}
   if(button.dataset.pageSpeak){event.stopPropagation();chooseView('speaking',button.dataset.pageSpeak);return}
@@ -69,7 +76,7 @@ export function mountPageClassroom({root,pages,speak,stopAudio,onError=()=>{},st
   if(button.dataset.pageToken!==undefined){picked.push(Number(button.dataset.pageToken));feedback=null;savePosition();renderPractice();return}
   if(button.dataset.pageRemove!==undefined){picked.splice(Number(button.dataset.pageRemove),1);feedback=null;savePosition();renderPractice();return}
   const position=pages.indexOf(current);
-  switch(button.id){case 'previousTextbookPage':goPage(pages[position-1]?.page);break;case 'nextTextbookPage':goPage(pages[position+1]?.page);break;
+  switch(button.id){case 'openPagePicker':if(!allowLeave())return;picker.querySelector('#pagePickerUnit').value='all';for(const section of picker.querySelectorAll('[data-picker-group]'))section.hidden=false;picker.showModal();picker.querySelector(`[data-pick-page="${current.page}"]`)?.scrollIntoView({block:'center'});break;case 'previousTextbookPage':goPage(pages[position-1]?.page);break;case 'nextTextbookPage':goPage(pages[position+1]?.page);break;
    case 'pageQuestionListen':{const q=questions[index],target=pageTargets(current).find(t=>t.id===q.targetId);speak(target,target.wordId);break}
    case 'pageOrderCheck':answer(picked.map(i=>questions[index].tokens[i]).join(' '));break;case 'pageOrderReset':picked=[];feedback=null;savePosition();renderPractice();break;
    case 'pagePracticeNext':if(!feedback?.correct)return;stopAudio();if(index===roundEnd()-1){roundDone=true;savePosition();}else{index++;feedback=null;picked=[];savePosition();}renderPractice();scrollToQuestion();break;
@@ -81,6 +88,6 @@ export function mountPageClassroom({root,pages,speak,stopAudio,onError=()=>{},st
   }
  }
  function change(event){if(event.target===selector)goPage(selector.value);if(event.target.id==='pageSpeakingTarget')chooseView('speaking',event.target.value)}
- function destroy(){if(destroyed)return;destroyed=true;stopAudio();clearSpeaking();root.removeEventListener('click',click);root.removeEventListener('change',change);if(fixedTabs){tabs.removeEventListener('click',click);root.insertBefore(tabs,body);}if(window.englishPagePractice===api)delete window.englishPagePractice;}
+ function destroy(){if(destroyed)return;destroyed=true;picker.remove();stopAudio();clearSpeaking();root.removeEventListener('click',click);root.removeEventListener('change',change);if(fixedTabs){tabs.removeEventListener('click',click);root.insertBefore(tabs,body);}if(window.englishPagePractice===api)delete window.englishPagePractice;}
  root.addEventListener('click',click);root.addEventListener('change',change);if(fixedTabs)tabs.addEventListener('click',click);restorePosition();render();return api;
 }
