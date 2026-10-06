@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox syntax for tracking.
 
-**Goal:** 10月7日前交付可在线打开的珠珠课堂，英语保持可用、语文完整教材课程和独立进度、数学预留。
+**Goal:** 10月7日交付可在线打开的珠珠课堂，英语保持可用、语文完整教材课程和独立进度、数学预留。
 **Architecture:** 静态ES模块课程与共享学科导航，共用现有家庭账号与孩子档案。语文课程与英语各自编解码，数据库事件版本隔离；云端同步沿用已测试的离线队列。
 **Tech Stack:** ES modules、CSS、SVG、Node tests、Chromium CDP、PostgreSQL、esbuild。
 **Spec:** openspec/changes/chinese-classroom/specs/pearl-classroom/spec.md；design.md。
