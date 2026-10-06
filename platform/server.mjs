@@ -7,7 +7,7 @@ import {ActivityStore, problem} from './store.mjs';
 import {fromNodeHeaders} from 'better-auth/node';
 import {createAuth, migrateAuth} from './auth.mjs';
 import {createMailer} from './mail.mjs';
-import {createPronunciation,MAX_WAV_BYTES} from './pronunciation.mjs';
+import {createPronunciation,MAX_WAV_BYTES,normalizeMiniprogramWav} from './pronunciation.mjs';
 import {createWechat,isWechatAccount} from './wechat.mjs';
 import {createMiniprogram} from './miniprogram.mjs';
 
@@ -82,7 +82,8 @@ export function createApi({store, secret, publicOrigin, auth, familyStore, mailR
         }
         const audio=Buffer.concat(chunks);
         try {
-          return send(res,200,await pronunciation.assess({ip:ipKey,target,audio}));
+          const normalized=url.pathname==='/api/miniprogram/pronunciation'?normalizeMiniprogramWav(audio):audio;
+          return send(res,200,await pronunciation.assess({ip:ipKey,target,audio:normalized}));
         } catch(error) {
           if(url.pathname==='/api/miniprogram/pronunciation'&&error.status===400) {
             // Format metadata only: never log the recording, identity or request headers.

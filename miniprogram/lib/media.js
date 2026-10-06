@@ -15,9 +15,15 @@ function recordingInfo(data){
 }
 function repairRecording(data){
  const info=recordingInfo(data);
- // iOS recordings observed in production overstate only the RIFF size by 44 bytes.
+ // Repair only the iOS header patterns observed in production; preserve every sample.
  if(info.code!=='WAV_LENGTH_MISMATCH'||info.riffBytes!==info.byteLength+44)return data;
  const bytes=new Uint8Array(data),view=new DataView(data);let offset=12,format=false,samples;
+ const tagAt=offset=>String.fromCharCode(...bytes.slice(offset,offset+4));
+ // The native 44-byte header also reports file size as data size and blockAlign 4.
+ if(tagAt(12)==='fmt '&&view.getUint32(16,true)===16&&tagAt(36)==='data'&&view.getUint16(20,true)===1&&view.getUint16(22,true)===1&&view.getUint32(24,true)===16000&&view.getUint32(28,true)===32000&&view.getUint16(32,true)===4&&view.getUint16(34,true)===16&&view.getUint32(40,true)===bytes.length){
+  const payload=bytes.length-44;if(payload%2||payload<4800||payload>640000)return data;
+  const repaired=data.slice(0),header=new DataView(repaired);header.setUint32(4,repaired.byteLength-8,true);header.setUint16(32,2,true);header.setUint32(40,payload,true);return repaired;
+ }
  while(offset+8<=bytes.length){
   const tag=String.fromCharCode(...bytes.slice(offset,offset+4)),size=view.getUint32(offset+4,true);offset+=8;
   if(offset+size>bytes.length)return data;

@@ -43,3 +43,17 @@ test('RIFF repair refuses malformed chunks, incompatible PCM and unrelated size 
  const cases=[{name:'truncated PCM',change:v=>v.setUint32(40,16044,true)},{name:'wrong sample rate',change:v=>v.setUint32(24,44100,true)},{name:'stereo',change:v=>v.setUint16(22,2,true)},{name:'8-bit samples',change:v=>v.setUint16(34,8,true)},{name:'unrelated length',change:v=>v.setUint32(4,16045,true)}];
  for(const c of cases){const input=wav(),view=new DataView(input);view.setUint32(4,input.byteLength+36,true);c.change(view);const h=await recorded(input),pending=h.media.submit();await Promise.resolve();h.request?.success({statusCode:400,data:{error:'Invalid WAV recording'}});await pending;assert.equal(!!h.request,false,c.name);assert.equal(h.media.state.result,null);assert.equal(h.diagnostics.at(-1).code,'WAV_LENGTH_MISMATCH',c.name)}
 });
+test('observed iOS 44-byte WAV header repairs all three fields without changing PCM samples',async()=>{
+ const input=wav(),view=new DataView(input);view.setUint32(4,input.byteLength+36,true);view.setUint16(32,4,true);view.setUint32(40,input.byteLength,true);
+ const samples=new Uint8Array(input,44);for(let i=0;i<samples.length;i++)samples[i]=(i*17)%251;
+ const original=input.slice(0),h=await recorded(input),pending=h.media.submit();await Promise.resolve();
+ assert.equal(!!h.request,true,'the exact observed iOS header should be canonicalized');
+ const output=h.request.data,canonical=new DataView(output);assert.deepEqual(validateWav(Buffer.from(output)),{duration:.5});
+ assert.equal(canonical.getUint32(4,true),16036);assert.equal(canonical.getUint16(32,true),2);assert.equal(canonical.getUint32(40,true),16000);
+ assert.deepEqual(new Uint8Array(output,44),new Uint8Array(input,44));assert.deepEqual(new Uint8Array(input),new Uint8Array(original));
+ h.request.success({statusCode:422,data:{error:'No clear speech detected. Please retry'}});await pending;
+});
+test('iOS three-field repair does not accept other alignment, sizes or encodings',async()=>{
+ const changes=[v=>v.setUint16(32,3,true),v=>v.setUint32(40,16042,true),v=>v.setUint32(16,18,true),v=>v.setUint16(20,3,true),v=>v.setUint32(28,64000,true),v=>v.setUint16(22,2,true)];
+ for(const change of changes){const input=wav(),v=new DataView(input);v.setUint32(4,input.byteLength+36,true);v.setUint16(32,4,true);v.setUint32(40,input.byteLength,true);change(v);const h=await recorded(input),pending=h.media.submit();await Promise.resolve();h.request?.success({statusCode:400,data:{error:'Invalid WAV recording'}});await pending;assert.equal(!!h.request,false);assert.equal(h.media.state.result,null)}
+});
