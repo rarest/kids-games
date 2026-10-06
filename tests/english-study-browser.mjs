@@ -10,7 +10,8 @@ test('study shows source page practice for photographed book and full classic co
  if(book.id==='g3-upper'){
   assert.equal(await b.evaluate('document.querySelectorAll("[data-page-view]").length'),3,unit.id);
   assert.equal(await b.evaluate('document.getElementById("textbookPage").options.length'),unit.textbookPages.length,unit.id);
-  const page=unit.textbookPages[0];assert.deepEqual(await b.evaluate('Array.from(document.querySelectorAll("[data-textbook-word]")).map(e=>e.dataset.textbookWord)'),page.words.map(w=>w.id),unit.id);
+  // Heading-only words are folded after the lesson words; every source ID remains present.
+  const page=unit.textbookPages[0];assert.deepEqual(await b.evaluate('Array.from(document.querySelectorAll("[data-textbook-word]")).map(e=>e.dataset.textbookWord).sort()'),page.words.map(w=>w.id).sort(),unit.id);
   assert.equal(await b.evaluate('document.querySelectorAll(".study-sentence").length'),0,'source page classroom avoids duplicate old sentence lists');
  }else{
   assert.deepEqual(await b.evaluate('Array.from(document.querySelectorAll("[data-say-word]")).map(b=>b.dataset.sayWord)'),unit.words,unit.id);assert.equal(await b.evaluate('document.querySelectorAll(".study-sentence").length'),unit.sentences.length,unit.id);assert.equal(await b.evaluate('document.querySelectorAll(".study-grammar").length'),unit.grammar.length,unit.id);

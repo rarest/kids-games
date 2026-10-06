@@ -265,3 +265,26 @@ body:has(#courseRoot) .topbar .brand{color:#3c6557}
 .course-unit-picture:hover{background:transparent}
 
 .course-choice.selected-correct{background:#e8f2df;border-color:#6b9759;color:#285132}.course-choice.selected-wrong{background:#fff0e1;border-color:#cf9861;color:#77502d}.course-answer-mark{display:block;font-size:13px;font-weight:650;margin-top:4px}
+
+/* A chosen chapter becomes a readable lesson list instead of a narrow tile. */
+@media(max-width:650px){
+ .course-unit:has(.course-unit-contents[open]){grid-column:1/-1}
+ .course-unit:has(.course-unit-contents[open]) .course-unit-picture>.course-illustration{aspect-ratio:2.3;max-height:190px}
+ .course-unit:has(.course-unit-contents[open]) .course-unit-top{padding:16px 16px 8px}
+ .course-unit:has(.course-unit-contents[open]) .course-unit-top h3{font-size:20px;letter-spacing:0}
+ .course-unit:has(.course-unit-contents[open]) .course-unit-description{display:block;padding:0 16px;font-size:13px;line-height:1.7;min-height:0;overflow:visible}
+ .course-unit:has(.course-unit-contents[open]) .course-unit-progress{padding:12px 16px;font-size:12px}
+ .course-unit:has(.course-unit-contents[open]) .course-unit-contents>summary{padding:12px 16px;font-size:14px}
+ .course-lessons{padding:4px 16px}
+ .course-lesson{flex-wrap:nowrap;align-items:center;gap:12px;padding:15px 0;min-height:76px}
+ .course-lesson-number{flex:none;width:30px;height:30px;font-size:14px}
+ .course-lesson-copy{min-width:0;flex:1}
+ .course-lesson strong{font-size:16px;line-height:1.6;overflow-wrap:anywhere}
+ .course-lesson small{font-size:13px;line-height:1.7;margin-top:4px;overflow-wrap:anywhere}
+ .course-lesson-arrow{display:block;flex:none;width:20px;text-align:center;font-size:16px}
+ .course-unit-top h3{font-size:16px;line-height:1.5;letter-spacing:0}
+ .course-unit-description{font-size:12px;line-height:1.7;min-height:40px}
+ .course-unit-contents>summary{font-size:13px}
+ .course-today-actions button{font-size:14px;padding:12px 9px}
+ .course-today-copy p{font-size:14px}
+}

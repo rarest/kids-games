@@ -13,7 +13,8 @@ test('2026 photo pages display all lines and page words on mobile and desktop, w
    if(unit.number!==1)await b.evaluate(`document.getElementById('closeStudy').click();document.getElementById('unit').value='${unit.id}';document.getElementById('unit').dispatchEvent(new Event('change',{bubbles:true}));document.getElementById('openStudy').click()`);
    for(const p of unit.textbookPages){await b.evaluate(`document.getElementById('textbookPage').value='${p.page}';document.getElementById('textbookPage').dispatchEvent(new Event('change',{bubbles:true}))`);
     assert.deepEqual(await b.evaluate('Array.from(document.querySelectorAll(".textbook-line strong")).map(e=>e.textContent)'),p.blocks.flatMap(b=>b.lines.map(l=>l.en)),`page ${p.page}`);
-    assert.deepEqual(await b.evaluate('Array.from(document.querySelectorAll("[data-textbook-word]")).map(e=>e.dataset.textbookWord)'),p.words.map(w=>w.id));
+    // Grouping changes visual order, while the exact source vocabulary must be preserved.
+    assert.deepEqual(await b.evaluate('Array.from(document.querySelectorAll("[data-textbook-word]")).map(e=>e.dataset.textbookWord).sort()'),p.words.map(w=>w.id).sort());
     assert.ok(await b.evaluate('document.getElementById("studyContent").scrollWidth<=document.getElementById("studyContent").clientWidth+1'),p.page);
    }
   }
