@@ -1,6 +1,6 @@
 # 微信英语小课堂
 
-用微信开发者工具导入本文件夹（`miniprogram/`）。`project.config.json` 默认 `touristappid`；可浏览原生页面结构，真实微信登录需要正式小程序 AppID。
+用微信开发者工具导入本文件夹（`miniprogram/`）。`project.config.json` 默认 `touristappid`；可浏览原生页面结构，真实微信登录需要正式小程序 AppID。仓库保留这个通用模板；上传体验版时使用独立交付目录中的正式配置，不能根据仓库模板推定已上传版本的身份状态。
 
 客户端只配置 `config.js` 的 HTTPS 网站地址；AppSecret 与微信 session_key 只在服务器。课程 JSON、音频和插图远程加载，主包不包含全量教材。原生页面包括课程首页、导学课、逐页课堂和家长账号。
 

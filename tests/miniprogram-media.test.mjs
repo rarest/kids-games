@@ -25,6 +25,12 @@ test('network timeout is distinguished and does not publish a score',async()=>{
  const h=await recorded();const pending=h.media.submit();await Promise.resolve();h.request.fail({errMsg:'request:fail timeout',errno:5});await pending;
  assert.match(h.media.state.message,/超时/);assert.equal(h.media.state.result,null);assert.equal(h.media.state.clip,true);assert.equal(h.diagnostics.at(-1).code,'REQUEST_TIMEOUT');assert.equal(h.diagnostics.at(-1).errno,5);
 });
+test('failed upload stays replayable and explicit retry submits the same saved recording',async()=>{
+ const h=await recorded();let pending=h.media.submit();await Promise.resolve();const first=h.request;first.fail({errMsg:'request:fail timeout'});await pending;
+ assert.equal(h.media.state.clip,true);assert.equal(h.media.state.assessing,false);h.media.replay();assert.equal(h.players.at(-1).src,'wxfile://temp/record.wav');assert.equal(h.request,first,'replay must not upload');
+ pending=h.media.submit();await Promise.resolve();assert.notEqual(h.request,first);assert.deepEqual(h.request.data,first.data);h.request.success({statusCode:200,data:{engine:'local-phoneme',score:80,accuracy:80,completeness:90,duration:.5,words:[{word:'Nice',score:80}]}});await pending;
+ assert.equal(h.media.state.result.score,80);assert.equal(h.media.state.diagnostic,null);assert.equal(h.media.state.assessing,false);
+});
 test('successful upload validates genuine result while malformed feedback stays rejected',async()=>{
  const h=await recorded();const good={engine:'local-phoneme',score:80,accuracy:80,completeness:90,duration:.5,words:[{word:'Nice',score:80},{word:'to',score:80},{word:'meet',score:80},{word:'you',score:80}]};
  let pending=h.media.submit();await Promise.resolve();h.request.success({statusCode:200,data:good});await pending;assert.deepEqual(h.media.state.result,good);assert.equal(h.diagnostics.length,0);
