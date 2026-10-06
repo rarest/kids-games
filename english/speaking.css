@@ -36,3 +36,5 @@
 
 .speaking-panel[data-speaking-state=recorded] .speaking-controls [data-speaking-action=listen]{grid-column:1;grid-row:2}
 .speaking-panel[data-speaking-state=recorded] .speaking-controls [data-speaking-action=retry]{grid-column:2;grid-row:2}
+
+.speaking-panel[data-speaking-state=recorded] .speaking-controls [data-speaking-action=cancel]{grid-column:1 / -1;grid-row:3;background:transparent;font-size:14px}.speaking-panel[data-speaking-state=recorded] .speaking-controls [data-speaking-action=submit]{box-shadow:0 3px 10px #d9b97233;border-width:2px}

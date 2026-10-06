@@ -1,9 +1,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
+import {accountError} from '../shared/family-client.js';
 const database=process.env.PLATFORM_TEST_DATABASE_URL;
 const secret='username-fixture-only-secret-123456789012345678901234567890';
 const password='fixture-parent-password-42';
+
+test('registration accepts six-character passwords without composition rules and preserves login',{skip:!database},async t=>{
+ const {Pool}=await import('../platform/node_modules/pg/esm/index.mjs');const {createAuth,migrateAuth}=await import('../platform/auth.mjs');
+ const admin=new Pool({connectionString:database}),schema=`password_${randomUUID().replaceAll('-','')}`;await admin.query(`CREATE SCHEMA ${schema}`);
+ const pool=new Pool({connectionString:database,options:`-c search_path=${schema}`});
+ try{
+  const auth=createAuth({pool,secret,publicOrigin:'http://games.test'});await migrateAuth(auth);
+  const request=(path,body)=>auth.handler(new Request('http://games.test/api/auth/'+path,{method:'POST',headers:{origin:'http://games.test','content-type':'application/json'},body:JSON.stringify(body)}));
+  for(const [username,password] of [['digits','123456'],['letter','abcdef'],['symbol','!!!!!!']])await t.test(`${username} password registers and logs in`,async()=>{
+   const signup=await request('sign-up/username',{username,password});assert.equal(signup.status,200,'six characters accepted');
+   const registered=await signup.json();assert.ok(registered.user.emailVerified);assert.ok(signup.headers.getSetCookie().length);
+   const login=await request('sign-in/username',{username,password});assert.equal(login.status,200);assert.equal((await login.json()).user.id,registered.user.id);assert.ok(login.headers.getSetCookie().length);
+  });
+  await t.test('five characters are rejected with the six-character instruction',async()=>{
+   const rejected=await request('sign-up/username',{username:'shorter',password:'12345'});assert.equal(rejected.status,400);
+   const data=await rejected.json();assert.equal(data.code,'PASSWORD_TOO_SHORT');assert.equal(accountError({status:rejected.status,data}),'密码至少需要6个字符。');
+  });
+  await t.test('the existing 128-character maximum is retained',async()=>{
+   const rejected=await request('sign-up/username',{username:'toolong',password:'a'.repeat(129)});assert.equal(rejected.status,400);assert.equal((await rejected.json()).code,'PASSWORD_TOO_LONG');
+  });
+ }finally{await pool.end();await admin.query(`DROP SCHEMA ${schema} CASCADE`);await admin.end();}
+});
 
 test('username recovery never pretends to send mail even when an email transport exists',{skip:!database},async()=>{
  const {Pool}=await import('../platform/node_modules/pg/esm/index.mjs');const {createAuth,migrateAuth}=await import('../platform/auth.mjs');

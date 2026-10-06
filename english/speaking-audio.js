@@ -46,14 +46,22 @@ export class MicrophoneRecorder {
     const epoch = this.epoch;
     const media = globalThis.navigator?.mediaDevices;
     if (!media?.getUserMedia) throw new Error('这个浏览器不能录音。请用支持麦克风的浏览器打开 HTTPS 网页。');
-    // The call is made only by the explicit recording button.
-    const stream = await media.getUserMedia({audio: {channelCount: 1, echoCancellation: true, noiseSuppression: true}, video: false});
-    if (epoch !== this.epoch) { stream.getTracks().forEach(track => track.stop()); return false; }
-    this.stream = stream;
+    // Unlock Web Audio while this explicit click still has user activation.
+    // Waiting for the permission dialog first can lose activation on iOS.
+    const AudioContext = globalThis.AudioContext || globalThis.webkitAudioContext;
+    if (!AudioContext) throw new Error('这个浏览器暂不支持录音。');
+    let wakeTimer;
     try {
-      const AudioContext = globalThis.AudioContext || globalThis.webkitAudioContext;
-      if (!AudioContext) throw new Error('这个浏览器暂不支持录音。');
       this.context = new AudioContext();
+      const context = this.context;
+      const waking = Promise.resolve(context.resume()).then(() => null, error => error);
+      const stream = await media.getUserMedia({audio: {channelCount: 1, echoCancellation: true, noiseSuppression: true}, video: false});
+      if (epoch !== this.epoch) { stream.getTracks().forEach(track => track.stop()); return false; }
+      this.stream = stream;
+      const wakeError = await Promise.race([waking, new Promise(resolve => {wakeTimer = setTimeout(() => resolve(new Error('麦克风音频没有启动，请重新点开始录音。')), 8000);})]);
+      clearTimeout(wakeTimer);
+      if (epoch !== this.epoch) return false;
+      if (wakeError) throw wakeError;
       this.sampleRate = this.context.sampleRate;
       this.source = this.context.createMediaStreamSource(stream);
       this.processor = this.context.createScriptProcessor(4096, 1, 1);
@@ -70,12 +78,18 @@ export class MicrophoneRecorder {
         this.onProgress({duration: this.samples / this.sampleRate, level: chunk.length ? Math.sqrt(energy / chunk.length) : 0});
         if (this.samples >= this.sampleRate * MAX_SECONDS) this.onLimit();
       };
-      await this.context.resume();
       if (epoch !== this.epoch) return false;
       this.recording = true;
+      this.captureWatchdog = setTimeout(() => {
+        if (epoch === this.epoch && this.recording && !this.samples) {
+          const error = new Error('麦克风没有传来声音，请重新开始录音。');
+          this.cancel(); this.onError(error);
+        }
+      }, 4000);
       this.timer = setTimeout(() => { if (epoch === this.epoch && this.recording) this.onLimit(); }, MAX_SECONDS * 1000);
       return true;
     } catch (error) {
+      clearTimeout(wakeTimer);
       if (epoch === this.epoch) this.cancel();
       throw error;
     }
@@ -87,7 +101,7 @@ export class MicrophoneRecorder {
     return result;
   }
   cancel() {
-    this.epoch++; this.recording = false; clearTimeout(this.timer);
+    this.epoch++; this.recording = false; clearTimeout(this.timer); clearTimeout(this.captureWatchdog);
     if (this.processor) this.processor.onaudioprocess = null;
     for (const node of [this.source, this.processor, this.mute]) { try { node?.disconnect(); } catch {} }
     this.stream?.getTracks().forEach(track => track.stop());

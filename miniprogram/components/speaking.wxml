@@ -1,14 +1,15 @@
 <template name="speaking">
  <view wx:if="{{speakingTarget}}" class="speaking">
-  <view class="subheading">跟读练习</view><view class="english">{{speakingTarget.en}}</view><view>{{speakingTarget.zh}}</view><view wx:if="{{speakingTarget.ipa}}" class="muted">{{speakingTarget.ipa}}</view>
-  <view wx:if="{{speakingTarget.say && speakingTarget.say !== speakingTarget.en}}" class="muted">跟读内容：{{speakingTarget.say}}</view>
-  <view class="muted">先听示范，再读一遍。录音只在本页暂存；点「提交练习反馈」才会发送到网站评分，退出本页即丢弃。</view>
-  <view class="row"><button bindtap="listenSpeaking" disabled="{{media.recording || media.requesting}}">听示范</button><button wx:if="{{!media.recording && !media.clip}}" class="primary" bindtap="record" disabled="{{media.requesting || media.assessing}}">{{media.requesting ? '等待授权…' : '开始录音'}}</button><button wx:if="{{media.recording}}" class="primary" bindtap="stopRecord">停止录音</button></view>
+  <view class="speaking-heading"><text>听一听，自己读</text><text class="speaking-state">{{media.recording ? '● 正在录音' : media.assessing ? '正在听你的声音…' : media.clip ? '已录好' : '准备跟读'}}</text></view>
+  <view wx:if="{{!hideTarget}}"><view class="english">{{speakingTarget.en}}</view><view>{{speakingTarget.zh}}</view><view wx:if="{{speakingTarget.ipa}}" class="muted">{{speakingTarget.ipa}}</view></view>
+  <view wx:if="{{!hideTarget && speakingTarget.say && speakingTarget.say !== speakingTarget.en}}" class="muted">读：{{speakingTarget.say}}</view>
+  <view class="row speaking-main-actions"><button class="listen-button" bindtap="toggleSpeakingAudio" disabled="{{media.recording || media.requesting || media.assessing}}">{{media.playing ? '暂停播放' : '听美式示范'}}</button><button wx:if="{{!media.recording && !media.clip}}" class="primary" bindtap="record" disabled="{{media.requesting || media.assessing}}">{{media.requesting ? '等待授权…' : '开始录音'}}</button><button wx:if="{{media.recording}}" class="primary recording-button" bindtap="stopRecord">读完了，停止</button></view>
+  <view class="notice speaking-message" wx:if="{{media.message}}">{{media.message}}</view>
   <view wx:if="{{media.clip}}" class="row"><button bindtap="replay" disabled="{{media.assessing}}">听我的录音</button><button bindtap="record" disabled="{{media.assessing}}">重新录音</button></view>
-  <button wx:if="{{media.clip}}" class="primary" bindtap="submitRecording" disabled="{{media.assessing}}">{{media.assessing ? '正在听你的声音…' : '提交练习反馈'}}</button>
-  <button wx:if="{{media.playing}}" bindtap="stopAudio">停止播放</button><button wx:if="{{media.clip || media.recording || media.requesting || media.assessing}}" bindtap="cancelRecording">丢弃本次录音</button>
-  <view class="notice" wx:if="{{media.message}}">{{media.message}}</view>
-  <view wx:if="{{media.result}}"><view class="score">本次反馈 {{media.result.score}} 分</view><view>准确度 {{media.result.accuracy}} · 完整度 {{media.result.completeness}}</view><view class="muted">练习反馈用于帮助跟读。</view><view wx:for="{{media.result.words}}" wx:key="index">{{item.word}} · {{item.score}}</view></view>
-  <view class="row"><button class="small" bindtap="openPrivacy">查看隐私说明</button><button class="small" bindtap="openMicSettings">麦克风设置</button></view>
+  <button wx:if="{{media.clip && !media.result}}" class="primary" bindtap="submitRecording" disabled="{{media.assessing}}">{{media.assessing ? '正在听你的声音…' : '提交练习反馈'}}</button>
+  <view wx:if="{{media.result}}" class="speaking-result"><view class="score">这次跟读 {{media.result.score}} 分</view><view class="muted">准确度 {{media.result.accuracy}} · 完整度 {{media.result.completeness}}</view><view class="feedback-word-grid"><view wx:for="{{media.result.words}}" wx:key="index" class="feedback-word {{item.score >= 80 ? 'word-clear' : 'word-practice'}}"><view>{{item.word}}</view><view class="word-score">{{item.score}} 分 · {{item.score >= 80 ? '读得清楚' : '再读一读'}}</view></view></view><view class="muted">先听示范，挑一个「再读一读」的词试一次。</view></view>
+  <button class="discard-button small" wx:if="{{media.clip || media.recording || media.requesting || media.assessing}}" bindtap="cancelRecording">丢弃本次录音</button>
+  <view class="muted recording-privacy">点提交才发送录音评分，退出本页会清除。</view>
+  <view class="row speaking-settings"><button class="small" bindtap="openPrivacy">隐私说明</button><button class="small" bindtap="openMicSettings">麦克风设置</button></view>
  </view>
 </template>
