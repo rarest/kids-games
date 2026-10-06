@@ -177,13 +177,14 @@ export function createApi({store, secret, publicOrigin, auth, familyStore, mailR
           if(req.method==='PATCH')return send(res,200,{profile:await familyStore.updateProfile(owner,profileMatch[1],await jsonBody(req,512*1024))});
           if(req.method==='DELETE')return send(res,200,await familyStore.deleteProfile(owner,profileMatch[1]));
         }
-        const progressMatch=url.pathname.match(/^\/api\/family\/profiles\/([^/]+)\/progress\/english(\/import)?$/);
+        const progressMatch=url.pathname.match(/^\/api\/family\/profiles\/([^/]+)\/progress\/([^/]+)(\/import)?$/);
         if(progressMatch) {
-          const id=progressMatch[1];
-          if(req.method==='GET'&&!progressMatch[2])return send(res,200,await familyStore.getProgress(owner,id));
+          const id=progressMatch[1],subject=progressMatch[2];
+          if(!['english','chinese'].includes(subject))throw problem(400,'Unknown subject');
+          if(req.method==='GET'&&!progressMatch[3])return send(res,200,await familyStore.getProgress(owner,id,subject));
           if(req.method==='POST') {
             const body=await jsonBody(req,512*1024);
-            return send(res,200,await (progressMatch[2]?familyStore.importProgress(owner,id,body):familyStore.syncProgress(owner,id,body)));
+            return send(res,200,await (progressMatch[3]?familyStore.importProgress(owner,id,body,subject):familyStore.syncProgress(owner,id,body,subject)));
           }
         }
         throw problem(404,'Not found');

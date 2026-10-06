@@ -28,7 +28,7 @@ test('all game areas adapt to phone, tablet and desktop, including rotation',{ti
       }
       assert.deepEqual(b.errors,[],name);
     }
-    await b.navigate('index.html');assert.equal(await b.evaluate('document.querySelectorAll(".card").length'),14);
+    await b.navigate('index.html');assert.equal(await b.evaluate('document.querySelectorAll(".card").length'),15);
   }finally{b.close()}
 });
 

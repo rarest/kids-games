@@ -126,6 +126,12 @@ test('game and platform deployment preserve unchanged rooms and retry failed pha
    assert.match(out,/restart games-platform.service/);noGameRestart(out);noRootNpm(out);assert.doesNotMatch(out,/npm ci|openresty/);
    await clear();await change('english/course-ui.js','// browser only course change\n');execute();out=await calls();
    assert.doesNotMatch(out,/restart|npm ci|openresty/);
+   await mkdir(join(repo,'chinese'),{recursive:true});
+   for(const file of ['engine.js','curriculum.js','appendices.js',...Array.from({length:8},(_,i)=>`content-u${i+1}.js`)]){
+    await clear();await change(`chinese/${file}`,`// Chinese runtime ${file}\n`);execute();out=await calls();
+    assert.match(out,/restart games-platform.service/,`${file} updates platform curriculum validation`);noGameRestart(out);noRootNpm(out);assert.doesNotMatch(out,/npm ci|openresty/);
+   }
+   await clear();await change('chinese/ui.js','// browser only Chinese change\n');execute();assert.doesNotMatch(await calls(),/restart|npm ci|openresty/);
   });
   await t.test('failed platform npm does not advance successful markers and the next deployment retries',async()=>{
    const dependencies=await readFile(join(state,'platform-dependencies'),'utf8'),runtime=await readFile(join(state,'platform-runtime'),'utf8');

@@ -43,7 +43,7 @@ test('hung response bodies leave loading and expose retry after the request dead
 });
 
 test('catalog IDs keep each game reachable even when its URL has cache parameters', () => {
-  const ids = ['memory', 'english', 'rescue', 'parkour', 'racing', 'territory', 'shooter', 'pinyin', 'snake', 'fish', 'fishing', 'goldminer', 'maze', 'merge4096'];
+  const ids = ['classroom', 'memory', 'english', 'rescue', 'parkour', 'racing', 'territory', 'shooter', 'pinyin', 'snake', 'fish', 'fishing', 'goldminer', 'maze', 'merge4096'];
   assert.deepEqual(catalog.map(game => game.id), ids);
   for (const game of catalog) {
     assert.equal(new URL(game.file, 'https://games.test').pathname, `/games/${game.id}.html`);
@@ -67,7 +67,7 @@ test('rankings use the known catalog links and server order, with no zero-play o
 test('rendered ranks show escaped titles, reachable links, counts, range and Shanghai statistics date', async () => {
   const { normalize, renderResults } = await ui();
   const data = normalize(payload('day', [{ gameId: 'memory', plays: 1234, activeSeconds: 3675 }]),
-    [{ ...catalog[0], name: '<img src=x onerror=alert(1)>' }], 'day');
+    [{ ...catalog.find(game=>game.id==='memory'), name: '<img src=x onerror=alert(1)>' }], 'day');
   const html = renderResults({ status: 'ready', period: 'day', data });
   assert.match(html, /href="games\/memory.html"/);
   assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/);
@@ -179,7 +179,7 @@ test('homepage mounts the ranking tabs while its existing search still filters t
   const inline = Array.from(html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g), match => match[1]).filter(Boolean).at(-1);
   vm.runInNewContext(inline, context);
   await new Promise(resolve => setImmediate(resolve));
-  assert.equal((nodes.grid.innerHTML.match(/class="card"/g) || []).length, 14);
+  assert.equal((nodes.grid.innerHTML.match(/class="card"/g) || []).length, 15);
   assert.match(results.innerHTML, /皇冠迷宫/);
   assert.deepEqual(tabs.map(tab => tab.attributes.role), ['tab', 'tab', 'tab']);
   assert.deepEqual(tabs.map(tab => tab.attributes['aria-selected']), ['true', 'false', 'false']);

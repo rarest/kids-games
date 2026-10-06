@@ -21,13 +21,18 @@ async function nativeLesson(id) {
   };
   let page;
   vm.runInNewContext(readFileSync(file, 'utf8'), {
-    require: createRequire(file), wx:{}, getApp:()=>({client}), console,
+    require: createRequire(file), wx:{getStorageSync(){return undefined},setStorageSync(){}}, getApp:()=>({client}), console,
     Page: definition => {page=definition; page.setData=patch=>Object.assign(page.data,patch);},
   });
   page.onLoad({id});
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(page.data.loading, false, page.data.error);
-  return {lesson:page.lesson, image:new URL(page.data.lesson.imageURL).pathname};
+  const imageURL=page.data.lesson.imageURL;
+  const pathname=new URL(imageURL,'https://fixture.invalid').pathname;
+  const bundled=createRequire(file)('../../lib/bundled-content.js');
+  const image=pathname.startsWith('/assets/')?Object.entries(bundled.assets).find(([,destination])=>destination===pathname)?.[0]:pathname;
+  assert.ok(image,'bundled image must map back to its original source: '+pathname);
+  return {lesson:page.lesson, image};
 }
 
 // Removing dynamically derived scene resources must break this native-client comparison.

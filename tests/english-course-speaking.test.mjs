@@ -4,7 +4,7 @@ import {mountCourse} from '../english/course-ui.js';
 import {LESSONS} from '../english/course-curriculum.js';
 import {createSession} from '../english/course-engine.js';
 import {getTarget} from '../english/page-practice.js';
-function mount(){let handler;const routes=[];globalThis.localStorage={getItem:()=>null,setItem(){}};globalThis.window={};globalThis.addEventListener=()=>{};const classes=new Set();const root={innerHTML:'',classList:{add:name=>classes.add(name),remove:name=>classes.delete(name),contains:name=>classes.has(name)},querySelector:()=>null,addEventListener(type,fn){handler=fn},scrollIntoView(){}};const course=mountCourse({root,speak(){},read(){},stopAudio(){},openPages:(...args)=>routes.push(args),onReward(){},notice(){}});return{course,root,routes,click:button=>handler({target:{closest:()=>button}})};}
+function mount(){const handlers={};const routes=[];globalThis.localStorage={getItem:()=>null,setItem(){}};globalThis.window={};globalThis.addEventListener=()=>{};const classes=new Set();const root={innerHTML:'',classList:{add:name=>classes.add(name),remove:name=>classes.delete(name),contains:name=>classes.has(name)},querySelector:()=>null,addEventListener(type,fn){handlers[type]=fn},scrollIntoView(){}};const course=mountCourse({root,speak(){},read(){},stopAudio(){},openPages:(...args)=>routes.push(args),onReward(){},notice(){}});return{course,root,routes,click:button=>handlers.click({target:{closest:()=>button}})};}
 test('every guided word, phrase and read line opens its actual photographed source speaking target',()=>{
  const {course,root,routes,click}=mount();let count=0;
  for(const lesson of LESSONS){const session=createSession(lesson);

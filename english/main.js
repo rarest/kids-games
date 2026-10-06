@@ -131,6 +131,8 @@ const course=mountCourse({root:$('courseRoot'),onSave:payload=>courseCloud?.onSa
 
 courseCloud=createCourseCloud({course,onState:()=>renderCloudState(),onAuthLoss:()=>{resetStudyIdentity();familyClearIdentity();familyUser=null;familyProfiles=[];renderFamily()}});
 window.englishCourseCloud=courseCloud;
+import {mountClassroomNav} from '../shared/classroom-nav.js';
+mountClassroomNav({subject:'english',canLeave:()=>course.canLeave()&&(!pageClassroom||pageClassroom.canLeave()),beforeLeave:()=>{course.save();stopReading();}});
 
 // Optional family learning: game coins and adventure reconnect state stay on this device.
 const familyStyle=document.createElement('link');familyStyle.rel='stylesheet';familyStyle.href=new URL('../shared/family.css?v=20261005family1',import.meta.url).href;document.head.append(familyStyle);

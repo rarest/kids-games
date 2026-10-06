@@ -2,6 +2,14 @@
    字段: id 稳定标识 | file 路径 | emoji 图标 | name 名称 | desc 一句话 | tags 标签(用于搜索/分类) */
 window.GAMES = [
   {
+    id: "classroom",
+    file: "games/classroom.html?v=20261007cn1",
+    emoji: "📚",
+    name: "珠珠课堂",
+    desc: "语文与英语一起学，逐段听读、字词理解、跟读练习，共享孩子学习档案",
+    tags: ["语文", "英语", "听读", "学习", "手机"],
+  },
+  {
     id: "memory",
     file: "games/memory.html",
     emoji: "🌼",
@@ -11,10 +19,10 @@ window.GAMES = [
   },
   {
     id: "english",
-    file: "games/english.html?v=20261006layout1",
+    file: "games/english.html?v=20261007classroom1",
     emoji: "🔵",
-    name: "珠珠英语课堂",
-    desc: "三年级上册照片课本，逐页词句练习、美式听读、录音回听与发音反馈",
+    name: "珠珠课堂 · 英语",
+    desc: "三年级上册逐页词句练习、美式听读、录音回听与发音反馈，共享两科学习档案",
     tags: ["英语", "听读", "练习", "跟读", "手机"],
   },
   {
