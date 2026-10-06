@@ -38,3 +38,4 @@
 .speaking-panel[data-speaking-state=recorded] .speaking-controls [data-speaking-action=retry]{grid-column:2;grid-row:2}
 
 .speaking-panel[data-speaking-state=recorded] .speaking-controls [data-speaking-action=cancel]{grid-column:1 / -1;grid-row:3;background:transparent;font-size:14px}.speaking-panel[data-speaking-state=recorded] .speaking-controls [data-speaking-action=submit]{box-shadow:0 3px 10px #d9b97233;border-width:2px}
+.speaking-mic-details{margin-top:16px;border-top:1px solid #e1e9de;padding-top:8px}.speaking-panel .speaking-mic-status{background:#edf5e9;border-radius:12px;padding:10px 12px;font-size:15px}.speaking-mic-label{display:block;font-size:15px}.speaking-mic-select{display:block;width:100%;min-height:48px;margin:8px 0;border:1px solid #aac4b4;border-radius:12px;padding:10px;background:#fff;color:#284d38;font:inherit;box-sizing:border-box}.speaking-panel .speaking-mic-help{font-size:14px;color:#58705d}.speaking-mic-select:disabled{opacity:.6}

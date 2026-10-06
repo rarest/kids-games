@@ -37,11 +37,11 @@ export function recordingFromSamples(chunks, sampleRate) {
 }
 
 export class MicrophoneRecorder {
-  constructor({onProgress = () => {}, onLimit = () => {}, onError = () => {}} = {}) {
-    this.onProgress = onProgress; this.onLimit = onLimit; this.onError = onError;
+  constructor({onProgress = () => {}, onLimit = () => {}, onError = () => {}, onInput = () => {}} = {}) {
+    this.onProgress = onProgress; this.onLimit = onLimit; this.onError = onError; this.onInput = onInput;
     this.epoch = 0; this.chunks = []; this.samples = 0; this.recording = false;
   }
-  async start() {
+  async start({deviceId = ''} = {}) {
     this.cancel();
     const epoch = this.epoch;
     const media = globalThis.navigator?.mediaDevices;
@@ -55,9 +55,11 @@ export class MicrophoneRecorder {
       this.context = new AudioContext();
       const context = this.context;
       const waking = Promise.resolve(context.resume()).then(() => null, error => error);
-      const stream = await media.getUserMedia({audio: {channelCount: 1, echoCancellation: true, noiseSuppression: true}, video: false});
+      const stream = await media.getUserMedia({audio: {channelCount: 1, echoCancellation: true, noiseSuppression: true, ...(deviceId ? {deviceId: {exact: deviceId}} : {})}, video: false});
       if (epoch !== this.epoch) { stream.getTracks().forEach(track => track.stop()); return false; }
       this.stream = stream;
+      const track = stream.getAudioTracks?.()[0];
+      if (track) this.onInput({label:track.label, muted:track.muted, readyState:track.readyState});
       const wakeError = await Promise.race([waking, new Promise(resolve => {wakeTimer = setTimeout(() => resolve(new Error('麦克风音频没有启动，请重新点开始录音。')), 8000);})]);
       clearTimeout(wakeTimer);
       if (epoch !== this.epoch) return false;
