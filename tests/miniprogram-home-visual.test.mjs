@@ -13,7 +13,7 @@ function home(progress={lessons:{},session:null},ready=Promise.resolve()) {
  const app={client,ready};
  vm.runInNewContext(source,{Page:value=>definition=value,getApp:()=>app,wx:{navigateTo:({url})=>navigations.push(url)},require:path=>require(new URL('../miniprogram/pages/home/'+path,import.meta.url).pathname)});
  const page={...definition,data:structuredClone(definition.data),setData(value){Object.assign(this.data,value)}};
- return {page,navigations,setProgress(value){progress=value}};
+ return {page,navigations,app,setProgress(value){progress=value}};
 }
 test('today recommendation resumes a saved lesson and refreshes after completing it',async()=>{
  const first=catalog.units[0].lessons[0],second=catalog.units[0].lessons[1];
@@ -59,6 +59,17 @@ test('a hidden home ignores late catalog and account restoration callbacks',asyn
  assert.equal(h.page.data.sessionReady,false);
  await h.page.onShow();assert.equal(h.page.data.sessionReady,true);
  assert.equal(h.page.data.units.length,6);
+});
+test('guest startup action makes the bundled lesson available without waiting for the account network',async()=>{
+ let finish;const ready=new Promise(resolve=>finish=resolve),h=home(undefined,ready);
+ let calls=0;h.app.useGuestStartup=()=>{calls++;finish()};
+ const showing=h.page.onShow();await new Promise(resolve=>setImmediate(resolve));
+ h.page.useGuestStartup();await showing;
+ assert.equal(h.page.data.sessionReady,true);assert.equal(h.page.data.profileName,'访客 · 此设备');
+ h.page.openSelectedPage();assert.equal(h.navigations[0],'/pages/page/page?page=2');
+ h.page.useGuestStartup();assert.equal(calls,1);
+ const template=readFileSync(new URL('../miniprogram/pages/home/home.wxml',import.meta.url),'utf8');
+ assert.match(template,/bindtap="useGuestStartup"/);
 });
 test('completed curriculum offers a review lesson and profile changes clear completion display',async()=>{
  const lessons=Object.fromEntries(catalog.units.flatMap(unit=>unit.lessons).map(lesson=>[lesson.id,{completed:true}]));

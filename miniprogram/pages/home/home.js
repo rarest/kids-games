@@ -11,6 +11,7 @@ Page({
  },
  onHide(){this.hidden=true;this.showEpoch=(this.showEpoch||0)+1},
  onUnload(){this.onHide()},
+ useGuestStartup(){if(!this.data.sessionReady)getApp().useGuestStartup()},
  async load(){
   const epoch=this.showEpoch;this.setData({loading:true,error:''});
   try{const catalog=await this.client.content('catalog.json');if(this.hidden||epoch!==this.showEpoch)return;this.updateCatalog(catalog);this.setData({loading:false})}
