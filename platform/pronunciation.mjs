@@ -1,5 +1,17 @@
 import {problem} from './store.mjs';
 export const MAX_WAV_BYTES=640044;
+export function normalizeMiniprogramWav(audio){
+  // Exact header defect observed from WeChat on iPhone. Keep all PCM bytes intact.
+  if(!Buffer.isBuffer(audio)||audio.length<4844||audio.length>MAX_WAV_BYTES||(audio.length-44)%2||
+    audio.toString('ascii',0,4)!=='RIFF'||audio.toString('ascii',8,16)!=='WAVEfmt '||
+    audio.readUInt32LE(4)+8!==audio.length+44||audio.readUInt32LE(16)!==16||
+    audio.readUInt16LE(20)!==1||audio.readUInt16LE(22)!==1||audio.readUInt32LE(24)!==16000||
+    audio.readUInt32LE(28)!==32000||audio.readUInt16LE(32)!==4||audio.readUInt16LE(34)!==16||
+    audio.toString('ascii',36,40)!=='data'||audio.readUInt32LE(40)!==audio.length)return audio;
+  const normalized=Buffer.from(audio);
+  normalized.writeUInt32LE(normalized.length-8,4);normalized.writeUInt16LE(2,32);normalized.writeUInt32LE(normalized.length-44,40);
+  validateWav(normalized);return normalized;
+}
 export function validateWav(audio){
   if(!Buffer.isBuffer(audio)||audio.length<44||audio.length>MAX_WAV_BYTES||audio.toString('ascii',0,4)!=='RIFF'||audio.toString('ascii',8,12)!=='WAVE'||audio.readUInt32LE(4)+8!==audio.length)throw problem(400,'Invalid WAV recording');
   let offset=12,format,data;
