@@ -17,3 +17,22 @@
 .speaking-word-feedback{list-style:none;margin:18px 0;padding:0}.speaking-word-feedback li{display:flex;flex-wrap:wrap;gap:8px 20px;padding:12px 0;border-bottom:1px solid #e1e9de}.speaking-word-feedback strong{min-width:80px;overflow-wrap:anywhere}.speaking-word-feedback span{color:#47634b}
 .speaking-panel .speaking-parent-note,.speaking-panel .speaking-feedback-note{font-size:14px;color:#637064;line-height:1.7}.speaking-panel .speaking-parent-note{margin-top:24px;padding-top:16px;border-top:1px solid #e1e9de}
 @media(max-width:540px){.speaking-panel{padding:20px 16px;border-radius:16px}.speaking-controls{gap:10px}.speaking-controls button{flex:1 1 130px;padding:10px 12px}.speaking-scores{gap:10px}.speaking-scores p{flex-basis:120px}}
+
+/* Current action first; recording and scoring remain explicit child choices. */
+.speaking-panel .speaking-status{padding:10px 12px;border-radius:12px;background:#edf5e9;margin:12px 0 0;line-height:1.6}
+.speaking-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:10px;margin:12px 0 18px}
+.speaking-controls button{min-width:0;margin:0}
+.speaking-controls [data-speaking-action=record],.speaking-controls [data-speaking-action=stop],.speaking-controls [data-speaking-action=submit]{grid-column:2;grid-row:1}
+.speaking-controls [data-speaking-action=listen],.speaking-controls [data-speaking-action=play],.speaking-controls [data-speaking-action=cancel]{grid-column:1;grid-row:1}
+.speaking-controls [data-speaking-action=retry],.speaking-controls [data-speaking-action=refresh]{grid-column:1 / -1;background:transparent;border-color:#dce5d9;font-size:14px}
+.speaking-panel[data-speaking-state=assessing] .speaking-controls [data-speaking-action=play]{grid-row:2}
+.speaking-parent-details,.speaking-score-details{margin-top:18px;border-top:1px solid #e1e9de;padding-top:10px}
+.speaking-panel summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:#58705d;font-size:14px;list-style:none}
+.speaking-panel summary::before{content:'＋';font-weight:700;margin-right:8px}.speaking-panel details[open]>summary::before{content:'−'}
+.speaking-panel .speaking-parent-note{margin-top:6px;padding-top:0;border-top:0}
+.speaking-score-summary{font-size:25px;font-weight:700;color:#276547}.speaking-next-practice{padding:12px;background:#edf6e8;border-radius:12px}
+@media(min-width:651px) and (max-width:1100px){.speaking-panel{padding:22px;max-width:100%}.speaking-controls{gap:14px}.speaking-panel button{min-height:52px}}
+@media(min-width:1101px){.speaking-panel{max-width:760px}.speaking-controls{max-width:580px}}
+
+.speaking-panel[data-speaking-state=recorded] .speaking-controls [data-speaking-action=listen]{grid-column:1;grid-row:2}
+.speaking-panel[data-speaking-state=recorded] .speaking-controls [data-speaking-action=retry]{grid-column:2;grid-row:2}
