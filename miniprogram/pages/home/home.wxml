@@ -1,1 +1,29 @@
-<view class="shell"><view class="eyebrow">照片教材 · 美式听读</view><view class="heading">每天学一小课</view><view class="muted">{{profileName}} · {{sync}}</view><button bindtap="account">家长账号与孩子档案</button><view class="notice">先认识词句，再听、选、拼、读。访客也可以学习，导学进度先保存在此设备。</view><view wx:if="{{loading}}">正在加载教材…</view><view class="error" wx:if="{{error}}">{{error}}</view><button wx:if="{{error}}" bindtap="load">重试加载</button><view wx:for="{{catalog.units}}" wx:key="id" class="panel"><view class="subheading">{{item.title}}</view><view class="muted">{{item.zh}}</view><view wx:for="{{item.lessons}}" wx:for-item="lesson" wx:key="id" class="list-row"><view class="block-title">{{lesson.title}}</view><view>{{lesson.goal}}</view><view class="muted">{{lesson.minutes}} 分钟 · 课本 {{lesson.pages}} 页 {{completed[lesson.id].completed ? '· 已完成一课' : ''}}</view><button class="primary" data-id="{{lesson.id}}" bindtap="openLesson">开始 / 接着学</button></view></view><view class="panel"><view class="subheading">逐页课堂 · 90 页</view><view class="muted">按照片课本顺序听读、练习和跟读。</view><button wx:for="{{catalog.pages}}" wx:key="page" class="choice" data-page="{{item.page}}" bindtap="openPage">第 {{item.page}} 页 · {{item.title}}</button></view></view>
+<view class="shell home-shell">
+ <view class="home-header">
+  <view class="brand"><view class="brand-mark">珠</view><view><view class="brand-title">珠珠学伴</view><view class="brand-caption">珠珠英语课堂</view></view></view>
+  <button class="account-button small" bindtap="account">家长与档案</button>
+ </view>
+ <view class="profile-line"><text>{{profileName}}</text><text class="sync-label">{{sync}}</text></view>
+ <view wx:if="{{loading}}" class="notice">正在为你打开课本…</view>
+ <view wx:if="{{error}}" class="notice error"><view>{{error}}</view><button bindtap="load">再试一次</button></view>
+ <view wx:if="{{recommended && !loading}}" class="today-card">
+  <view class="today-art-wrap"><image class="today-art" src="{{recommended.imageURL}}" mode="aspectFit" aria-label="{{recommended.unitTitle}}单元插画"/><view class="today-badge">{{recommended.resuming ? '接着上次学' : recommended.reviewing ? '今天再回忆' : '今天学这一课'}}</view></view>
+  <view class="today-content"><view class="eyebrow">UNIT {{recommended.unitNumber}} · {{recommended.unitTitle}}</view><view class="today-title">{{recommended.title}}</view><view class="today-goal">{{recommended.goal}}</view><view class="today-meta"><text>{{recommended.minutes}} 分钟</text><text>课本 {{recommended.pagesLabel}} 页</text></view><button class="primary today-start" data-id="{{recommended.id}}" bindtap="openLesson">{{recommended.resuming ? '接着学' : recommended.reviewing ? '再练一课' : '开始今天的一课'}} <text>→</text></button></view>
+ </view>
+ <view wx:if="{{catalog && !loading}}">
+  <view class="section-heading"><view><view class="subheading">六个小世界</view><view class="muted">选一幅画，打开这一单元</view></view><view class="completion-pill">已学 {{completedCount}} / {{lessonCount}} 课</view></view>
+  <view class="unit-grid">
+   <view wx:for="{{units}}" wx:key="id" class="unit-card unit-{{item.number}} {{expandedUnit === item.id ? 'unit-expanded' : ''}}">
+    <button class="unit-toggle" data-id="{{item.id}}" bindtap="toggleUnit" aria-label="{{item.zh}}，{{expandedUnit === item.id ? '收起课程' : '查看课程'}}">
+     <view class="unit-art-wrap"><image class="unit-art" src="{{item.imageURL}}" mode="aspectFit" aria-label="{{item.zh}}单元插画"/><view class="unit-number">{{item.number}}</view></view>
+     <view class="unit-summary"><view class="unit-title">{{item.zh}}</view><view class="unit-english">{{item.title}}</view><view class="unit-bottom"><text>{{item.completedCount}} / {{item.lessonCount}} 课</text><text class="unit-expand-label">{{expandedUnit === item.id ? '收起 −' : '选课 +'}} </text></view></view>
+    </button>
+    <view wx:if="{{expandedUnit === item.id}}" class="unit-lessons">
+     <button wx:for="{{item.lessons}}" wx:for-item="lesson" wx:key="id" class="lesson-choice" data-id="{{lesson.id}}" bindtap="openLesson"><view class="lesson-order {{lesson.completed ? 'is-complete' : ''}}">{{lesson.completed ? '✓' : lesson.number}}</view><view class="lesson-label"><view>{{lesson.title}}</view><view class="muted">{{lesson.minutes}} 分钟 · {{lesson.completed ? '已完成 · 可再练' : '课本 ' + lesson.pagesLabel + ' 页'}}</view></view><text class="lesson-arrow">›</text></button>
+    </view>
+   </view>
+  </view>
+  <view class="textbook-card"><view class="textbook-heading"><view class="book-mark">Aa</view><view><view class="subheading">按课本页码学习</view><view class="muted">听读、练习、跟读，选一页就出发</view></view></view><view class="page-picker-row"><picker class="page-picker" mode="selector" range="{{pageOptions}}" value="{{pageIndex}}" bindchange="selectPage"><view class="picker"><view class="picker-page">第 {{selectedPage.page}} 页 <text>⌄</text></view><view class="picker-title">{{selectedPage.title}}</view></view></picker><button class="primary open-page" bindtap="openSelectedPage">打开</button></view></view>
+  <view class="home-footer">先听一听，再试着说。每一次尝试都算数。</view>
+ </view>
+</view>

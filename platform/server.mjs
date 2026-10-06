@@ -80,7 +80,22 @@ export function createApi({store, secret, publicOrigin, auth, familyStore, mailR
         for await(const chunk of req.iterator({destroyOnReturn:false})) {
           length+=chunk.length;if(length>MAX_WAV_BYTES){req.resume();throw problem(413,'Recording too large');}chunks.push(chunk);
         }
-        return send(res,200,await pronunciation.assess({ip:ipKey,target,audio:Buffer.concat(chunks)}));
+        const audio=Buffer.concat(chunks);
+        try {
+          return send(res,200,await pronunciation.assess({ip:ipKey,target,audio}));
+        } catch(error) {
+          if(url.pathname==='/api/miniprogram/pronunciation'&&error.status===400) {
+            // Format metadata only: never log the recording, identity or request headers.
+            console.warn('mini-recording-format',JSON.stringify({targetId,bytes:audio.length,
+              riff:audio.toString('ascii',0,4)==='RIFF',wave:audio.toString('ascii',8,12)==='WAVE',
+              declaredBytes:audio.length>=8?audio.readUInt32LE(4)+8:null,
+              format:audio.length>=44&&audio.toString('ascii',12,16)==='fmt '?[
+                audio.readUInt16LE(20),audio.readUInt16LE(22),audio.readUInt32LE(24),
+                audio.readUInt32LE(28),audio.readUInt16LE(32),audio.readUInt16LE(34)]:null,
+              declaredDataBytes:audio.length>=44&&audio.toString('ascii',36,40)==='data'?audio.readUInt32LE(40):null}));
+          }
+          throw error;
+        }
       }
       const authHeaders = fromNodeHeaders(req.headers);
       for (const key of ['x-forwarded-for','x-forwarded-host','x-forwarded-proto','forwarded','x-real-ip']) authHeaders.delete(key);
