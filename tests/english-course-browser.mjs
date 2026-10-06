@@ -45,7 +45,7 @@ test('real lesson completion, retry, reward once, focused review and all 36 less
   await b.size(390,844,true);await b.navigate('games/english.html');await wait(b,'!!window.englishCourse');
   writeFileSync('/home/ubuntu/codex-work/output/english-course/home-mobile.png',Buffer.from((await b.call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false})).data,'base64'));
   const ids=await b.evaluate('Array.from(document.querySelectorAll("[data-course-lesson]")).map(b=>b.dataset.courseLesson)');assert.equal(ids.length,36);
-  const pictures=await b.evaluate('Array.from(document.querySelectorAll(".course-unit>.course-illustration")).map(i=>i.src)');assert.equal(new Set(pictures).size,6);
+  const pictures=await b.evaluate('Array.from(document.querySelectorAll(".course-unit .course-illustration")).map(i=>i.src)');assert.equal(new Set(pictures).size,6);
   for(const src of pictures){const picture=await b.evaluate(`new Promise(resolve=>{const image=new Image();image.onload=()=>resolve({w:image.naturalWidth,h:image.naturalHeight});image.onerror=()=>resolve(null);image.src=${JSON.stringify(src)}})`);assert.ok(picture&&picture.w>=1000&&picture.h>=600,src);}
   await b.evaluate('document.getElementById("startCourse").click()');const id=await b.evaluate('window.englishCourse.lesson.id');
   await completeInUI(b,{wrongFirst:true});assert.equal(await b.evaluate('window.englishApp.save.coins'),200);
