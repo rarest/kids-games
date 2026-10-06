@@ -48,11 +48,12 @@
 
 ### Task 4: 三端课堂与听读
 
-**Files:** shared/classroom-nav.js/css、games/classroom.html、games/chinese.html、chinese/main.js/css/art.js/audio.js/family.js、英语品牌修改、index.html、package.json、tests/chinese-browser.mjs。
+**Files:** shared/classroom-nav.js/css、games/classroom.html、games/chinese.html、chinese/main.js/css/art.js/audio.js/family.js、英语品牌修改、games.js、index.html、account.html、shared/account.js、package.json、tests/chinese-browser.mjs及相关目录/账号验收。
 
 - [ ] native输入测试先访问缺页失败；覆盖320/390/768/1024/1366屏宽与touch点击，真实英语切换后回到语文仍续学。
 - [ ] 建立纸面插画式8单元首页、今日小课、单目标卡片、目录模态、字词/理解、提示重试、表达、自评背诵、错题复习、退出续学。所有原文按顺序可读，学习过程不会揭露听力答案。
 - [ ] 接入共享账号与语文cloud；访客进度不可自动混入孩子；冲突显式选择，pagehide本地先保存。
+- [ ] 游戏厅课程卡与家长中心入口、导出文件名、档案/删除说明采用两科学习措辞；默认课入口为统一学科首页，既有英语地址保留。
 - [ ] 普通话固定音频逐段；本地备用朗读明确标识。不得将英语评分后端当中文评分。
 - [ ] node --test tests/chinese-browser.mjs与English三端相关浏览器验证，再构建两bundle提交。
 
