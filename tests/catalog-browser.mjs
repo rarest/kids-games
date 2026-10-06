@@ -13,6 +13,7 @@ test('every catalog destination loads real content and resources on a tablet',{t
   'parkour':"document.body.dataset.ready==='true'",
   'rescue':"document.querySelector('#view')?.dataset.phase==='home'",
   'english':'!!window.englishApp',
+  'classroom':'window.pearlClassroom?.ready===true',
   'merge4096':"document.body.dataset.screen==='home'&&document.querySelectorAll('.pile-button').length===5",
  };
  const b=await openBrowser({chromeFlags:['--enable-unsafe-swiftshader']});

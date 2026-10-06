@@ -31,7 +31,8 @@ export function mountCourse({root,speak,read,stopAudio,openPages,onReward,notice
  function markAttempt(){const step=current();if(step?.kind!=='oral')return;session.answers[step.id]={selfReported:true};save();const next=root.querySelector?.('#courseNext');if(next)next.disabled=false;}
  function openSourceSpeaking(id){const target=getTarget(id);if(!target||!lesson)return;clearSpeaking();stopAudio();openPages(target.page,lesson.unitId,{speakingTarget:id});}
  function resumeSpeaking(){const step=current();if(step?.kind!=='oral'||speaking)return;const target=oralTarget(),host=root.querySelector?.('#courseSpeaking'),activeSession=session,token=viewEpoch;if(target&&host)speaking=mountSpeaking({root:host,target,speak,stopAudio,onResult:()=>{if(token===viewEpoch&&session===activeSession&&current()?.id===step.id)markAttempt();}});}
- const api={get progress(){return progress},get lesson(){return lesson},get session(){return session},get storageKey(){return storageKey},home,start,save,resumeSpeaking,snapshot:()=>JSON.parse(JSON.stringify(progress)),replaceProgress};window.englishCourse=api;
+ function canLeave(){if(!speaking||speaking.canLeave())return true;const status=root.querySelector('[data-speaking-status]');if(status){status.tabIndex=-1;status.scrollIntoView({block:'center',behavior:'instant'});status.focus({preventScroll:true});}return false;}
+ const api={get progress(){return progress},get lesson(){return lesson},get session(){return session},get storageKey(){return storageKey},home,start,save,resumeSpeaking,canLeave,snapshot:()=>JSON.parse(JSON.stringify(progress)),replaceProgress};window.englishCourse=api;
  function save(event=null){if(session)progress.session=session;try{localStorage.setItem(storageKey,JSON.stringify(progress));}catch{notice('学习进度暂时无法保存，请保持页面打开。');}onSave({progress:JSON.parse(JSON.stringify(progress)),event});}
  function replaceProgress(raw,{storageKey:nextKey=KEY,preserveView=false}={}){
   const incoming=loadProgress(raw,LESSONS),nextSession=incoming.session;
@@ -45,7 +46,7 @@ export function mountCourse({root,speak,read,stopAudio,openPages,onReward,notice
   const todayLesson=(resume&&LESSONS.find(l=>l.id===resume.lessonId))||recommended||LESSONS[0];
   root.innerHTML=`
    <div class="course-heading">
-    <div class="course-welcome"><span class="course-kicker">PEARL ENGLISH · 珠珠英语课堂</span><h1>和<span class="course-title-context">课本里的</span><span class="course-title-friends">朋友，</span><br>一起说英语。</h1><p>三年级上册 · ${esc(COURSE.edition)}</p><div class="course-route" aria-label="每节小课的学习顺序">${['听一听','记词语','练句子','说一说'].map((name,i)=>`<span><b aria-hidden="true">${stageIcons[i]}</b>${name}</span>`).join('')}</div></div>
+    <div class="course-welcome"><span class="course-kicker">PEARL CLASSROOM · 珠珠课堂 · 英语</span><h1>和<span class="course-title-context">课本里的</span><span class="course-title-friends">朋友，</span><br>一起说英语。</h1><p>三年级上册 · ${esc(COURSE.edition)}</p><div class="course-route" aria-label="每节小课的学习顺序">${['听一听','记词语','练句子','说一说'].map((name,i)=>`<span><b aria-hidden="true">${stageIcons[i]}</b>${name}</span>`).join('')}</div></div>
     <div class="course-hero-art">${unitArt(todayLesson.unitId)}<span class="course-art-note">翻开课本，开始今天的小发现</span></div>
    </div>
    <section class="course-today" aria-labelledby="courseTodayTitle">

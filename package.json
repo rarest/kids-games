@@ -1,6 +1,7 @@
 {
   "type": "module",
   "scripts": {
+    "build:chinese": "esbuild chinese/main.js --bundle --format=esm --minify --legal-comments=none --outfile=chinese/bundle.js",
     "build:memory": "esbuild memory/game.js --bundle --format=esm --minify --legal-comments=none --outfile=memory/bundle.js",
     "test:memory": "node --test tests/memory-*.test.mjs && node --test tests/memory-browser.mjs",
     "posttest:browser": "node --test tests/memory-browser.mjs",
