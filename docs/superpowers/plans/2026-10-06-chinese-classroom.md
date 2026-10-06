@@ -56,6 +56,7 @@
 - [ ] 游戏厅课程卡与家长中心入口、导出文件名、档案/删除说明采用两科学习措辞；默认课入口为统一学科首页，既有英语地址保留。
 - [ ] 普通话固定音频逐段；本地备用朗读明确标识。不得将英语评分后端当中文评分。
 - [ ] node --test tests/chinese-browser.mjs与English三端相关浏览器验证，再构建两bundle提交。
+- [ ] 修正主线已复现的测试夹具兼容性错误：english-course-save/speaking按事件类型保存click/toggle监听，而非让toggle覆盖click；wechat-cloud-media-manifest识别bundled-content的包内资源路径，并反查对应原始sourcePath。保留原业务断言、不跳过失败测试、不修改小程序业务；原生英语和打包资源检查仍需通过。
 
 ### Task 5: 审查与上线
 
