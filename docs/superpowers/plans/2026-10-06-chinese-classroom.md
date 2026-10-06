@@ -31,12 +31,12 @@
 **Files:** chinese/engine.js、tests/chinese-engine.test.mjs。
 **Interfaces:** exports buildSteps(lesson,{review=false,reviewKeys=[]}={}),createSession(lesson,{now=Date.now(),review=false,reviewKeys=[]}={}),loadProgress(raw,lessons=LESSONS),recordAnswer(progress,session,step,selected,{hinted=false,now=Date.now()}={}),advance(session),completeLesson(progress,session,{now=Date.now()}={}),dueItems(progress,now=Date.now()),recommendLesson(lessons,progress)。Progress={version:1,lessons:{},items:{},session:null}。Session={lessonId,startedAt,index,review,reviewKeys,steps,answers,feedback}。Steps={id,kind,stage,itemKey?,...}。kind preview/reading/word/meaning/check/expression/recite；评分仅meaning/check。
 
-- [ ] 测试未完成课不能complete、错答再答不丢首次错误、hinted不能提高掌握、北京时间复习间隔、未知原型键和注入步骤剔除、恢复重建steps。
-- [ ] 阅读每屏一段；选择题保存选项并反馈；非评分步骤需要显式visited或selfReported；advance不得越过未完成步骤。表达和背诵仅记录尝试。
-- [ ] 理解题和字词题正确选项位置用稳定顺序分散，不能一律第一项；重建步骤仍完全一致，干扰项不能与正确释义等价。
-- [ ] complete验证每步答案并幂等startedAt:review身份，review不能完成未学课。服务端将复用引擎完整校验。
-- [ ] 将掌握计数抽为小导出recordItemAnswer(progress,itemKey,correct,{hinted=false,now=Date.now()}={})，本地首次答题与服务端合法事件回放复用同一算法，避免复制。
-- [ ] node --test tests/chinese-engine.test.mjs通过后提交。
+- [x] 测试未完成课不能complete、错答再答不丢首次错误、hinted不能提高掌握、北京时间复习间隔、未知原型键和注入步骤剔除、恢复重建steps。
+- [x] 阅读每屏一段；选择题保存选项并反馈；非评分步骤需要显式visited或selfReported；advance不得越过未完成步骤。表达和背诵仅记录尝试。
+- [x] 理解题和字词题正确选项位置用稳定顺序分散，不能一律第一项；重建步骤仍完全一致，干扰项不能与正确释义等价。
+- [x] complete验证每步答案并幂等startedAt:review身份，review不能完成未学课。服务端将复用引擎完整校验。
+- [x] 将掌握计数抽为小导出recordItemAnswer(progress,itemKey,correct,{hinted=false,now=Date.now()}={})，本地首次答题与服务端合法事件回放复用同一算法，避免复制。
+- [x] node --test tests/chinese-engine.test.mjs通过后提交。
 
 ### Task 3: 家庭学科隔离
 
