@@ -77,3 +77,30 @@ test('native paused queue defers a late ended callback until the child resumes',
 test('native last audio ending while paused completes only on resume and clears pause state',async()=>{const h=harness('page');h.page.onLoad({page:2});await tick();h.page.switchTab(event({tab:'speak'}));h.page.toggleSpeakingAudio();const audio=h.audios[0];audio.pause=()=>{};h.page.toggleSpeakingAudio();audio.ended();assert.equal(h.page.data.media.paused,true);assert.equal(h.page.data.media.playing,false);h.page.toggleSpeakingAudio();assert.equal(h.audios.length,1);assert.equal(h.page.data.media.playing,false);assert.equal(h.page.data.media.paused,false);assert.equal(h.page.data.media.source,'');h.page.toggleSpeakingAudio();assert.equal(h.audios.length,2);assert.equal(h.page.data.media.playing,true);h.page.onUnload()});
 test('native retired queue player cannot stop or skip the next audio with late callbacks',async()=>{const h=harness('page');h.page.onLoad({page:2});await tick();h.page.readPage();const first=h.audios[0];first.ended();const next=h.audios[1];first.error();assert.equal(h.page.data.media.playing,true);assert.equal(next.destroyed,undefined);assert.equal(next.stopped,undefined);first.ended();assert.equal(h.audios.length,2);assert.equal(h.page.data.media.message,'');next.ended();assert.equal(h.audios.length,3);h.page.onUnload()});
 test('native hide discards a queue waiting on a paused end callback',async()=>{const h=harness('page');h.page.onLoad({page:2});await tick();h.page.readPage();const first=h.audios[0];first.pause=()=>{};h.page.readPage();first.ended();h.page.onHide();assert.equal(h.page.data.media.paused,false);first.ended();assert.equal(h.audios.length,1);h.page.onShow();h.page.readPage();assert.equal(h.audios.length,2);h.page.onUnload()});
+
+test('native encouragement praises distinct streaks and stops for next, demonstration, recording and hide',async()=>{
+ const h=harness('page');h.page.onLoad({page:17});await tick();
+ for(let i=0;i<3;i++){h.page.submitAnswer(h.page.data.question.answer);if(i<2)h.page.nextQuestion()}
+ assert.equal(h.page.data.streak,3);assert.equal(h.audios.at(-1).src,'/assets/encouragement/three.mp3');
+ const praise=h.audios.at(-1),count=h.audios.length;h.page.submitAnswer(h.page.data.question.answer);assert.equal(h.audios.length,count);
+ h.page.nextQuestion();assert.equal(praise.stopped,true);h.page.submitAnswer(h.page.data.question.answer);h.page.nextQuestion();h.page.submitAnswer(h.page.data.question.answer);assert.equal(h.audios.at(-1).src,'/assets/encouragement/five.mp3');
+ const five=h.audios.at(-1);h.page.listenQuestion();assert.equal(five.stopped,true);
+ h.page.chooseAndSpeak(event({id:h.page.targets.find(t=>t.audio).id}));await h.page.record();assert.equal(h.page.data.media.recording,true);assert.equal(h.page.data.media.playing,false);h.page.onHide();assert.equal(h.page.data.media.recording,false);
+});
+test('native encouragement retries stay honest and sound preference does not mute English',async()=>{
+ const h=harness('page');h.page.onLoad({page:17});await tick();const q=h.page.data.question;
+ h.page.submitAnswer(q.choices.find(x=>x!==q.answer));h.page.submitAnswer(q.answer);assert.equal(h.page.data.streak,0);assert.equal(h.audios.at(-1).src,'/assets/encouragement/recovered.mp3');assert.equal(h.client.pageHistory(17)[q.id].correct,0);
+ h.page.toggleEncouragementSound();assert.equal(h.page.data.encourageMuted,true);const count=h.audios.length;h.page.restartPractice();for(let i=0;i<3;i++){h.page.submitAnswer(h.page.data.question.answer);if(i<2)h.page.nextQuestion()}assert.equal(h.audios.length,count);
+ h.page.listenQuestion();assert.ok(h.audios.length>count);assert.ok(!h.audios.at(-1).src.includes('encouragement'));
+ const again=harness('page',h.storage);again.page.onLoad({page:17});await tick();assert.equal(again.page.data.encourageMuted,true);
+});
+test('native mute changes in a second page apply to an already opened lesson',async()=>{
+ const storage=new Map(),lesson=harness('lesson',storage),page=harness('page',storage);lesson.page.onLoad({id:'g3-upper-u1-l1'});page.page.onLoad({page:17});await tick();page.page.toggleEncouragementSound();lesson.page.onShow();assert.equal(lesson.page.data.encourageMuted,true);
+ for(const key of ['a','b','c'])lesson.page.encourageAnswer(key,true);assert.equal(lesson.audios.length,0);assert.equal(lesson.page.data.streak,3);
+ lesson.page.toggleEncouragementSound();page.page.onShow();assert.equal(page.page.data.encourageMuted,false);for(const key of ['a','b','c'])page.page.encourageAnswer(key,true);assert.equal(page.audios.at(-1).src,'/assets/encouragement/three.mp3');
+});
+test('native restored wrong question receives recovery while a fresh round has its own first attempts',async()=>{
+ const storage=new Map(),a=harness('page',storage);a.page.onLoad({page:17});await tick();const q=a.page.data.question;a.page.submitAnswer(q.choices.find(x=>x!==q.answer));assert.equal(a.client.pageCursor(17).retry,true);a.page.onUnload();
+ const b=harness('page',storage);b.page.onLoad({page:17});await tick();assert.equal(b.page.data.question.id,q.id);b.page.submitAnswer(q.answer);assert.equal(b.page.data.streak,0);assert.equal(b.audios.at(-1).src,'/assets/encouragement/recovered.mp3');
+ b.page.practiceTarget(event({id:q.targetId}));b.page.submitAnswer(b.page.data.question.answer);assert.equal(b.page.data.streak,1);assert.ok(!b.client.pageCursor(17).retry);
+});

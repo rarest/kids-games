@@ -1,3 +1,4 @@
+import {stopEncouragement} from './encouragement-audio.js';
 import {mountCourse} from './course-ui.js';
 import {createCourseCloud} from './course-cloud.js';
 import {LESSONS as COURSE_LESSONS} from './course-curriculum.js';
@@ -102,7 +103,7 @@ $('studyContent').onclick=async e=>{
 };
 const reader=new AudioReader({manifest:AUDIO,words:WORDS,baseURL:import.meta.url,onError:toast});let pageReadToken=0;
 function readingControls(active){const pageButton=$('readTextbookPage');if(pageButton)pageButton.textContent=active?'🔊 正在朗读…':'🔊 听本页';for(const id of ['stopTextbookReading','courseStop']){const button=$(id);if(button)button.hidden=!active;}}
-function stopReading(){pageReadToken++;reader.cancel();readingControls(false);const button=$('readTextbookPage');if(button)button.textContent='🔊 听本页';}
+function stopReading(){stopEncouragement();pageReadToken++;reader.cancel();readingControls(false);const button=$('readTextbookPage');if(button)button.textContent='🔊 听本页';}
 async function speak(text,wordId){stopReading();const token=pageReadToken;readingControls(true);try{return await reader.speak(text,wordId);}finally{if(token===pageReadToken)readingControls(false);}}
 async function readLines(lines){stopReading();const token=pageReadToken;readingControls(true);try{return await reader.read(lines);}finally{if(token===pageReadToken)readingControls(false);}}
 $('listen').onclick=()=>{const q=currentQuestion();speak(q.say,q.wordId);};

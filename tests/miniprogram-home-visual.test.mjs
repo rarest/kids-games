@@ -80,7 +80,7 @@ async function lessonDisplay(id){
  const file=new URL('../miniprogram/pages/lesson/lesson.js',import.meta.url);
  const lesson=JSON.parse(readFileSync(new URL('../english/miniprogram-data/lessons/'+id+'.json',import.meta.url)));
  const client={identity:'guest',content:async()=>lesson,progress:()=>({version:1,lessons:{},items:{},session:null}),saveProgress(){},flush:async()=>{}};
- vm.runInNewContext(readFileSync(file,'utf8'),{Page:value=>definition=value,require:createRequire(file),wx:{},getApp:()=>({client})});
+ vm.runInNewContext(readFileSync(file,'utf8'),{Page:value=>definition=value,require:createRequire(file),wx:{getStorageSync:()=>undefined},getApp:()=>({client})});
  const page={...definition,data:structuredClone(definition.data),setData(value){Object.assign(this.data,value)}};
  page.onLoad({id});await new Promise(resolve=>setImmediate(resolve));
  assert.equal(page.data.loading,false);

@@ -17,6 +17,9 @@ const first=JSON.parse(await readFile(join(source,'lessons/g3-upper-u1-l1.json')
 for(const audio of new Set(first.targets.map(t=>t.audio).filter(Boolean))){
  const local='/assets/audio/'+audio.split('/').at(-1);await copyFile(join(root,audio),join(mini,local));assets[audio]=local;
 }
+await mkdir(join(assetRoot,'encouragement'),{recursive:true});
+for(const name of ['three','five','recovered','done'])await copyFile(join(root,'english/encouragement/'+name+'.mp3'),join(assetRoot,'encouragement/'+name+'.mp3'));
+await build({entryPoints:[join(root,'english/encouragement.js')],bundle:true,platform:'neutral',format:'cjs',target:'es2017',minify:true,legalComments:'none',outfile:join(mini,'lib/encouragement.js')});
 await build({entryPoints:[join(root,'scripts/miniapp-content-runtime.js')],bundle:true,platform:'neutral',format:'cjs',target:'es2017',minify:true,legalComments:'none',define:{PACKAGED_CONTENT:JSON.stringify(data),PACKAGED_ASSETS:JSON.stringify(assets)},outfile:join(mini,'lib/bundled-content.js')});
 const bytes=(await Promise.all((await walk(mini)).map(p=>readFile(p)))).reduce((n,b)=>n+b.length,0);
 if(bytes>=1800000)throw new Error('Main package exceeds the 1.8 MB project budget: '+bytes);
