@@ -142,8 +142,8 @@ body:has(#courseRoot) .topbar .brand{color:#3c6557}
 .course-unit-contents{border-top:1px solid #eeebdf}
 .course-unit-contents>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none;padding:13px 17px;min-height:48px;color:#577361;font-size:13px;font-weight:650;cursor:pointer;background:#f7f6ec;touch-action:manipulation}
 .course-unit-contents>summary::-webkit-details-marker{display:none}
-.course-unit-contents>summary b{font-size:22px;line-height:1;transition:transform .18s}
-.course-unit-contents[open]>summary b{transform:rotate(180deg)}
+.course-unit-chevron{display:block;width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transform-origin:center;transition:transform .18s}
+.course-unit-contents[open]>summary>.course-unit-chevron{transform:rotate(180deg)}
 .course-unit-contents>summary:hover{background:#eef1e3}
 .course-lessons{padding:4px 13px;background:#fffdf8}
 .course-lesson{gap:9px;background:transparent;min-height:64px;padding:13px 0;border-bottom-color:#eeece1;color:#405b4c}
@@ -259,7 +259,7 @@ body:has(#courseRoot) .topbar .brand{color:#3c6557}
  .course-unit-icon{width:23px;height:30px;font-size:13px}
  .course-unit-top small{font-size:7px}
 }
-@media(prefers-reduced-motion:reduce){.course-unit,.course-unit-contents>summary b{transition:none}}
+@media(prefers-reduced-motion:reduce){.course-unit,.course-unit-chevron{transition:none}}
 
 .course-unit-picture{display:block;width:100%;padding:0;margin:0;border:0;background:transparent;border-radius:22px 22px 0 0;box-shadow:none;cursor:pointer}
 .course-unit-picture:hover{background:transparent}

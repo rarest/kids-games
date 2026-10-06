@@ -44,10 +44,3 @@ test('a started audio engine that sends no samples releases the microphone and r
  Object.defineProperty(globalThis,'navigator',{configurable:true,value:{mediaDevices:{getUserMedia:async()=>({getTracks:()=>[{stop(){stops++}}]})}}});
  try{const recorder=new MicrophoneRecorder({onError:e=>error=e});assert.equal(await recorder.start(),true);timers.get(4000)();assert.equal(recorder.recording,false);assert.equal(stops,1);assert.match(error.message,/麦克风没有传来声音/);assert.equal(timers.size,0)}finally{if(saved.navigator)Object.defineProperty(globalThis,'navigator',saved.navigator);else delete globalThis.navigator;globalThis.AudioContext=saved.context;globalThis.setTimeout=saved.timer;globalThis.clearTimeout=saved.clear}
 });
-
-test('the selected microphone is requested exactly and its local input state is reported',async()=>{
- const nav=Object.getOwnPropertyDescriptor(globalThis,'navigator'),ctx=globalThis.AudioContext;let constraints,input,stops=0;const node=()=>({connect(){},disconnect(){},gain:{value:1}}),track={label:'USB microphone',muted:false,readyState:'live',stop(){stops++}};
- globalThis.AudioContext=class{sampleRate=48000;resume(){return Promise.resolve()}createMediaStreamSource(){return node()}createScriptProcessor(){return node()}createGain(){return node()}close(){return Promise.resolve()}};
- Object.defineProperty(globalThis,'navigator',{configurable:true,value:{mediaDevices:{getUserMedia:async c=>{constraints=c;return {getTracks:()=>[track],getAudioTracks:()=>[track]}}}}});
- try{const recorder=new MicrophoneRecorder({onInput:value=>input=value});assert.equal(await recorder.start({deviceId:'usb-test'}),true);assert.deepEqual(constraints.audio.deviceId,{exact:'usb-test'});assert.deepEqual(input,{label:'USB microphone',muted:false,readyState:'live'});recorder.cancel();assert.equal(stops,1)}finally{if(nav)Object.defineProperty(globalThis,'navigator',nav);else delete globalThis.navigator;globalThis.AudioContext=ctx}
-});

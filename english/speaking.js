@@ -37,7 +37,6 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     </div>
     <div class="speaking-meter" hidden><canvas width="640" height="64" aria-hidden="true"></canvas><span class="speaking-time">0.0 / 20 秒</span></div>
     <div class="speaking-result" data-speaking-result aria-live="polite"></div>
-    <details class="speaking-mic-details"><summary>麦克风与声音检查</summary><p class="speaking-mic-status" role="status">点开始录音后，声音指示会随你说话变化。</p><label class="speaking-mic-label">录音用的麦克风<select class="speaking-mic-select" aria-label="录音用的麦克风"><option value="">系统默认麦克风</option></select></label><p class="speaking-mic-help">Chrome 已记住允许或阻止时，不会再次弹窗。点地址栏左侧的网站设置，查看麦克风权限；也请检查电脑的输入设备和麦克风静音开关。这里的设备名称只在本页显示。</p></details>
     <details class="speaking-parent-details"><summary>家长提示：录音与自动反馈</summary><p class="speaking-parent-note">录音只在本页暂存。点击「看发音反馈」才会发送到我们网站的服务器，不保存录音；退出本页就丢弃。自动反馈用于跟读练习。</p></details>
     <audio hidden preload="metadata"></audio>`;
   const get = selector => panel.querySelector(selector);
@@ -52,10 +51,9 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
   }
   const status = get('[data-speaking-status]'), result = get('[data-speaking-result]');
   const meter = get('.speaking-meter'), canvas = get('canvas'), time = get('.speaking-time'), player = get('audio');
-  const micDetails = get('.speaking-mic-details'), micStatus = get('.speaking-mic-status'), micSelect = get('.speaking-mic-select');
   const context = canvas.getContext('2d');
   let dead = false, epoch = 0, state = 'idle', available = false, checkingReadiness = false, clip = null, clipURL = null, assessmentController;
-  let levels = [], shownDuration = 0, hasFeedback = false, captureAttempted = false, inputEpoch = 0, permissionHintTimer;
+  let levels = [], shownDuration = 0, hasFeedback = false;
   const readinessController = new AbortController();
   const message = text => { if (!dead) status.textContent = text; };
   const reportError = error => { try { onError(error); } catch {} };
@@ -70,7 +68,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     buttons.cancel.hidden = state === 'idle';
     buttons.listen.hidden = capturing || asking || assessing;
     buttons.submit.hidden = !clip || capturing || asking;
-    buttons.submit.disabled = !clip || clip.duration < 0.25 || clip.noInput || !available || capturing || asking || assessing;
+    buttons.submit.disabled = !clip || clip.duration < 0.25 || !available || capturing || asking || assessing;
     buttons.submit.textContent = assessing ? '正在听你的声音…' : '✨ 看发音反馈';
     buttons.refresh.hidden = available || checkingReadiness || capturing || asking;
     buttons.refresh.disabled = assessing;
@@ -79,25 +77,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     meter.hidden = !capturing && !clip;
     time.textContent = `${shownDuration.toFixed(1)} / 20 秒`;
     panel.setAttribute('aria-busy', assessing ? 'true' : 'false');
-    micSelect.disabled = capturing || asking || assessing;
   }
-  async function refreshInputs() {
-    const token = ++inputEpoch;
-    try {
-      const permission = await navigator.permissions?.query({name:'microphone'}).catch(() => null);
-      if (dead || token !== inputEpoch) return;
-      if (permission?.state === 'denied') { micStatus.textContent = '麦克风被阻止：请在地址栏的网站设置中改为允许，再点开始录音。'; return; }
-      if (permission?.state === 'prompt') { micStatus.textContent = '麦克风还未授权：点开始录音，在浏览器提示中选择允许。'; return; }
-      const devices = await navigator.mediaDevices?.enumerateDevices();
-      if (dead || token !== inputEpoch || !devices) return;
-      const selected = micSelect.value;
-      micSelect.replaceChildren(new Option('系统默认麦克风', ''));
-      for (const [i,device] of devices.filter(device => device.kind === 'audioinput' && device.deviceId).entries()) micSelect.add(new Option(device.label || `麦克风 ${i+1}`, device.deviceId));
-      if (Array.from(micSelect.options).some(option => option.value === selected)) micSelect.value = selected;
-    } catch { /* Browsers without the permissions/device-list APIs can still record. */ }
-  }
-  micDetails.addEventListener('toggle', () => { if (micDetails.open) refreshInputs(); });
-  micSelect.addEventListener('change', () => { if (!micSelect.disabled) {micStatus.textContent='已选择麦克风。点开始录音，说一句话检查声音指示。';} });
   function drawMeter() {
     if (!context) return;
     const width = canvas.width, height = canvas.height;
@@ -117,32 +97,27 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     clipURL = null; clip = null; shownDuration = 0; levels = []; hasFeedback = false; result.replaceChildren();
   }
   const recorder = new MicrophoneRecorder({
-    onInput(input) { if(dead)return;micStatus.textContent=`已连接：${input.label || '系统默认麦克风'}。${input.muted ? '麦克风当前没有输入，请检查静音开关。' : '说一句话，看看声音指示是否变化。'}`;refreshInputs(); },
-    onProgress({duration, level}) { if (dead || state !== 'recording') return; shownDuration = duration; levels.push(level); drawMeter(); if(duration>=1.5&&levels.every(value=>value<0.003)){message('还没有采到明显的声音。请检查麦克风选择和静音开关，再靠近一些。');micStatus.textContent='没有采到声音：可选择其他麦克风，并检查电脑输入音量和静音开关。';micDetails.open=true;}else if(level>=0.003){message('收到你的声音了！读完后点「停止录音」。');micStatus.textContent='已检测到声音，麦克风正在正常输入。';} update(); },
+    onProgress({duration, level}) { if (dead || state !== 'recording') return; shownDuration = duration; levels.push(level); drawMeter(); if(duration>=1.5&&levels.every(value=>value<0.003))message('声音比较小，请靠近麦克风。读完后点「停止录音」。');else if(level>=0.003)message('收到你的声音了！读完后点「停止录音」。'); update(); },
     onLimit() { if (state === 'recording') stopRecording(); },
-    onError(error) {if(dead)return;state='idle';message(error.message);micStatus.textContent=error.message;micDetails.open=true;reportError(error);update();}
+    onError(error) {if(dead)return;state='idle';message(error.message);reportError(error);update();}
   });
   function cancel() {
-    epoch++; clearTimeout(permissionHintTimer); assessmentController?.abort(); recorder.cancel(); dropClip(); state = 'idle';captureAttempted=false;
+    epoch++; assessmentController?.abort(); recorder.cancel(); dropClip(); state = 'idle';
     message(available ? '听一遍示范，准备好了就开始录音。' : '评分服务暂时没有准备好。你可以先录音和回听。'); update();
   }
   async function startRecording() {
     if (dead || state === 'requesting' || state === 'recording' || state === 'assessing') return;
-    epoch++; const token = epoch;captureAttempted=true;
+    epoch++; const token = epoch;
     dropClip(); stopAudio(); state = 'requesting'; message('请允许使用麦克风，然后开始读。最多可以录 20 秒。'); update();
-    const hintTimer=setTimeout(()=>{if(!dead&&token===epoch&&state==='requesting'){message('正在等待麦克风。请查看地址栏的权限提示；也可以点取消后重新开始。');micDetails.open=true;}},10000);permissionHintTimer=hintTimer;
     try {
-      const started = await recorder.start({deviceId:micSelect.value});
-      clearTimeout(hintTimer);
+      const started = await recorder.start();
       if (dead || token !== epoch || !started) return;
       state = 'recording'; message('正在录音。读完后点「停止录音」。'); update();
     } catch (error) {
-      clearTimeout(hintTimer);
       if (dead || token !== epoch) return;
       state = 'idle';
-      message(error.name === 'NotAllowedError' ? '麦克风没有获准使用。请点地址栏左侧的网站设置，把麦克风改为允许，再开始录音。' :
+      message(error.name === 'NotAllowedError' ? '还没有获得麦克风权限。请在浏览器里允许麦克风，再开始录音。' :
         error.name === 'NotFoundError' ? '没有找到麦克风。请连接麦克风后再试。' : error.message?.startsWith('这个浏览器') || error.message?.startsWith('麦克风音频') ? error.message : '暂时不能录音。请检查麦克风和浏览器权限后再试。');
-      micStatus.textContent=status.textContent;micDetails.open=true;
       reportError(error); update();
     }
   }
@@ -150,13 +125,11 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     if (dead || state !== 'recording') return;
     clip = recorder.stop(); state = 'recorded';
     if (!clip) { cancel(); return; }
-    clip.noInput=clip.rms<0.003&&!levels.some(level=>level>=0.003);
     clipURL = URL.createObjectURL(clip.blob); player.src = clipURL; shownDuration = clip.duration;
     message(clip.duration < 0.25 ? '录音太短了。请点「再读一次」，读完后再停止。' :
-      clip.noInput ? '这次没有录到明显的声音。请检查下方麦克风设置，再点「再读一次」。' :
+      clip.rms < 0.003 ? '没有听到明显的声音。可以先回听，再靠近麦克风读一次。' :
       available ? '录好了！点黄色「看发音反馈」按钮，查看这次结果。' : '录好了！可以听自己的录音。评分服务暂时没有准备好。');
-    if(clip.noInput){micStatus.textContent='没有采到声音：请选择正确的麦克风，检查静音开关和电脑输入音量。';micDetails.open=true;}
-    update(); (clip.noInput?micDetails:buttons.submit).scrollIntoView({block:'nearest',behavior:'instant'});
+    update(); buttons.submit.scrollIntoView({block:'nearest',behavior:'instant'});
   }
   async function play() {
     if (!clip || dead) return;
@@ -166,7 +139,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     try {
       await player.play();
       if (dead || token !== epoch) return;
-      buttons.play.textContent = '暂停回放';
+      buttons.play.textContent = 'Ⅱ 暂停录音';
     } catch (error) { if (!dead && token === epoch) { message('暂时播放不了录音。可以再点一次回听。'); reportError(error); } }
   }
   player.addEventListener('ended', pausePlayback);
@@ -241,15 +214,15 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
       const body = await response.json();
       if (dead) return;
       available = body.enabled === true && body.provider === 'local-phoneme';
-      if (state === 'idle' && !captureAttempted) message(available ? '听一遍示范，准备好了就开始录音。' : '评分服务暂时没有准备好。你可以先录音和回听。');
-      else if (state === 'recorded' && clip?.duration >= 0.25 && !clip.noInput) message(available ? '录好了！先回听，准备好了就点「看发音反馈」。' : '评分服务暂时没有准备好。你仍然可以回听和重录。');
+      if (state === 'idle') message(available ? '听一遍示范，准备好了就开始录音。' : '评分服务暂时没有准备好。你可以先录音和回听。');
+      else if (state === 'recorded') message(available ? '录好了！先回听，准备好了就点「看发音反馈」。' : '评分服务暂时没有准备好。你仍然可以回听和重录。');
     } catch {
-      if (!dead) { available = false; if ((state === 'idle' && !captureAttempted) || (state === 'recorded' && clip?.duration >= 0.25 && !clip.noInput)) message('评分服务暂时没有连上。你可以先录音和回听。'); }
+      if (!dead) { available = false; if (state === 'idle' || state === 'recorded') message('评分服务暂时没有连上。你可以先录音和回听。'); }
     } finally { checkingReadiness = false; update(); }
   }
   function destroy() {
     if (dead) return;
-    dead = true; epoch++; inputEpoch++; clearTimeout(permissionHintTimer); readinessController.abort(); assessmentController?.abort(); recorder.cancel(); dropClip();
+    dead = true; epoch++; readinessController.abort(); assessmentController?.abort(); recorder.cancel(); dropClip();
     window.removeEventListener('pagehide', destroy); window.removeEventListener('beforeunload', destroy); panel.remove();
   }
   window.addEventListener('pagehide', destroy); window.addEventListener('beforeunload', destroy);
