@@ -65,7 +65,7 @@
 
 **Files:** OpenSpec tasks/verification与docs进度记录。
 
-- [ ] 独立review全分支及具体教材内容，修复重要问题，运行项目必需检查与openspec validate chinese-classroom --strict。
+- [x] 独立review全分支及具体教材内容，修复重要问题，运行项目必需检查与openspec validate chinese-classroom --strict。
 - [ ] fetch最新main，保护并发提交，创建PR、合并、既有webhook部署。
 - [ ] 公网native学习路径、两科账号存档、资源哈希与服务器HEAD一致；不改联机游戏运行时。
 - [ ] 报告真实链接与结果；只有规定功能和公网验收完成才勾选任务。
