@@ -45,7 +45,7 @@
 
 **Files:** docs交付记录与本plancheckbox。
 
-- [ ] 独立wholebranch review及必要scoped fix，检查所有规范规则；项目必需unit/browser全命令真实执行。已有未变软件WebGL时序问题以实际当前基线证据区分，不放松断言或改其他游戏。
-- [ ] fresh fetch保护并发main，PR/main合并既有webhook部署。只有功能/真实用户路径验证完成才声明完成。
-- [ ] 公网HTML/bundle/CSS版本与服务器HEAD一致，其他游戏PID不变；真实native新建保存两条、重载关卡选玩、通关买外观、双点删除/清空/道具/庆祝/回厅，全程不登录。
-- [ ] 持久真实验收、所有rulings与未解决问题，最后输出链接；只清本plan scratch（可恢复归档），用户7个原untracked与别任务工作区保留。
+- [x] 独立wholebranch review及必要scoped fix，检查所有规范规则；项目必需unit/browser全命令真实执行。已有未变软件WebGL时序问题以实际当前基线证据区分，不放松断言或改其他游戏。
+- [x] fresh fetch保护并发main，PR/main合并既有webhook部署。只有功能/真实用户路径验证完成才声明完成。
+- [x] 公网HTML/bundle/CSS版本与服务器HEAD一致，其他游戏PID不变；真实native新建保存两条、重载关卡选玩、通关买外观、双点删除/清空/道具/庆祝/回厅，全程不登录。
+- [x] 持久真实验收、所有rulings与未解决问题，最后输出链接；只清本plan scratch（可恢复归档），用户7个原untracked与别任务工作区保留。

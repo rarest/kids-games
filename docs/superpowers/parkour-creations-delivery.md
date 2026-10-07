@@ -21,12 +21,26 @@
 - 原跑酷浏览器9项、集成3项、新原生验收7项，以及修复后的6个覆盖场景通过。57个模型测试通过。真实450ms鼠标双击和重叠平台单次删除通过，离开通关界面停止待播放音通过。
 - 模型独立审查通过；UI双击与声音退出缺口已修复并独立复审通过。整分支独立审查通过，Critical/Important/Minor均无，Ready to merge: Yes。
 - 全项目unit960项：923通过、2旧目录断言失败、35原有跳过。其余必需browser共38个命令全部执行，33成功、5原主线问题失败；无削弱断言或修改其他游戏。
-- 发布PR100已创建；合并、既有部署、公网资源字节和实际游玩：待执行。
+- 发布PR100已合并，版本`217466dc7c19de056f22351add34a8d0b183e114`，既有webhook实际部署，服务器HEAD一致。
+- 公网HTML/bundle/CSS字节与本地构建一致。三个游戏与平台服务PID保持191269/173049/143350/261329，没有重启其他游戏服务。
+- 公网原生新建两条路线、正常关闭Chromium并重新打开相同本机profile、UUID和自创路线一/二保留、选择真实开玩、暂停后返回实际目录，全部通过，浏览器错误为空。初版验收脚本直接SIGTERM导致未刷盘数据丢失；改为正常Browser.close后通过，没有修改产品或放松存档断言。
+- `GAMES_TEST_ORIGIN=https://games.nblord.com node --test tests/parkour-creations-browser.mjs`：公网10/10通过，175.04秒，0失败/跳过。实际两条保存、通关2金币与付费外观、道具和暂停、三音烟花、全删除确认、原生450ms双击与手机双点、空草稿刷新、返回实际游戏厅、钱包两键失败重试、旧窗口保留其他作品全部通过。1000平台实际绘制249004三角形、94调用、6几何体/3纹理。
+- 无登录正常关闭/重开验收命令：`node .superpowers/sdd/2026-10-07-parkour-creations/public-close-check.mjs`，exit0。链接已优先发送用户。
 
 不会修改账号/云库、三科课堂或其他游戏服务。原用户未提交文件保留。
+
+入口：https://games.nblord.com/games/parkour.html。作品保存在当前浏览器本机存储，无登录；清理网站数据或换浏览器不会自动复制这些作品。
+
+公网资源SHA256：HTML `72d59cbfd4843a616b00326106b0a6a6594fcc287ad93cd4f2f620443a2e0b88`；bundle `653ea877646907cae5fdcc85dd10221a1b9f91794736cc324ba003c665f71446`；CSS `752ba0addb1407117ac4da0cfb980a4b037759d38c2a42d8cef7b186321f6d29`。
 
 未改模块失败详情：popularity-unit/responsive仍预期15目录卡（当前14）；racing-online在reload后DOM恢复前访问view；Rescue online及latency在软件WebGL中触发input-timeout；English旧subject数组漏掉当前math链接。相关运行时、HTML和测试与基线main无差异，保留失败而不降低断言。Memory最终9/9通过。
 
 ## 实现判断
 
 仅扩展scenery.js四处大数组边界归约，避免不限平台时参数展开栈溢出；若判断错误，代价是四处可单独回退的局部改动及覆盖检查。没有扩展其他游戏、账号或云存储。
+
+## 审查与证据
+
+模型审查：Approved，无缺陷。UI初审两项缺口：实际鼠标dblclick、离开完成态音频清理；修复`34f077a`后独立复审全部ADDRESSED，无新问题。最后整分支审查Ready to merge Yes，Critical/Important/Minor均无。
+
+功能PR：[100](https://github.com/rarest/kids-games/pull/100)。过程报告、review包、原始测试日志及关闭/重开脚本可恢复归档在`.superpowers/archive/2026-10-07-parkour-creations-delivered-217466d/`，没有删除别的任务或原用户文件。功能版本`217466d`公网三资源hash与实际验收全部通过；后续交付记录为仅文档变更，不改游戏资源。
