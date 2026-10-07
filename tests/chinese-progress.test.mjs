@@ -80,7 +80,7 @@ test('English and Chinese concurrent CAS updates never conflict or replay each o
  await assert.rejects(store.syncProgress('parent-a',child.id,{baseRevision:0,session:null,events:[]},'chinese'),error=>error.status===409&&error.current.revision===2);
  for(const subject of ['english','chinese'])await assert.rejects(store.getProgress('parent-b',child.id,subject),failure(404));
  for(const method of ['getProgress','syncProgress','importProgress']){
-  const args=method==='getProgress'?['parent-a',child.id,'math']:['parent-a',child.id,{baseRevision:0,session:null,events:[],importId:randomUUID(),sourceId:randomUUID(),data:empty()},'math'];
+  const args=method==='getProgress'?['parent-a',child.id,'history']:['parent-a',child.id,{baseRevision:0,session:null,events:[],importId:randomUUID(),sourceId:randomUUID(),data:empty()},'history'];
   await assert.rejects(store[method](...args),failure(400));
  }
  await assert.rejects(store.syncProgress('parent-a',child.id,{baseRevision:2,session:null,events:Array.from({length:257},()=>answer())},'chinese'),failure(400));
@@ -96,21 +96,21 @@ test('subject imports use separate emptiness and sources; export has one profile
  assert.deepEqual(await store.importProgress('parent-a',child.id,{...chinese,importId:randomUUID()},'chinese'),imported);
  await assert.rejects(store.importProgress('parent-a',child.id,{...chinese,sourceId:randomUUID()},'chinese'),failure(409));
  await assert.rejects(store.importProgress('parent-a',child.id,{...chinese,importId:english.importId},'chinese'),failure(409));
- const exported=await store.exportAccount('parent-a');assert.equal(exported.profiles.length,1);assert.deepEqual(exported.progress.map(row=>row.gameId).sort(),['chinese','english']);
+ const exported=await store.exportAccount('parent-a');assert.equal(exported.profiles.length,1);assert.deepEqual(exported.progress.map(row=>row.gameId).sort(),['chinese','english','math']);
  assert.deepEqual(await store.exportAccount('parent-b'),{profiles:[],progress:[]});
  const second=await store.createProfile('parent-a',{nickname:'英语已有',avatar:'bird'});await store.syncProgress('parent-a',second.id,{baseRevision:0,session:null,events:[englishAnswer()]});
  assert.equal((await store.importProgress('parent-a',second.id,{...chinese,importId:randomUUID()},'chinese')).revision,1);
  await store.deleteProfile('parent-a',child.id);for(const table of ['game_progress','learning_events','save_imports'])assert.equal((await pool.query(`SELECT count(*) FROM ${table} WHERE profile_id=$1`,[child.id])).rows[0].count,'0');
 });
 
-test('additive subject migration preserves old English rows, permits only two values and is repeatable',pg,async t=>{
+test('additive subject migration preserves old English rows, permits all three subjects and is repeatable',pg,async t=>{
  const {store,pool}=await fixture(t,{old:true});const child=await store.createProfile('parent-a',{nickname:'旧数据',avatar:'panda'});
  const imported=await store.importProgress('parent-a',child.id,{importId:randomUUID(),sourceId:randomUUID(),data:empty()});
  const prior=await store.syncProgress('parent-a',child.id,{baseRevision:imported.revision,session:null,events:[englishAnswer()]});
  const snapshot=(await pool.query('SELECT * FROM save_imports')).rows;
  await store.migrate();await store.migrate();assert.deepEqual(await store.getProgress('parent-a',child.id),prior);assert.deepEqual((await pool.query('SELECT * FROM save_imports')).rows,snapshot);
  assert.equal((await store.syncProgress('parent-a',child.id,{baseRevision:0,session:null,events:[answer()]},'chinese')).revision,1);
- for(const sql of ["UPDATE game_progress SET game_id='math'","UPDATE save_imports SET game_id='math'","UPDATE learning_events SET content_version='unknown'"])await assert.rejects(pool.query(sql),error=>error.code==='23514');
+ for(const sql of ["UPDATE game_progress SET game_id='history'","UPDATE save_imports SET game_id='history'","UPDATE learning_events SET content_version='unknown'"])await assert.rejects(pool.query(sql),error=>error.code==='23514');
 });
 
 test('family HTTP exposes Chinese while enforcing verified ownership, subject validation and body limit',pg,async t=>{
@@ -123,7 +123,7 @@ test('family HTTP exposes Chinese while enforcing verified ownership, subject va
  const request=(target,body,extra={})=>fetch(base+target,{method:body?'POST':'GET',headers:{origin:'http://games.test','content-type':'application/json',...extra},...(body?{body:JSON.stringify(body)}:{})});
  assert.equal((await request(path)).status,200);assert.equal((await request(path,undefined,{'x-test-owner':'parent-b'})).status,404);assert.equal((await request(path,undefined,{'x-test-verified':'no'})).status,401);
  const response=await request(path,{baseRevision:0,session:null,events:[answer()]});assert.equal(response.status,200);assert.equal((await response.json()).data.items['cn-1:word:0'].correct,1);
- assert.equal((await request(path.replace('chinese','math'))).status,400);assert.equal((await request(path,{padding:'x'.repeat(512*1024)})).status,413);
+ assert.equal((await request(path.replace('chinese','history'))).status,400);assert.equal((await request(path,{padding:'x'.repeat(512*1024)})).status,413);
  const fresh=await store.createProfile('parent-a',{nickname:'接口导入',avatar:'fox'});
  assert.equal((await request(`/api/family/profiles/${fresh.id}/progress/chinese/import`,{importId:randomUUID(),sourceId:randomUUID(),data:empty()})).status,200);
 });

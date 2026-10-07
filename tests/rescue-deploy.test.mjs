@@ -132,6 +132,12 @@ test('game and platform deployment preserve unchanged rooms and retry failed pha
     assert.match(out,/restart games-platform.service/,`${file} updates platform curriculum validation`);noGameRestart(out);noRootNpm(out);assert.doesNotMatch(out,/npm ci|openresty/);
    }
    await clear();await change('chinese/ui.js','// browser only Chinese change\n');execute();assert.doesNotMatch(await calls(),/restart|npm ci|openresty/);
+   await mkdir(join(repo,'math'),{recursive:true});
+   for(const file of ['engine.js','curriculum.js','models.js']){
+    await clear();await change(`math/${file}`,`// Math runtime ${file}\n`);execute();out=await calls();
+    assert.match(out,/restart games-platform.service/,`${file} updates platform math validation`);noGameRestart(out);noRootNpm(out);assert.doesNotMatch(out,/npm ci|openresty/);
+   }
+   await clear();await change('math/widgets.js','// browser only math change\n');execute();assert.doesNotMatch(await calls(),/restart|npm ci|openresty/);
   });
   await t.test('failed platform npm does not advance successful markers and the next deployment retries',async()=>{
    const dependencies=await readFile(join(state,'platform-dependencies'),'utf8'),runtime=await readFile(join(state,'platform-runtime'),'utf8');

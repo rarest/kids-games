@@ -90,7 +90,7 @@ test('real HTTP verified parent sessions, recovery, family ownership and deletio
     assert.equal((await request(chinesePath)).status,401);
     assert.equal((await request(chinesePath,{cookie:a.cookie,body:{baseRevision:0,session:null,events:[]}})).status,200);
     assert.equal((await request(chinesePath,{cookie:a.cookie,body:{baseRevision:1,session:null,events:[]},origin:'http://foreign.test'})).status,403);
-    assert.equal((await request(chinesePath.replace('chinese','math'),{cookie:a.cookie})).status,400);
+    assert.equal((await request(chinesePath.replace('chinese','history'),{cookie:a.cookie})).status,400);
     assert.equal((await request(`/api/family/profiles/${profile.id}`,{cookie:b.cookie,method:'DELETE'})).status,404);
     assert.equal((await request(`/api/family/profiles/${profile.id}`,{cookie:a.cookie,method:'PATCH',body:{nickname:'孩子二'}})).status,200);
     assert.equal((await request(`/api/family/profiles/${profile.id}/progress/english`,{cookie:a.cookie,body:{baseRevision:0,session:null,events:[]}})).status,200);
@@ -98,7 +98,7 @@ test('real HTTP verified parent sessions, recovery, family ownership and deletio
     assert.equal(stale.status,409); assert.ok((await stale.json()).current);
     const exported=await (await request('/api/family/export',{cookie:a.cookie})).json();
     assert.equal(exported.profiles.length,1); assert.ok(!JSON.stringify(exported).includes('password')); assert.ok(!JSON.stringify(exported).includes('token'));
-    assert.deepEqual(exported.progress.map(row=>row.gameId).sort(),['chinese','english']);
+    assert.deepEqual(exported.progress.map(row=>row.gameId).sort(),['chinese','english','math']);
     const sibling=await (await request('/api/family/profiles',{cookie:a.cookie,body:{nickname:'孩子三',avatar:'panda'}})).json();
     const siblingPath=`/api/family/profiles/${sibling.profile.id}/progress/english`;
     const importBody={importId:randomUUID(),sourceId:randomUUID(),data:{version:1,lessons:{},items:{},session:null}};

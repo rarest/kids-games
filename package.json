@@ -22,7 +22,9 @@
     "build:miniprogram": "node scripts/build-miniprogram-content.mjs && node scripts/build-miniprogram-bundle.mjs",
     "test:miniprogram": "node --test tests/miniprogram-*.test.mjs",
     "check:miniprogram": "node scripts/check-miniprogram.mjs",
-    "test:english-interaction": "node --test tests/english-guided-responsive-browser.mjs tests/english-reading-layout-browser.mjs tests/english-practice-rounds-browser.mjs tests/english-practice-rounds-small-screen-browser.mjs tests/english-speaking-flow-browser.mjs tests/page-practice-touch-browser.mjs tests/page-classroom-layout-browser.mjs tests/page-classroom-auth-race-browser.mjs tests/english-web-three-device-browser.mjs"
+    "test:english-interaction": "node --test tests/english-guided-responsive-browser.mjs tests/english-reading-layout-browser.mjs tests/english-practice-rounds-browser.mjs tests/english-practice-rounds-small-screen-browser.mjs tests/english-speaking-flow-browser.mjs tests/page-practice-touch-browser.mjs tests/page-classroom-layout-browser.mjs tests/page-classroom-auth-race-browser.mjs tests/english-web-three-device-browser.mjs",
+    "build:math": "esbuild math/main.js --bundle --format=esm --minify --legal-comments=none --outfile=math/bundle.js",
+    "test:math": "node --test tests/math-*.test.mjs && node --test tests/math-browser.mjs"
   },
   "devDependencies": {
     "@resvg/resvg-js": "2.6.2",
