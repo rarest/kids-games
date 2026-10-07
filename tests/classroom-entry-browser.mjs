@@ -3,6 +3,16 @@ import assert from 'node:assert/strict';
 import {openBrowser,sleep} from './game-browser-harness.mjs';
 
 async function wait(b,expression){for(let i=0;i<100;i++){if(await b.evaluate(expression))return;await sleep(70)}throw Error(expression)}
+test('classroom entrance retains shared side space on phones tablets and desktop',{timeout:30000},async()=>{
+ const b=await openBrowser();try{
+  for(const [width,height] of [[320,568],[390,660],[430,740],[768,1024],[1024,768],[1366,900]]){
+   await b.size(width,height,width<=1024);await b.navigate('games/classroom.html');await wait(b,'!!window.pearlClassroom');
+   const cards=await b.evaluate("[...document.querySelectorAll('.subject-card')].map(e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right}})");
+   const gutter=width<=700?16:24;
+   for(const r of cards){assert.ok(r.left>=gutter,`${width}: retain left gutter`);assert.ok(r.right<=width-gutter,`${width}: retain right gutter`)}
+  }
+ }finally{b.close()}
+});
 test('phone entry exposes both available subjects together with reachable controls',{timeout:60000},async()=>{
  const b=await openBrowser();
  try{

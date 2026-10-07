@@ -8,6 +8,7 @@
 .classroom-page>.classroom-nav small{color:inherit;margin-top:3px}
 .classroom-page:has(>#home:not([hidden]))>.topbar{display:none}
 .classroom-page>#home,.classroom-page>main:not(.classroom-welcome){max-width:var(--classroom-width);margin:auto;padding:16px var(--classroom-gutter) 28px}
+.classroom-page>main.classroom-welcome{max-width:var(--classroom-width);padding-left:var(--classroom-gutter);padding-right:var(--classroom-gutter)}
 .classroom-page .classroom-family{max-width:none;margin:0 0 12px;padding:8px 12px;display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;border:1px solid #e0e5d7;border-radius:14px;background:#edf1e6;color:#4e6857;font:13px/1.6 system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif}
 .classroom-page .classroom-family>span:first-child{font-size:13px}
 .classroom-page .classroom-family label{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;font:inherit;color:inherit}
