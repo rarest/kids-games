@@ -46,13 +46,13 @@ export function mountCourse({root,speak,read,stopAudio,openPages,onReward,notice
   const todayLesson=(resume&&LESSONS.find(l=>l.id===resume.lessonId))||recommended||LESSONS[0];
   root.innerHTML=`
    <div class="course-heading">
-    <div class="course-welcome"><span class="course-kicker">PEARL CLASSROOM · 珠珠课堂 · 英语</span><h1>和<span class="course-title-context">课本里的</span><span class="course-title-friends">朋友，</span><br>一起说英语。</h1><p>三年级上册 · ${esc(COURSE.edition)}</p><div class="course-route" aria-label="每节小课的学习顺序">${['听一听','记词语','练句子','说一说'].map((name,i)=>`<span><b aria-hidden="true">${stageIcons[i]}</b>${name}</span>`).join('')}</div></div>
+    <div class="course-welcome"><span class="course-kicker">英语 · 三年级上册</span><h1>和<span class="course-title-context">课本里的</span><span class="course-title-friends">朋友，</span><br>一起说英语。</h1><p>听一句，练一练，再试着自己说。</p><div class="course-route" aria-label="每节小课的学习顺序">${['听一听','记词语','练句子','说一说'].map((name,i)=>`<span><b aria-hidden="true">${stageIcons[i]}</b>${name}</span>`).join('')}</div></div>
     <div class="course-hero-art">${unitArt(todayLesson.unitId)}<span class="course-art-note">翻开课本，开始今天的小发现</span></div>
    </div>
    <section class="course-today" aria-labelledby="courseTodayTitle">
     <div class="course-today-mark" aria-hidden="true">${stageIcons[1]}</div>
     <div class="course-today-copy"><span class="course-kicker">${resume?'继续上次的小课':'今天的小课'} · UNIT ${Number(todayLesson.unitId.match(/u(\d+)/)?.[1])}</span><h2 id="courseTodayTitle">${esc(todayLesson.title)}</h2><p>${esc(todayLesson.goal)}</p><small>约15—20分钟 · 按自己的节奏学</small></div>
-    <div class="course-today-actions"><button id="startCourse" class="primary">${resume?'继续学习':'开始今天的小课'} <span>→</span></button><button id="courseTextbook" class="secondary">课本逐页练习 ↗</button></div>
+    <div class="course-today-actions"><button id="startCourse" class="primary">${resume?'继续学习':'开始小课'} <span>→</span></button><button id="courseTextbook" class="secondary">按页学习 ↗</button></div>
    </section>
    <div class="course-summary"><span>已完成 <strong>${done}</strong> / ${LESSONS.length} 小课</span><progress value="${done}" max="${LESSONS.length}" aria-label="课程完成进度"></progress><button id="reviewCourse" class="secondary">${due?`复习 ${due} 项学过的内容`:'看看复习安排'}</button></div>
    <div class="course-map-title"><div><span class="course-kicker">SIX LITTLE CHAPTERS</span><h2>六个单元，六段小旅程</h2></div><p>选一幅图，看看里面的小课</p></div>
@@ -66,7 +66,7 @@ export function mountCourse({root,speak,read,stopAudio,openPages,onReward,notice
      <details id="contents-${unit.id}" class="course-unit-contents"><summary><span>选一节小课</span><svg class="course-unit-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary><div class="course-lessons">${unit.lessons.map(l=>`<button data-course-lesson="${l.id}" class="course-lesson ${progress.lessons[l.id]?.completed?'done':''}"><span class="course-lesson-number">${progress.lessons[l.id]?.completed?'✓':l.number}</span><span class="course-lesson-copy"><strong>${esc(l.title)}</strong><small>${esc(l.goal)}</small></span><span class="course-lesson-arrow">${l.type==='phonics'?'Aa':l.type==='story'?'📖':'→'}</span></button>`).join('')}</div></details>
     </section>`;
    }).join('')}</div>
-   <div class="course-helper"><span class="course-helper-icon" aria-hidden="true">${stageIcons[3]}</span><div><strong>慢慢听，大胆说</strong><p>听完再自己试一试。遇到新词可以多听几遍，最后和家人做个小活动。</p><small>学过的内容会在1、3、7天后安排复习。</small></div></div>`;
+   <div class="course-helper"><span class="course-helper-icon" aria-hidden="true">${stageIcons[3]}</span><div><strong>慢慢听，大胆说</strong><p>听完再自己试一试。遇到新词可以多听几遍，最后和家人做个小活动。</p><small>学过的内容会在1、3、7天后安排复习。</small><small>教材：三年级上册 · ${esc(COURSE.edition)}</small></div></div>`;
  }
  function start(id=null,{review=false}={}){encouragement.reset();praise='';readingGroup=0;readingKey=null;stopAudio();const stored=progress.session;lesson=LESSONS.find(l=>l.id===(id||stored?.lessonId))||recommendLesson(LESSONS,progress)||LESSONS[0];session=!id&&stored?stored:createSession(lesson,{review});progress.session=session;save();render();onActivity(!!session);scrollToCurrentStep();}
  function review(){encouragement.reset();praise='';const keys=dueItems(progress);if(!keys.length){const next=Object.values(progress.items).map(i=>i.nextReview).filter(Number.isFinite).sort((a,b)=>a-b)[0];notice(next?`下一次复习：${new Date(next).toLocaleDateString('zh-CN')}。也可以选一课再练。`:'先完成一节小课，学过的词句就会进入复习安排。');return;}

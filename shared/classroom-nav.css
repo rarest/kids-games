@@ -1,1 +1,62 @@
 .classroom-nav{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1180px;margin:auto;padding:14px 24px;font-family:system-ui,sans-serif;color:#25483e}.classroom-nav a{color:inherit;text-decoration:none;min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:16px;font-weight:650}.classroom-brand{font-size:20px;white-space:nowrap}.classroom-nav>div{display:flex;gap:4px;padding:4px;background:#e8eee4;border-radius:20px}.classroom-nav [aria-current]{background:#fff;box-shadow:0 2px 4px #25483e15}.classroom-nav button{font:inherit;background:none;border:0;color:#627068;padding:0 12px;min-height:44px;cursor:default}.classroom-nav small{font-size:10px;display:block}.classroom-nav a:focus-visible,.classroom-nav button:focus-visible{outline:3px solid #d88d34;outline-offset:3px}@media(max-width:570px){.classroom-nav{padding:10px 12px;flex-wrap:wrap;gap:6px}.classroom-brand{font-size:17px}.classroom-nav>div{order:3;width:100%;justify-content:center}.classroom-nav>div a,.classroom-nav>div button{flex:1}.classroom-parent{font-size:13px}}
+
+/* One classroom shell; subject readers and the legacy game keep their own layout. */
+.classroom-page{--classroom-width:1180px;--classroom-gutter:24px;background:#f8f6ef}
+.classroom-page>.classroom-nav{max-width:var(--classroom-width);padding:12px var(--classroom-gutter);font-size:15px;line-height:1.5}
+.classroom-page>.classroom-nav>div{align-items:stretch}
+.classroom-page>.classroom-nav button{line-height:1.25;opacity:.6}
+.classroom-page>.classroom-nav small{color:inherit;margin-top:3px}
+.classroom-page:has(>#home:not([hidden]))>.topbar{display:none}
+.classroom-page>#home,.classroom-page>main:not(.classroom-welcome){max-width:var(--classroom-width);margin:auto;padding:16px var(--classroom-gutter) 28px}
+.classroom-page .classroom-family{max-width:none;margin:0 0 12px;padding:8px 12px;display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;border:1px solid #e0e5d7;border-radius:14px;background:#edf1e6;color:#4e6857;font:13px/1.6 system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif}
+.classroom-page .classroom-family>span:first-child{font-size:13px}
+.classroom-page .classroom-family label{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;font:inherit;color:inherit}
+.classroom-page .classroom-family select{font:inherit;color:inherit;min-height:44px;min-width:0;max-width:230px;border:1px solid #cdd8ca;border-radius:10px;background:#fffdf8;padding:6px 10px}
+.classroom-page .classroom-family a,.classroom-page .classroom-family button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;font:inherit;color:#365b42;padding:8px 10px;border-radius:10px}
+.classroom-page .classroom-family #familySyncStatus{margin-left:auto;font-size:12px}
+.classroom-page .classroom-family>div{flex-basis:100%;padding:12px;background:#fffdf8;border-radius:12px}
+.classroom-page .classroom-family [hidden]{display:none!important}
+.classroom-page #notice:empty{display:none}
+.classroom-page .cn-hero,.classroom-page .course-heading{padding:12px 0 24px;gap:32px;grid-template-columns:1.15fr 1fr}
+.classroom-page .cn-hero h1,.classroom-page .course-heading h1{font-size:clamp(30px,3.6vw,44px);line-height:1.35;margin:12px 0}
+.classroom-page .cn-hero>div>p,.classroom-page .course-heading p{font-size:15px;line-height:1.7;margin:0 0 14px}
+.classroom-page .cn-kicker,.classroom-page .course-heading .course-kicker{font-size:12px;letter-spacing:.08em}
+.classroom-page .cn-hero>.cn-art{max-height:240px}
+.classroom-page .course-hero-art .course-illustration{max-height:240px}
+@media(max-width:700px){
+ .classroom-page{--classroom-gutter:16px}
+ .classroom-page>.classroom-nav{padding:8px var(--classroom-gutter);gap:6px}
+ .classroom-page>.classroom-nav a{padding:0 10px}
+ .classroom-page>#home,.classroom-page>main:not(.classroom-welcome){padding-top:12px}
+ .classroom-page .classroom-family{gap:6px 8px;padding:8px 10px}
+ .classroom-page .classroom-family label{flex-basis:100%}
+ .classroom-page .classroom-family select{flex:1;max-width:none}
+ .classroom-page .cn-hero,.classroom-page .course-heading{grid-template-columns:1.25fr 1fr;gap:12px;padding:8px 0 20px}
+ .classroom-page .cn-hero h1,.classroom-page .course-heading h1{font-size:26px;letter-spacing:0;line-height:1.35;margin:8px 0}
+ .classroom-page .cn-hero>div>p,.classroom-page .course-heading p{font-size:13px;margin:0 0 8px}
+ .classroom-page .cn-kicker,.classroom-page .course-heading .course-kicker{font-size:11px;letter-spacing:.03em}
+ .classroom-page .cn-hero>.cn-art{max-height:165px;margin:0}
+ .classroom-page .cn-progress-label{margin:6px 0 0;padding:0 0 2px;font-size:12px}
+ .classroom-page .course-hero-art .course-illustration{max-height:180px;aspect-ratio:.9}
+ .classroom-page .course-route{gap:4px}
+ .classroom-page .course-route>span{font-size:11px;padding:4px 6px;gap:4px}
+ .classroom-page .course-route b{width:14px;height:14px}
+ .classroom-page .course-today,.classroom-page .cn-today{padding:18px;border-radius:20px}
+ .classroom-page .course-today h2,.classroom-page .cn-today h2{font-size:22px;margin:4px 0}
+ .classroom-page .course-today p,.classroom-page .cn-today p{font-size:14px;line-height:1.6;margin:4px 0 8px}
+ .classroom-page .course-today small{font-size:12px}
+ .classroom-page .cn-today button{margin-top:12px}
+}
+@media(max-width:360px){
+ .classroom-page .cn-hero h1,.classroom-page .course-heading h1{font-size:22px}
+ .classroom-page .course-today,.classroom-page .cn-today{padding:14px}
+ .classroom-page .course-today h2,.classroom-page .cn-today h2{font-size:20px}
+ .classroom-page .course-route{display:none}
+}
+
+.classroom-page .course-today-actions button,.classroom-page .cn-today button{font-size:16px;line-height:1.5;min-height:48px}
+@media(max-width:360px){
+ .classroom-page .cn-hero{padding-top:4px;padding-bottom:12px}
+ .classroom-page .cn-hero>div{line-height:1.5}
+ .classroom-page .cn-progress-label{margin-top:0;padding-bottom:0;border-bottom-width:2px}
+}

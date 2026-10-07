@@ -3,7 +3,7 @@
 window.GAMES = [
   {
     id: "classroom",
-    file: "games/classroom.html?v=20261007cn1",
+    file: "games/classroom.html?v=20261007shell1",
     emoji: "📚",
     name: "珠珠课堂",
     desc: "语文与英语一起学，逐段听读、字词理解、跟读练习，共享孩子学习档案",
@@ -16,14 +16,6 @@ window.GAMES = [
     name: "记忆花园",
     desc: "200关立体记忆配对，拖动大牌桌寻找小小惊喜，金币装备助你记住",
     tags: ["记忆", "配对", "3D", "手机"],
-  },
-  {
-    id: "english",
-    file: "games/english.html?v=20261007classroom1",
-    emoji: "🔵",
-    name: "珠珠课堂 · 英语",
-    desc: "三年级上册逐页词句练习、美式听读、录音回听与发音反馈，共享两科学习档案",
-    tags: ["英语", "听读", "练习", "跟读", "手机"],
   },
   {
     id: "rescue",
