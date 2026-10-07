@@ -29,7 +29,7 @@ test('native two-browser math family resumes canonical first answer and position
  const fixture=await startFixture({family:true,mail:false}),previous=process.env.GAMES_TEST_ORIGIN;process.env.GAMES_TEST_ORIGIN=fixture.origin;
  const username=`MathParent${Date.now()}`,password='isolated-math-native-pass-42';let a,b;
  try{
-  a=await openBrowser();await a.size(390,844,true);await a.navigate('games/math.html');await wait(a,'!!window.mathCourse&&!!window.mathCourseCloud');
+  a=await openBrowser();await a.call('Page.addScriptToEvaluateOnNewDocument',{source:`window.__praises=[];const play=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=function(){if(this.src.includes('/encouragement/'))__praises.push(this);return play.call(this)};`});await a.size(390,844,true);await a.navigate('games/math.html');await wait(a,'!!window.mathCourse&&!!window.mathCourseCloud');
   assert.equal(await a.evaluate('window.mathCourseCloud.profile'),null);
   await tap(a,'.classroom-parent');await wait(a,'!!document.querySelector("[data-tab=register]")');await tap(a,'[data-tab=register]');
   await fill(a,'input[name=username]',username);await fill(a,'input[name=password]',password);await tap(a,'form[data-form=register] button[type=submit]');
@@ -42,8 +42,8 @@ test('native two-browser math family resumes canonical first answer and position
   const question=await a.evaluate('mathCourse.session.steps[mathCourse.session.index]');assert.equal(question.kind,'question');assert.ok(question.choices);
   const wrong=question.choices.findIndex(c=>c!==question.answer),right=question.choices.indexOf(question.answer);
   await tap(a,`[data-answer="${wrong}"]`);assert.equal(await a.evaluate('document.querySelector("#mathNext").disabled'),true);
-  await tap(a,'#mathHint');await tap(a,'#mathHint');await tap(a,`[data-answer="${right}"]`);
-  await tap(a,'#mathNext');await synced(a);
+  await synced(a);await tap(a,'#mathHint');await tap(a,'#mathHint');await tap(a,`[data-answer="${right}"]`);
+  await wait(a,'__praises.at(-1)?.currentTime>0.1','real encouragement started');await a.evaluate('mathCourseCloud.flush()');assert.equal(await a.evaluate('__praises.at(-1).paused&&!__praises.at(-1).ended'),false,'real immediate family receipt must preserve encouragement');await tap(a,'#mathNext');await synced(a);assert.equal(await a.evaluate('__praises.at(-1).paused&&!__praises.at(-1).ended'),false,'family acknowledgement must not truncate encouragement');await wait(a,'__praises.at(-1).ended','real encouragement reaches its natural end');
   const checkpoint=await a.evaluate('mathCourse.session.index');assert.equal(checkpoint,4);
   const first=await a.evaluate(`mathCourse.session.answers[${JSON.stringify(question.id)}]`);
   assert.equal(first.correct,false);assert.equal(first.latest.correct,true);assert.equal(first.latest.hinted,true);
