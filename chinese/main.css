@@ -26,3 +26,18 @@
 .cn-unit{overflow:hidden}
 .cn-study>.cn-illustration,.cn-finish>.cn-illustration{max-width:600px;margin:18px auto;max-height:300px}
 .subject-card .cn-illustration{object-fit:cover}
+
+/* Three ready subjects remain visible as short rows on the smallest phones. */
+@media(max-width:600px){
+ .classroom-welcome{padding-top:12px}
+ .classroom-welcome>h1{margin:8px 0;font-size:25px}
+ .classroom-welcome>p{margin:7px 0;font-size:13px}
+ .classroom-welcome .subject-cards{grid-template-columns:1fr;gap:10px;margin:14px 0}
+ .classroom-welcome a.subject-card{display:grid;grid-template-columns:85px 1fr;column-gap:14px;align-items:center;padding:10px 13px;min-height:98px}
+ .classroom-welcome a.subject-card>div{grid-column:1;grid-row:1/4}
+ .classroom-welcome a.subject-card .cn-art{aspect-ratio:1.1;max-height:78px;margin:0;border-radius:12px}
+ .classroom-welcome a.subject-card h2{font-size:20px;line-height:1.3}
+ .classroom-welcome a.subject-card p{font-size:12px;line-height:1.5;margin:2px 0}
+ .classroom-welcome a.subject-card>strong{min-height:44px;margin:0;font-size:14px;line-height:1.4}
+}
+@media(max-width:360px){.classroom-welcome a.subject-card p{display:none}.classroom-welcome a.subject-card>div{grid-row:1/3}}

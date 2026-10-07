@@ -4,10 +4,12 @@ import {isDeepStrictEqual} from 'node:util';
 import {problem} from './store.mjs';
 import {boundJson,uuid,sanitizeEnglish,sanitizeSession,normalizeEvent,replayEnglish,CONTENT_VERSION} from './english-progress.mjs';
 import * as chinese from './chinese-progress.mjs';
+import * as math from './math-progress.mjs';
 
 const codecs = new Map([
   ['english',{sanitize:sanitizeEnglish,sanitizeSession,normalizeEvent,replay:replayEnglish,CONTENT_VERSION}],
   ['chinese',chinese],
+  ['math',math],
 ]);
 function subjectCodec(subject) {
   const codec = codecs.get(subject);
@@ -136,7 +138,7 @@ export class FamilyStore {
   async importProgress(owner,id,body,subject='english') {
     const codec = subjectCodec(subject);
     id = uuid(id, 'profile ID'); boundJson(body);
-    if (!object(body) || !object(body.data) || body.data.version !== 1) throw problem(400, `Invalid ${subject === 'english' ? 'English' : 'Chinese'} import`);
+    if (!object(body) || !object(body.data) || body.data.version !== 1) throw problem(400, `Invalid ${subject === 'english' ? 'English' : subject === 'chinese' ? 'Chinese' : 'Math'} import`);
     const importId = uuid(body.importId,'import ID'), sourceId = uuid(body.sourceId,'source ID');
     const data = codec.sanitize(body.data);
     // Preserve the uploaded course snapshot, excluding unrelated game and auth root fields.
@@ -161,7 +163,7 @@ export class FamilyStore {
   async exportAccount(owner) {
     return this.transaction(async client => {
       // One statement yields one snapshot of active owned profiles and their course state.
-      const rows = (await client.query("SELECT p.id,p.nickname,p.avatar,s.game_id,gp.revision,gp.data FROM player_profiles p CROSS JOIN (VALUES ('english'),('chinese')) s(game_id) LEFT JOIN game_progress gp ON gp.profile_id=p.id AND gp.game_id=s.game_id WHERE p.owner_user_id=$1 AND p.deleted_at IS NULL ORDER BY p.created_at,p.id,s.game_id",[owner])).rows;
+      const rows = (await client.query("SELECT p.id,p.nickname,p.avatar,s.game_id,gp.revision,gp.data FROM player_profiles p CROSS JOIN (VALUES ('english'),('chinese'),('math')) s(game_id) LEFT JOIN game_progress gp ON gp.profile_id=p.id AND gp.game_id=s.game_id WHERE p.owner_user_id=$1 AND p.deleted_at IS NULL ORDER BY p.created_at,p.id,s.game_id",[owner])).rows;
       return {profiles:[...new Map(rows.map(row => [row.id,profileView(row)])).values()],progress:rows.map(row => ({profileId:row.id,gameId:row.game_id,...progressView(row.revision===null?null:row)}))};
     });
   }

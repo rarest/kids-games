@@ -180,7 +180,7 @@ export function createApi({store, secret, publicOrigin, auth, familyStore, mailR
         const progressMatch=url.pathname.match(/^\/api\/family\/profiles\/([^/]+)\/progress\/([^/]+)(\/import)?$/);
         if(progressMatch) {
           const id=progressMatch[1],subject=progressMatch[2];
-          if(!['english','chinese'].includes(subject))throw problem(400,'Unknown subject');
+          if(!['english','chinese','math'].includes(subject))throw problem(400,'Unknown subject');
           if(req.method==='GET'&&!progressMatch[3])return send(res,200,await familyStore.getProgress(owner,id,subject));
           if(req.method==='POST') {
             const body=await jsonBody(req,512*1024);

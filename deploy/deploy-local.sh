@@ -135,6 +135,9 @@ if(existsSync('chinese')){
   if(['engine.js','curriculum.js','appendices.js'].includes(name)||/^content-u[1-8]\.js$/.test(name))paths.push(`chinese/${name}`);
  }
 }
+if(existsSync('math')){
+ for(const name of ['curriculum.js','engine.js','models.js'])if(existsSync(`math/${name}`))paths.push(`math/${name}`);
+}
 console.log(createHash('sha256').update(JSON.stringify(paths.sort().map(name=>[name,readFileSync(name,'utf8')]))).digest('hex'));
 JS
 )"
