@@ -1,9 +1,8 @@
 import {
   createEditorLevel,
   validateLevel,
-  readEditorLevel,
-  writeEditorLevel,
 } from "./editor.js";
+import { createRouteLibrary, readRouteLibrary, writeRouteLibrary, saveRoute } from "./route-library.js";
 
 const THEMES = [
   ["sakura", "樱花林"],
@@ -11,9 +10,11 @@ const THEMES = [
   ["city", "城市"],
   ["cabin", "林间木屋"],
 ];
-export function createEditorUI(root, { onPlay, onClose, onStatus }) {
+export function createEditorUI(root, { onPlay, onClose, onStatus, onSaved }) {
   root.innerHTML = `<section class="editor-header"><div><span class="eyebrow">YOUR LITTLE WORLD</span><h2>搭一条自己的路线</h2></div><button id="editor-close" aria-label="关闭编辑器">✕</button></section>
-    <p class="editor-note">自创金币只作练习，不增加商店余额。保存前检查起终点支撑，路线是否可达由你试玩调整。</p>
+    <p class="editor-note">保存作品后通关，收集的金币就能购买外观。双击或连续双点同一平台可删除。无需登录。</p>
+    <div class="editor-commands"><button id="editor-new">新建路线</button><button id="editor-clear" title="只删除当前路线内容；已保存作品和金币保留">全部删除</button><a id="editor-hall" class="hall-return" href="../index.html">回到小火箭游戏厅</a></div>
+    <div id="clear-confirm" hidden><p>删除当前路线的全部内容？仅清空当前草稿，已保存作品和金币会保留。</p><button id="clear-accept">确认清空</button><button id="clear-cancel">取消</button></div>
     <div class="editor-layout"><div class="map-column"><div class="tools" aria-label="编辑工具">
     ${[
       ["platform", "平台"],
@@ -21,6 +22,8 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
       ["goal", "终点"],
       ["checkpoint", "存档点"],
       ["coin", "金币"],
+      ["speed", "加速"],
+      ["jump", "高跳"],
     ]
       .map(
         ([id, name]) =>
@@ -31,8 +34,8 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
     <div class="map-footer"><span id="platform-count"></span><span>拖动平移 · 滚轮缩放</span><button id="zoom-out" aria-label="缩小">−</button><button id="zoom-in" aria-label="放大">＋</button></div></div>
     <form class="editor-fields" onsubmit="return false"><label>路线名称<input id="editor-name" maxlength="80"></label><label>场景<select id="level-theme">${THEMES.map(([id, name]) => `<option value="${id}">${name}</option>`).join("")}</select></label>
     <h3 id="selected-platform">平台</h3><div class="coordinate-fields">${[
-      ["x", "横向 x", -100, 100],
-      ["z", "纵向 z", -100, 100],
+      ["x", "横向 x", -100000, 100000],
+      ["z", "纵向 z", -100000, 100000],
       ["y", "顶面高度", -2, 30],
       ["w", "宽度", 1, 20],
       ["d", "深度", 1, 20],
@@ -44,7 +47,7 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
       )
       .join("")}</div>
     <button id="platform-delete" class="subtle">删除选中平台</button><p id="editor-feedback" role="status"></p>
-    <div class="editor-actions"><button id="editor-save">保存到本机</button><button id="editor-load">重新加载</button><button id="editor-play" class="primary">3D 试玩 →</button></div></form></div>`;
+    <div class="editor-actions"><button id="editor-save">保存</button><button id="editor-load">重新加载</button><button id="editor-play" class="primary">3D 试玩 →</button></div></form></div>`;
   const q = (id) => root.querySelector(`#${id}`),
     canvas = q("editor-map"),
     ctx = canvas.getContext("2d");
@@ -54,22 +57,47 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
     scale = 23,
     center = { x: 2.5, z: 0 },
     gesture = null,
-    counter = 0;
+    counter = 0,
+    editingId,
+    lastTap = null;
   let storage,
-    savedState = "none";
+    savedState = "none",
+    library;
   try {
     storage = localStorage;
-    const raw = storage.getItem("glow-parkour-level-v1");
-    if (raw !== null) {
-      const saved = readEditorLevel(storage);
-      if (saved) {
-        level = saved;
-        selected = level.platforms.at(-1).id;
-        savedState = "loaded";
-      } else savedState = "invalid";
-    }
+    library = readRouteLibrary(storage);
+    const draft = library.draft;
+    if (draft?.level && Array.isArray(draft.level.platforms)) {
+      level = draft.level;
+      editingId = library.routes.some(r => r.id === draft.editingId) ? draft.editingId : undefined;
+      selected = level.platforms.at(-1)?.id;
+      savedState = "loaded";
+    } else if (library.routes.length) {
+      level = structuredClone(library.routes.at(-1).level);
+      editingId = level.id;
+      selected = level.platforms.at(-1)?.id;
+      savedState = "loaded";
+    } else if (storage.getItem("glow-parkour-level-v1") !== null) savedState = "invalid";
   } catch {
     savedState = "blocked";
+  }
+  library ??= readRouteLibrary(null);
+  level.powerups ??= [];
+  let hasDraft = Boolean(library.draft);
+  function latestLibrary() {
+    try {
+      const raw = storage.getItem("glow-parkour-routes-v1");
+      if (raw !== null) return createRouteLibrary(JSON.parse(raw));
+    } catch {}
+    return structuredClone(library);
+  }
+  function persistDraft() {
+    if (!hasDraft) return true;
+    const staged = latestLibrary();
+    staged.draft = { level: structuredClone(level), editingId };
+    if (!writeRouteLibrary(storage, staged)) return false;
+    library = staged;
+    return true;
   }
   const feedback = (text) => {
     q("editor-feedback").textContent = text;
@@ -94,7 +122,7 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
       q(`platform-${field}`).disabled = !p;
       q(`platform-${field}`).value = p?.[field] ?? "";
     }
-    q("platform-count").textContent = `${level.platforms.length} / 80`;
+    q("platform-count").textContent = `${level.platforms.length} 个平台`;
   }
   const screen = (x, z) => ({
     x: canvas.clientWidth / 2 + (x - center.x) * scale,
@@ -141,6 +169,7 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
       ctx.fillText(`${i + 1} · ${p.y.toFixed(1)}m`, x + 5, y + 17);
     }
     const marker = (point, color, label) => {
+      if (!point) return;
       const s = screen(point.x, point.z);
       ctx.fillStyle = color;
       ctx.beginPath();
@@ -153,6 +182,7 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
     };
     for (const coin of level.coins) marker(coin, "#b7872f", "币");
     for (const cp of level.checkpoints) marker(cp, "#3a9786", "存");
+    for (const p of level.powerups) marker(p, p.type === "speed" ? "#208bac" : "#9955c6", p.type === "speed" ? "速" : "跳");
     marker(level.spawn, "#4774a0", "起");
     marker(level.goal, "#d0767e", "终");
   }
@@ -164,10 +194,8 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
       if (p) {
         selected = p.id;
         feedback("已选中平台，可修改位置、大小和高度。");
-      } else if (level.platforms.length >= 80)
-        feedback("最多放置80个平台，请先删除一个。");
-      else if (Math.abs(x) > 100 || Math.abs(z) > 100)
-        feedback("平台位置需在 -100 到 100 之间。");
+      } else if (Math.abs(x) > 100000 || Math.abs(z) > 100000)
+        feedback("平台位置需在 -100000 到 100000 之间。");
       else {
         const next = { id: id("p"), x, z, y: 0, w: 3, d: 3, h: 0.6 };
         level.platforms.push(next);
@@ -179,29 +207,30 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
       level[tool] = { x, y: p.y, z };
       feedback(`已设置${tool === "spawn" ? "起点" : "终点"}。`);
     } else {
-      const list = tool === "coin" ? level.coins : level.checkpoints,
+      const powerup = tool === "speed" || tool === "jump";
+      const list = powerup ? level.powerups : tool === "coin" ? level.coins : level.checkpoints,
         existing = list.findIndex(
           (point) => Math.hypot(point.x - x, point.z - z) < 0.6,
         );
       if (existing >= 0) {
         list.splice(existing, 1);
         feedback("已移除此标记。");
-      } else if (list.length >= (tool === "coin" ? 160 : 80))
-        feedback("标记数量已达上限。");
-      else {
+      } else {
         list.push({
           id: id(tool),
           x,
-          y: p.y + (tool === "coin" ? 0.35 : 0),
+          y: p.y + (tool === "coin" || powerup ? 0.35 : 0),
           z,
+          ...(powerup ? { type: tool } : {}),
         });
         feedback(
-          `已放置${tool === "coin" ? "金币" : "存档点"}；再次点击可移除。`,
+          `已放置${powerup ? tool === "speed" ? "加速" : "高跳" : tool === "coin" ? "金币" : "存档点"}；再次点击可移除。`,
         );
       }
     }
     fields();
     draw();
+    persistDraft();
   }
   canvas.addEventListener("pointerdown", (event) => {
     canvas.setPointerCapture(event.pointerId);
@@ -237,14 +266,23 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
     gesture = null;
     if (!moved) {
       const r = canvas.getBoundingClientRect();
-      place(
-        center.x + (event.clientX - r.x - r.width / 2) / scale,
-        center.z + (event.clientY - r.y - r.height / 2) / scale,
-      );
-    }
+      const x = center.x + (event.clientX - r.x - r.width / 2) / scale,
+        z = center.z + (event.clientY - r.y - r.height / 2) / scale,
+        p = support(x, z), now = performance.now();
+      if (p && lastTap?.id === p.id && now - lastTap.time < 340 && Math.hypot(event.clientX - lastTap.x, event.clientY - lastTap.y) < 18) {
+        selected = p.id;
+        removePlatform();
+        lastTap = null;
+      } else {
+        // Remember the pre-action hit, so adding a platform cannot count as its first deletion tap.
+        lastTap = p ? { id: p.id, time: now, x: event.clientX, y: event.clientY } : null;
+        place(x, z);
+      }
+    } else lastTap = null;
   });
   canvas.addEventListener("pointercancel", () => {
     gesture = null;
+    lastTap = null;
   });
   canvas.addEventListener(
     "wheel",
@@ -269,6 +307,7 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
   for (const button of root.querySelectorAll("[data-tool]"))
     button.onclick = () => {
       tool = button.dataset.tool;
+      lastTap = null;
       for (const other of root.querySelectorAll("[data-tool]"))
         other.setAttribute("aria-pressed", String(other === button));
       feedback(
@@ -300,8 +339,10 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
         level.goal,
         ...level.coins,
         ...level.checkpoints,
+        ...level.powerups,
       ])
         if (
+          point &&
           Math.abs(point.x - before.x) <= before.w / 2 &&
           Math.abs(point.z - before.z) <= before.d / 2 &&
           point.y >= before.y &&
@@ -314,36 +355,39 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
       feedback("平台已更新；缩小平台后，请确认所有标记仍有支撑。");
       fields();
       draw();
+      persistDraft();
     };
   q("editor-name").onchange = () => {
     level.name = q("editor-name").value.trim() || "我的微光路线";
+    persistDraft();
   };
   q("level-theme").onchange = () => {
     level.theme = q("level-theme").value;
+    persistDraft();
   };
-  q("platform-delete").onclick = () => {
+  function removePlatform() {
     const p = platform();
     if (!p) return;
-    if (level.platforms.length === 1) {
-      feedback("至少保留一个平台。");
-      return;
-    }
     const attached = (point) =>
+      point &&
       Math.abs(point.x - p.x) <= p.w / 2 &&
       Math.abs(point.z - p.z) <= p.d / 2 &&
       Math.abs(point.y - p.y) < 2.26;
     level.platforms = level.platforms.filter((other) => other !== p);
     level.coins = level.coins.filter((point) => !attached(point));
     level.checkpoints = level.checkpoints.filter((point) => !attached(point));
+    level.powerups = level.powerups.filter((point) => !attached(point));
     const first = level.platforms[0];
     for (const key of ["spawn", "goal"])
       if (attached(level[key]))
-        level[key] = { x: first.x, y: first.y, z: first.z };
-    selected = first.id;
-    feedback("平台及其标记已删除，受影响的起终点已移至第一个平台。");
+        level[key] = null;
+    selected = first?.id;
+    feedback("平台及附着标记已删除。受影响的起终点需要重新放置。");
     fields();
     draw();
-  };
+    persistDraft();
+  }
+  q("platform-delete").onclick = removePlatform;
   const validated = () => {
     const result = validateLevel(level);
     if (!result.ok) {
@@ -355,34 +399,73 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
   q("editor-save").onclick = () => {
     const valid = validated();
     if (!valid) return;
-    if (storage && writeEditorLevel(storage, valid)) {
+    const staged = latestLibrary();
+    const route = saveRoute(staged, valid, { id: editingId });
+    if (route) staged.draft = { level: structuredClone(route.level), editingId: route.id };
+    if (route && writeRouteLibrary(storage, staged)) {
+      library = staged;
+      editingId = route.id;
+      level = structuredClone(route.level);
       savedState = "loaded";
-      feedback("已保存到本机，可关闭后重新加载。");
+      fields();
+      onSaved?.();
+      feedback(`已保存「${route.name}」，可从关卡列表游玩。`);
     } else feedback("保存失败：浏览器不允许本地存储。当前路线仍可试玩。");
   };
   q("editor-load").onclick = () => {
-    const loaded = storage ? readEditorLevel(storage) : null;
+    const loaded = library.routes.find(r => r.id === editingId)?.level;
     if (!loaded) {
       feedback("没有可用的本地路线，或保存数据损坏。当前编辑内容已保留。");
       return;
     }
-    level = loaded;
+    level = structuredClone(loaded);
     selected = level.platforms.at(-1).id;
     feedback("已从本机重新加载。");
     fields();
     draw();
+    persistDraft();
   };
   q("editor-play").onclick = () => {
     const valid = validated();
-    if (valid) onPlay(valid);
+    if (valid) {
+      persistDraft();
+      const saved = library.routes.find(r => r.id === editingId);
+      // Unsaved edits are always a practice run, even when the draft belongs to a work.
+      const matches = saved && JSON.stringify(saved.level) === JSON.stringify(valid);
+      onPlay(valid, matches ? saved.id : null);
+    }
   };
-  q("editor-close").onclick = onClose;
+  q("editor-close").onclick = () => { persistDraft(); onClose(); };
+  q("editor-new").onclick = () => {
+    level = createEditorLevel(); editingId = undefined; selected = level.platforms[0].id;
+    lastTap = null; center = { x: 2.5, z: 0 }; scale = 23;
+    fields(); draw(); persistDraft(); feedback("新草稿已准备好。保存后成为新的作品。");
+  };
+  q("editor-clear").onclick = () => { q("clear-confirm").hidden = false; };
+  q("clear-cancel").onclick = () => { q("clear-confirm").hidden = true; };
+  q("clear-accept").onclick = () => {
+    level.platforms = []; level.coins = []; level.checkpoints = []; level.powerups = [];
+    level.spawn = null; level.goal = null; selected = undefined; lastTap = null;
+    q("clear-confirm").hidden = true; fields(); draw(); persistDraft(); feedback("草稿已清空，请放置平台和起终点。");
+  };
   new ResizeObserver(() => {
     if (!root.hidden) draw();
   }).observe(canvas);
   return {
-    open() {
+    persistDraft,
+    confirmLeave() {
+      return persistDraft() || window.confirm("草稿保存失败，当前修改还没有存入本机。确认离开？取消可继续编辑并重试保存。");
+    },
+    open(id) {
+      hasDraft = true;
+      library = latestLibrary();
+      if (id) {
+        const route = library.routes.find(r => r.id === id);
+        if (route) { level = structuredClone(route.level); editingId = id; selected = level.platforms.at(-1)?.id; center = { x: level.spawn.x + 2.5, z: level.spawn.z }; scale = 23; }
+      }
+      lastTap = null;
       root.hidden = false;
+      root.scrollTop = 0;
       fields();
       draw();
       feedback(
@@ -392,7 +475,7 @@ export function createEditorUI(root, { onPlay, onClose, onStatus }) {
             ? "本地存储不可用，当前路线仍可编辑试玩。"
             : savedState === "loaded"
               ? "已读取本机路线。点击空处添加平台，保存后可继续试玩。"
-              : "点击空处添加平台；拖动预览平移。自创金币不增加余额。",
+              : "点击空处添加平台；拖动预览平移。保存作品后通关可获得金币。",
       );
     },
     currentLevel() {

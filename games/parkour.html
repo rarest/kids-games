@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#d6e6de" />
     <title>微光跑酷 · 一步一片风景</title>
-    <link rel="stylesheet" href="../parkour/style.css?v=20261002parkour1" />
+    <link rel="stylesheet" href="../parkour/style.css?v=20261007creations1" />
   </head>
   <body>
     <canvas
@@ -36,6 +36,7 @@
             ><button id="editor">自创路线</button>
           </div>
         </div>
+        <a id="home-hall" class="hall-return" href="../index.html">回到小火箭游戏厅</a>
         <div class="home-meta">
           4 片风景 <span>·</span> 12 段旅程 <span>·</span> 自由探索
         </div>
@@ -52,6 +53,7 @@
           ><button id="pause" aria-label="暂停游戏">Ⅱ</button>
         </div>
         <p id="practice-note"></p>
+        <p id="effect-status" role="status"></p>
       </section>
       <aside id="tutorial" hidden>
         <span id="tutorial-text"></span
@@ -144,7 +146,10 @@
           ><button id="next-level" hidden>下一关 →</button
           ><button id="restart">重新出发</button
           ><button id="quit">返回关卡选择</button
+          ><button id="edit-current" hidden>编辑当前作品</button
+          ><button id="retry-reward" hidden>重试领取通关金币</button
           ><button id="pause-home" class="subtle">返回主页</button>
+          <a id="pause-hall" class="hall-return" href="../index.html">回到小火箭游戏厅</a>
         </section>
       </div>
       <div id="help-overlay" class="overlay" hidden>
@@ -170,17 +175,18 @@
             <li><b>存档点</b>：踩上薄荷色旗帜圆台，掉落后回到这里。</li>
             <li><b>终点</b>：走到发光门中，记录通关时间。</li>
           </ol>
-          <p>自创金币只用于练习。余额、外观和最快记录保存在当前浏览器。</p>
+          <p>已保存自创作品通关后，收集的金币可购买外观。加速和高跳持续8秒，掉落后结束。余额、作品和最快记录保存在当前浏览器，无需登录。</p>
         </section>
       </div>
     </main>
+    <div id="celebration" aria-hidden="true" hidden></div>
     <p id="status" role="status" aria-live="polite"></p>
     <p id="storage-note" role="status" aria-live="polite"></p>
     <div id="loading" role="status">正在把微光装进口袋…</div>
     <script src="../shared/game-activity.js?v=20261004activity1" data-game-id="parkour"></script>
     <script
       type="module"
-      src="../parkour/bundle.js?v=20261004activity1"
+      src="../parkour/bundle.js?v=20261007creations1"
     ></script>
   </body>
 </html>

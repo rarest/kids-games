@@ -56,10 +56,13 @@ export function createScenery(world, level, palette) {
     cone: new THREE.ConeGeometry(1, 1, 7),
     blade: grassGeometry(),
   };
-  const minX = Math.min(...ps.map((p) => p.x)) - 35,
-    maxX = Math.max(...ps.map((p) => p.x)) + 35,
-    minZ = Math.min(...ps.map((p) => p.z)) - 35,
-    maxZ = Math.max(...ps.map((p) => p.z)) + 35;
+  let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
+  for (const p of ps) {
+    minX = Math.min(minX, p.x - 35);
+    maxX = Math.max(maxX, p.x + 35);
+    minZ = Math.min(minZ, p.z - 35);
+    maxZ = Math.max(maxZ, p.z + 35);
+  }
   const clearOfRoute = (x, z, radius) =>
     ps.every(
       (p) =>

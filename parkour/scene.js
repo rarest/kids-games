@@ -78,6 +78,7 @@ export function createScene(canvas) {
   scene.add(world);
   const platforms = [],
     coins = [],
+    powerups = [],
     checkpoints = [],
     target = new THREE.Vector3(),
     desired = new THREE.Vector3(),
@@ -106,6 +107,7 @@ export function createScene(canvas) {
     autoCamera = true;
     platforms.length = 0;
     coins.length = 0;
+    powerups.length = 0;
     checkpoints.length = 0;
     const palette = THEMES[level.theme],
       box = new THREE.BoxGeometry(1, 1, 1),
@@ -175,6 +177,14 @@ export function createScene(canvas) {
         m: add(coinGeometry, 0xf5c54f, coin.x, coin.y, coin.z),
         coin,
       });
+    const speedGeometry = new THREE.OctahedronGeometry(0.32),
+      jumpGeometry = new THREE.ConeGeometry(0.28, 0.65, 5);
+    for (const point of level.powerups ?? [])
+      powerups.push({ point, m: add(point.type === "speed" ? speedGeometry : jumpGeometry,
+        point.type === "speed" ? 0x24bada : 0xb276ee, point.x, point.y, point.z) });
+    // Unused geometry is not attached to the world traversal.
+    if (!powerups.some(p => p.point.type === "speed")) speedGeometry.dispose();
+    if (!powerups.some(p => p.point.type === "jump")) jumpGeometry.dispose();
     const checkpointGeometry = new THREE.CylinderGeometry(0.6, 0.6, 0.04, 20);
     for (const point of level.checkpoints) {
       const m = add(
@@ -226,12 +236,11 @@ export function createScene(canvas) {
     autoCamera = true;
     let index = 0;
     if (lastPlayer) {
-      const distances = level.platforms.map(
-        (p) =>
-          Math.hypot(p.x - lastPlayer.x, p.z - lastPlayer.z) +
-          Math.abs(p.y - lastPlayer.y),
-      );
-      index = distances.indexOf(Math.min(...distances));
+      let nearest = Infinity;
+      level.platforms.forEach((p, i) => {
+        const distance = Math.hypot(p.x - lastPlayer.x, p.z - lastPlayer.z) + Math.abs(p.y - lastPlayer.y);
+        if (distance < nearest) { nearest = distance; index = i; }
+      });
     }
     const current = level?.platforms[index],
       next = level?.platforms[index + 1];
@@ -291,10 +300,16 @@ export function createScene(canvas) {
     shadow.position.set(p.x, floor + 0.055, p.z);
     shadow.material.opacity = 0.25 / Math.max(1, p.y - floor + 1);
     shadow.scale.setScalar(Math.min(1.8, 1 + (p.y - floor) * 0.1));
+    shadow.material.color.set(state.effects.speed ? 0x24bada : state.effects.jump ? 0xb276ee : 0x263b34);
     for (const { m, coin } of coins) {
       m.visible = !state.collected.has(coin.id);
       m.rotation.y = time * 2;
       m.position.y = coin.y + Math.sin(time * 3) * 0.035;
+    }
+    for (const { m, point } of powerups) {
+      m.visible = !state.powerupsCollected.has(point.id);
+      m.rotation.y = time * (point.type === "speed" ? 3 : -2);
+      m.position.y = point.y + .15 + Math.sin(time * 3) * .1;
     }
     for (const { m, point } of checkpoints)
       m.material.color.set(
