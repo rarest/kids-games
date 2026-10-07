@@ -1,14 +1,15 @@
-// Original paper-cut teaching scenes: no textbook image or personal photo assets.
-const tree=(x,y,color='#70916a')=>`<path d="M${x} ${y+52}v-49" stroke="#75654b" stroke-width="7"/><path d="M${x-35} ${y+3}Q${x-48} ${y-40} ${x-8} ${y-46}Q${x+29} ${y-74} ${x+45} ${y-27}Q${x+66} ${y+15} ${x+20} ${y+15}Z" fill="${color}"/>`;
-const bird=(x,y,color='#d99852')=>`<path d="M${x} ${y}q24-21 37 3q-3 23-29 18l-18-13Z" fill="${color}"/><path d="M${x+34} ${y+1}l13 5-13 4" fill="#c5773f"/><circle cx="${x+27}" cy="${y+2}" r="2" fill="#384f48"/>`;
-const scenes=[
- `${tree(70,117)}<path d="M132 111l65-48 65 48v76H132Z" fill="#eed49d"/><path d="M121 110l76-57 78 57" fill="none" stroke="#bb7159" stroke-width="14"/><path d="M156 132h24v26h-24zm53 0h24v26h-24z" fill="#faf8e9"/><path d="M187 165h23v26h-23z" fill="#779783"/>${bird(100,73)}`,
- `${tree(87,130,'#dba958')}${tree(251,130,'#c8855d')}<path d="M103 202q60-59 105-63" fill="none" stroke="#eedbbb" stroke-width="25"/><path d="M160 94q-35-39-44-10q13 30 44 10M212 62q-34-33-37-7q14 27 37 7M232 142q-32-27-31 0q16 19 31 0" fill="#bd7147"/>`,
- `<path d="M77 84q45-24 89 5q43-29 89-5v109q-43-22-89 1q-44-23-89-1Z" fill="#fff7df" stroke="#d7b887" stroke-width="3"/><path d="M166 89v105M96 111h47m-47 19h44m41-19h49m-49 19h44" stroke="#c3b998" stroke-width="4"/><path d="M148 69q-10-41 17-47q36 3 17 32l-18 14" fill="none" stroke="#c78956" stroke-width="9"/><circle cx="164" cy="82" r="5" fill="#c78956"/>${bird(204,147)}`,
- `${tree(261,138)}<path d="M85 174q-32-58 2-98q14 3 21 36q45-26 59 4q19 47-30 69Z" fill="#d59455"/><path d="M87 79l-9-38 33 27M111 104l18-33 12 36" fill="#d59455"/><path d="M94 157q13-46 42-27q26 22-4 49" fill="#f5e0b8"/><circle cx="113" cy="112" r="4" fill="#41554b"/>${bird(198,94,'#779eaa')}`,
- `<path d="M28 166q61-47 128 0t137 0v56H28" fill="#9ab5a2"/><path d="M152 103l77-22-35 56-54-8Z" fill="#58a197"/><path d="M138 125l-49 9 59 23" fill="#55978c"/><path d="M212 83l21-33 23 34" fill="#568da5"/><circle cx="233" cy="68" r="3" fill="#304c47"/><path d="M249 72l26 8-28 3" fill="#d79b51"/><path d="M62 145v-42m0 10l-18-11m18 22l19-9" stroke="#688c5b" stroke-width="4"/><circle cx="62" cy="97" r="16" fill="#ead57e"/>`,
- `<path d="M0 160l89-100 58 70 57-100 116 133" fill="#86a7a0"/><path d="M44 174l82-66 61 60 58-58 75 84" fill="#b2c4ab"/><path d="M0 192q79-29 158 0t162 0v48H0" fill="#75abb5"/><path d="M203 166l40-45v45Z" fill="#faf2d6"/><path d="M187 169h65l-13 14h-41Z" fill="#9f7355"/>`,
- `${tree(69,138,'#77946c')}<path d="M65 177q48-74 120-41q29 15 94-12" fill="none" stroke="#8fb9bc" stroke-width="22"/>${bird(164,64,'#dba55e')}${bird(216,85,'#8b9bab')}<path d="M177 44v-25l20-5v25m-20-18l20-5" fill="none" stroke="#667f68" stroke-width="3"/><circle cx="171" cy="45" r="7" fill="#667f68"/><circle cx="191" cy="40" r="7" fill="#667f68"/>`,
- `<path d="M104 174q-42-35-51-18q1 22 37 40l61 9 6-30M217 174q42-35 51-18q-1 22-37 40l-61 9-6-30" fill="#e2b18a"/><path d="M162 161q-69-38-42-67q25-25 43 6q22-33 46-8q28 31-47 69" fill="#c7836c"/><path d="M162 49v-15m-51 32-10-11m111 11 10-11" stroke="#d8ad60" stroke-width="5"/>`
+// Original generated picture-book scenes, mapped to the photographed textbook's units.
+const descriptions=[
+ '孩子们在大树下的校园互相问好',
+ '孩子们观察金秋的银杏叶与枫叶',
+ '孩子们读故事，沿足迹猜测接下来会发生什么',
+ '松鼠、孔雀和刺猬在森林童话中相聚',
+ '孩子们仔细观察翠鸟与蒲公英',
+ '青山、江河、秋林与帆船组成山河美景',
+ '孩子在森林中聆听鸟鸣与溪流',
+ '孩子们互相帮助，捡起掉落的书本'
 ];
-export function unitArt(id){const n=Math.max(0,Math.min(7,Number(String(id).replace('u',''))-1));return `<svg class="cn-art" viewBox="0 0 320 225" aria-hidden="true"><rect x="9" y="10" width="302" height="205" rx="45" fill="${['#e9eddc','#f2e8d2','#ece6da','#e7e8d6','#e6eedb','#e0ece7','#e9eddd','#f3e5d8'][n]}"/><circle cx="245" cy="52" r="23" fill="#f4db98"/>${scenes[n]}</svg>`;}
+export function unitArt(id,{priority=false}={}){
+ const match=/^u([1-8])$/.exec(String(id)),n=match?Number(match[1]):1;
+ return `<img class="cn-art cn-illustration" src="${new URL(`illustrations/u${n}-v1.webp`,import.meta.url).href}" alt="${descriptions[n-1]}" width="1200" height="800" loading="${priority?'eager':'lazy'}" ${priority?'fetchpriority="high" ':''}decoding="async">`;
+}
