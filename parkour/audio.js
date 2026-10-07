@@ -29,6 +29,7 @@ export function createAudio() {
   };
   return {
     unlock,
+    stop,
     play(type) {
       if (
         !context ||

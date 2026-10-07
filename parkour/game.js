@@ -111,7 +111,10 @@ const panels = [
   "help-overlay",
 ];
 function setMode(next) {
-  if (mode === "complete" && next !== "complete") celebration.stop();
+  if (mode === "complete" && next !== "complete") {
+    celebration.stop();
+    audio.stop();
+  }
   mode = next;
   window.GameActivity?.setPlaying(next === "playing");
   document.body.dataset.mode = next;

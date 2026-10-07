@@ -4,7 +4,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import {openBrowser,sleep} from './game-browser-harness.mjs';
 
 const artifacts='/tmp/parkour-creations';
-async function wait(b,expression,timeout=15000){const end=Date.now()+timeout;while(Date.now()<end){const result=await b.evaluate(expression);if(result)return result;await sleep(50)}throw new Error(`Timed out: ${expression}; ${await b.evaluate('document.body.innerText.slice(-1500)')}`)}
+async function wait(b,expression,timeout=15000){const end=Date.now()+timeout;while(Date.now()<end){try{const result=await b.evaluate(expression);if(result)return result}catch(error){if(!/Inspected target navigated or closed|Execution context was destroyed|Cannot find context with specified id/.test(error.message))throw error}await sleep(50)}throw new Error(`Timed out: ${expression}; ${await b.evaluate('document.body.innerText.slice(-1500)')}`)}
 async function click(b,selector){const p=await b.evaluate(`(()=>{const e=document.querySelector(${JSON.stringify(selector)});if(!e)return null;e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);assert.ok(p,`visible control ${selector}`);await mouse(b,p.x,p.y)}
 async function mouse(b,x,y,count=1){await b.call('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',clickCount:count});await b.call('Input.dispatchMouseEvent',{type:'mouseReleased',x,y,button:'left',clickCount:count})}
 async function key(b,key,down=true,modifiers=0){await b.call('Input.dispatchKeyEvent',{type:down?'keyDown':'keyUp',key,code:key,modifiers,windowsVirtualKeyCode:({ArrowUp:38,Space:32,Enter:13,Tab:9,KeyA:65}[key]||0)})}
@@ -14,6 +14,31 @@ async function doublePoint(b,x,z,touch=false){const p=await b.evaluate(`(()=>{co
 async function shot(b,name){await mkdir(artifacts,{recursive:true});const r=await b.call('Page.captureScreenshot',{format:'png'});await writeFile(`${artifacts}/${name}.png`,Buffer.from(r.data,'base64'))}
 async function boot(b){await b.size(1440,900);await b.navigate('games/parkour.html');await wait(b,'document.body.dataset.ready === "true"')}
 const library='JSON.parse(localStorage.getItem("glow-parkour-routes-v1"))';
+
+test('native mouse dblclick honors a 450ms interval and removes only one overlapping platform', {timeout:60000},async()=>{
+ const b=await openBrowser();try{await boot(b);await click(b,'#editor');
+ await b.evaluate('window.nativeDoubleClicks=0;document.querySelector("#editor-map").addEventListener("dblclick",e=>{if(e.isTrusted)nativeDoubleClicks++})');
+ const p=await b.evaluate('(()=>{const r=document.querySelector("#editor-map").getBoundingClientRect();return {x:r.x+r.width/2+57.5,y:r.y+r.height/2}})()');
+ await mouse(b,p.x,p.y);await sleep(450);await mouse(b,p.x,p.y,2);
+ assert.equal(await b.evaluate('nativeDoubleClicks'),1,'browser dispatched one real dblclick');assert.match(await b.evaluate('document.querySelector("#platform-count").textContent'),/^1 /,'native dblclick deletes even above the touch interval');
+ await click(b,'#editor-new');await point(b,5,0);await input(b,'#platform-x',0);await doublePoint(b,0,0);assert.match(await b.evaluate('document.querySelector("#platform-count").textContent'),/^1 /,'one mouse gesture deletes only top overlapping platform');
+ await click(b,'#editor-new');await point(b,5,0);await input(b,'#platform-x',0);await b.size(820,1180,true);await doublePoint(b,0,0,true);assert.match(await b.evaluate('document.querySelector("#platform-count").textContent'),/^1 /,'touch compatibility mouse events cannot delete underlying platform');assert.deepEqual(b.errors,[]);
+ }finally{b.close()}
+});
+
+for(const exitTarget of ['pause-home','restart']) test(`native completion exit via ${exitTarget} stops pending finish voices`, {timeout:60000},async()=>{
+ const b=await openBrowser();try{
+ await b.call('Page.addScriptToEvaluateOnNewDocument',{source:`window.audioVoices=[];window.audioContexts=[];const Native=window.AudioContext;window.AudioContext=class extends Native{constructor(...args){super(...args);audioContexts.push(this)}createOscillator(){const osc=super.createOscillator(),voice={stops:[]};audioVoices.push(voice);const set=osc.frequency.setValueAtTime.bind(osc.frequency),stop=osc.stop.bind(osc);osc.frequency.setValueAtTime=(value,time)=>{voice.frequency=value;return set(value,time)};osc.stop=at=>{voice.stops.push({at:at??null,now:this.currentTime});return stop(at)};return osc}}`});
+ await boot(b);await click(b,'#editor');await click(b,'[data-tool=goal]');await point(b,1.5,0);
+ b.on('Runtime.consoleAPICalled',event=>{if(event.args[0]?.value==='native-finish-exit'){const p=JSON.parse(event.args[1].value);void Promise.all(['mousePressed','mouseReleased'].map(type=>b.call('Input.dispatchMouseEvent',{type,...p,button:'left',clickCount:1})))}});
+ // Suspend the real native context at completion so slow CDP machines cannot
+ // let every scheduled note end before the native exit click arrives.
+ await b.evaluate(`window.exitAt=null;document.addEventListener('click',e=>{if(e.target.closest('#${exitTarget}')&&e.isTrusted)window.exitAt=audioContexts[0].currentTime},{capture:true});new MutationObserver(()=>{if(document.body.dataset.mode==='complete'&&!window.exitRequested){window.exitRequested=true;const r=document.querySelector('#${exitTarget}').getBoundingClientRect();audioContexts[0].suspend().then(()=>console.log('native-finish-exit',JSON.stringify({x:r.x+r.width/2,y:r.y+r.height/2})))}}).observe(document.body,{attributes:true,attributeFilter:['data-mode']})`);
+ await click(b,'#editor-play');await wait(b,'audioContexts[0].state === "running"');await key(b,'ArrowUp');await wait(b,'window.exitAt !== null');await key(b,'ArrowUp',false);
+ const pending=await b.evaluate('audioVoices.filter(v=>[523.25,659.25,783.99].includes(v.frequency)&&v.stops[0]?.at>exitAt).map(v=>({frequency:v.frequency,stops:v.stops,exitAt}))');
+ assert.ok(pending.length>0,`native exit before notes ended: ${JSON.stringify(await b.evaluate('({voices:audioVoices,exitAt,context:audioContexts.map(c=>({state:c.state,time:c.currentTime}))})'))}`);assert.ok(pending.every(v=>v.stops.some(s=>s.at===null)),`leaving completion cancels every pending voice: ${JSON.stringify(pending)}`);assert.equal(await b.evaluate('document.querySelector("#celebration").hidden'),true);assert.deepEqual(b.errors,[]);
+ }finally{b.close()}
+});
 
 test('explicit hall links and native double deletion retain empty draft across refresh', {timeout:90000},async()=>{
  const b=await openBrowser();try{await boot(b);assert.equal(await b.evaluate('document.querySelector("#home-hall")?.textContent.trim()'),'回到小火箭游戏厅');await click(b,'#editor');

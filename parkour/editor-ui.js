@@ -59,7 +59,8 @@ export function createEditorUI(root, { onPlay, onClose, onStatus, onSaved }) {
     gesture = null,
     counter = 0,
     editingId,
-    lastTap = null;
+    lastTap = null,
+    mouseDoubleTarget = null;
   let storage,
     savedState = "none",
     library;
@@ -269,20 +270,32 @@ export function createEditorUI(root, { onPlay, onClose, onStatus, onSaved }) {
       const x = center.x + (event.clientX - r.x - r.width / 2) / scale,
         z = center.z + (event.clientY - r.y - r.height / 2) / scale,
         p = support(x, z), now = performance.now();
-      if (p && lastTap?.id === p.id && now - lastTap.time < 340 && Math.hypot(event.clientX - lastTap.x, event.clientY - lastTap.y) < 18) {
+      const mouse = event.pointerType === "mouse";
+      mouseDoubleTarget = mouse && p && lastTap?.type === "mouse" && lastTap.id === p.id ? p.id : null;
+      if (!mouse && p && lastTap?.type === event.pointerType && lastTap.id === p.id && now - lastTap.time < 340 && Math.hypot(event.clientX - lastTap.x, event.clientY - lastTap.y) < 18) {
         selected = p.id;
         removePlatform();
         lastTap = null;
       } else {
         // Remember the pre-action hit, so adding a platform cannot count as its first deletion tap.
-        lastTap = p ? { id: p.id, time: now, x: event.clientX, y: event.clientY } : null;
+        lastTap = p ? { id: p.id, type: event.pointerType, time: now, x: event.clientX, y: event.clientY } : null;
         place(x, z);
       }
-    } else lastTap = null;
+    } else { lastTap = null; mouseDoubleTarget = null; }
+  });
+  canvas.addEventListener("dblclick", () => {
+    // Browser mouse double-click timing can exceed the touch interval. The
+    // pre-action ID also prevents deleting a new or underlying platform twice.
+    if (!mouseDoubleTarget || lastTap?.type !== "mouse") return;
+    selected = mouseDoubleTarget;
+    mouseDoubleTarget = null;
+    lastTap = null;
+    removePlatform();
   });
   canvas.addEventListener("pointercancel", () => {
     gesture = null;
     lastTap = null;
+    mouseDoubleTarget = null;
   });
   canvas.addEventListener(
     "wheel",
