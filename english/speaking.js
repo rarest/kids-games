@@ -53,7 +53,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
   const meter = get('.speaking-meter'), canvas = get('canvas'), time = get('.speaking-time'), player = get('audio');
   const context = canvas.getContext('2d');
   let dead = false, epoch = 0, state = 'idle', available = false, checkingReadiness = false, clip = null, clipURL = null, assessmentController;
-  let levels = [], shownDuration = 0, hasFeedback = false;
+  let levels = [], shownDuration = 0, hasFeedback = false, leaveBlocked = false;
   const readinessController = new AbortController();
   const message = text => { if (!dead) status.textContent = text; };
   const reportError = error => { try { onError(error); } catch {} };
@@ -97,22 +97,24 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     clipURL = null; clip = null; shownDuration = 0; levels = []; hasFeedback = false; result.replaceChildren();
   }
   const recorder = new MicrophoneRecorder({
-    onProgress({duration, level}) { if (dead || state !== 'recording') return; shownDuration = duration; levels.push(level); drawMeter(); if(duration>=1.5&&levels.every(value=>value<0.003))message('声音比较小，请靠近麦克风。读完后点「停止录音」。');else if(level>=0.003)message('收到你的声音了！读完后点「停止录音」。'); update(); },
+    onProgress({duration, level}) { if (dead || state !== 'recording') return; shownDuration = duration; levels.push(level); drawMeter(); if(!leaveBlocked){if(duration>=1.5&&levels.every(value=>value<0.003))message('声音比较小，请靠近麦克风。读完后点「停止录音」。');else if(level>=0.003)message('收到你的声音了！读完后点「停止录音」。');} update(); },
     onLimit() { if (state === 'recording') stopRecording(); },
     onError(error) {if(dead)return;state='idle';message(error.message);reportError(error);update();}
   });
   function cancel() {
+    leaveBlocked = false;
     epoch++; assessmentController?.abort(); recorder.cancel(); dropClip(); state = 'idle';
     message(available ? '听一遍示范，准备好了就开始录音。' : '评分服务暂时没有准备好。你可以先录音和回听。'); update();
   }
   async function startRecording() {
     if (dead || state === 'requesting' || state === 'recording' || state === 'assessing') return;
+    leaveBlocked = false;
     epoch++; const token = epoch;
     dropClip(); stopAudio(); state = 'requesting'; message('请允许使用麦克风，然后开始读。最多可以录 20 秒。'); update();
     try {
       const started = await recorder.start();
       if (dead || token !== epoch || !started) return;
-      state = 'recording'; message('正在录音。读完后点「停止录音」。'); update();
+      state = 'recording'; if (!leaveBlocked) message('正在录音。读完后点「停止录音」。'); update();
     } catch (error) {
       if (dead || token !== epoch) return;
       state = 'idle';
@@ -123,6 +125,7 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
   }
   function stopRecording() {
     if (dead || state !== 'recording') return;
+    leaveBlocked = false;
     clip = recorder.stop(); state = 'recorded';
     if (!clip) { cancel(); return; }
     clipURL = URL.createObjectURL(clip.blob); player.src = clipURL; shownDuration = clip.duration;
@@ -226,5 +229,5 @@ export function mountSpeaking({root, target, speak = () => {}, stopAudio = () =>
     window.removeEventListener('pagehide', destroy); window.removeEventListener('beforeunload', destroy); panel.remove();
   }
   window.addEventListener('pagehide', destroy); window.addEventListener('beforeunload', destroy);
-  return {destroy,canLeave(){if(state==='requesting'||state==='recording'||state==='assessing'||clip&&!hasFeedback){message('先完成这次录音和反馈，或点「取消」丢弃录音，再切换。');return false;}return true;}};
+  return {destroy,canLeave(){if(state==='requesting'||state==='recording'||state==='assessing'||clip&&!hasFeedback){leaveBlocked=true;message('先完成这次录音和反馈，或点「取消」丢弃录音，再切换。');return false;}return true;}};
 }

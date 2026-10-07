@@ -62,6 +62,7 @@ html:has(.study-dialog[open]),body:has(.study-dialog[open]){overflow:hidden;over
  .page-question-card .page-task-instruction{display:none}
  .page-question-card>.listen-button{min-height:44px;margin-bottom:8px}
  .page-answer-choices{margin:8px 0 10px;gap:8px}
+ .page-answer-choices.compact button[data-long-word]{grid-column:1/-1}
  .page-answer-choices.compact button{position:relative;padding-right:26px}
  .page-answer-choices.compact .page-answer-mark{position:absolute;right:8px;top:50%;transform:translateY(-50%);margin:0;font-size:0;line-height:1}
  .page-answer-choices.compact .page-answer-mark::after{content:'✓';font-size:16px;font-weight:800}

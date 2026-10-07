@@ -80,7 +80,7 @@ function selectSkin(id){previewSkin=id;const s=SKINS.find(s=>s.id===id);$('previ
 $('skinFilters').addEventListener('click',e=>{const b=e.target.closest('[data-tier]');if(b){skinFilter=b.dataset.tier;renderSkins();}});$('skins').addEventListener('click',e=>{const b=e.target.closest('[data-skin]');if(b)selectSkin(b.dataset.skin);});
 $('buyPreview').onclick=()=>{if(save.owned.includes(previewSkin)){save.skin=previewSkin;persist();}else if(buySkin(save,previewSkin)){persist();toast('新皮肤已换上！下一局带着它出发。');}selectSkin(previewSkin);};
 let studyPages=[],pageClassroom=null;
-function mountStudyClassroom(){pageClassroom?.destroy();const section=$('studyContent').querySelector('.textbook-section');if(section)pageClassroom=mountPageClassroom({root:section,pages:studyPages,speak,stopAudio:stopReading,onError:toast,storageKey:`english-page-practice-v1:${course.storageKey}`});}
+function mountStudyClassroom({resume=false}={}){pageClassroom?.destroy();const section=$('studyContent').querySelector('.textbook-section');if(section)pageClassroom=mountPageClassroom({root:section,pages:studyPages,speak,stopAudio:stopReading,onError:toast,storageKey:`english-page-practice-v1:${course.storageKey}`,resume});}
 function resetStudyIdentity(){closeStudy();if($('study').open)$('study').close();}
 function closeStudy(){pageClassroom?.destroy();pageClassroom=null;stopReading();}
 function openStudy(){closeStudy();studyPages=selectedUnit.textbookPages??[];$('studyTitle').textContent=`Unit ${selectedUnit.number} · ${selectedUnit.title}`;
@@ -126,7 +126,7 @@ $('grade').value=selectedBook.grade;$('term').value=termLabel(selectedBook.term)
 let courseCloud;
 const course=mountCourse({root:$('courseRoot'),onSave:payload=>courseCloud?.onSave(payload),onActivity:value=>{coursePlaying=value;syncActivity();},speak,read:readLines,stopAudio:stopReading,notice:toast,
  onReward:id=>{if(completeCard(save,`course:${id}`))persist();},
- openPages:(number,unitId,options={})=>{stopReading();selectedBook=BOOKS.find(b=>b.id==='g3-upper');$('grade').value=3;$('term').value='上';updateBook();$('unit').value=unitId;updateSelection();openStudy();studyPages=selectedBook.textbookPages;$('studyTitle').textContent='课本逐页课堂';$('studyContent').firstElementChild.textContent='三年级上册 · 按课本页码选择词句';const section=$('studyContent').querySelector('.textbook-section');section.outerHTML=textbookSection({textbookPages:studyPages},esc);mountStudyClassroom();$('textbookPage').value=String(number);$('textbookPage').dispatchEvent(new Event('change',{bubbles:true}));if(options.speakingTarget)pageClassroom.openSpeaking(options.speakingTarget);}
+ openPages:(number,unitId,options={})=>{stopReading();selectedBook=BOOKS.find(b=>b.id==='g3-upper');$('grade').value=3;$('term').value='上';updateBook();$('unit').value=unitId;updateSelection();openStudy();studyPages=selectedBook.textbookPages;$('studyTitle').textContent='课本逐页课堂';$('studyContent').firstElementChild.textContent='三年级上册 · 按课本页码选择词句';const section=$('studyContent').querySelector('.textbook-section');section.outerHTML=textbookSection({textbookPages:studyPages},esc);mountStudyClassroom({resume:options.resume===true});if(!options.resume){$('textbookPage').value=String(number);$('textbookPage').dispatchEvent(new Event('change',{bubbles:true}));}if(options.speakingTarget)pageClassroom.openSpeaking(options.speakingTarget);}
 });
 
 courseCloud=createCourseCloud({course,onState:()=>renderCloudState(),onAuthLoss:()=>{resetStudyIdentity();familyClearIdentity();familyUser=null;familyProfiles=[];renderFamily()}});
