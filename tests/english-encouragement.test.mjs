@@ -13,3 +13,11 @@ test('sound preferences apply to already mounted course and page controllers',as
  course.toggle();assert.equal(page.muted,false);page.answer('a',true);page.answer('b',true);page.answer('c',true);assert.deepEqual(played,['/english/encouragement/three.mp3']);
  delete globalThis.localStorage;delete globalThis.Audio;
 });
+
+test('finishPrevious queues a new celebration until the current clip ends and cancellation clears the queue',async()=>{
+ const saved=new Map();globalThis.localStorage={getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)};
+ const clips=[],played=[];globalThis.Audio=class{constructor(url){this.url=url;clips.push(this)}play(){played.push(this.url);return Promise.resolve()}pause(){this.paused=true}};
+ const {createWebEncouragement,stopEncouragement}=await import('../english/encouragement-audio.js');stopEncouragement();const e=createWebEncouragement({finishPrevious:true});
+ try{e.answer('a',true);e.answer('b',true);e.answer('c',true);e.complete('round');assert.equal(played.length,1,'a second clip must wait');clips[0].onended();assert.deepEqual(played,['/english/encouragement/three.mp3','/english/encouragement/done.mp3']);e.answer('wrong',false);e.answer('wrong',true);const ended=clips[1].onended;e.toggle();assert.equal(clips[1].paused,true);ended();assert.equal(played.length,2,'muted or cancelled queued praise cannot start late');}
+ finally{stopEncouragement();delete globalThis.Audio;delete globalThis.localStorage;}
+});
