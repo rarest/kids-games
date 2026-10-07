@@ -2,6 +2,7 @@ export const PLAYER_HEIGHT = 1.65;
 export const PLAYER_RADIUS = .25;
 const SPEED = 6, JUMP = 8.4, GRAVITY = 20, GRACE = .12, EPS = 1e-7;
 const timing = new WeakMap();
+const powerupMultipliers={speed:1.6,jump:1.5};
 
 function overlaps(player, platform) {
   const dx = Math.max(0, Math.abs(player.x-platform.x)-platform.w/2);
@@ -19,9 +20,12 @@ export function createState(level) {
   const state = {
     level, player, checkpoint:{...level.spawn}, collected:new Set(), receipts:new Set(),
     events:[], elapsed:0, complete:false, falls:0,
+    effects:{speed:null,jump:null},powerupsCollected:new Set(),
     tutorial:{moved:false,jumped:false,camera:false,collected:false,checkpoint:false,finished:false},
   };
-  timing.set(state,{held:false,buffer:0,coyote:player.grounded?GRACE:0});
+  let fallHeight=-8;
+  for (const platform of level.platforms) fallHeight=Math.min(fallHeight,platform.y-8);
+  timing.set(state,{held:false,buffer:0,coyote:player.grounded?GRACE:0,fallHeight});
   return state;
 }
 
@@ -71,6 +75,14 @@ function visitPoints(state) {
       state.collected.add(coin.id); state.events.push({type:'coin',id:coin.id}); state.tutorial.collected=true;
     }
   }
+  for (const powerup of state.level.powerups??[]) {
+    if (powerupMultipliers[powerup.type] && !state.powerupsCollected.has(powerup.id) &&
+        Math.hypot(p.x-powerup.x,p.y-powerup.y,p.z-powerup.z)<=.6) {
+      state.powerupsCollected.add(powerup.id);
+      state.effects[powerup.type]={multiplier:powerupMultipliers[powerup.type],expiresAt:state.elapsed+8};
+      state.events.push({type:'powerup',id:powerup.id,powerupType:powerup.type});
+    }
+  }
   if (!p.grounded) return;
   const onPoint=point=>Math.abs(p.y-point.y)<.08 && Math.hypot(p.x-point.x,p.z-point.z)<=.6;
   for (const point of state.level.checkpoints??[]) {
@@ -99,24 +111,28 @@ export function stepState(state, input={}, dt=0) {
     p.grounded=p.vy<=0 && supported(p,state.level.platforms);
     clock.coyote=p.grounded?GRACE:Math.max(0,clock.coyote-slice);
     if (clock.buffer>0 && clock.coyote>0) {
-      p.vy=JUMP; p.grounded=false; clock.buffer=0; clock.coyote=0;
+      p.vy=JUMP*(state.effects.jump?.multiplier??1); p.grounded=false; clock.buffer=0; clock.coyote=0;
       state.events.push({type:'jump'}); state.tutorial.jumped=true;
     }
     clock.buffer=Math.max(0,clock.buffer-slice);
     const beforeX=p.x, beforeZ=p.z;
-    p.vx=x*SPEED; p.vz=z*SPEED;
+    const speed=SPEED*(state.effects.speed?.multiplier??1);
+    p.vx=x*speed; p.vz=z*speed;
     if (x || z) p.yaw=Math.atan2(x,z);
     moveAxis(p,state.level.platforms,'x',p.vx*slice);
     moveAxis(p,state.level.platforms,'z',p.vz*slice);
     if (Math.hypot(p.x-beforeX,p.z-beforeZ)>EPS) state.tutorial.moved=true;
     moveVertical(state,slice);
     state.elapsed+=slice;
-    const fallHeight=Math.min(-8,...state.level.platforms.map(platform=>platform.y-8));
-    if (p.y<fallHeight) {
+    for (const type of ['speed','jump']) {
+      if (state.effects[type] && state.elapsed>=state.effects[type].expiresAt-EPS) state.effects[type]=null;
+    }
+    if (p.y<clock.fallHeight) {
       Object.assign(p,state.checkpoint,{vx:0,vy:0,vz:0,grounded:true});
       // Checkpoint ID belongs to the point, not to the player schema.
       delete p.id;
       state.falls++; state.events.push({type:'fall'}); clock.buffer=0; clock.coyote=GRACE;
+      state.effects.speed=null;state.effects.jump=null;
     }
     visitPoints(state);
   }
