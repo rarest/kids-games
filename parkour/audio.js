@@ -29,6 +29,7 @@ export function createAudio() {
   };
   return {
     unlock,
+    stop,
     play(type) {
       if (
         !context ||
@@ -38,36 +39,38 @@ export function createAudio() {
         active.size >= 6
       )
         return;
-      const frequency = {
-        jump: 470,
-        coin: 1040,
-        land: 160,
-        checkpoint: 740,
-        finish: 880,
-      }[type];
-      if (!frequency) return;
-      const osc = context.createOscillator(),
-        gain = context.createGain(),
-        voice = { osc, gain };
-      active.add(voice);
-      const now = context.currentTime;
-      osc.type = type === "land" ? "triangle" : "sine";
-      osc.frequency.setValueAtTime(frequency, now);
-      osc.frequency.exponentialRampToValueAtTime(
-        type === "jump" ? 760 : frequency * 0.8,
-        now + 0.1,
-      );
-      gain.gain.setValueAtTime(0.035, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
-      osc.connect(gain);
-      gain.connect(context.destination);
-      osc.onended = () => {
-        active.delete(voice);
-        osc.disconnect();
-        gain.disconnect();
-      };
-      osc.start();
-      osc.stop(now + 0.17);
+      const frequencies = type === "finish" ? [523.25, 659.25, 783.99] : [{
+          jump: 470,
+          coin: 1040,
+          land: 160,
+          checkpoint: 740,
+          powerup: 940,
+        }[type]];
+      for (const [index, frequency] of frequencies.entries()) {
+        if (!frequency) return;
+        const osc = context.createOscillator(),
+          gain = context.createGain(),
+          voice = { osc, gain };
+        active.add(voice);
+        const now = context.currentTime + index * 0.2;
+        osc.type = type === "land" ? "triangle" : "sine";
+        osc.frequency.setValueAtTime(frequency, now);
+        osc.frequency.exponentialRampToValueAtTime(
+          type === "jump" ? 760 : frequency * 0.8,
+          now + 0.1,
+        );
+        gain.gain.setValueAtTime(0.035, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+        osc.connect(gain);
+        gain.connect(context.destination);
+        osc.onended = () => {
+          active.delete(voice);
+          osc.disconnect();
+          gain.disconnect();
+        };
+        osc.start(now);
+        osc.stop(now + 0.17);
+      }
     },
     setMuted(value) {
       muted = value;

@@ -496,14 +496,14 @@ test(
         await b.evaluate(
           'document.querySelector("#platform-count").textContent',
         ),
-        "3 / 80",
+        "3 个平台",
       );
       await b.evaluate(
         'document.querySelector("#platform-y").value="1.1";document.querySelector("#platform-y").dispatchEvent(new Event("change",{bubbles:true}));document.querySelector("#editor-save").click()',
       );
       assert.equal(
         await b.evaluate(
-          'JSON.parse(localStorage.getItem("glow-parkour-level-v1")).platforms.at(-1).y',
+          'JSON.parse(localStorage.getItem("glow-parkour-routes-v1")).routes[0].level.platforms.at(-1).y',
         ),
         1.1,
         "editor saves actual modified height",
@@ -530,14 +530,14 @@ test(
       assert.ok(
         Math.abs(
           (await b.evaluate(
-            'JSON.parse(localStorage.getItem("glow-parkour-level-v1")).coins[0].y',
+            'JSON.parse(localStorage.getItem("glow-parkour-routes-v1")).routes[0].level.coins[0].y',
           )) - 0.65,
         ) < 1e-9,
         "coin is placed above actual support top",
       );
       assert.equal(
         await b.evaluate(
-          'JSON.parse(localStorage.getItem("glow-parkour-level-v1")).checkpoints[0].y',
+          'JSON.parse(localStorage.getItem("glow-parkour-routes-v1")).routes[0].level.checkpoints[0].y',
         ),
         0.3,
       );
@@ -548,7 +548,7 @@ test(
         await b.evaluate(
           'document.querySelector("#practice-note").textContent',
         ),
-        /不.*余额/,
+        /通关后.*余额/,
       );
       const customStick = await b.evaluate(
         '(()=>{const r=document.querySelector("#joystick").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()',
@@ -576,21 +576,21 @@ test(
           'document.querySelector("#pause-details").textContent',
         ),
         /收集 1 枚/,
-        "real custom route collects the practice coin",
+        "real saved custom route collects its coin",
       );
       assert.equal(
         await b.evaluate("coins.textContent"),
-        "0",
-        "custom completion cannot credit preset wallet",
+        "1",
+        "saved custom completion credits its collected coin",
       );
       await b.evaluate("quit.click()");
       assert.equal(
-        await b.evaluate('document.querySelector("#editor-panel").hidden'),
+        await b.evaluate('document.querySelector("#level-overlay").hidden'),
         false,
-        "custom play returns to editor",
+        "custom play returns to route selection",
       );
       await b.evaluate(
-        'document.querySelector("#editor-close").click();start.click()',
+        'document.querySelector("#home-return").click();start.click()',
       );
       const resources = [];
       for (const id of [
@@ -778,7 +778,7 @@ test(
       await b.evaluate('document.querySelector("#editor-save").click()');
       assert.equal(
         await b.evaluate(
-          'JSON.parse(localStorage.getItem("glow-parkour-level-v1")).platforms[0].x',
+          'JSON.parse(localStorage.getItem("glow-parkour-routes-v1")).routes[0].level.platforms[0].x',
         ),
         1,
         "explicit save persists the current edited level",

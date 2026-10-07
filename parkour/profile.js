@@ -1,4 +1,5 @@
 import {LEVELS} from './levels.js';
+import {validateLevel} from './editor.js';
 
 const KEY='glow-parkour-v1';
 export const SKINS=[
@@ -10,6 +11,9 @@ export const SKINS=[
 ].map(([id,name,color])=>({id,name,color,price:id==='red'?0:2}));
 const skinIds=new Set(SKINS.map(s=>s.id));
 const presetIds=new Set(LEVELS.map(l=>l.id));
+const customId=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const customFinishReceipt=Symbol('custom finish');
+const savedCustom=(state,saved)=>saved===true && state.level.custom===true && customId.test(state.level.id) && validateLevel(state.level).ok;
 
 export function createProfile(raw) {
   raw=raw && typeof raw==='object' && !Array.isArray(raw)?raw:{};
@@ -19,7 +23,7 @@ export function createProfile(raw) {
   const progress={};
   if (raw.progress && typeof raw.progress==='object') {
     for (const [id,value] of Object.entries(raw.progress)) {
-      if (presetIds.has(id) && value?.completed===true && Number.isFinite(value.bestTime) && value.bestTime>=0) {
+      if ((presetIds.has(id) || customId.test(id)) && value?.completed===true && Number.isFinite(value.bestTime) && value.bestTime>=0) {
         progress[id]={completed:true,bestTime:value.bestTime};
       }
     }
@@ -44,8 +48,16 @@ export function creditCoin(profile,state,coinId) {
   state.receipts.add(coinId); profile.coins+=1; return true;
 }
 
-export function recordFinish(profile,state) {
-  if (!state.complete || state.level.custom || !presetIds.has(state.level.id) || !Number.isFinite(state.elapsed) || state.elapsed<0) return false;
+export function creditCustomFinish(profile,state,{saved=false}={}) {
+  if (!state.complete || !savedCustom(state,saved) || state.receipts.has(customFinishReceipt)) return 0;
+  const amount=state.level.coins.filter(coin=>state.collected.has(coin.id)).length;
+  if (!Number.isSafeInteger(profile.coins) || profile.coins<0 || !Number.isSafeInteger(profile.coins+amount)) return 0;
+  state.receipts.add(customFinishReceipt);profile.coins+=amount;return amount;
+}
+
+export function recordFinish(profile,state,{saved=false}={}) {
+  const eligible=state.level.custom?savedCustom(state,saved):presetIds.has(state.level.id);
+  if (!state.complete || !eligible || !Number.isFinite(state.elapsed) || state.elapsed<0) return false;
   const best=profile.progress[state.level.id]?.bestTime??Infinity;
   profile.progress[state.level.id]={completed:true,bestTime:Math.min(best,state.elapsed)};
   return true;

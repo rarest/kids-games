@@ -7,6 +7,7 @@ import {
   buySkin,
   equipSkin,
   creditCoin,
+  creditCustomFinish,
   recordFinish,
 } from "./profile.js";
 import {
@@ -20,10 +21,13 @@ import { createScene } from "./scene.js";
 import { createControls } from "./controls.js";
 import { createEditorUI } from "./editor-ui.js";
 import { createAudio } from "./audio.js";
+import { createRouteLibrary, readRouteLibrary } from "./route-library.js";
+import { createCelebration } from "./celebration.js";
 
 const $ = (id) => document.getElementById(id),
   view = $("view"),
   audio = createAudio();
+const celebration = createCelebration($("celebration"));
 let storage = null,
   storageMessage = "";
 try {
@@ -34,9 +38,17 @@ try {
 }
 const profile = readProfile(storage),
   wardrobe = readWardrobe(storage);
+readRouteLibrary(storage); // One-time legacy migration; only durable routes are exposed below.
+function savedRoutes() {
+  try { return createRouteLibrary(JSON.parse(storage.getItem("glow-parkour-routes-v1"))).routes; }
+  catch { return []; }
+}
+const escapeHTML = text => String(text).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
 let scene,
   controls,
+  editor,
   state,
+  savedRunId = null,
   mode = "home",
   jumpRequested = false,
   skipTutorial = false,
@@ -99,13 +111,17 @@ const panels = [
   "help-overlay",
 ];
 function setMode(next) {
+  if (mode === "complete" && next !== "complete") {
+    celebration.stop();
+    audio.stop();
+  }
   mode = next;
   window.GameActivity?.setPlaying(next === "playing");
   document.body.dataset.mode = next;
   controls?.clear();
   jumpRequested = false;
   lastTime = performance.now();
-  audio.setPaused(next !== "home" && next !== "playing");
+  audio.setPaused(next !== "home" && next !== "playing" && next !== "complete");
   needsRender = true;
   for (const id of panels) $(id).hidden = true;
   if (next === "home") {
@@ -155,18 +171,26 @@ function renderLevels() {
     (level, i) =>
       `<button class="level-card" data-level="${level.id}" data-theme="${level.theme}"><span class="level-theme">${themeNames[level.theme]}</span><span class="level-number">${String(i + 1).padStart(2, "0")}</span><strong>${level.name}</strong><small>${profile.progress[level.id] ? `✓ 最快 ${profile.progress[level.id].bestTime.toFixed(1)} 秒` : `${level.platforms.length} 个落点 · 难度 ${i + 1}`}</small></button>`,
   ).join("");
+  const custom = savedRoutes();
+  $("levels").insertAdjacentHTML("beforeend", custom.map(route =>
+    `<div class="custom-level"><button class="level-card" data-level="${route.id}" data-theme="${route.level.theme}"><span class="level-theme">我的作品</span><strong>${escapeHTML(route.name)}</strong><small>${route.level.platforms.length} 个落点 · 通关金币可购买外观</small></button><button data-edit="${route.id}">编辑作品</button></div>`).join(""));
   for (const button of $("levels").querySelectorAll("[data-level]"))
-    button.onclick = () =>
-      startLevel(LEVELS.find((l) => l.id === button.dataset.level));
+    button.onclick = () => {
+      const route = custom.find(r => r.id === button.dataset.level);
+      startLevel(route?.level ?? LEVELS.find(l => l.id === button.dataset.level), route?.id);
+    };
+  for (const button of $("levels").querySelectorAll("[data-edit]"))
+    button.onclick = () => { setMode("editor"); editor.open(button.dataset.edit); };
 }
-function startLevel(level) {
+function startLevel(level, savedId = null) {
+  savedRunId = level.custom && savedRoutes().some(r => r.id === savedId && JSON.stringify(r.level) === JSON.stringify(level)) ? savedId : null;
   state = createState(level);
   scene.setLevel(level);
   appearance();
   skipTutorial = false;
   $("level-name").textContent = level.name;
   $("practice-note").textContent = level.custom
-    ? "自创试玩：金币仅作练习，不增加商店余额。"
+    ? savedRunId ? "已保存作品：通关后收集的金币计入商店余额。" : "未保存试玩：金币不计入余额。保存作品后再挑战吧。"
     : "";
   setMode("playing");
 }
@@ -214,20 +238,40 @@ function pause() {
   $("pause-details").textContent = "休息一下，随时继续。";
   $("resume").hidden = false;
   $("next-level").hidden = true;
-  $("quit").textContent = state.level.custom ? "返回编辑器" : "返回关卡选择";
+  $("quit").textContent = "返回关卡选择";
+  $("edit-current").hidden = !state.level.custom;
+  $("retry-reward").hidden = true;
   setMode("paused");
 }
+function settleFinish() {
+  const previous = structuredClone(profile), receipts = new Set(state.receipts);
+  const saved = Boolean(savedRunId && savedRoutes().some(r => r.id === savedRunId));
+  const amount = creditCustomFinish(profile, state, { saved });
+  recordFinish(profile, state, { saved });
+  if (!saveAppearance()) {
+    Object.assign(profile, previous);
+    state.receipts = receipts;
+    $("coins").textContent = String(profile.coins);
+    $("retry-reward").hidden = false;
+    status("通关保存失败，金币尚未入账。释放本机空间后点击重试领取。");
+  } else {
+    $("retry-reward").hidden = true;
+    if (amount) status(`通关金币 +${amount}，已存入本机余额。`);
+  }
+}
 function finish() {
-  recordFinish(profile, state);
-  saveAppearance();
+  settleFinish();
   $("pause-caption").textContent = "YOU FOUND YOUR GLOW";
   $("pause-heading").textContent = "这一程，漂亮！";
   $("pause-details").textContent =
     `用时 ${state.elapsed.toFixed(1)} 秒 · 收集 ${state.collected.size} 枚金币 · 掉落 ${state.falls} 次`;
   $("resume").hidden = true;
   $("next-level").hidden = state.level.custom || state.level === LEVELS.at(-1);
-  $("quit").textContent = state.level.custom ? "返回编辑器" : "返回关卡选择";
+  $("quit").textContent = "返回关卡选择";
+  $("edit-current").hidden = !state.level.custom;
   setMode("complete");
+  audio.play("finish");
+  celebration.start(() => { if (mode === "complete") audio.setPaused(true); });
 }
 function tutorial() {
   if (!state.level.tutorial || skipTutorial || mode !== "playing") {
@@ -273,6 +317,10 @@ function readback() {
   view.dataset.cameraYaw = info.yaw.toFixed(3);
   $("run-info").textContent =
     `${state.elapsed.toFixed(1)} 秒 · ${state.collected.size} / ${state.level.coins.length} 金币`;
+  $("effect-status").textContent = [
+    state.effects.speed && `加速 ×1.6 · ${Math.ceil(state.effects.speed.expiresAt - state.elapsed)}秒`,
+    state.effects.jump && `高跳 ×1.5 · ${Math.ceil(state.effects.jump.expiresAt - state.elapsed)}秒`,
+  ].filter(Boolean).join("　");
 }
 function frame(now) {
   if (!running) return;
@@ -299,11 +347,11 @@ function frame(now) {
     stepState(state, input, dt);
     if (mode === "playing")
       for (const event of state.events) {
-        audio.play(event.type);
+        if (event.type !== "finish") audio.play(event.type);
         if (event.type === "coin") {
           if (creditCoin(profile, state, event.id)) saveAppearance();
           else if (state.level.custom)
-            status("练习金币 +1 · 自创关卡不增加商店余额");
+            status(savedRunId ? "金币 +1 · 通关后存入商店余额" : "试玩金币 +1 · 保存作品后通关可获得余额");
         }
         if (event.type === "checkpoint")
           status("存档点已点亮，掉落会从这里继续。");
@@ -342,10 +390,11 @@ try {
     },
     onInteract: audio.unlock,
   });
-  const editor = createEditorUI($("editor-panel"), {
+  editor = createEditorUI($("editor-panel"), {
     onPlay: startLevel,
     onClose: showHome,
     onStatus: status,
+    onSaved: renderLevels,
   });
   $("start").onclick = () => {
     renderLevels();
@@ -364,15 +413,14 @@ try {
   $("pause").onclick = pause;
   $("resume").onclick = () => setMode("playing");
   $("quit").onclick = () => {
-    if (state.level.custom) {
-      setMode("editor");
-      editor.open();
-    } else {
-      renderLevels();
-      setMode("levels");
-    }
+    renderLevels();
+    setMode("levels");
   };
-  $("restart").onclick = () => startLevel(state.level);
+  $("edit-current").onclick = () => { setMode("editor"); editor.open(savedRunId); };
+  $("retry-reward").onclick = settleFinish;
+  $("restart").onclick = () => startLevel(state.level, savedRunId);
+  for (const link of document.querySelectorAll('a[href="../index.html"]'))
+    link.addEventListener("click", event => { if (!editor.confirmLeave()) event.preventDefault(); });
   $("pause-home").onclick = showHome;
   $("next-level").onclick = () =>
     startLevel(LEVELS[LEVELS.indexOf(state.level) + 1]);
@@ -500,6 +548,8 @@ try {
     running = false;
   });
   window.addEventListener("pagehide", (event) => {
+    editor.persistDraft();
+    celebration.stop();
     running = false;
     cancelAnimationFrame(frameId);
     controls.clear();

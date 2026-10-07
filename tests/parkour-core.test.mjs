@@ -133,3 +133,58 @@ test('presets span four themes with progressively longer or narrower routes', ()
     assert.ok(LEVELS[i].platforms.length>LEVELS[i-1].platforms.length || LEVELS[i].platforms[1].w<LEVELS[i-1].platforms[1].w);
   }
 });
+
+const poweredFixture=powerups=>fixture({platforms:[platform('floor',0,0,0,20,20)],goal:{x:8,y:0,z:8},powerups});
+test('touching speed and jump powerups changes real movement and jump height',()=>{
+  const speed=createState(poweredFixture([{id:'speed',type:'speed',x:0,y:0,z:0}]));
+  const plain=createState(poweredFixture([]));tick(speed);tick(plain);
+  assert.ok(speed.events.some(e=>e.type==='powerup' && e.id==='speed' && e.powerupType==='speed'));
+  tick(speed,{x:1},60);tick(plain,{x:1},60);
+  near(plain.player.x,3);near(speed.player.x,4.8);
+  const jump=createState(poweredFixture([{id:'jump',type:'jump',x:0,y:0,z:0}]));
+  const ordinary=createState(poweredFixture([]));tick(jump);tick(ordinary);
+  let high=0,low=0;
+  for(let i=0;i<180;i++){
+    tick(jump,{jump:i===0});tick(ordinary,{jump:i===0});
+    high=Math.max(high,jump.player.y);low=Math.max(low,ordinary.player.y);
+  }
+  assert.ok(high>low*2,`${high} should be more than twice ordinary peak ${low}`);
+  near(jump.player.y,0);assert.equal(jump.player.grounded,true);
+});
+
+test('powerup duration uses eight seconds of simulation and freezes when not stepped',()=>{
+  const state=createState(poweredFixture([{id:'speed',type:'speed',x:0,y:0,z:0}]));tick(state);
+  assert.ok(state.effects?.speed,'pickup activates speed');
+  near(state.effects.speed.expiresAt-state.elapsed,8,.00001);
+  const effect=structuredClone(state.effects.speed),elapsed=state.elapsed;
+  stepState(state,{},0);stepState(state,{},NaN);
+  assert.deepEqual(state.effects.speed,effect);assert.equal(state.elapsed,elapsed);
+  tick(state,{},950);assert.ok(state.effects.speed);
+  tick(state,{},11);assert.equal(state.effects.speed,null);
+  const before=state.player.x;tick(state,{x:1},60);near(state.player.x-before,3);
+});
+
+test('both effects expire at the exact eight-second simulation boundary',()=>{
+  const state=createState(poweredFixture([{id:'s',type:'speed',x:0,y:0,z:0},{id:'j',type:'jump',x:0,y:0,z:0}]));
+  tick(state);assert.ok(state.effects.speed);assert.ok(state.effects.jump);
+  tick(state,{},960);assert.deepEqual(state.effects,{speed:null,jump:null});
+});
+
+test('same-type powerups refresh without stacking and falls clear effects without re-picking',()=>{
+  const level=poweredFixture([{id:'a',type:'speed',x:0,y:0,z:0},{id:'b',type:'speed',x:1,y:0,z:0}]);
+  const state=createState(level);tick(state);assert.ok(state.effects?.speed);
+  const firstExpiry=state.effects.speed.expiresAt;
+  tick(state,{x:1},20);assert.equal(state.powerupsCollected.size,2);
+  assert.ok(state.effects.speed.expiresAt>firstExpiry);
+  const before=state.player.x;tick(state,{x:1},20);near(state.player.x-before,1.6);
+  state.player.y=-30;tick(state);assert.equal(state.falls,1);assert.equal(state.effects.speed,null);
+  assert.equal(state.powerupsCollected.size,2);tick(state);assert.equal(state.effects.speed,null);
+  const next=createState(level);tick(next);assert.ok(next.effects.speed);assert.equal(next.powerupsCollected.size,1);
+});
+
+test('very long platform arrays step and respawn without spread argument stack overflow',()=>{
+  const platforms=Array.from({length:150000},(_,i)=>platform(`p${i}`,i*10));
+  const state=createState(fixture({platforms}));
+  assert.doesNotThrow(()=>stepState(state,{},1/120));
+  state.player.y=-30;tick(state);assert.equal(state.falls,1);near(state.player.y,0);
+});
