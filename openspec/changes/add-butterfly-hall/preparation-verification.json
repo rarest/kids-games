@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-24T12:53:40.286147+00:00",
+  "authorization": "用户先试玩；等待再次明确上架指示，禁止commit/push/merge和部署",
+  "hallName": "小火箭游戏厅",
+  "source": "/home/ubuntu/codex-work/products/butterfly-garden",
+  "sourceManifest": {
+    "source": "products/butterfly-garden",
+    "files": [
+      {
+        "name": "index.html",
+        "sha256": "6e5d548a41fd6684a8fb0e825a2458ae9625a21ccc2a053cc4c7fa00c7ae2856"
+      },
+      {
+        "name": "rules.js",
+        "sha256": "1615d19ae4011dbf087a3b0641c372f9eba997f1cacca43db3992e9355e7d310"
+      },
+      {
+        "name": "server.cjs",
+        "sha256": "ee7c3abec997182fc8c34f6b700abcaf8c1144441a57ed60ece9816da7c5912a"
+      },
+      {
+        "name": "checkpoint.js",
+        "sha256": "66b493084483b0b160a20f8af421ffc28dd628b5e2e4e925fe43dd1d1a377364"
+      }
+    ],
+    "publicPage": {
+      "path": "games/butterfly.html",
+      "sha256": "3eca44ef3f727ea3685cbdc6d8e446503dab5fc1f37a36515e7d07576654c3cf"
+    }
+  },
+  "checks": {
+    "sourceEmbeddedRuntimeScripts": 11,
+    "sourceStyleMatches": true,
+    "parsedStandaloneScripts": 12,
+    "unitTestsPassed": 22,
+    "unitTestsFailed": 0,
+    "unitCommand": "node --test tests/butterfly-build.test.mjs tests/rescue-deploy.test.mjs tests/racing-deploy.test.mjs tests/deploy-config.test.mjs tests/game-hall.test.mjs tests/popularity-ui.test.mjs",
+    "importedServerLoopbackEphemeralStartStop": true,
+    "commonJsSyntaxChecks": true,
+    "bashSyntaxCheck": true,
+    "gitDiffWhitespaceCheck": true,
+    "openSpecStrict": true,
+    "chromeRun": false,
+    "commitPushMerge": false,
+    "deploymentExecuted": false
+  },
+  "pending": "用户试玩反馈及新的上架指示；届时复核主源SHA是否漂移，按共享锁和快进链路发布并完成公网原生入口与房间/持久化验收"
+}

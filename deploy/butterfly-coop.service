@@ -1,0 +1,19 @@
+[Unit]
+Description=Cooperative butterfly garden
+After=network.target
+[Service]
+Type=simple
+WorkingDirectory=%h/games-site
+ExecStartPre=/usr/bin/mkdir -p %h/.local/state/butterfly-garden
+ExecStart=/usr/bin/node %h/games-site/butterfly/server.cjs
+Environment=PORT=8791
+Environment=HOST=127.0.0.1
+Environment=GARDEN_STATE_FILE=%h/.local/state/butterfly-garden/state.json
+UMask=0077
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+MemoryMax=384M
+[Install]
+WantedBy=default.target
