@@ -11,6 +11,9 @@ PROXY_DIR="$(dirname "$DOCROOT")/proxy"
 cd "$REPO_DIR"
 STATE_DIR="$(git rev-parse --git-path games-deploy)"
 mkdir -p "$STATE_DIR" "$UNIT_DIR"
+# Direct releases and webhook deliveries share one writer lock.
+exec 9>"$STATE_DIR/deploy.lock"
+flock -w 110 9
 
 production_dependencies() {
   node --input-type=module - "$1" <<'JS'
@@ -35,6 +38,7 @@ const files={
  shooter:['server.mjs','core.js','snapshot.js'],
  rescue:['server.mjs','net-codec.js','core.js','bosses.js','campaign.js','levels.js'],
  racing:['server.mjs','core.js','routes.js','contact.js','hazards.js'],
+ butterfly:['server.cjs','rules.js','checkpoint.js','package.json'],
 }[game];
 const paths=[`deploy/${game}-coop.service`,...files.map(file=>`${game}/${file}`)];
 const contents=paths.map(path=>{
@@ -56,7 +60,7 @@ for GAME in shooter rescue racing; do
   if [ ! -f "$STATE_DIR/$GAME-runtime" ]; then runtime_fingerprint "$GAME" "$PREVIOUS_HEAD" "$PREVIOUS_DEPENDENCIES" > "$STATE_DIR/$GAME-runtime"; fi
 done
 git fetch --quiet origin main
-git reset --hard --quiet origin/main
+git merge --ff-only --quiet origin/main
 CURRENT_DEPENDENCIES="$(production_dependencies WORKTREE)"
 if [ "$(cat "$STATE_DIR/dependencies")" != "$CURRENT_DEPENDENCIES" ] || [ ! -d node_modules/ws ] || [ -f "$STATE_DIR/dependencies-pending" ]; then
   touch "$STATE_DIR/dependencies-pending"
@@ -69,19 +73,23 @@ sudo rsync -a --delete \
   --exclude '.git' --exclude 'deploy' --exclude 'README.md' --exclude '.gitignore' \
   --exclude '.agents' --exclude '.superpowers' --exclude 'openspec' --exclude 'node_modules' --exclude 'output' \
   --exclude 'shooter/server.mjs' --exclude 'rescue/server.mjs' --exclude 'racing/server.mjs' \
+  --exclude 'butterfly' --exclude 'tests' --exclude 'scripts' \
   --exclude 'platform' --exclude 'miniprogram' --exclude '.env' --exclude '.env.*' \
   --exclude '.user.ini' --exclude '.well-known' \
   "$REPO_DIR"/ "$DOCROOT"/
 sudo chmod -R a+rX "$DOCROOT"
 # Exclusions protect old receiver files from rsync --delete. Remove only legacy
 # backend copies; live runtimes and database data live outside this docroot.
-sudo rm -rf -- "$DOCROOT/platform"
+sudo rm -rf -- "$DOCROOT/platform" "$DOCROOT/butterfly"
 sudo rm -f -- "$DOCROOT/shooter/server.mjs" "$DOCROOT/rescue/server.mjs" "$DOCROOT/racing/server.mjs"
 sudo mkdir -p "$PROXY_DIR"
 
 PROXY_CHANGED=false
 if [ -f "$STATE_DIR/proxy-pending" ]; then PROXY_CHANGED=true; fi
-for GAME in shooter rescue racing; do
+GAMES=(shooter rescue racing)
+if [ -f deploy/butterfly-coop.service ]; then GAMES+=(butterfly); fi
+for GAME in "${GAMES[@]}"; do
+  if [ ! -f "$STATE_DIR/$GAME-runtime" ]; then runtime_fingerprint "$GAME" "$PREVIOUS_HEAD" "$PREVIOUS_DEPENDENCIES" > "$STATE_DIR/$GAME-runtime"; fi
   UNIT_CHANGED=false
   if [ -f "$STATE_DIR/$GAME-unit-pending" ] || ! cmp -s "deploy/$GAME-coop.service" "$UNIT_DIR/$GAME-coop.service"; then
     touch "$STATE_DIR/$GAME-unit-pending"

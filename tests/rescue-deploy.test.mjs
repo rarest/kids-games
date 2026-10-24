@@ -94,7 +94,7 @@ test('game and platform deployment preserve unchanged rooms and retry failed pha
    for(const file of ['server.mjs','store.mjs','periods.mjs','migrations/001-activity.sql'])await writeFile(join(repo,'platform',file),'// initial platform\n');
    await writeFile(join(repo,'platform/package.json'),JSON.stringify({dependencies:{pg:'1'}}));
    await change('platform/package-lock.json',JSON.stringify({packages:{'':{dependencies:{pg:'1'}},'node_modules/pg':{version:'1'}}}));
-   for(const folder of ['platform','shooter','.well-known'])await mkdir(join(docroot,folder),{recursive:true});
+   for(const folder of ['platform','shooter','butterfly','.well-known'])await mkdir(join(docroot,folder),{recursive:true});
    await writeFile(join(docroot,'platform/server.mjs'),'old static backend copy');
    await writeFile(join(docroot,'shooter/server.mjs'),'old static backend copy');
    await writeFile(join(docroot,'.well-known/challenge'),'keep certificate challenge');
@@ -107,6 +107,7 @@ test('game and platform deployment preserve unchanged rooms and retry failed pha
    assert.equal(await readFile(config,'utf8'),'PLATFORM_CONFIG_SENTINEL=outside-docroot\n');
    await assert.rejects(access(join(docroot,'app.env')),{code:'ENOENT'});
    await assert.rejects(access(join(docroot,'platform')),{code:'ENOENT'});
+   await assert.rejects(access(join(docroot,'butterfly')),{code:'ENOENT'});
    await assert.rejects(access(join(docroot,'shooter/server.mjs')),{code:'ENOENT'});
    assert.equal(await readFile(join(docroot,'.well-known/challenge'),'utf8'),'keep certificate challenge');
    await clear();execute();out=await calls();
@@ -162,6 +163,17 @@ test('game and platform deployment preserve unchanged rooms and retry failed pha
    const result=failed();assert.notEqual(result.status,0);assert.match(result.stderr,/Platform configuration missing outside docroot/);out=await calls();assert.doesNotMatch(out,/npm ci|restart games-platform.service/);noGameRestart(out);
    assert.equal(await readFile(join(state,'platform-runtime'),'utf8'),runtime);
    await writeFile(config,'PLATFORM_CONFIG_SENTINEL=outside-docroot\n');await clear();execute();out=await calls();assert.match(out,/restart games-platform.service/);assert.doesNotMatch(out,/npm ci/);noGameRestart(out);noRootNpm(out);
+  });
+  await t.test('butterfly bootstrap and updates preserve all existing rooms',async()=>{
+   await mkdir(join(repo,'butterfly'),{recursive:true});
+   for(const file of ['butterfly-coop.service','butterfly-coop.conf'])await copyFile(new URL(`deploy/${file}`,source),join(repo,'deploy',file));
+   for(const file of ['server.cjs','rules.js','checkpoint.js','package.json'])await writeFile(join(repo,'butterfly',file),'// butterfly runtime\n');
+   await clear();await change('butterfly/source-manifest.json','{}');execute();out=await calls();
+   assert.match(out,/restart butterfly-coop/);noGameRestart(out);assert.doesNotMatch(out,/restart games-platform|npm ci/);assert.match(out,/openresty -s reload/);
+   assert.match(out,/rsync [^\n]*--exclude butterfly[^\n]*--exclude tests[^\n]*--exclude scripts/);
+   await clear();execute();assert.doesNotMatch(await calls(),/restart|npm ci|openresty/,'butterfly deploy is idempotent');
+   await clear();await change('butterfly/rules.js','// changed butterfly rules\n');execute();out=await calls();assert.match(out,/restart butterfly-coop/);noGameRestart(out);assert.doesNotMatch(out,/restart games-platform|npm ci|openresty/);
+   await mkdir(join(repo,'games'),{recursive:true});await clear();await change('games/butterfly.html','<h1>browser only update</h1>');execute();assert.doesNotMatch(await calls(),/restart|npm ci|openresty/,'butterfly browser updates preserve all rooms');
   });
  } finally {await rm(dir,{recursive:true,force:true});}
 });

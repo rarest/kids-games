@@ -1,0 +1,98 @@
+{
+  "verifiedAt": "2026-10-24T13:06:44.362053+00:00",
+  "url": "https://games.nblord.com/games/butterfly.html",
+  "hall": "https://games.nblord.com/",
+  "pullRequest": "https://github.com/rarest/kids-games/pull/102",
+  "firstFeatureCommit": "f7901abd64d09bb534c00f2997c9bbc1a301873d",
+  "publicPageSha256": "3eca44ef3f727ea3685cbdc6d8e446503dab5fc1f37a36515e7d07576654c3cf",
+  "publicHttp": [
+    {
+      "path": "/games/butterfly.html",
+      "status": 200,
+      "bytes": 824229,
+      "sha256": "3eca44ef3f727ea3685cbdc6d8e446503dab5fc1f37a36515e7d07576654c3cf"
+    },
+    {
+      "path": "/games.js?v=20261024butterfly1",
+      "status": 200,
+      "bytes": 4028,
+      "sha256": "c3c164c7010840b163cb711ff746e24ebb94049c35520fd3a504f51c15e5b2df",
+      "butterflyInCatalog": true
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 11411,
+      "sha256": "a77f6a82a546541ad7161ac4c789b7e578f11ee2586223ae0e4261ffa23dbc17"
+    },
+    {
+      "path": "/butterfly/server.cjs",
+      "status": 404,
+      "bytes": 150
+    },
+    {
+      "path": "/butterfly/checkpoint.js",
+      "status": 404,
+      "bytes": 150
+    },
+    {
+      "path": "/butterfly/source-manifest.json",
+      "status": 404,
+      "bytes": 150
+    },
+    {
+      "path": "/butterfly/state.json",
+      "status": 404,
+      "bytes": 150
+    },
+    {
+      "path": "/butterfly/vendor/ws/index.js",
+      "status": 404,
+      "bytes": 150
+    },
+    {
+      "path": "/butterfly/tests/persistence.test.cjs",
+      "status": 404,
+      "bytes": 150
+    }
+  ],
+  "publicRoom": {
+    "origin": "https://games.nblord.com",
+    "endpoint": "wss://games.nblord.com/butterfly-ws",
+    "code": "8422",
+    "maxPlayers": 64,
+    "players": 2,
+    "epoch": 1,
+    "mode": "playing",
+    "hostMovedSeenByGuest": true
+  },
+  "publicPersistence": {
+    "origin": "https://games.nblord.com",
+    "code": "2421",
+    "epoch": 1,
+    "savedElapsed": 0.46666666666666656,
+    "exactPlayersRecovered": true,
+    "roomAndTokensRecovered": true,
+    "continued": true,
+    "existingServicePidsPreserved": true
+  },
+  "servicePidsAfterRestart": {
+    "shooter-coop": 143350,
+    "rescue-coop": 191269,
+    "racing-coop": 173049,
+    "games-platform": 261329,
+    "butterfly-coop": 1377693
+  },
+  "previousServicePidsUnchanged": true,
+  "stateDirectory": "/home/ubuntu/.local/state/butterfly-garden",
+  "stateDirectoryMode": "700",
+  "stateFileMode": "600",
+  "localNativeBrowser": "390px游戏厅真实点击进入、森林地图开始、原生箭头键飞行和返回通过",
+  "focusedUnit": {
+    "passed": 22,
+    "failed": 0
+  },
+  "fullUnit": "原完整962项922pass/35skip/5fail；5处缺锁定platform依赖的环境错误已安装依赖后以4文件16项重测（12pass/4skip/0fail）全部覆盖，未修改源码",
+  "publicNativeBrowser": "root独立390px公网原生验收通过：游戏厅点击进入、简单/森林图、ArrowDown实际移动与自动视角、返回，无脚本错误、新游戏404或溢出（37.1秒）",
+  "merge": "pending merge commit; never squash or rebase"
+}

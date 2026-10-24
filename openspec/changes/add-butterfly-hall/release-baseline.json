@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-24T12:56:14.928956+00:00",
+  "originMain": "7ff7eb6",
+  "serverHead": "7ff7eb6",
+  "serverWorktreeClean": true,
+  "deploymentSubprocesses": 0,
+  "previousServicePids": {
+    "shooter-coop": 143350,
+    "rescue-coop": 191269,
+    "racing-coop": 173049,
+    "games-platform": 261329
+  },
+  "butterflyServiceInitiallyPresent": false,
+  "butterflyPort": 8791,
+  "sourceManifestMatches": true,
+  "firstOnlineChangePendingLocalBrowserGate": true
+}

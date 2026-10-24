@@ -2,6 +2,14 @@
    字段: id 稳定标识 | file 路径 | emoji 图标 | name 名称 | desc 一句话 | tags 标签(用于搜索/分类) */
 window.GAMES = [
   {
+    id: "butterfly",
+    file: "games/butterfly.html?v=20261024hall1",
+    emoji: "🦋",
+    name: "蜜语花园",
+    desc: "化身蝴蝶飞过花海，采蜜回草屋，四位房间码邀请伙伴一同冒险",
+    tags: ["3D", "采蜜", "多人联机", "手机"],
+  },
+  {
     id: "classroom",
     file: "games/classroom.html?v=20261007shell1",
     emoji: "📚",

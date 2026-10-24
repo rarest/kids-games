@@ -43,7 +43,7 @@ test('hung response bodies leave loading and expose retry after the request dead
 });
 
 test('catalog IDs keep each game reachable even when its URL has cache parameters', () => {
-  const ids = ['classroom', 'memory', 'english', 'rescue', 'parkour', 'racing', 'territory', 'shooter', 'pinyin', 'snake', 'fish', 'fishing', 'goldminer', 'maze', 'merge4096'];
+  const ids = ['butterfly', 'classroom', 'memory', 'rescue', 'parkour', 'racing', 'territory', 'shooter', 'pinyin', 'snake', 'fish', 'fishing', 'goldminer', 'maze', 'merge4096'];
   assert.deepEqual(catalog.map(game => game.id), ids);
   for (const game of catalog) {
     assert.equal(new URL(game.file, 'https://games.test').pathname, `/games/${game.id}.html`);

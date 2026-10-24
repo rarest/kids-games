@@ -11,9 +11,12 @@ test('game hall has one unified learning entrance and preserves other games and 
   assert.match(catalog.searchParams.get('v')||'',/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/,'a nonempty cache version is present');
   const source = await readFile(new URL(`..${catalog.pathname}`, import.meta.url), 'utf8');
   const context = { window: {} }; vm.runInNewContext(source, context);
-  assert.equal(context.window.GAMES.length, 14);
-  assert.equal(new Set(context.window.GAMES.map(game=>game.file)).size,14,'all entries are unique');
-  assert.deepEqual(Array.from(context.window.GAMES,game=>game.id).sort(),['classroom','fish','fishing','goldminer','maze','memory','merge4096','parkour','pinyin','racing','rescue','shooter','snake','territory']);
+  assert.equal(context.window.GAMES.length, 15);
+  assert.equal(new Set(context.window.GAMES.map(game=>game.file)).size,15,'all entries are unique');
+  assert.deepEqual(Array.from(context.window.GAMES,game=>game.id).sort(),['butterfly','classroom','fish','fishing','goldminer','maze','memory','merge4096','parkour','pinyin','racing','rescue','shooter','snake','territory']);
+  const butterfly=context.window.GAMES.find(game=>game.id==='butterfly');
+  assert.equal(new URL(butterfly.file,'https://games.test').pathname,'/games/butterfly.html');
+  assert.equal(butterfly.name,'蜜语花园');
   const classroom=context.window.GAMES.find(game=>game.id==='classroom');
   assert.equal(new URL(classroom.file,'https://games.test').pathname,'/games/classroom.html');
   assert.equal(classroom.name,'珠珠课堂');
