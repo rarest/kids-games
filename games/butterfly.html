@@ -882,7 +882,7 @@ globalThis.GardenFlight=(()=>{
         let r,g,b,h,rr;
         if(kind==='ground') {
           const bare=Math.max(0,n-.18),variation=n*12+grain*14;
-          r=72+variation+bare*20;g=88+variation-bare*17;b=43+variation*.55-bare*3;
+          r=80+variation+bare*18;g=105+variation-bare*17;b=45+variation*.55-bare*3;
           h=118+n*22+grain*55;rr=239+grain*20;
         } else if(kind==='bark') {
           const w=Math.sin(tau*(u*23+.14*Math.sin(tau*v*3)))+.43*Math.sin(tau*(u*47+.2*Math.sin(tau*v*2)));
@@ -948,7 +948,7 @@ globalThis.GardenFlight=(()=>{
       const c=canvas(),ctx=c.getContext('2d');
       ctx.beginPath();ctx.moveTo(128,248);ctx.bezierCurveTo(28,201,33,88,128,7);ctx.bezierCurveTo(222,85,232,187,128,248);ctx.closePath();
       ctx.save();ctx.clip();
-      const g=ctx.createLinearGradient(45,0,210,0);g.addColorStop(0,'#aab78c');g.addColorStop(.48,'#e0e5bf');g.addColorStop(1,'#9eaf7b');
+      const g=ctx.createLinearGradient(45,0,210,0);g.addColorStop(0,'#9caf78');g.addColorStop(.44,'#d2dfa5');g.addColorStop(.52,'#e2e8b7');g.addColorStop(1,'#a7b781');
       ctx.fillStyle=g;ctx.fillRect(0,0,size,size);
       for(let i=0;i<350;i++){
         ctx.fillStyle=`rgba(70,90,40,${random()*.08})`;ctx.fillRect(random()*size,random()*size,1,1);
@@ -961,23 +961,27 @@ globalThis.GardenFlight=(()=>{
       }
       ctx.restore();return texture(c,true);
     }
-    function tissueMap(grass=false) {
+    function tissueMap(grass=false,bump=false) {
       const c=canvas(),ctx=c.getContext('2d'),d=ctx.createImageData(size,size);
       for(let y=0;y<size;y++)for(let x=0;x<size;x++){
-        const i=(y*size+x)*4,vein=Math.cos((x-128)*(grass?.18:.09)+Math.sin(y*.018)*2);
-        const shade=grass?213+(1-y/size)*25+vein*7:239+Math.sin(y/size*Math.PI)*10+vein*2;
-        d.data[i]=clamp(shade+(random()-.5)*4);d.data[i+1]=clamp(shade+(grass?2:0));d.data[i+2]=clamp(shade-(grass?20:2));d.data[i+3]=255;
+        // Narrow veins fan out from the petal base; soft tissue stays bright under tint.
+        const u=(x-128)/128,v=1-y/size,vein=Math.cos(u*(grass?30:27)/(0.55+v*.8)+Math.sin(v*8)*.55);
+        const grain=(random()-.5)*3,fold=Math.cos(u*Math.PI)*5;
+        const shade=bump?128+vein*9+fold*2+grain:grass?220+v*20+vein*5:244+fold+v*4+vein*1.8;
+        const i=(y*size+x)*4;
+        d.data[i]=clamp(shade+grain);d.data[i+1]=clamp(shade+(grass?3:0));d.data[i+2]=clamp(shade-(grass?17:3));d.data[i+3]=255;
       }
-      ctx.putImageData(d,0,0);return texture(c,true);
+      ctx.putImageData(d,0,0);return texture(c,!bump);
     }
-    function strip(petal) {
-      const rows=petal?6:5,cols=petal?3:2,p=[],uv=[],indices=[];
+    function strip(kind) {
+      const petal=kind==='petal',leaf=kind==='leaf',rows=petal?9:leaf?7:5,cols=petal?5:leaf?3:2,p=[],uv=[],indices=[];
       for(let row=0;row<rows;row++){
-        const t=row/(rows-1),width=petal?.34*Math.pow(Math.sin(Math.PI*t),.65)+.014*(1-t)+.002:.045*Math.pow(1-t,1.2)+.0006;
+        const t=row/(rows-1),arch=Math.sin(Math.PI*t);
+        const width=petal?.37*Math.pow(arch,.62)+.016*(1-t)+.003:leaf?.32*Math.pow(arch,.9)+.004:.045*Math.pow(1-t,1.2)+.0006;
         for(let col=0;col<cols;col++){
           const s=col/(cols-1)*2-1;
-          const z=petal?.2*t*t-.07*Math.sin(Math.PI*t)+.07*s*s*Math.sin(Math.PI*t):.22*t*t+Math.abs(s)*.014*Math.sin(Math.PI*t);
-          p.push(s*width,t,z);uv.push((s+1)/2,t);
+          const z=petal?.22*t*t-.10*arch+.085*s*s*arch+.012*Math.sin(t*12+s)*Math.abs(s)*arch:leaf?.15*t*t+.065*s*s*arch:.22*t*t+Math.abs(s)*.014*arch;
+          p.push(s*width*(petal?1+.025*Math.sin(t*19+s*3):1),t,z);uv.push((s+1)/2,t);
         }
       }
       for(let y=0;y<rows-1;y++)for(let x=0;x<cols-1;x++){
@@ -985,16 +989,316 @@ globalThis.GardenFlight=(()=>{
       }
       const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(indices);g.computeVertexNormals();g.computeBoundingSphere();return g;
     }
-    return {
+    function pollenMap() {
+      const c=canvas(),ctx=c.getContext('2d');ctx.fillStyle='#e5bb42';ctx.fillRect(0,0,size,size);
+      for(let i=0;i<2600;i++){
+        const x=random()*size,y=random()*size,r=.7+random()*1.4;
+        ctx.fillStyle=i%3?'#f9df71':'#ac7a22';ctx.beginPath();ctx.arc(x,y,r,0,tau);ctx.fill();
+      }
+      return texture(c,true);
+    }
+    const kit={
       ground:surface('ground',[32,32]),bark:surface('bark',[2,2]),wood:surface('wood',[1,2]),straw:surface('straw',[3,2]),
-      leaf:new T.MeshStandardMaterial({color:0x668b43,map:leafMap(),roughness:.9,metalness:0,side:T.DoubleSide,alphaTest:.4}),
-      petal:new T.MeshStandardMaterial({map:tissueMap(),roughness:.78,metalness:0,side:T.DoubleSide}),
+      leaf:new T.MeshStandardMaterial({color:0x789c4e,map:leafMap(),roughness:.92,metalness:0,side:T.DoubleSide,alphaTest:.4}),
+      petal:new T.MeshStandardMaterial({map:tissueMap(),bumpMap:tissueMap(false,true),bumpScale:.008,roughness:.83,metalness:0,side:T.DoubleSide}),
+      pollen:new T.MeshStandardMaterial({color:0xffffff,map:pollenMap(),roughness:1,metalness:0}),
       grass:new T.MeshStandardMaterial({map:tissueMap(true),roughness:1,metalness:0,side:T.DoubleSide}),
-      palette:{grass:[0x536c32,0x6b8242,0x778e49,0x8a9953,0x435d2b,0x929959],flowers:[0xf2e9c9,0xd9b756,0xc78396,0xaba0c3,0xe2d8bd,0xca9370],leaf:[0x6c8849,0x587039,0x819459]},
-      bladeGeometry:strip(false),petalGeometry:strip(true)
+      palette:{grass:[0x557b32,0x709446,0x7f9c48,0x96a759,0x496e2e,0x94a554],flowers:[0xfff1d1,0xf2c85a,0xe291af,0xb7a2df,0xfff6e5,0xeea17b],leaf:[0x739947,0x5a8037,0x8aa758]},
+      bladeGeometry:strip('grass'),petalGeometry:strip('petal'),leafGeometry:strip('leaf')
     };
+    kit.dispose=()=>{
+      const textures=new Set();for(const value of Object.values(kit)){
+        if(value?.isMaterial){for(const key of ['map','bumpMap','roughnessMap'])if(value[key])textures.add(value[key]);value.dispose();}
+        else if(value?.isBufferGeometry)value.dispose();
+      }
+      for(const t of textures)t.dispose();
+    };
+    return kit;
+
   }
   globalThis.GardenMaterials={create};
+})();
+
+</script>
+<script>
+/* Fixed world cells: rendering slots may be reused, living plants never follow the camera. */
+globalThis.GardenVegetation=(()=>{
+ const cellSize=32,radius=3;
+ function hash(x,z,salt=0){let h=Math.imul(Math.round(x*1000)^salt,73856093)^Math.imul(Math.round(z*1000),19349663);h=Math.imul(h^(h>>>16),2246822519);return(h^(h>>>13))>>>0;}
+ function flowerStyle(f){const seed=hash(f.x,f.z,7143);return{height:.62+(seed%71)/110,angle:(seed%65536)/65536*Math.PI*2,palette:seed%6,phase:(seed%8192)/8192*Math.PI*2};}
+ function randomFor(cx,cz){let seed=hash(cx,cz,783);return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
+ function treesInCell(cx,cz){const rand=randomFor(cx,cz),out=[];for(let n=0;n<2;n++){const x=cx*cellSize+6+rand()*20,z=cz*cellSize+6+rand()*20,scale=.8+rand()*.65;if(Math.hypot(x,z-6)<18)continue;out.push({key:cx+','+cz+':'+n,x,z,scale,angle:rand()*Math.PI*2});}return out;}
+ function create(T,owner){
+  const scene=owner.scene,slots=[],records=[],matrix=new T.Object3D(),color=new T.Color(),faded=new WeakSet();let signature='',treeSnapshot=[];
+  const petalGeo=new T.BufferGeometry();petalGeo.setAttribute('position',new T.Float32BufferAttribute([0,0,0,-.28,.5,.09,.28,.5,.09,0,1,.22],3));petalGeo.setAttribute('uv',new T.Float32BufferAttribute([.5,0,0,.5,1,.5,.5,1],2));petalGeo.setIndex([0,2,1,1,2,3]);petalGeo.computeVertexNormals();
+  const coverGeo=new T.CircleGeometry(1,7);coverGeo.rotateX(-Math.PI/2);
+  const smallSphere=new T.SphereGeometry(1,6,4),canopyGeo=new T.IcosahedronGeometry(1,1),barkGeo=new T.CylinderGeometry(.64,1,1,8);
+  const canvas=document.createElement('canvas');canvas.width=canvas.height=128;const ctx=canvas.getContext('2d');ctx.fillStyle='#e1e1e1';ctx.fillRect(0,0,128,128);const leafRand=randomFor(27,91);for(let i=0;i<550;i++){ctx.fillStyle=['#bebebe','#eeeeee','#d2d2d2','#f7f7f7'][i%4];ctx.beginPath();ctx.ellipse(leafRand()*128,leafRand()*128,2+leafRand()*4,1+leafRand()*2,leafRand()*6.28,0,Math.PI*2);ctx.fill();}const canopyMap=new T.CanvasTexture(canvas);canopyMap.colorSpace=T.SRGBColorSpace;canopyMap.wrapS=canopyMap.wrapT=T.RepeatWrapping;canopyMap.repeat.set(2,2);
+  const canopyMaterial=new T.MeshStandardMaterial({color:'#ffffff',map:canopyMap,roughness:.97}),pollen=owner.pbr.pollen||owner.materials.honey;
+  function mesh(geometry,material,count,kind){const m=new T.InstancedMesh(geometry,material,count);m.count=0;m.castShadow=kind==='trees'||kind==='bark';m.receiveShadow=kind!=='trees';m.userData.worldAnchored=true;scene.add(m);const record={mesh:m,kind,center:new T.Vector3(),worldAnchored:true};records.push(record);owner.decorChunks.push(record);return m;}
+  for(let i=0;i<49;i++)slots.push({key:'',grass:mesh(owner.pbr.bladeGeometry,owner.materials.grass,900,'grass'),clover:mesh(coverGeo,owner.materials.leaf,450,'clover'),petal:mesh(petalGeo,owner.materials.petal,350,'petal'),center:mesh(smallSphere,pollen,70,'centers')});
+  const bark=mesh(barkGeo,owner.materials.bark,392,'bark'),canopy=mesh(canopyGeo,canopyMaterial,588,'trees');
+  function set(m,i,x,y,z,sx,sy,sz,rx=0,ry=0,rz=0,c){matrix.position.set(x,y,z);matrix.rotation.set(rx,ry,rz);matrix.scale.set(sx,sy,sz);matrix.updateMatrix();m.setMatrixAt(i,matrix.matrix);if(c)m.setColorAt(i,color.set(c));}
+  function flush(m,n){m.count=n;m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.computeBoundingSphere();const rec=records.find(r=>r.mesh===m);rec.center.copy(m.boundingSphere?.center||new T.Vector3());}
+  function fade(material,end){if(faded.has(material))return;faded.add(material);const previous=material.onBeforeCompile;material.onBeforeCompile=shader=>{previous?.(shader);shader.vertexShader='varying vec3 vGardenPosition;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>\nvec4 gardenVertex=vec4(transformed,1.0);\n#ifdef USE_INSTANCING\ngardenVertex=instanceMatrix*gardenVertex;\n#endif\nvGardenPosition=(modelMatrix*gardenVertex).xyz;`);shader.fragmentShader='varying vec3 vGardenPosition;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <dithering_fragment>',`float gardenFade=1.0-smoothstep(${end-8}.0,${end}.0,distance(cameraPosition.xz,vGardenPosition.xz));\nfloat gardenNoise=fract(sin(dot(floor(vGardenPosition.xz*70.0),vec2(12.9898,78.233)))*43758.5453);\nif(gardenFade<gardenNoise)discard;\n#include <dithering_fragment>`);};material.customProgramCacheKey=()=>`garden-cell-fade-${end}`;material.needsUpdate=true;}
+  function fill(slot,cx,cz,homes){const rand=randomFor(cx,cz),gx=cx*cellSize,gz=cz*cellSize,soft=owner.quality==='software';let g=0,c=0,p=0,n=0;for(let i=0;i<900;i++){const x=gx+rand()*cellSize,z=gz+rand()*cellSize,height=.19+rand()*.33,angle=rand()*Math.PI*2,width=.55+rand()*.7,flowerHeight=.17+rand()*.22;if(homes.some(h=>Math.hypot(x-h.x,z-h.z)<1.6))continue;if(!soft||hash(x,z,33)%100<45)set(slot.grass,g++,x,.004,z,width,height,width,0,angle,0,owner.pbr.palette.grass[i%owner.pbr.palette.grass.length]);if(i%6===0&&(!soft||hash(x,z,41)%100<45))for(let j=0;j<3;j++){const a=j*2.094;set(slot.clover,c++,x+Math.cos(a)*.06,.02,z+Math.sin(a)*.06,.052,.015,.075,0,a,0,['#789459','#8fa966','#a0b979'][i%3]);}if(i%13===0&&(!soft||hash(x,z,61)%100<55)){const h=flowerHeight,col=owner.pbr.palette.flowers[i%owner.pbr.palette.flowers.length];for(let j=0;j<5;j++)set(slot.petal,p++,x,h,z,.19,.15,.19,-Math.PI/2,j*Math.PI*.4,0,col);set(slot.center,n++,x,h+.014,z,.038,.023,.038);}}for(const [m,count]of [[slot.grass,g],[slot.clover,c],[slot.petal,p],[slot.center,n]])flush(m,count);slot.key=cx+','+cz;slot.cx=cx;slot.cz=cz;}
+  function forest(cells){let b=0,c=0;treeSnapshot=[];const scale=owner._forestScale||1;for(const [cx,cz]of cells)for(const tree of treesInCell(cx,cz)){if((owner.houses||[]).some(h=>Math.hypot(tree.x-h.home.x,tree.z-h.home.z)<4))continue;const s=tree.scale,height=5.4*s;treeSnapshot.push({...tree,trunkIndex:b});set(bark,b++,tree.x,height*.5,tree.z,.25*s,height,.25*s,0,tree.angle,0);for(let j=0;j<3;j++){const a=tree.angle+j*2.094;set(bark,b++,tree.x+Math.sin(a)*.5*s,height*.72+j*.28,tree.z+Math.cos(a)*.5*s,.10*s,2.1*s,.10*s,.5*Math.cos(a),0,-.5*Math.sin(a));}for(let j=0;j<6;j++){const a=j*2.4,r=j===0?0:1.0*s;set(canopy,c++,tree.x+Math.cos(a)*r,height+(j%3)*.6*s,tree.z+Math.sin(a)*r,1.65*s*scale,1.45*s,1.5*s*scale,.1,a,.1,['#5b8149','#6e9256','#799b5d','#527644'][j%4]);}}flush(bark,b);flush(canopy,c);owner.meadowCounts.trees=treeSnapshot.length;owner.meadowCounts.canopyLeaves=c;}
+  function update(local,force=false){const cx=Math.floor(local.x/cellSize),cz=Math.floor(local.z/cellSize),homes=(owner.houses||[]).map(h=>h.home);if(!homes.length)homes.push({x:0,z:6});const next=cx+','+cz+'|'+owner.biome+'|'+owner.quality+'|'+homes.map(h=>h.x+','+h.z).join(';');if(force||next!==signature){const cells=[];for(let x=cx-radius;x<=cx+radius;x++)for(let z=cz-radius;z<=cz+radius;z++)cells.push([x,z]);const need=new Set(cells.map(([x,z])=>x+','+z)),free=slots.filter(s=>!need.has(s.key));for(const [x,z]of cells){const key=x+','+z;let slot=slots.find(s=>s.key===key);if(!slot)slot=free.pop();if(force||next.split('|').slice(2).join('|')!==signature.split('|').slice(2).join('|')||slot.key!==key)fill(slot,x,z,homes);}forest(cells);signature=next;owner.renderer.shadowMap.needsUpdate=true;}
+   for(const slot of slots){const dx=Math.max(slot.cx*cellSize-local.x,0,local.x-(slot.cx+1)*cellSize),dz=Math.max(slot.cz*cellSize-local.z,0,local.z-(slot.cz+1)*cellSize),distance=Math.hypot(dx,dz);slot.grass.visible=slot.clover.visible=distance<34;slot.petal.visible=slot.center.visible=distance<50;fade(slot.grass.material,32);fade(slot.clover.material,32);fade(slot.petal.material,48);fade(slot.center.material,48);} }
+  return{update,snapshot:()=>treeSnapshot.map(t=>({...t})),slots,records,bark,canopy};
+ }
+ return{hash,flowerStyle,treesInCell,cellSize,create};
+})();
+if(typeof module!=='undefined')module.exports=globalThis.GardenVegetation;
+
+</script>
+<script>
+/* Shared procedural model geometry. No assets, animation loop, or view-model edits. */
+(() => {
+  'use strict';
+  const kits = new WeakMap();
+  function createKit(T) {
+    if (kits.has(T)) return kits.get(T);
+    const V=(x=0,y=0,z=0)=>new T.Vector3(x,y,z);
+    const sphere=new T.SphereGeometry(1,12,8),cylinder=new T.CylinderGeometry(1,1,1,8);
+    const solid=new T.MeshStandardMaterial({vertexColors:true,roughness:.8,metalness:.025});
+    const wingGeometries=new Map(),hunterGeometries=new Map();
+    const unitY=V(0,1,0);
+    // Every colored part is merged once. Copies of an animal share this geometry.
+    function assembly() {
+      const parts=[];
+      function add(geometry,color,position=[0,0,0],scale=[1,1,1],rotation=null) {
+        const g=geometry.clone(),m=new T.Matrix4(),q=new T.Quaternion();
+        if(rotation)q.setFromEuler(new T.Euler(...rotation));
+        m.compose(V(...position),q,V(...scale));g.applyMatrix4(m);parts.push({g,color:new T.Color(color)});
+      }
+      function ball(color,position,scale){add(sphere,color,position,scale);}
+      function rod(a,b,radius,color) {
+        const delta=V(...b).sub(V(...a)),g=cylinder.clone();
+        const m=new T.Matrix4().compose(V(...a).add(V(...b)).multiplyScalar(.5),new T.Quaternion().setFromUnitVectors(unitY,delta.clone().normalize()),V(radius,delta.length(),radius));
+        g.applyMatrix4(m);parts.push({g,color:new T.Color(color)});
+      }
+      function curve(points,radius,color,segments=12) {
+        const path=new T.CatmullRomCurve3(points.map(p=>V(...p)));
+        const g=new T.TubeGeometry(path,segments,radius,5,false);parts.push({g,color:new T.Color(color)});
+      }
+      function finish() {
+        const positions=[],normals=[],colors=[];
+        for(const {g,color}of parts){
+          const flat=g.index?g.toNonIndexed():g,p=flat.attributes.position,n=flat.attributes.normal;
+          for(let i=0;i<p.count;i++){positions.push(p.getX(i),p.getY(i),p.getZ(i));normals.push(n.getX(i),n.getY(i),n.getZ(i));colors.push(color.r,color.g,color.b);}
+          if(flat!==g)flat.dispose();g.dispose();
+        }
+        const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(positions,3));geometry.setAttribute('normal',new T.Float32BufferAttribute(normals,3));geometry.setAttribute('color',new T.Float32BufferAttribute(colors,3));geometry.computeBoundingSphere();return geometry;
+      }
+      return {add,ball,rod,curve,finish};
+    }
+    function mesh(geometry,name,parent) {const m=new T.Mesh(geometry,solid);m.name=name;m.castShadow=m.receiveShadow=true;parent.add(m);return m;}
+    function wingGeometry(id) {
+      const family=id==='swallow'?'swallow':id==='leaf'||id==='dry-leaf'?'leaf':'round';
+      if(wingGeometries.has(family))return wingGeometries.get(family);
+      // Same canvas coordinates as the painted veins; UVs follow that outline.
+      const s=new T.Shape();s.moveTo(22,113);
+      if(family==='leaf'){
+        s.bezierCurveTo(70,72,159,13,227,21);s.bezierCurveTo(235,81,216,150,152,193);s.bezierCurveTo(100,225,51,194,22,139);
+      }else{
+        s.bezierCurveTo(60,51,167,7,216,37);s.bezierCurveTo(254,75,221,126,165,141);
+        if(family==='swallow'){
+          s.bezierCurveTo(204,154,210,181,181,198);s.lineTo(189,242);s.lineTo(169,217);s.lineTo(155,240);s.lineTo(151,202);s.bezierCurveTo(99,232,57,188,22,142);
+        }else{s.bezierCurveTo(210,160,198,209,151,216);s.bezierCurveTo(100,229,54,186,22,142);}
+      }
+      s.closePath();const source=new T.ShapeGeometry(s,18).toNonIndexed();
+      // Split each triangle once, so the mild camber has interior vertices too.
+      const p=source.attributes.position,positions=[],uvs=[];
+      function vertex(x,y){const u=x/256,v=y/256;positions.push(u*.83,Math.sin(u*Math.PI)*.016,(v-.5)*1.42);uvs.push(u,1-v);}
+      for(let i=0;i<p.count;i+=3){const a=[p.getX(i),p.getY(i)],b=[p.getX(i+1),p.getY(i+1)],c=[p.getX(i+2),p.getY(i+2)],ab=[(a[0]+b[0])/2,(a[1]+b[1])/2],bc=[(b[0]+c[0])/2,(b[1]+c[1])/2],ca=[(c[0]+a[0])/2,(c[1]+a[1])/2];for(const point of [a,ab,ca,ab,b,bc,ca,bc,c,ab,bc,ca])vertex(...point);}
+      source.dispose();const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('uv',new T.Float32BufferAttribute(uvs,2));g.computeVertexNormals();g.computeBoundingSphere();g.userData.silhouette=family;wingGeometries.set(family,g);return g;
+    }
+    let butterflyBody;
+    function butterflyAnatomy() {
+      if(butterflyBody)return butterflyBody;
+      const b=assembly(),shell='#564239',trim='#b99866',eye='#322e25';
+      b.ball(shell,[0,.026,-.18],[.084,.077,.15]);
+      b.ball('#7f6551',[0,.04,-.26],[.071,.071,.075]);
+      for(let i=0;i<8;i++){const radius=.057-i*.0046;b.ball(i%2?'#80664c':shell,[0,.005,.005+i*.038],[radius,.047-i*.0028,.038]);}
+      b.ball(shell,[0,.035,-.35],[.075,.064,.074]);
+      for(const side of [-1,1]){
+        b.ball(eye,[side*.058,.05,-.385],[.033,.037,.027]);
+        b.ball('#b99a68',[side*.067,.067,-.404],[.009,.01,.005]);
+        b.curve([[side*.025,.075,-.394],[side*.066,.12,-.48],[side*.126,.15,-.53],[side*.158,.145,-.535]],.006,shell);
+        b.ball(trim,[side*.158,.145,-.535],[.016,.011,.024]);
+        for(let i=0;i<3;i++){
+          const z=-.24+i*.085;
+          b.curve([[side*.04,-.01,z],[side*(.09+i*.012),-.07,z+.027],[side*(.155+i*.016),-.115,z-.035]],.0045,shell,6);
+        }
+        // Short thoracic hairs make the body read as velvet in close views.
+        for(let i=0;i<6;i++)b.rod([side*.049,.05,-.27+i*.026],[side*.075,.074,-.27+i*.026],.0025,trim);
+      }
+      const spiral=[];for(let i=0;i<=20;i++){const t=i/20,angle=t*Math.PI*3.2;spiral.push([0,-.008-Math.sin(angle)*(.032-t*.02),-.419-Math.cos(angle)*(.032-t*.02)]);}b.curve(spiral,.004,'#a18059',24);
+      butterflyBody=b.finish();butterflyBody.userData.anatomy={legs:6,antennae:2,compoundEyes:2,abdomenSegments:8,proboscis:true};return butterflyBody;
+    }
+    function setButterflySkin(actor,id) {const g=wingGeometry(id);for(const pivot of actor.wings)pivot.children[0].geometry=g;actor.root.userData.wingSilhouette=g.userData.silhouette;}
+    function enhanceButterfly(actor,id) {
+      if(!actor.root.getObjectByName('butterfly:anatomy')){
+        // Original body/head/antenna follow the two wing pivots. Keep references
+        // and worldTwig intact; only their low-detail predecessors are hidden.
+        for(const child of actor.root.children.slice(2,5))child.visible=false;
+        mesh(butterflyAnatomy(),'butterfly:anatomy',actor.root);
+      }
+      setButterflySkin(actor,id);return actor;
+    }
+    let timberGeometry,thatchGeometry,roofGeometry;
+    function enhanceHut(hut) {
+      if(hut.getObjectByName('hut:carved-timber'))return hut;
+      if(!roofGeometry){
+        const profile=[[0,.95],[.22,.90],[.50,.77],[.83,.51],[1.17,.16],[1.50,-.21],[1.81,-.56],[2.05,-.78],[2.18,-.88],[2.18,-.95]].reverse();
+        roofGeometry=new T.LatheGeometry(profile.map(([r,y])=>new T.Vector2(r,y)),64);roofGeometry.userData.curvedThatch=true;
+        const t=assembly(),thatch=assembly();
+        // The front opening is along +Z. Nothing bridges its walkable width.
+        const opening=hut.children[0].geometry.parameters.thetaStart||.7;
+        for(let i=0;i<28;i++){const angle=i/28*Math.PI*2;if(angle<opening+.07||angle>Math.PI*2-opening-.07)continue;const x=Math.sin(angle),z=Math.cos(angle);t.rod([x*1.67,.23,z*1.67],[x*1.565,2.1,z*1.565],.036,i%3?'#886242':'#a17a51');}
+        for(const y of [.35,1.95]){
+          const radius=y>.5?1.58:1.68,points=[];
+          for(let i=0;i<=56;i++){const angle=opening+i/56*(Math.PI*2-opening*2);points.push([Math.sin(angle)*radius,y,Math.cos(angle)*radius]);}
+          t.curve(points,.032,'#6f5239',56);
+        }
+        // Narrow overlapping straw lips follow the curved roof profile.
+        for(let i=1;i<8;i++){const point=profile[i];const ring=new T.TorusGeometry(point[0]-.012,.024,5,64);ring.rotateX(Math.PI/2);thatch.add(ring,i%2?'#b49b62':'#cfb77e',[0,3+point[1]-.018,0],[1,.75,1]);ring.dispose();}
+        timberGeometry=t.finish();thatchGeometry=thatch.finish();
+      }
+      hut.children[2].geometry=roofGeometry;hut.children[2].name='hut:curved-thatch-roof';
+      mesh(timberGeometry,'hut:carved-timber',hut);mesh(thatchGeometry,'hut:layered-eaves',hut);
+      const fibers=hut.children[3],matrix=new T.Matrix4(),position=V(),q=new T.Quaternion();
+      if(fibers?.isInstancedMesh){
+        for(let i=0;i<fibers.count;i++){const angle=i*2.3999632297,t=.05+((i*71)%397)/397*.94,r=2.18*t,y=3.95-1.9*Math.pow(t,1.29),slope=-1.9*1.29*Math.pow(t,.29)/2.18;position.set(Math.cos(angle)*r,y+.018,Math.sin(angle)*r);q.setFromUnitVectors(unitY,V(Math.cos(angle),slope,Math.sin(angle)).normalize());matrix.compose(position,q,V(.006,.11+(i%5)*.021,.006));fibers.setMatrixAt(i,matrix);}
+        fibers.instanceMatrix.needsUpdate=true;fibers.computeBoundingSphere();
+      }
+      hut.userData.model='round-thatched-cottage';return hut;
+    }
+    function hunterBody(index) {
+      const key=index%4;if(hunterGeometries.has(key))return hunterGeometries.get(key);
+      const shirt=['#bc9272','#87a4aa','#a19ab5','#9ba77d'][key],skin='#e1b08a',hat='#cbb47e',boots='#5e5145';
+      const b=assembly();
+      const torsoProfile=[[0,2.18],[.43,2.18],[.50,2.36],[.52,2.8],[.57,3.22],[.59,3.37],[.48,3.55],[.24,3.62],[0,3.62]].map(([r,y])=>new T.Vector2(r,y));
+      const torso=new T.LatheGeometry(torsoProfile,24);b.add(torso,shirt,[0,0,0],[1,1,.73]);torso.dispose();
+      b.ball('#777e70',[0,2.09,.015],[.49,.24,.34]);
+      b.add(new T.CylinderGeometry(.51,.51,.13,16),boots,[0,2.21,0],[1,1,.75]);
+      b.add(new T.BoxGeometry(.16,.11,.025),'#bfa575',[0,2.21,-.394]);
+      b.ball(skin,[0,3.68,0],[.18,.23,.17]);b.ball(skin,[0,4.045,-.015],[.43,.5,.405]);
+      b.ball('#d7a17e',[0,3.84,-.04],[.32,.22,.31]);
+      b.ball(skin,[0,4.03,-.405],[.085,.115,.115]);
+      for(const side of [-1,1]){
+        b.ball(skin,[side*.42,4.045,0],[.075,.13,.08]);
+        b.ball('#433d33',[side*.15,4.11,-.389],[.039,.048,.023]);b.ball('#fff3dc',[side*.143,4.127,-.41],[.012,.014,.008]);
+        b.curve([[side*.08,4.23,-.389],[side*.16,4.25,-.392],[side*.215,4.22,-.37]],.013,'#64503c',8);
+        b.ball('#cf9277',[side*.24,3.98,-.35],[.06,.025,.015]);
+        b.add(new T.BoxGeometry(.22,.27,.04),'#baa588',[side*.27,2.98,-.379]);
+        b.add(new T.BoxGeometry(.25,.065,.052),'#cbb79a',[side*.27,3.11,-.39]);
+        b.ball('#80634b',[side*.27,3.085,-.422],[.016,.016,.009]);
+        b.add(new T.BoxGeometry(.27,.12,.07),'#cfbaa0',[side*.19,3.52,-.31],[1,1,1],[0,0,side*.38]);
+      }
+      b.curve([[-.115,3.86,-.35],[0,3.83,-.39],[.115,3.86,-.35]],.011,'#80513d',12);
+      // A safari crown with rounded sides, a dipped brim, and fabric band.
+      const hatProfile=[[0,.43],[.24,.43],[.41,.38],[.46,.18],[.49,.12],[.70,.085],[.73,.025],[.69,0],[.48,.065]].map(([r,y])=>new T.Vector2(r,y));
+      const hatGeo=new T.LatheGeometry(hatProfile,32);b.add(hatGeo,hat,[0,4.43,0]);hatGeo.dispose();
+      b.add(new T.CylinderGeometry(.474,.482,.105,24),'#806b48',[0,4.61,0]);
+      const body=b.finish(),arm=assembly(),leg=assembly();
+      arm.ball(shirt,[0,-.25,0],[.215,.36,.22]);arm.ball(shirt,[0,-.58,0],[.174,.29,.17]);
+      arm.add(new T.CylinderGeometry(.18,.18,.095,12),'#c7b191',[0,-.77,0]);
+      arm.ball(skin,[0,-.94,-.015],[.142,.27,.145]);arm.ball(skin,[0,-1.23,-.025],[.154,.18,.14]);
+      arm.ball('#d5a27e',[-.13,-1.2,-.065],[.065,.1,.075]);
+      leg.ball('#858c7b',[0,-.39,0],[.205,.51,.22]);leg.ball('#77816e',[0,-.94,0],[.18,.40,.185]);
+      leg.add(new T.CylinderGeometry(.185,.195,.11,12),'#a39f80',[0,-1.28,0]);
+      leg.ball('#675a46',[0,-1.48,0],[.2,.27,.215]);leg.ball(boots,[0,-1.73,-.13],[.247,.17,.355]);
+      leg.add(new T.BoxGeometry(.43,.085,.57),'#443f35',[0,-1.83,-.13]);
+      for(let i=0;i<3;i++)leg.rod([-.095,-1.62-i*.045,-.28],[.095,-1.62-i*.045,-.28],.011,'#bcb18f');
+      const data={body,arm:arm.finish(),leg:leg.finish()};hunterGeometries.set(key,data);return data;
+    }
+    let netDetails;
+    function enhanceHunter(actor,index) {
+      if(actor.root.getObjectByName('hunter:safari-body'))return actor;
+      const data=hunterBody(index);
+      for(const child of actor.root.children.slice(0,4))child.visible=false;
+      mesh(data.body,'hunter:safari-body',actor.root);
+      for(const [i,pivot]of actor.arms.entries()){for(const c of pivot.children)if(c!==actor.net)c.visible=false;mesh(data.arm,'hunter:arm-'+i,pivot);}
+      for(const [i,pivot]of actor.legs.entries()){for(const c of pivot.children)c.visible=false;mesh(data.leg,'hunter:leg-'+i,pivot);}
+      if(!netDetails){const n=assembly();n.add(new T.CylinderGeometry(.048,.048,.32,10),'#6d6650',[0,0,-.12],[1,1,1],[Math.PI/2,0,0]);n.add(new T.CylinderGeometry(.047,.047,.09,10),'#d6c5a0',[0,0,-1.38],[1,1,1],[Math.PI/2,0,0]);for(let i=0;i<12;i++){const a=i/12*Math.PI*2;n.ball('#cfbd8b',[Math.cos(a)*.55,Math.sin(a)*.55,-1.6],[.043,.043,.03]);}netDetails=n.finish();}
+      mesh(netDetails,'hunter:net-bindings',actor.net);actor.root.userData.model='friendly-safari-collector';return actor;
+    }
+    const kit={enhanceButterfly,setButterflySkin,enhanceHut,enhanceHunter};kits.set(T,kit);return kit;
+  }
+  globalThis.GardenModels={createKit};
+})();
+
+</script>
+<script>
+/* One opaque sky draw: gradient, soft clouds and a celestial disc in linear light. */
+(() => {
+ 'use strict';
+ const presets={
+  meadow:{zenith:'#4d8fc6',horizon:'#d6e5db',cloud:'#fdfaf0',sun:'#fff2ce',direction:[-.55,.66,-.50],coverage:.54,strength:.82},
+  forest:{zenith:'#538c9e',horizon:'#bacbb5',cloud:'#e2e9d8',sun:'#fff5cd',direction:[-.55,.66,-.50],coverage:.49,strength:.69},
+  sunset:{zenith:'#817caa',horizon:'#f1bc97',cloud:'#f7c5b3',sun:'#fff2ba',direction:[-.65,.20,-.73],coverage:.56,strength:.72},
+  moon:{zenith:'#101b38',horizon:'#394862',cloud:'#64728b',sun:'#e4edff',direction:[-.48,.49,-.73],coverage:.62,strength:.36}
+ };
+ function create(T,owner){
+  const scene=owner.scene?.isScene?owner.scene:owner;
+  const renderer=owner.renderer;
+  const uniforms={zenith:{value:new T.Color()},horizon:{value:new T.Color()},cloudTint:{value:new T.Color()},sunTint:{value:new T.Color()},sunDirection:{value:new T.Vector3()},coverage:{value:.54},cloudStrength:{value:.8},drift:{value:0},night:{value:0}};
+  const material=new T.ShaderMaterial({
+   uniforms,side:T.BackSide,depthWrite:false,depthTest:false,fog:false,toneMapped:false,
+   vertexShader:'varying vec3 skyDirection; void main(){skyDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+   fragmentShader:`
+    varying vec3 skyDirection;
+    uniform vec3 zenith,horizon,cloudTint,sunTint,sunDirection;
+    uniform float coverage,cloudStrength,drift,night;
+    float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+1.),f.x),f.y);}
+    void main(){
+     vec3 d=normalize(skyDirection);
+     float elevation=max(d.y,0.0);
+     vec3 color=mix(horizon,zenith,pow(elevation,.56));
+     vec2 q=d.xz/max(d.y+.23,.18)*1.65+vec2(drift,0.0);
+     float billow=noise(q)*.56+noise(q*2.09+3.7)*.29+noise(q*4.13-5.3)*.15;
+     float cloud=smoothstep(coverage,coverage+.20,billow)*smoothstep(.025,.18,d.y);
+     color=mix(color,cloudTint,cloud*cloudStrength);
+     float sunDot=dot(d,sunDirection);
+     float halo=pow(max(sunDot,0.0),36.0)*(1.0-night)*.12;
+     color=mix(color,sunTint,halo);
+     float disc=smoothstep(.99922,.99948,sunDot);
+     color=mix(color,sunTint,disc*(1.0-cloud*.75));
+     gl_FragColor=vec4(color,1.0);
+     #include <colorspace_fragment>
+    }`
+  });
+  material.name='garden-atmosphere';
+  const geometry=new T.SphereGeometry(125,24,12),dome=new T.Mesh(geometry,material);
+  dome.name='garden-sky';dome.renderOrder=-100;dome.frustumCulled=false;scene.add(dome);
+  let biome='',pmrem=null,environment=null,disposed=false;
+  function disableEnvironment(){if(scene.environment===environment?.texture)scene.environment=null;environment?.dispose();environment=null;}
+  function enableEnvironment(){
+   if(!renderer||disposed||environment)return false;
+   const gl=renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');
+   const device=String(ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER));
+   if(/swiftshader|llvmpipe|software raster|microsoft basic render/i.test(device)||owner.quality==='software')return false;
+   pmrem??=new T.PMREMGenerator(renderer);
+   const envScene=new T.Scene(),envDome=new T.Mesh(geometry,material);envScene.add(envDome);
+   environment=pmrem.fromScene(envScene,.14,.1,200);scene.environment=environment.texture;return true;
+  }
+  const api={dome,material,uniforms,
+   setBiome(id='meadow'){
+    if(!presets[id])id='meadow';if(id===biome)return;biome=id;
+    const p=presets[id];uniforms.zenith.value.set(p.zenith);uniforms.horizon.value.set(p.horizon);uniforms.cloudTint.value.set(p.cloud);uniforms.sunTint.value.set(p.sun);uniforms.sunDirection.value.set(...p.direction).normalize();uniforms.coverage.value=p.coverage;uniforms.cloudStrength.value=p.strength;uniforms.night.value=id==='moon'?1:0;
+    if(scene.fog)scene.fog.color.set(p.horizon);
+    if(environment){disableEnvironment();enableEnvironment();}
+   },
+   update(local,time=0){dome.position.set(local.x||0,0,local.z||0);uniforms.drift.value=Math.max(0,time)*.0009;},
+   enableEnvironment,disableEnvironment,
+   dispose(){if(disposed)return;disposed=true;disableEnvironment();pmrem?.dispose();dome.removeFromParent();geometry.dispose();material.dispose();}
+  };
+  api.setBiome('meadow');return api;
+ }
+ globalThis.GardenAtmosphere={create};
 })();
 
 </script>
@@ -1086,6 +1390,7 @@ globalThis.GardenFlight=(()=>{
   }
   if(!T){globalThis.drawSkinThumbnail=drawSkinThumbnail;return;}
   const V = (x=0,y=0,z=0)=>new T.Vector3(x,y,z);
+  const modelKit=globalThis.GardenModels?.createKit(T);
   const mat = (color,extra={})=>new T.MeshStandardMaterial({color,roughness:.88,...extra});
 
   class GardenScene {
@@ -1101,7 +1406,7 @@ globalThis.GardenFlight=(()=>{
       this.camera=new T.PerspectiveCamera(72,1,.04,160);this.camera.rotation.order='YXZ';this.scene.add(this.camera);
       this.ambient=new T.HemisphereLight('#bfd4eb','#4c482d',.80);this.scene.add(this.ambient);
       const light=new T.DirectionalLight('#fff0d4',3.1);light.position.set(-18,28,12);light.castShadow=true;
-      light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-18,right:18,top:18,bottom:-18,near:.5,far:90});light.shadow.bias=-.00022;light.shadow.normalBias=.018;light.shadow.radius=2.2;
+      light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-18,right:18,top:18,bottom:-18,near:.5,far:90});light.shadow.bias=-.00022;light.shadow.normalBias=.04;light.shadow.radius=2.2;
       this.scene.add(light,light.target);this.sun=light;
       this.raycaster=new T.Raycaster();this.groundPlane=new T.Plane(V(0,1,0),-.1);
       this._matrix=new T.Object3D();this._color=new T.Color();this._textures=new Map();
@@ -1109,7 +1414,7 @@ globalThis.GardenFlight=(()=>{
       this.materials={stem:mat('#5f9365'),grass:mat('#8eaf65'),leaf:mat('#6f9b66'),bark:mat('#9d7c61'),stone:mat('#b7baaa'),shadow:new T.MeshBasicMaterial({color:'#4a754c',transparent:true,opacity:.13,depthWrite:false}),body:mat('#63515e'),honey:mat('#ffc94e',{emissive:'#d49415',emissiveIntensity:.35}),white:mat('#fff2df'),skin:mat('#e9bd91'),shoe:mat('#765f55')};
       this.pbr=globalThis.GardenMaterials.create(T);Object.assign(this.materials,{grass:this.pbr.grass,leaf:this.pbr.leaf,bark:this.pbr.bark,wood:this.pbr.wood,straw:this.pbr.straw,petal:this.pbr.petal});
       this.hero=[];this.hunters=[];this.flowers=[];
-      this._world();this._hut();this._board();this._initHouses();this._firstPersonHand();
+      this._world();this.atmosphere=globalThis.GardenAtmosphere?.create(T,this);this._hut();this._board();this._initHouses();this._firstPersonHand();
       this.flowerStems=new T.InstancedMesh(this.geo.cylinder,this.materials.stem,240);
       this.flowerLeaves=new T.InstancedMesh(this.pbr.petalGeometry,this.materials.leaf,480);
       this.flowerPetals=new T.InstancedMesh(this.pbr.petalGeometry,this.materials.petal,1920);
@@ -1139,78 +1444,41 @@ globalThis.GardenFlight=(()=>{
       return chunks.size;
     }
     _world() {
-      this.decorChunks=[];this.decorTileSize=96;
-      // Wrap shared decorative chunks around the player; houses keep world coordinates.
+      this.decorChunks=[];this.decorTileSize=32;
       this.ground=this._mesh(new T.PlaneGeometry(400,400,1,1),this.pbr.ground,this.scene,0,-.012,0);this.ground.rotation.x=-Math.PI/2;this.ground.castShadow=false;this.ground.receiveShadow=true;
-      const grass=[],clovers=[],littlePetals=[],littleCenters=[],stones=[],trunks=[],branches=[],crowns=[];
-      let seed=783;
-      const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
-      const grassColors=this.pbr.palette.grass,flowerColors=this.pbr.palette.flowers;
-      for(let i=0;i<17800;i++){
-        const x=(rand()-.5)*this.decorTileSize,z=(rand()-.5)*this.decorTileSize;
-        if(Math.hypot(x,z-6)<1.35||Math.abs(x)<.45&&z>6.7&&z<10)continue;
-        const h=.17+rand()*.33,w=.55+rand()*.65;
-        grass.push([x,.004,z,w,h,w,rand()*.14,rand()*Math.PI*2,(rand()-.5)*.24,grassColors[i%grassColors.length]]);
-        if(i%6===0){for(let j=0;j<3;j++){const angle=j*2.094;clovers.push([x+Math.cos(angle)*.07,.028,z+Math.sin(angle)*.07,.055,.013,.08,0,angle,0,grassColors[(i+1)%grassColors.length]]);}}
-        if(i%13===0&&Math.hypot(x,z-6)>1.65){
-          const height=.15+rand()*.27,color=flowerColors[i%flowerColors.length];
-          for(let j=0;j<5;j++){const angle=j*Math.PI*2/5;littlePetals.push([x,height,z,.22,.15,.22,-Math.PI/2,angle,0,color]);}
-          littleCenters.push([x,height+.008,z,.043,.022,.043,0,0,0]);
-        }
-      }
-      const tinySphere=new T.SphereGeometry(1,5,3);
-      const cloverGeometry=new T.PlaneGeometry(1,1);cloverGeometry.rotateX(-Math.PI/2);
-      const cloverMaterial=this.materials.leaf.clone();cloverMaterial.color.set('#8a9c66');
-      const meadowPetal=new T.BufferGeometry();meadowPetal.setAttribute('position',new T.Float32BufferAttribute([0,0,0,-.28,.5,.06,.28,.5,.06,0,1,.15],3));meadowPetal.setAttribute('uv',new T.Float32BufferAttribute([.5,0,0,.5,1,.5,.5,1],2));meadowPetal.setIndex([0,2,1,1,2,3]);meadowPetal.computeVertexNormals();
-      const grassChunks=this._chunks(this.pbr.bladeGeometry,this.materials.grass,grass,false);
-      this._chunks(cloverGeometry,cloverMaterial,clovers,false,'clover');
-      this._chunks(meadowPetal,this.materials.petal,littlePetals,false,'petal');
-      this._chunks(tinySphere,mat('#b29345',{roughness:1}),littleCenters,false,'centers');
-      // Trees form an irregular distant forest instead of surrounding a toy island.
-      for(let i=0;i<52;i++){
-        const a=i*2.399963+rand()*.14,r=1.05+rand()*.28,x=Math.cos(a)*43*r,z=Math.sin(a)*35*r,s=.9+rand()*.7;
-        trunks.push([x,2.7*s,z,.20*s,5.4*s,.23*s,0,a,(rand()-.5)*.08]);
-        for(let k=0;k<3;k++)branches.push([x+Math.sin(a+k*2)*.35,4*s+k*.4,z+Math.cos(a+k*2)*.35,.12*s,2.8*s,.12*s,.45*Math.sin(a+k*2),0,-.45*Math.cos(a+k*2)]);
-        for(let k=0;k<9;k++){const angle=k*2.399963;crowns.push([x+Math.sin(angle)*(k%3)*.53*s,(5.0+(k%4)*.55)*s,z+Math.cos(angle)*(k%3)*.53*s,1.7*s,1.5*s,1.65*s,0,angle,0,['#3e5235','#4b5d38','#596c42'][i%3]]);}
-      }
-      const leafCards=[];
-      for(const crown of crowns)for(let j=0;j<20;j++){
-        const a=rand()*Math.PI*2,h=rand()*2-1,r=Math.sqrt(1-h*h),spread=.55+rand()*.45;
-        leafCards.push([crown[0]+Math.cos(a)*r*crown[3]*spread,crown[1]+h*crown[4]*spread,crown[2]+Math.sin(a)*r*crown[5]*spread,.50+rand()*.30,.7+rand()*.35,1,rand()*Math.PI,rand()*Math.PI*2,rand()*Math.PI,['#6c7c53','#7d8b5e','#566d47'][j%3]]);
-      }
-      const canopyMaterial=this.materials.leaf.clone();canopyMaterial.color.set('#ffffff');
-      this._chunks(new T.CylinderGeometry(.65,1,1,9),this.materials.bark,trunks,true,'bark');this._chunks(this.geo.cylinder,this.materials.bark,branches,true,'bark');this._chunks(new T.PlaneGeometry(1,1),canopyMaterial,leafCards,true,'trees');
-      for(let i=0;i<80;i++){const a=i*2.399963,r=.83+rand()*.5,x=Math.cos(a)*43*r,z=Math.sin(a)*35*r,s=.16+rand()*.5;stones.push([x,s*.45,z,s,s*.55,s*.8,.1,a,.1,['#7b7c6e','#999a86','#64695f'][i%3]]);}
-      this._chunks(new T.IcosahedronGeometry(1,1),mat('#ffffff',{roughness:1}),stones,true,'stone');
-      this.meadowCounts={grass:grass.length,decorativeFlowers:littleCenters.length,grassChunks,trees:52,canopyLeaves:leafCards.length};
+      this.meadowCounts={grass:44100,decorativeFlowers:3430,grassChunks:49,trees:0,canopyLeaves:0};
+      this.vegetation=GardenVegetation.create(T,this);this.vegetation.update({x:0,z:6});
       this.safeRing=this._mesh(new T.RingGeometry(2.10,2.17,64),new T.MeshBasicMaterial({color:'#c2ac70',transparent:true,opacity:.23,depthWrite:false}),this.scene,0,.016,6);this.safeRing.rotation.x=-Math.PI/2;
       this.obstacleGroup=new T.Group();this.scene.add(this.obstacleGroup);
     }
     setBiome(id='meadow') {
       const presets={
-        meadow:{sky:'#b3c9d8',fog:[40,94],ground:'#ffffff',grass:'#ffffff',clover:'#8a9c66',petal:'#ffffff',trees:'#ffffff',bark:'#ffffff',sun:'#fff0d4',power:3.1,ambient:'#bfd4eb',soil:'#4c482d',fill:.80,treeScale:1,flowers:[0xf2e9c9,0xd9b756,0xc78396,0xaba0c3,0xe2d8bd,0xca9370]},
-        forest:{sky:'#849b87',fog:[25,76],ground:'#759276',grass:'#8bb58c',clover:'#6fa68b',petal:'#d4e8bd',trees:'#78b99b',bark:'#a3b7a6',sun:'#dcecc3',power:2.05,ambient:'#b2d8c7',soil:'#293f35',fill:1.05,treeScale:.65,flowers:[0xc3d8ab,0xede3a1,0x97c3c1,0xd8e7cb,0xb1a8d4,0x80adab]},
-        sunset:{sky:'#efb58f',fog:[38,96],ground:'#eec99b',grass:'#e6c276',clover:'#c5ae6e',petal:'#ffd1b0',trees:'#d6a175',bark:'#c5a295',sun:'#ffb575',power:3.5,ambient:'#f2bbac',soil:'#71504b',fill:.72,treeScale:.92,flowers:[0xffbc65,0xf2dc83,0xe98c79,0xdc9aac,0xf3cbb4,0xe7aa5e]},
-        moon:{sky:'#17233f',fog:[25,85],ground:'#738bb3',grass:'#8299ca',clover:'#8caac5',petal:'#d8d8ff',trees:'#8aa5cf',bark:'#8a96af',sun:'#a8c7ff',power:1.5,ambient:'#a6bde7',soil:'#252940',fill:.72,treeScale:.84,flowers:[0xb9d7ff,0xe1c5ff,0xc0f0ed,0xe1e6ff,0x92b3ef,0xcca2df]}
+        meadow:{sky:'#b3c9d8',fog:[40,94],ground:'#ffffff',grass:'#ffffff',clover:'#8a9c66',petal:'#ffffff',trees:'#ffffff',bark:'#ffffff',sun:'#fff0d4',power:3.1,ambient:'#bfd4eb',soil:'#78875e',fill:1.18,treeScale:1,flowers:[0xfff1d1,0xf2c85a,0xe291af,0xb7a2df,0xfff6e5,0xeea17b]},
+        forest:{sky:'#849b87',fog:[25,76],ground:'#759276',grass:'#8bb58c',clover:'#6fa68b',petal:'#d4e8bd',trees:'#78b99b',bark:'#a3b7a6',sun:'#dcecc3',power:2.05,ambient:'#b2d8c7',soil:'#546e58',fill:1.20,treeScale:.65,flowers:[0xc3d8ab,0xede3a1,0x97c3c1,0xd8e7cb,0xb1a8d4,0x80adab]},
+        sunset:{sky:'#efb58f',fog:[38,96],ground:'#eec99b',grass:'#e6c276',clover:'#c5ae6e',petal:'#ffd1b0',trees:'#d6a175',bark:'#c5a295',sun:'#ffb575',power:3.5,ambient:'#f2bbac',soil:'#886b5c',fill:.98,treeScale:.92,flowers:[0xffbc65,0xf2dc83,0xe98c79,0xdc9aac,0xf3cbb4,0xe7aa5e]},
+        moon:{sky:'#17233f',fog:[25,85],ground:'#738bb3',grass:'#8299ca',clover:'#8caac5',petal:'#d8d8ff',trees:'#8aa5cf',bark:'#8a96af',sun:'#a8c7ff',power:1.5,ambient:'#a6bde7',soil:'#414b67',fill:.85,treeScale:.84,flowers:[0xb9d7ff,0xe1c5ff,0xc0f0ed,0xe1e6ff,0x92b3ef,0xcca2df]}
       };
       if(!presets[id])id='meadow';if(this.biome===id)return;
       this.biome=id;const b=presets[id];this._flowerPalette=b.flowers;
       this.scene.background.set(b.sky);this.scene.fog.color.set(b.sky);this.scene.fog.near=b.fog[0];this.scene.fog.far=b.fog[1];
       this.sun.color.set(b.sun);this.sun.intensity=b.power;this.ambient.color.set(b.ambient);this.ambient.groundColor.set(b.soil);this.ambient.intensity=b.fill;
       this.ground.material.color.set(b.ground);
-      for(const {mesh,kind} of this.decorChunks){mesh.material.color.set(b[kind]||'#ffffff');if(kind==='trees'||kind==='bark')mesh.scale.set(b.treeScale,1,b.treeScale);}
+      for(const {mesh,kind} of this.decorChunks){mesh.material.color.set(b[kind]||'#ffffff');if(!mesh.userData.worldAnchored&&(kind==='trees'||kind==='bark'))mesh.scale.set(b.treeScale,1,b.treeScale);}
       this.flowerPetals.material.color.set(b.petal);this.flowerLeaves.material.color.set(b.clover);
       if(!this.stars){
         const points=[];for(let i=0;i<180;i++){const a=i*2.399963,r=45+(i%23)*2;points.push(Math.cos(a)*r,24+(i*17%57),Math.sin(a)*r);}
         const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(points,3));
         this.stars=new T.Points(geometry,new T.PointsMaterial({color:'#e1eaff',size:.13,sizeAttenuation:true,fog:false,transparent:true,opacity:.9}));this.scene.add(this.stars);
       }
+      this._forestScale=b.treeScale;this._sunCenter=null;this.atmosphere?.setBiome(id);
       this.stars.visible=id==='moon';this._flowerLayout='';if(this.flowers.length)this._layoutFlowers(this.flowers.map(actor=>actor.flower));this._recenterWorld(this._worldFocus||{x:0,z:0});this.renderer.shadowMap.needsUpdate=true;
     }
     _recenterWorld(local) {
       this._worldFocus={x:local.x,z:local.z};this.ground.position.set(local.x,-.012,local.z);
       for(const key of ['map','bumpMap','roughnessMap']){const texture=this.ground.material[key];if(texture)texture.offset.set(local.x/400*texture.repeat.x,-local.z/400*texture.repeat.y);}
+      this.vegetation?.update(local);this.atmosphere?.update(local,this._natureTime||0);
       for(const {mesh,center} of this.decorChunks){
+        if(mesh.userData.worldAnchored)continue;
         const x=Math.round((local.x-center.x*mesh.scale.x)/this.decorTileSize)*this.decorTileSize,z=Math.round((local.z-center.z*mesh.scale.z)/this.decorTileSize)*this.decorTileSize;
         if(mesh.position.x!==x||mesh.position.z!==z){mesh.position.set(x,0,z);this.renderer.shadowMap.needsUpdate=true;}
       }
@@ -1233,7 +1501,7 @@ globalThis.GardenFlight=(()=>{
         this._matrix.quaternion.setFromUnitVectors(V(0,1,0),V(Math.cos(a)*2.18,-1.9,Math.sin(a)*2.18).normalize());
         this._matrix.scale.set(.006,.20+(i%5)*.035,.006);this._matrix.updateMatrix();fibers.setMatrixAt(i,this._matrix.matrix);
       }
-      fibers.castShadow=fibers.receiveShadow=true;group.add(fibers);
+      fibers.name='hut:straw-fibers';fibers.castShadow=false;fibers.receiveShadow=true;group.add(fibers);
       // A real opening, with an arched frame rather than an opaque door picture.
       const doorFrame=this.materials.wood;
       const postX=1.56*Math.sin(openingAngle),postZ=1.63*Math.cos(openingAngle);
@@ -1259,6 +1527,7 @@ globalThis.GardenFlight=(()=>{
         const glass=this._mesh(this.geo.disc,mat('#b8d6d2',{emissive:'#c5c595',emissiveIntensity:.15}),group,side*1.555,1.4,.405,.20,.20,.20);glass.rotation.y=side*1.32;
       }
       this._mesh(this.geo.sphere,mat('#a9bb74'),group,-1.25,.15,1.6,.6,.28,.35);
+      modelKit?.enhanceHut(group);if(group.children[2])group.children[2].receiveShadow=false;
     }
     _board() {
       this.board=new T.Group();this.board.position.set(1.5,0,6.7);this.board.scale.setScalar(.6);this.scene.add(this.board);
@@ -1377,7 +1646,7 @@ globalThis.GardenFlight=(()=>{
       const shadow=this._mesh(this.geo.sphere,this.materials.shadow,this.scene,0,.06,0,.6,.025,.37);
       const worldTwig=this.viewModel.clone(true),worldTools={};worldTwig.position.set(.12,-.02,-.05);worldTwig.rotation.set(0,0,0);worldTwig.scale.setScalar(.6);worldTwig.visible=true;
       worldTwig.traverse(object=>{if(object.name.startsWith('held:'))worldTools[object.name.slice(5)]=object;if(object.isMesh){object.material=object.material.clone();object.material.depthTest=true;object.material.depthWrite=true;object.renderOrder=0;}});root.add(worldTwig);
-      return {root,wings,material,drop,shield,shadow,worldTwig,worldTools,skin:id,heading:0,lastX:null,lastZ:null,foldAmount:0,index};
+      const actor={root,wings,material,drop,shield,shadow,worldTwig,worldTools,skin:id,heading:0,lastX:null,lastZ:null,foldAmount:0,index};modelKit?.enhanceButterfly(actor,id);return actor;
     }
     _hunter(index) {
       const root=new T.Group();this.scene.add(root);
@@ -1395,7 +1664,7 @@ globalThis.GardenFlight=(()=>{
       const bag=new T.SphereGeometry(.53,10,7,0,Math.PI*2,0,Math.PI/2);bag.rotateX(Math.PI/2);
       this._mesh(bag,new T.MeshBasicMaterial({color:'#eaf0dc',wireframe:true,transparent:true,opacity:.5}),net,0,0,-1.60,1,1,1.35);
       const shadow=new T.Object3D();
-      return {root,arms,legs,net,shadow,heading:0};
+      const actor={root,arms,legs,net,shadow,heading:0};modelKit?.enhanceHunter(actor,index);return actor;
     }
     _eyeHeight(p) {
       if(p.hiddenFor>0)return .4;
@@ -1412,8 +1681,8 @@ globalThis.GardenFlight=(()=>{
         basis.makeBasis(x,y,z);this._matrix.quaternion.setFromRotationMatrix(basis);
       };
       flowers.slice(0,240).forEach((f,i)=>{
-        const gold=f.value===3||f.kind==='golden',variation=Math.abs(Number(f.id)||i),height=.58+(variation*37%71)/110,angle=variation*2.399963,color=gold?0xffc54a:this._flowerPalette[variation%this._flowerPalette.length];
-        this.flowers.push({height,x:f.x,z:f.z,id:f.id,flower:f});
+        const gold=f.value===3||f.kind==='golden',style=GardenVegetation.flowerStyle(f),height=style.height,angle=style.angle,color=gold?0xffc54a:this._flowerPalette[style.palette];
+        this.flowers.push({height,phase:style.phase,x:f.x,z:f.z,id:f.id,flower:f});
         this._matrix.position.set(f.x,height/2,f.z);this._matrix.rotation.set(0,0,0);this._matrix.scale.set(.014,height,.014);this._matrix.updateMatrix();this.flowerStems.setMatrixAt(i,this._matrix.matrix);
         for(let j=0;j<2;j++){
           const a=angle+j*Math.PI;orient(a);this._matrix.position.set(f.x,height*(.27+j*.21),f.z);this._matrix.scale.set(.55,.28,.45);this._matrix.updateMatrix();this.flowerLeaves.setMatrixAt(i*2+j,this._matrix.matrix);
@@ -1437,7 +1706,7 @@ globalThis.GardenFlight=(()=>{
     }
     setSkin(id) {
       this.skin=PALETTES[id]?id:'sun';
-      if(this.hero[0]){this.hero[0].material.map=this._wingTexture(this.skin);this.hero[0].material.needsUpdate=true;this.hero[0].skin=this.skin;}
+      if(this.hero[0]){this.hero[0].material.map=this._wingTexture(this.skin);this.hero[0].material.needsUpdate=true;this.hero[0].skin=this.skin;modelKit?.setButterflySkin(this.hero[0],this.skin);}
     }
     resize(width,height) {
       this.width=Math.max(1,width);this.height=Math.max(1,height);this.renderer.setSize(this.width,this.height,false);this.camera.aspect=this.width/this.height;this._camera(this.mode||'home');
@@ -1448,7 +1717,7 @@ globalThis.GardenFlight=(()=>{
       this.camera.updateProjectionMatrix();this.camera.updateMatrixWorld();
     }
     update(state,dt=0,options={}) {
-      const time=options.time??state?.elapsed??0,mode=options.mode||state?.mode||'home';
+      const time=options.time??state?.elapsed??0,mode=options.mode||state?.mode||'home';this._natureTime=time;
       if(this._lastShadowTime===undefined||Math.abs(time-this._lastShadowTime)>.065){this.renderer.shadowMap.needsUpdate=true;this._lastShadowTime=time;}
       if(mode!==this.mode){this.mode=mode;this._camera(mode);}
       const s=state||{players:[{x:3,z:.5,bag:0,skin:options.skin||this.skin||'sun'}],hunters:[],flowers:[[-4,3],[4,2],[-7,-2],[6,-3],[-3,-6],[2,-7]].map(([x,z],id)=>({x,z,id})),obstacles:[],nectar:0,target:6};
@@ -1463,7 +1732,7 @@ globalThis.GardenFlight=(()=>{
         this._lastEye={x:local.x,z:local.z};
         this.cameraView=options.cameraView==='follow'?'follow':'first';
         const eye=V(local.x,this._eyeHeight(local),local.z);
-        if(!this._sunCenter||Math.hypot(local.x-this._sunCenter.x,local.z-this._sunCenter.z)>6){this._sunCenter={x:local.x,z:local.z};this.sun.position.set(local.x-18,28,local.z+12);this.sun.target.position.set(local.x,0,local.z);this.sun.target.updateMatrixWorld();this.renderer.shadowMap.needsUpdate=true;}
+        const shadowStep=36/this.sun.shadow.mapSize.x,sx=Math.floor(local.x/shadowStep)*shadowStep,sz=Math.floor(local.z/shadowStep)*shadowStep;if(!this._sunCenter||sx!==this._sunCenter.x||sz!==this._sunCenter.z){this._sunCenter={x:sx,z:sz};const direction=this.atmosphere?.uniforms.sunDirection.value;this.sun.position.set(sx+(direction?direction.x*42:-18),direction?direction.y*42:28,sz+(direction?direction.z*42:12));this.sun.target.position.set(sx,0,sz);this.sun.target.updateMatrixWorld();this.renderer.shadowMap.needsUpdate=true;}
         if(this.cameraView==='follow'){
           const desired=eye.clone().add(V(-Math.sin(this.look.yaw)*3.2,1.3,Math.cos(this.look.yaw)*3.2)),delta=desired.clone().sub(eye),length=delta.length();
           this.raycaster.set(eye,delta.normalize());this.raycaster.far=length;
@@ -1486,7 +1755,7 @@ globalThis.GardenFlight=(()=>{
       this.hero.forEach((actor,i)=>{
         const p=players[i];actor.root.visible=actor.shadow.visible=!!p;if(!p)return;
         const skin=i===localIndex?(options.skin||p.skin||this.skin||'sun'):(p.skin||'sun');
-        if(actor.skin!==skin){actor.skin=skin;actor.material.map=this._wingTexture(skin);actor.material.needsUpdate=true;}
+        if(actor.skin!==skin){actor.skin=skin;modelKit?.setButterflySkin(actor,skin);actor.material.map=this._wingTexture(skin);actor.material.needsUpdate=true;}
         let dx=actor.lastX===null?0:p.x-actor.lastX,dz=actor.lastZ===null?0:p.z-actor.lastZ;
         if(Math.hypot(dx,dz)>.002)actor.heading=Math.atan2(-dx,-dz);
         actor.root.rotation.y+=Math.atan2(Math.sin(actor.heading-actor.root.rotation.y),Math.cos(actor.heading-actor.root.rotation.y))*Math.min(1,dt*12);
@@ -1525,7 +1794,7 @@ globalThis.GardenFlight=(()=>{
       this._layoutFlowers(selected);
       this.flowers.forEach((actor,i)=>{
         const f=selected[i],ripe=!f.done,gold=f.value===3||f.kind==='golden';actor.flower=f;
-        this._matrix.position.set(f.x,actor.height+(gold?.23:.18)+Math.sin(time*3+i)*.025,f.z);this._matrix.rotation.set(0,time,0);this._matrix.scale.set(ripe?(gold?.06:.035):0,ripe?(gold?.085:.055):0,ripe?(gold?.06:.035):0);this._matrix.updateMatrix();this.flowerNectar.setMatrixAt(i,this._matrix.matrix);this.flowerNectar.setColorAt(i,this._color.set(gold?'#fff0b3':'#ffffff'));
+        this._matrix.position.set(f.x,actor.height+(gold?.23:.18)+Math.sin(time*3+actor.phase)*.015,f.z);this._matrix.rotation.set(0,time,0);this._matrix.scale.set(ripe?(gold?.06:.035):0,ripe?(gold?.085:.055):0,ripe?(gold?.06:.035):0);this._matrix.updateMatrix();this.flowerNectar.setMatrixAt(i,this._matrix.matrix);this.flowerNectar.setColorAt(i,this._color.set(gold?'#fff0b3':'#ffffff'));
       });
       this.flowerNectar.count=this.flowers.length;this.flowerNectar.instanceMatrix.needsUpdate=true;if(this.flowerNectar.instanceColor)this.flowerNectar.instanceColor.needsUpdate=true;this.flowerNectar.computeBoundingSphere();
       const gathering=selected.find(f=>f.id===local?.activeFlower&&!f.done&&(f.progress||0)>.005)||selected.find(f=>!f.done&&(f.progress||0)>.005);
@@ -1552,29 +1821,73 @@ globalThis.GardenFlight=(()=>{
 
 </script>
 <script>
-/* Real device adaptation. Full PBR stays enabled on accelerated hardware. */
+/* Keep complete plants at every quality level; simplify only ground-cover density. */
 globalThis.GardenQuality=(()=>{
- function configure(scene,force=false){
-  if(scene.quality==='software')return false;
-  const T=globalThis.THREE,r=scene.renderer,gl=r.getContext();
+ function configure(owner,force=false){
+  if(owner.quality==='software')return false;
+  const T=globalThis.THREE,r=owner.renderer,gl=r.getContext();
   const ext=gl.getExtension('WEBGL_debug_renderer_info');
   const device=String(ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER));
-  if(!force&&!/swiftshader|llvmpipe|software raster|microsoft basic render/i.test(device)){scene.quality='full';return false;}
-  scene.quality='software';scene.rendererDevice=device;
-  r.setPixelRatio(Math.min(.45,globalThis.devicePixelRatio||1));r.shadowMap.type=T.BasicShadowMap;
-  if(scene.sun){scene.sun.shadow.map?.dispose();scene.sun.shadow.map=null;scene.sun.shadow.mapSize.set(256,256);r.shadowMap.needsUpdate=true;}
-  const materials=new Map(),keep=new Set([scene.flowerStems,scene.flowerLeaves,scene.flowerPetals,scene.flowerCenters,scene.flowerNectar,scene.slots,scene.slotCenters,scene.hunterShadows]);
-  function diffuse(m){if(!m?.isMeshStandardMaterial)return m;if(materials.has(m))return materials.get(m);
-   const n=new T.MeshLambertMaterial({color:m.color,map:m.map,alphaMap:m.alphaMap,transparent:m.transparent,opacity:m.opacity,alphaTest:m.alphaTest,side:m.side,depthTest:m.depthTest,depthWrite:m.depthWrite,emissive:m.emissive,emissiveMap:m.emissiveMap,emissiveIntensity:m.emissiveIntensity,fog:m.fog});
-   n.name=m.name;for(const texture of [n.map,n.alphaMap])if(texture){texture.anisotropy=1;texture.needsUpdate=true;}materials.set(m,n);return n;
+  owner.rendererDevice=device;
+  if(!force&&!/swiftshader|llvmpipe|software raster|microsoft basic render/i.test(device)){
+   owner.quality='full';r.setPixelRatio(Math.min(1.8,globalThis.devicePixelRatio||1));owner.atmosphere?.enableEnvironment();return false;
   }
-  const blade=new T.BufferGeometry();blade.setAttribute('position',new T.Float32BufferAttribute([-.035,0,0,.035,0,0,0,1,.12],3));blade.setAttribute('uv',new T.Float32BufferAttribute([0,0,1,0,.5,1],2));blade.computeVertexNormals();
-  const petal=new T.BufferGeometry();petal.setAttribute('position',new T.Float32BufferAttribute([-.025,0,0,.025,0,0,-.20,.5,.06,.20,.5,.06,0,1,.16],3));petal.setAttribute('uv',new T.Float32BufferAttribute([.45,0,.55,0,0,.5,1,.5,.5,1],2));petal.setIndex([0,1,2,1,3,2,2,3,4]);petal.computeVertexNormals();
-  scene.scene.traverse(o=>{if(!o.isMesh)return;if(o.isInstancedMesh&&!keep.has(o)&&o.instanceMatrix.count>20){o.count=Math.max(8,Math.floor(o.instanceMatrix.count*.30));o.userData.adaptiveDensity=true;}if(o.geometry===scene.pbr.bladeGeometry)o.geometry=blade;else if(o.geometry===scene.pbr.petalGeometry)o.geometry=petal;
+  owner.quality='software';owner.atmosphere?.disableEnvironment();
+  r.setPixelRatio(Math.min(.45,globalThis.devicePixelRatio||1));r.shadowMap.type=T.BasicShadowMap;
+  if(owner.sun){owner.sun.shadow.map?.dispose();owner.sun.shadow.map=null;owner.sun.shadow.mapSize.set(256,256);r.shadowMap.needsUpdate=true;}
+  const materials=new Map();
+  function diffuse(m){
+   if(!m?.isMeshStandardMaterial)return m;if(materials.has(m))return materials.get(m);
+   const n=new T.MeshLambertMaterial({color:m.color,map:m.map,alphaMap:m.alphaMap,transparent:m.transparent,opacity:m.opacity,alphaTest:m.alphaTest,side:m.side,depthTest:m.depthTest,depthWrite:m.depthWrite,emissive:m.emissive,emissiveMap:m.emissiveMap,emissiveIntensity:m.emissiveIntensity,fog:m.fog,vertexColors:m.vertexColors});
+   n.name=m.name;n.userData={...m.userData};for(const texture of [n.map,n.alphaMap])if(texture){texture.anisotropy=1;texture.needsUpdate=true;}materials.set(m,n);return n;
+  }
+  const blade=new T.BufferGeometry();blade.setAttribute('position',new T.Float32BufferAttribute([-.035,0,0,.035,0,0,-.018,.5,.035,.018,.5,.035,0,1,.22],3));blade.setAttribute('uv',new T.Float32BufferAttribute([0,0,1,0,0,.5,1,.5,.5,1],2));blade.setIndex([0,1,2,1,3,2,2,3,4]);blade.computeVertexNormals();
+  function tissue(leaf=false){
+   const positions=[],uv=[],indices=[];
+   for(let row=0;row<4;row++){
+    const t=row/3,arch=Math.sin(Math.PI*t),width=(leaf?.32:.37)*Math.pow(arch,leaf?.9:.62)+.014*(1-t)+.003;
+    for(let col=0;col<3;col++){
+     const side=col-1;
+     positions.push(side*width,t,(leaf?.15:.22)*t*t-(leaf?0:.10)*arch+(leaf?.065:.085)*side*side*arch);
+     uv.push(col/2,t);
+    }
+   }
+   for(let row=0;row<3;row++)for(let col=0;col<2;col++){const a=row*3+col,b=a+3;indices.push(a,a+1,b,b,a+1,b+1);}
+   const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(indices);g.computeVertexNormals();g.computeBoundingSphere();return g;
+  }
+  const petal=tissue(),leaf=tissue(true),pollen=new T.IcosahedronGeometry(1,0),canopy=new T.IcosahedronGeometry(1,0),clover=new T.PlaneGeometry(1,1);
+  clover.rotateX(-Math.PI/2);
+  // Radial normals soften low-poly crown shading while keeping a complete silhouette.
+  const cp=canopy.attributes.position,cn=canopy.attributes.normal;
+  for(let i=0;i<cp.count;i++){const length=Math.hypot(cp.getX(i),cp.getY(i),cp.getZ(i));cn.setXYZ(i,cp.getX(i)/length,cp.getY(i)/length,cp.getZ(i)/length);}
+  cn.needsUpdate=true;
+  const grass=new Set((owner.decorChunks||[]).filter(c=>c.kind==='grass').map(c=>c.mesh));
+  const matrix=new T.Matrix4(),color=new T.Color();
+  for(const mesh of grass){
+   // Choose entire fixed half-metre cells. Never take the first N trees or petals.
+   const indices=[];
+   for(let i=0;i<mesh.count;i++){
+    mesh.getMatrixAt(i,matrix);const x=Math.floor(matrix.elements[12]*2),z=Math.floor(matrix.elements[14]*2);
+    const hash=(Math.imul(x^0x45d9f3b,73856093)^Math.imul(z^0x27d4eb2d,19349663))>>>0;
+    if(hash%100<45){const target=indices.length;mesh.setMatrixAt(target,matrix);if(mesh.instanceColor){mesh.getColorAt(i,color);mesh.setColorAt(target,color);}indices.push(i);}
+   }
+   mesh.count=indices.length;mesh.userData.adaptiveDensity=true;mesh.userData.densitySourceIndices=indices;
+   mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
+  }
+  owner.scene.traverse(o=>{if(!o.isMesh)return;
+   if(o.name==='hut:straw-fibers'&&o.isInstancedMesh){const source=o.count;let count=0;for(let i=0;i<source;i+=3){o.getMatrixAt(i,matrix);o.setMatrixAt(count++,matrix);}o.count=count;o.instanceMatrix.needsUpdate=true;o.computeBoundingSphere();}
+
+   if(o.geometry===owner.pbr.bladeGeometry)o.geometry=blade;
+   else if(o.geometry===owner.pbr.petalGeometry)o.geometry=petal;
+   else if(o.geometry===owner.pbr.leafGeometry)o.geometry=leaf;
    o.material=Array.isArray(o.material)?o.material.map(diffuse):diffuse(o.material);
   });
-  for(const name of ['flowerCenters','flowerNectar'])if(scene[name])scene[name].geometry=new T.IcosahedronGeometry(1,0);
-  scene.softwareMaterials=materials;return true;
+  // Reduce triangles, never a fraction of a plant or the first N canopy instances.
+  if(owner.vegetation?.canopy)owner.vegetation.canopy.geometry=canopy;
+  for(const slot of owner.vegetation?.slots||[]){slot.clover.geometry=clover;slot.center.geometry=pollen;}
+  for(const name of ['flowerCenters','flowerNectar'])if(owner[name])owner[name].geometry=pollen;
+  owner.softwareMaterials=materials;owner.softwareGeometry=blade;
+  owner.softwareGeometries=[blade,petal,leaf,pollen,canopy,clover];return true;
  }
  return{configure};
 })();
