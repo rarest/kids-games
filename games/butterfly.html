@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>蜜语花园 · 小火箭游戏厅</title><style>body{margin:0;background:#dce6cf;padding:18px;font-family:system-ui}#nectar-garden{max-width:1100px;margin:auto}@media(max-width:600px){body{padding:0}#nectar-garden{border-radius:0}}</style></head><body>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>蜜语花园 · 小火箭游戏厅</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#dce6cf;font-family:system-ui}#nectar-garden{max-width:none;margin:0}</style></head><body>
 <script>globalThis.GARDEN_WS_PATH='/butterfly-ws';</script>
 <style>
 #nectar-garden{--ng-ink:#244d40;--ng-sub:#5c796a;--ng-cream:#fffbed;--ng-forest:#316b50;--ng-yellow:#f8ce62;position:relative;width:100%;overflow:hidden;border-radius:22px;background:#edf2de;color:var(--ng-ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:14px;line-height:1.5;isolation:isolate}
@@ -147,23 +147,82 @@
 #nectar-garden .ng-map-card canvas{display:block;width:100%;height:auto;aspect-ratio:220/126;border-radius:9px}
 #nectar-garden .ng-map-card strong{display:block;padding:8px 2px;font-size:13px}
 
+/* Full viewport by default; screen controls are independent from world input. */
+#nectar-garden{height:100vh;height:100dvh;max-width:none;margin:0;border-radius:0;display:flex;flex-direction:column}
+#nectar-garden .ng-top,#nectar-garden .ng-footer{flex:0 0 auto}
+#nectar-garden .ng-stage{flex:1 1 auto;min-height:0;height:auto}
+#nectar-garden .ng-top{padding-top:max(10px,env(safe-area-inset-top));padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+#nectar-garden:not([data-view="home"]) .ng-top,#nectar-garden:not([data-view="home"]) .ng-footer{display:none}
+#nectar-garden .ng-hud{top:max(12px,env(safe-area-inset-top));left:max(14px,env(safe-area-inset-left));right:max(14px,env(safe-area-inset-right))}
+#nectar-garden .ng-hud-actions{display:grid;grid-template-columns:repeat(3,auto);gap:5px}
+#nectar-garden .ng-hud-actions button{min-height:34px;padding:7px 10px}
+#nectar-garden .ng-hud-main{max-width:calc(100% - 215px);align-self:flex-start}
+#nectar-garden .ng-bottom{bottom:max(16px,env(safe-area-inset-bottom));left:max(18px,env(safe-area-inset-left));right:max(18px,env(safe-area-inset-right))}
+#nectar-garden .ng-turn-controls{position:absolute;left:18px;bottom:224px;display:flex;gap:6px;pointer-events:auto}
+#nectar-garden .ng-turn-controls button{padding:6px 9px;min-height:38px;background:#fffbedc9;border:1px solid #fffbed;border-radius:12px;touch-action:none;font-size:12px}
+#nectar-garden .ng-joystick{bottom:116px}
+#nectar-garden .ng-honey-actions{bottom:122px}
+#nectar-garden .ng-dialog{max-height:100%;overscroll-behavior:contain}
+#nectar-garden .ng-dialog-wrap{padding-top:max(12px,env(safe-area-inset-top));padding-bottom:max(12px,env(safe-area-inset-bottom))}
+@media(max-width:560px){
+ #nectar-garden .ng-top{gap:5px;padding-left:10px;padding-right:10px}
+ #nectar-garden .ng-brand{gap:6px}#nectar-garden .ng-brand-mark{width:29px;height:29px;font-size:22px}
+ #nectar-garden .ng-brand strong{font-size:14px;letter-spacing:0}#nectar-garden .ng-brand div>span{display:none}
+ #nectar-garden .ng-top-actions{gap:5px;font-size:12px}#nectar-garden .ng-top-actions button{padding:6px;font-size:11px;min-height:36px}
+ #nectar-garden .ng-hud{left:10px;right:10px;gap:5px}
+ #nectar-garden .ng-hud-actions{gap:4px;grid-template-columns:repeat(3,auto)}
+ #nectar-garden .ng-hud-actions button{font-size:10px;min-height:32px;padding:6px}
+ #nectar-garden .ng-hud-main{max-width:calc(100% - 166px);padding:8px}
+ #nectar-garden .ng-level{font-size:9px}#nectar-garden .ng-honey{font-size:13px}#nectar-garden .ng-bag{font-size:10px}
+ #nectar-garden .ng-navigation{top:104px}#nectar-garden .ng-storage-panel{top:140px}
+ #nectar-garden .ng-held-label{top:140px}
+ #nectar-garden .ng-turn-controls{left:12px;bottom:calc(218px + env(safe-area-inset-bottom,0px))}
+ #nectar-garden .ng-turn-controls button{min-height:36px;padding:5px 6px;font-size:10px}
+ #nectar-garden .ng-joystick{left:15px;bottom:calc(116px + env(safe-area-inset-bottom,0px))}
+ #nectar-garden .ng-honey-actions{bottom:calc(132px + env(safe-area-inset-bottom,0px));max-width:calc(100% - 134px)}
+ #nectar-garden .ng-footer>span:first-child{display:none}
+}
+@media(max-height:520px) and (min-width:561px){
+ #nectar-garden .ng-panel{top:15px;left:20px;padding:16px;width:310px}#nectar-garden .ng-home p{margin:8px 0}
+ #nectar-garden h1{font-size:22px;margin:6px 0}#nectar-garden .ng-note{display:none}
+ #nectar-garden .ng-home-links{margin-top:8px}
+ #nectar-garden .ng-bottom{left:auto;bottom:12px;right:14px}
+ #nectar-garden .ng-energy{display:none}
+ #nectar-garden .ng-skills{gap:5px}#nectar-garden .ng-skills button{min-height:38px;padding:7px 9px;font-size:11px}
+ #nectar-garden .ng-joystick{left:18px;bottom:18px;width:90px;height:90px}
+ #nectar-garden .ng-turn-controls{left:120px;bottom:22px;gap:5px}
+ #nectar-garden .ng-honey-actions{bottom:65px;right:14px}
+ #nectar-garden .ng-activity{bottom:120px}
+ #nectar-garden .ng-navigation{top:77px}#nectar-garden .ng-storage-panel{top:112px}
+ #nectar-garden .ng-held-label{top:90px}
+}
+@media(max-height:650px) and (max-width:560px){#nectar-garden .ng-panel{top:12px;padding:16px}#nectar-garden h1{font-size:24px;margin:8px 0}#nectar-garden .ng-home p{margin:8px 0 12px}#nectar-garden .ng-footer{padding:5px 12px}#nectar-garden .ng-note{display:none}}
+
+#nectar-garden .ng-mission{position:absolute;left:50%;top:20px;transform:translateX(-50%);max-width:36%;text-align:center;padding:8px 12px;background:#244c3edc;color:#fff9dc;border-radius:14px;font-size:12px;z-index:3;pointer-events:none}
+#nectar-garden .ng-radar{position:absolute;right:18px;top:116px;width:108px;height:108px;border:2px solid #fffbed88;border-radius:50%;z-index:3;pointer-events:none;box-shadow:0 4px 12px #173c332c}
+#nectar-garden[data-view="home"] .ng-mission,#nectar-garden[data-view="home"] .ng-radar{display:none}
+#nectar-garden .ng-navigation{max-width:calc(100% - 150px)}
+@media(max-width:560px){#nectar-garden .ng-mission{top:auto;bottom:calc(270px + env(safe-area-inset-bottom,0px));max-width:90%;width:max-content;font-size:10px;padding:6px 10px}#nectar-garden .ng-radar{top:186px;right:10px;width:86px;height:86px}#nectar-garden .ng-navigation{max-width:calc(100% - 20px);gap:4px}#nectar-garden .ng-navigation span{font-size:9px;padding:4px 6px}}
+@media(max-height:520px) and (min-width:561px){#nectar-garden .ng-mission{top:auto;bottom:116px;max-width:50%;font-size:10px;padding:5px 8px}#nectar-garden .ng-radar{width:78px;height:78px;top:113px;right:15px}#nectar-garden .ng-navigation{max-width:calc(100% - 150px)}}
+#nectar-garden .ng-panel{max-height:calc(100% - 32px);overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+
 </style>
 <div id="nectar-garden" class="ng-game" data-network="on">
   <div class="ng-top">
     <div class="ng-brand"><span class="ng-brand-mark">✿</span><div><strong>蜜语花园</strong><span>蝴蝶采蜜 · 林间冒险</span></div></div>
-    <div class="ng-top-actions"><span class="ng-coins">✦ <b data-coins>200</b></span><button type="button" data-action="music" aria-pressed="true">♫ 音乐开</button></div>
+    <div class="ng-top-actions"><span class="ng-coins">✦ <b data-coins>200</b></span><button type="button" data-action="music" aria-pressed="true">♫ 音乐开</button><button type="button" data-action="fullscreen" aria-pressed="false">全屏</button></div>
   </div>
   <div class="ng-stage">
-    <canvas class="ng-world" aria-label="蝴蝶第一视角：拖动环顾，摇杆或WASD飞行，按采蜜与存蜜按钮，回草屋拿取道具。"></canvas>
+    <canvas class="ng-world" aria-label="蝴蝶第一视角：方向键或WASD前后左右，Q和E左前右前，J和L转向，摇杆飞行，按采蜜与存蜜按钮，回草屋拿取道具。"></canvas>
     <div class="ng-vignette"></div>
     <div class="ng-hud" hidden>
       <div class="ng-hud-main"><span class="ng-level">春日花园</span><strong class="ng-honey">🍯 <span data-bank>0 / 6</span></strong><span class="ng-bag">背包：空</span></div>
-      <div class="ng-hud-actions"><button type="button" data-action="view" aria-label="切换到跟随蝴蝶的第二视角">第一视角 ↔</button><button type="button" data-action="pause">暂停</button><button type="button" data-action="home">主页</button></div>
+      <div class="ng-hud-actions"><button type="button" data-action="view" aria-label="切换到跟随蝴蝶的第二视角">第一视角 ↔</button><button type="button" class="ng-sound" data-action="music" aria-label="关闭音乐">♫</button><button type="button" data-action="fullscreen" aria-pressed="false">全屏</button><button type="button" data-action="pause">暂停</button><button type="button" data-action="home">主页</button></div>
     </div>
     <div class="ng-home ng-panel">
       <span class="ng-kicker">花开了，一起去冒险吧</span>
       <h1>把春天的甜，<br>带回小草屋。</h1>
-      <p>飞到花上停留1秒，带一滴蜜回家。<br>大个子的捕蝶人来了，记得躲进草屋！</p>
+      <p>穿过花丛，连采多朵，整包带回家。<br>远处的金色花更甜，也要小心捕蝶人！</p>
       <button type="button" class="ng-main-button" data-action="choose">进入花园 <span>↗</span></button>
       <button type="button" class="ng-main-button ng-resume" data-action="continue" hidden>继续上次采蜜</button><div class="ng-home-links"><button type="button" data-action="skins">蝴蝶皮肤</button><button type="button" data-action="items">道具商店</button><button type="button" data-action="rooms">房间联机</button></div>
       <span class="ng-note">首次赠送200金币 · 没有真实付费</span>
@@ -173,21 +232,23 @@
     <div class="ng-world-label ng-house-label">小草屋 · 安全区</div>
     <div class="ng-world-label ng-target-label" hidden></div>
     <div class="ng-reticle" hidden aria-hidden="true">·</div>
-    <div class="ng-navigation" hidden><span data-house-direction>小草屋 ↑</span><span data-flower-direction>花朵 ↑</span></div>
+    <div class="ng-navigation" hidden><span data-house-direction>小草屋 ↑</span><span data-flower-direction>花朵 ↑</span><span data-gold-direction>金花×3 ↑</span><span data-chain>3连采触发顺风</span></div>
+    <div class="ng-mission" aria-live="polite"></div><canvas class="ng-radar" width="200" height="200" aria-label="附近地图：绿色小屋、红色追捕者、金色高收益花，前方在上"></canvas>
     <div class="ng-storage-panel" hidden><span class="ng-storage-title">五边形储蜜框 · <b data-storage-count>0 / 6</b></span><div class="ng-storage-grid" role="img" aria-label="五边形储蜜格"></div></div>
     <div class="ng-flight-controls" hidden>
       <button type="button" class="ng-joystick" aria-label="飞行摇杆，按住向想飞的方向拖动"><span class="ng-stick-nub">飞行</span></button>
+      <div class="ng-turn-controls" aria-label="转动视角"><button type="button" data-turn="-1" aria-label="向左转动视角">↶ 左转</button><button type="button" data-turn="1" aria-label="向右转动视角">右转 ↷</button></div>
       <div class="ng-honey-actions"><button type="button" data-action="collect">采蜜 · 1秒</button><button type="button" data-action="deposit">存入蜜框 · 1秒</button></div>
     </div>
     <div class="ng-activity" hidden><span></span><div><i></i></div></div>
     <div class="ng-bottom" hidden>
       <div class="ng-energy"><span>飞行能量</span><div><i></i></div><small class="ng-safe-status">草屋里很安全</small></div>
-      <div class="ng-skills"><button type="button" data-action="house">⌂ 小屋道具</button><button type="button" data-action="held">使用道具</button><button type="button" data-action="fold">合拢翅膀</button><button type="button" class="ng-boost" data-action="boost">加速飞行 <small>空格</small></button></div>
+      <div class="ng-skills"><button type="button" data-action="house">⌂ 小屋道具</button><button type="button" data-action="held">使用道具</button><button type="button" data-action="fold">向上合翅</button><button type="button" class="ng-boost" data-action="boost">加速飞行 <small>空格</small></button></div>
     </div>
     <div class="ng-held-label" hidden>树枝上：空</div>
     <div class="ng-load">正在唤醒花园…</div>
   </div>
-  <div class="ng-footer"><span>拖动画面环顾 · 方向键 / WASD / 摇杆飞行 · 空格加速 · E合翅</span><a class="ng-hall-link" href="/">回到小火箭游戏厅</a><span class="ng-local">第一视角 · 自动跟随</span></div>
+  <div class="ng-footer"><span>方向键/WASD移动 · Q/E左前/右前 · J/L转向 · 空格加速 · F合翅 · C采蜜 · V存蜜</span><a class="ng-hall-link" href="/">回到小火箭游戏厅</a><span class="ng-local">第一视角 · 全页花园</span></div>
 </div>
 <script>
 console.warn('Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation'),
@@ -219,6 +280,11 @@ globalThis.GardenRules = (() => {
     addFlower(Math.cos(angle)*world.x*.965*radius,Math.sin(angle)*world.z*.965*radius);
   }
   const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+  function flowerType(f,homes=[hut]){
+    const x=Math.round(f.x*1000),z=Math.round(f.z*1000),point={x:x/1000,z:z/1000};
+    const golden=homes.every(home=>distance(point,home)>=14)&&Math.abs((x*73856093)^(z*19349663))%5===0;
+    return {kind:golden?'golden':'ordinary',value:golden?3:1};
+  }
   const hutFor=p=>p?.home||hut;
   const isSafe=p=>distance(p,hutFor(p))<=hut.radius;
   const isSheltered=(s,p)=>(s.huts||[hut]).some(home=>distance(p,home)<=hut.radius);
@@ -232,7 +298,7 @@ globalThis.GardenRules = (() => {
     const key=s.players.map(p=>Math.floor(p.x/24)+','+Math.floor(p.z/24)).join(';');if(s.flowerKey===key)return;s.flowerKey=key;
     const old=s.flowers,active=s.players.map(p=>old.find(f=>f.id===p.activeFlower));s.flowers=old.filter((f,i)=>i<192||s.players.some(p=>distance(f,p)<60));
     const existing=new Set(s.flowers.map(f=>f.tile).filter(Boolean));
-    for(const p of s.players){if(Math.abs(p.x)<24&&Math.abs(p.z)<20)continue;const cx=Math.floor(p.x/24),cz=Math.floor(p.z/24);for(let tx=cx-1;tx<=cx+1;tx++)for(let tz=cz-1;tz<=cz+1;tz++){const tile=tx+','+tz;if(existing.has(tile))continue;existing.add(tile);for(let n=0;n<16;n++){const seed=Math.abs(Math.sin(tx*17.3+tz*73.1+n*2.399)),x=tx*24+(n%4)*6+2+seed*2,z=tz*24+Math.floor(n/4)*6+2+(1-seed)*2;if(s.huts.every(h=>distance({x,z},h)>=3))s.flowers.push({x,z,tile,id:0,done:false,progress:0,regrow:0});}}}
+    for(const p of s.players){if(Math.abs(p.x)<24&&Math.abs(p.z)<20)continue;const cx=Math.floor(p.x/24),cz=Math.floor(p.z/24);for(let tx=cx-1;tx<=cx+1;tx++)for(let tz=cz-1;tz<=cz+1;tz++){const tile=tx+','+tz;if(existing.has(tile))continue;existing.add(tile);for(let n=0;n<16;n++){const seed=Math.abs(Math.sin(tx*17.3+tz*73.1+n*2.399)),x=tx*24+(n%4)*6+2+seed*2,z=tz*24+Math.floor(n/4)*6+2+(1-seed)*2;if(s.huts.every(h=>distance({x,z},h)>=3))s.flowers.push({x,z,tile,id:0,done:false,progress:0,regrow:0,...flowerType({x,z},s.huts)});}}}
     if(s.flowers.length>8192){const keep=new Set(active.filter(Boolean)),base=s.flowers.slice(0,192),near=s.flowers.slice(192).map(f=>({f,score:keep.has(f)?-1:Math.min(...s.players.map(p=>(p.x-f.x)**2+(p.z-f.z)**2))})).sort((a,b)=>a.score-b.score);s.flowers=base.concat(near.slice(0,8000).map(a=>a.f));}
     s.flowers.forEach((f,id)=>{f.id=id;});s.players.forEach((p,i)=>{p.activeFlower=active[i]?s.flowers.indexOf(active[i]):-1;if(p.activeFlower<0)p.collectProgress=0;});
   }
@@ -242,12 +308,12 @@ globalThis.GardenRules = (() => {
   function actor(inventory={},id=0){
     const stash=Object.fromEntries(itemIds.map(key=>[key,itemCount(inventory[key])]));
     const home={...housePositions[id],id};
-    return {id,home,x:home.x,z:home.z+2.1,nectar:0,bag:0,deposit:0,stamina:1,surge:0,immunity:0,stash,held:'',folded:false,shields:0,slows:0,energy:0,decoys:0,activeFlower:-1,collectProgress:0,skin:String(inventory.skin||'sun'),hiddenFor:0,hideCooldown:0};
+    return {id,home,x:home.x,z:home.z+2.1,nectar:0,bag:0,deposit:0,stamina:1,surge:0,immunity:0,stash,held:'',folded:false,shields:0,slows:0,energy:0,decoys:0,activeFlower:-1,collectProgress:0,skin:String(inventory.skin||'sun'),hiddenFor:0,hideCooldown:0,lastCollectAt:0,streak:0};
   }
-  function addPlayer(s,inventory={}){const p=actor(inventory,s.players.length);s.players.push(p);s.huts.push(p.home);clearHouseFlowers(s);for(const h of s.hunters)move(s,h,0,0,.55,true);return p;}
+  function addPlayer(s,inventory={}){const p=actor(inventory,s.players.length);s.players.push(p);s.huts.push(p.home);clearHouseFlowers(s);for(const f of s.flowers)Object.assign(f,flowerType(f,s.huts));for(const h of s.hunters)move(s,h,0,0,.55,true);return p;}
   function create(level=1,inventory={},options={}){
     level=Math.min(4,Math.max(1,Math.floor(level)||1));
-    const s={mode:'playing',level,map:mapIds.includes(options.map)?options.map:'meadow',target:Math.max(1,Math.min(199,Math.floor(options.target)||[6,8,10,112][level-1])),players:[actor(inventory)],hunters:[],flowers:layouts.map(([x,z],id)=>({x,z,id,done:false,progress:0,regrow:0})),obstacles:[],nectar:0,decoy:null,grace:3,slowed:0,elapsed:0,events:[],eventDetails:[]};
+    const s={mode:'playing',level,map:mapIds.includes(options.map)?options.map:'meadow',target:Math.max(1,Math.min(199,Math.floor(options.target)||[6,8,10,112][level-1])),players:[actor(inventory)],hunters:[],flowers:layouts.map(([x,z],id)=>({x,z,id,done:false,progress:0,regrow:0,...flowerType({x,z})})),obstacles:[],nectar:0,decoy:null,grace:3,slowed:0,elapsed:0,events:[],eventDetails:[]};
     s.huts=[s.players[0].home];
     const spawn=[[9,-5],[-9,-4],[7,0],[-7,-6],[3,-7],[-9,1],[0,-7.8],[-5,0]];
     for(let i=0;i<[1,1,1,5][level-1];i++)s.hunters.push({x:spawn[i][0],z:spawn[i][1],vx:0,vz:0,id:i});
@@ -307,10 +373,10 @@ globalThis.GardenRules = (() => {
       if(moving){p.hiddenFor=0;p.folded=false;}
       p.stamina=1;
       const speed=(boosted?(s.level===4?12:7.6):4.3)*(p.surge>0?1.35:1);move(s,p,x*speed*dt,z*speed*dt,world.playerRadius);
-      if(a.deposit&&!moving&&isSafe(p)&&p.bag&&s.nectar<s.target){p.deposit+=dt;if(p.deposit>=1-1e-8){p.bag=0;p.deposit=0;s.nectar=Math.min(s.target,s.nectar+1);p.nectar++;event(s,'deposit',i);}}else p.deposit=0;
-      const f=a.collect&&!moving&&!p.bag?s.flowers.find(f=>!f.done&&distance(f,p)<.85):null;
+      if(a.deposit&&!moving&&isSafe(p)&&p.bag&&s.nectar<s.target){p.deposit+=dt;if(p.deposit>=1-1e-8){const amount=Math.min(p.bag,s.target-s.nectar);p.bag-=amount;p.deposit=0;s.nectar+=amount;p.nectar+=amount;event(s,'deposit',i);}}else p.deposit=0;
+      const f=a.collect&&!moving&&p.bag<s.target-s.nectar?s.flowers.find(f=>!f.done&&distance(f,p)<.85):null;
       if(f){if(p.activeFlower!==f.id)p.collectProgress=0;p.activeFlower=f.id;p.collectProgress+=dt;f.progress=Math.max(f.progress,p.collectProgress/collectTime(s));
-        if(p.collectProgress>=collectTime(s)-1e-8){f.done=true;f.regrow=8;f.progress=1;p.bag=1;p.activeFlower=-1;p.collectProgress=0;event(s,'collect',i);}
+        if(p.collectProgress>=collectTime(s)-1e-8){f.done=true;f.regrow=8;f.progress=1;p.bag+=Math.min(f.value,s.target-s.nectar-p.bag);p.activeFlower=-1;p.collectProgress=0;p.streak=p.streak>0&&s.elapsed-p.lastCollectAt<=8+1e-8?p.streak+1:1;p.lastCollectAt=s.elapsed;event(s,'collect',i);if(p.streak>=3){p.surge=Math.max(p.surge,3);event(s,'chain',i);}}
       }else{p.activeFlower=-1;p.collectProgress=0;}
     }
     if(s.nectar>=s.target){s.mode='won';returnTools(s);event(s,'won');return;}
@@ -331,12 +397,12 @@ globalThis.GardenRules = (() => {
       for(let i=0;i<s.players.length;i++){const p=s.players[i];if(!isSheltered(s,p)&&p.hiddenFor<=0&&p.immunity<=0&&distance(p,h)<1.4){
         if(p.shields>0){consume(p,'shields');p.immunity=3.5;event(s,'shield',i);const a=Math.atan2(h.z-p.z,h.x-p.x);move(s,h,Math.cos(a)*2.8,Math.sin(a)*2.8,.55,true);}
         else if(i===0){s.mode='dead';returnTools(s);event(s,'dead',i);return;}
-        else{const home=hutFor(p);Object.assign(p,{x:home.x,z:home.z+2.1,bag:0,deposit:0,collectProgress:0,activeFlower:-1,hiddenFor:0,folded:false,immunity:3.5});event(s,'respawn',i);}
+        else{const home=hutFor(p);Object.assign(p,{x:home.x,z:home.z+2.1,bag:0,deposit:0,collectProgress:0,activeFlower:-1,hiddenFor:0,folded:false,immunity:3.5,lastCollectAt:0,streak:0});event(s,'respawn',i);}
       }}
     }
   }
   function tick(s,delta,input={}){if(s.mode!=='playing')return;let remaining=Math.min(.1,Math.max(0,finite(delta)));while(remaining>1e-9&&s.mode==='playing'){const dt=Math.min(.02,remaining);step(s,dt,input);remaining-=dt;}}
-  return {create,addPlayer,tick,slow,hide,fold,refill,decoy,equip,returnTools,isSafe,isSheltered,hutFor,collectTime,hut,world,targetFor,mapIds};
+  return {create,addPlayer,tick,slow,hide,fold,refill,decoy,equip,returnTools,isSafe,isSheltered,hutFor,collectTime,hut,world,targetFor,mapIds,flowerType};
 })();
 if(typeof module!=='undefined')module.exports=globalThis.GardenRules;
 
@@ -364,17 +430,17 @@ globalThis.GardenCheckpoint=(()=>{
    if(!p||typeof p!=='object'||!p.stash)fail();const dest=s.players[index];
    for(const key of Object.keys(dest)){
     if(['id','home','stash'].includes(key))continue;
-    const value=p[key];if(typeof dest[key]==='number')dest[key]=num(value,['x','z','activeFlower'].includes(key)?-1e9:0);
+    const value=p[key]===undefined&&['lastCollectAt','streak'].includes(key)?0:p[key];if(typeof dest[key]==='number')dest[key]=num(value,['x','z','activeFlower'].includes(key)?-1e9:0);
     else if(typeof dest[key]==='boolean'){if(typeof value!=='boolean')fail();dest[key]=value;}
     else if(typeof dest[key]==='string'){if(typeof value!=='string'||value.length>64)fail();dest[key]=value;}
    }
-   integer(dest.bag,0,1);num(dest.stamina,0,1);num(dest.deposit,0,1);num(dest.collectProgress,0,1);integer(dest.activeFlower,-1,saved.flowers.length-1);
+   integer(dest.bag,0,199);integer(dest.streak,0,1e9);num(dest.stamina,0,1);num(dest.deposit,0,1);num(dest.collectProgress,0,1);integer(dest.activeFlower,-1,saved.flowers.length-1);
    if(!rules.world.infinite&&Math.hypot(dest.x/rules.world.x,dest.z/rules.world.z)>1.001)fail();
    for(const key of items){dest.stash[key]=integer(p.stash[key],0,99);integer(dest[key],0,1);if(dest.stash[key]+dest[key]>99)fail();}
    if(!['',...items].includes(dest.held))fail();for(const key of items)if(dest[key]!==Number(dest.held===key))fail();
   });
   if(!Array.isArray(saved.flowers)||saved.flowers.length<192||saved.flowers.length>12000||!Array.isArray(saved.hunters)||saved.hunters.length!==s.hunters.length)fail();
-  s.flowers=saved.flowers.map((f,index)=>{if(!f||f.id!==index||typeof f.done!=='boolean'||f.tile!==undefined&&(typeof f.tile!=='string'||f.tile.length>64))fail();return{x:num(f.x,-1e9,1e9),z:num(f.z,-1e9,1e9),id:index,done:f.done,regrow:num(f.regrow,0,8),progress:num(f.progress,0,1),...(f.tile?{tile:f.tile}:{})};});
+  s.flowers=saved.flowers.map((f,index)=>{if(!f||f.id!==index||typeof f.done!=='boolean'||f.tile!==undefined&&(typeof f.tile!=='string'||f.tile.length>64))fail();const flower={x:num(f.x,-1e9,1e9),z:num(f.z,-1e9,1e9),id:index,done:f.done,regrow:num(f.regrow,0,8),progress:num(f.progress,0,1),...(f.tile?{tile:f.tile}:{})},type=rules.flowerType(flower,s.huts);if(f.kind!==undefined&&!['ordinary','golden'].includes(f.kind)||f.value!==undefined&&![1,3].includes(f.value)||f.kind!==undefined&&f.value!==undefined&&f.value!==(f.kind==='golden'?3:1))fail();return{...flower,...type};});
   saved.hunters.forEach((h,index)=>{if(!h||h.id!==s.hunters[index].id)fail();for(const key of ['x','z','vx','vz'])s.hunters[index][key]=num(h[key],-1e4,1e4);});
   if(!Array.isArray(saved.obstacles)||saved.obstacles.length>1000)fail();s.obstacles=saved.obstacles.map(o=>({x:num(o.x,-1e4,1e4),z:num(o.z,-1e4,1e4),radius:num(o.radius,0,100)}));
   if(saved.decoy!==null){if(!saved.decoy)fail();s.decoy={x:num(saved.decoy.x,-1e4,1e4),z:num(saved.decoy.z,-1e4,1e4),left:num(saved.decoy.left,0,8)};}
@@ -434,10 +500,16 @@ globalThis.GardenProfile=(()=>{
 globalThis.GardenFlight=(()=>{
  function turn(look,dx,dy){look.yaw+=dx*.0045;look.pitch=Math.max(-.9,Math.min(.7,look.pitch-dy*.004));}
  function movement(look,{forward=0,right=0,boost=false}={}){const n=Math.max(1,Math.hypot(forward,right));forward/=n;right/=n;return{x:Math.sin(look.yaw)*forward+Math.cos(look.yaw)*right,z:-Math.cos(look.yaw)*forward+Math.sin(look.yaw)*right,boost};}
+ // Translation and looking have independent axes. Backing up never flips the eye.
+ function steer(look,{forward=0,right=0,turn=0}={},dt=0){
+  const length=Math.hypot(forward,right),gain=length<=.12?0:Math.min(1,(length-.12)/.88);
+  look.yaw+=Math.max(-1,Math.min(1,turn))*1.6*Math.min(.25,Math.max(0,dt));
+  return{forward:length?forward/length*gain:0,right:length?right/length*gain:0};
+ }
  function bearing(look,p,target){const a=Math.atan2(target.x-p.x,-(target.z-p.z))-look.yaw;const angle=Math.atan2(Math.sin(a),Math.cos(a));const i=((Math.round(angle/(Math.PI/4))%8)+8)%8;return['↑','↗','→','↘','↓','↙','←','↖'][i];}
  function limitPoint(point,world={x:40,z:32}){if(world.infinite)return{x:point.x,z:point.z};const wx=world.x-.5,wz=world.z-.5,n=Math.max(1,Math.hypot(point.x/wx,point.z/wz));return{x:point.x/n,z:point.z/n};}
  function follow(look,x,z,dt){if(Math.hypot(x,z)<.01)return;const target=Math.atan2(x,-z),a=Math.atan2(Math.sin(target-look.yaw),Math.cos(target-look.yaw)),gain=1-Math.exp(-Math.max(0,dt)*8);look.yaw+=a*gain;look.pitch+=(-.08-look.pitch)*gain;}
- return{turn,movement,bearing,limitPoint,follow};
+ return{turn,movement,steer,bearing,limitPoint,follow};
 })();
 
 </script>
@@ -988,7 +1060,7 @@ globalThis.GardenFlight=(()=>{
       this.flowerStems=new T.InstancedMesh(this.geo.cylinder,this.materials.stem,240);
       this.flowerLeaves=new T.InstancedMesh(this.pbr.petalGeometry,this.materials.leaf,480);
       this.flowerPetals=new T.InstancedMesh(this.pbr.petalGeometry,this.materials.petal,1920);
-      this.flowerCenters=new T.InstancedMesh(this.geo.sphere,mat('#a58a35',{roughness:1}),240);
+      this.flowerCenters=new T.InstancedMesh(this.geo.sphere,mat('#ffffff',{roughness:1}),240);
       this.flowerNectar=new T.InstancedMesh(this.geo.sphere,this.materials.honey,240);
       this.hunterShadows=new T.InstancedMesh(this.geo.sphere,this.materials.shadow,8);
       this.flowerStems.count=this.flowerNectar.count=this.hunterShadows.count=0;
@@ -1214,8 +1286,8 @@ globalThis.GardenFlight=(()=>{
     }
     _wingTexture(id) {
       if(this._textures.has(id))return this._textures.get(id);
-      const canvas=document.createElement('canvas');canvas.width=canvas.height=256;paintWing(canvas.getContext('2d'),id);
-      const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=Math.min(4,this.renderer.capabilities.getMaxAnisotropy());this._textures.set(id,texture);return texture;
+      const canvas=document.createElement('canvas');canvas.width=canvas.height=512;const ctx=canvas.getContext('2d');ctx.scale(2,2);paintWing(ctx,id);
+      const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=Math.min(8,this.renderer.capabilities.getMaxAnisotropy());this._textures.set(id,texture);return texture;
     }
     _firstPersonHand() {
       const root=new T.Group();root.position.set(.31,-.27,-.53);this.camera.add(root);this.viewModel=root;
@@ -1244,7 +1316,7 @@ globalThis.GardenFlight=(()=>{
       const root=new T.Group();root.scale.setScalar(.4);this.scene.add(root);
       const material=new T.MeshStandardMaterial({map:this._wingTexture(id),transparent:true,alphaTest:.23,side:T.DoubleSide,forceSinglePass:true,roughness:.7,metalness:.03});
       const wingGeo=new T.PlaneGeometry(.83,1.42);wingGeo.translate(.415,0,0);wingGeo.rotateX(-Math.PI/2);
-      const wings=[];for(const side of [-1,1]){const pivot=new T.Group();const wing=new T.Mesh(wingGeo,material);wing.scale.x=side;pivot.add(wing);root.add(pivot);wings.push(pivot);}
+      const wings=[];for(const side of [-1,1]){const pivot=new T.Group();pivot.position.set(side*.045,.035,0);const wing=new T.Mesh(wingGeo,material);wing.scale.x=side;pivot.add(wing);root.add(pivot);wings.push(pivot);}
       this._mesh(this.geo.sphere,this.materials.body,root,0,0,0,.055,.05,.36);this._mesh(this.geo.sphere,this.materials.body,root,0,.015,-.35,.075,.065,.075);
       const antenna=new T.BufferGeometry().setFromPoints([V(-.02,.02,-.38),V(-.14,.08,-.56),V(.02,.02,-.38),V(.14,.08,-.56)]);root.add(new T.LineSegments(antenna,new T.LineBasicMaterial({color:'#6b525e'})));
       const drop=this._mesh(this.geo.sphere,this.materials.honey,root,0,-.15,.19,.12,.17,.12);drop.visible=false;
@@ -1252,7 +1324,7 @@ globalThis.GardenFlight=(()=>{
       const shadow=this._mesh(this.geo.sphere,this.materials.shadow,this.scene,0,.06,0,.6,.025,.37);
       const worldTwig=this.viewModel.clone(true),worldTools={};worldTwig.position.set(.12,-.02,-.05);worldTwig.rotation.set(0,0,0);worldTwig.scale.setScalar(.6);worldTwig.visible=true;
       worldTwig.traverse(object=>{if(object.name.startsWith('held:'))worldTools[object.name.slice(5)]=object;if(object.isMesh){object.material=object.material.clone();object.material.depthTest=true;object.material.depthWrite=true;object.renderOrder=0;}});root.add(worldTwig);
-      return {root,wings,material,drop,shield,shadow,worldTwig,worldTools,skin:id,heading:0,lastX:null,lastZ:null,index};
+      return {root,wings,material,drop,shield,shadow,worldTwig,worldTools,skin:id,heading:0,lastX:null,lastZ:null,foldAmount:0,index};
     }
     _hunter(index) {
       const root=new T.Group();this.scene.add(root);
@@ -1278,7 +1350,7 @@ globalThis.GardenFlight=(()=>{
       return .78+.67*t*t*(3-2*t);
     }
     _layoutFlowers(flowers) {
-      const signature=this.biome+'|'+flowers.map(f=>f.id+':'+f.x+','+f.z).join(';');
+      const signature=this.biome+'|'+flowers.map(f=>f.id+':'+f.x+','+f.z+','+(f.value===3||f.kind==='golden')).join(';');
       if(signature===this._flowerLayout)return;
       this._flowerLayout=signature;this.flowers=[];
       const basis=new T.Matrix4();
@@ -1287,16 +1359,16 @@ globalThis.GardenFlight=(()=>{
         basis.makeBasis(x,y,z);this._matrix.quaternion.setFromRotationMatrix(basis);
       };
       flowers.slice(0,240).forEach((f,i)=>{
-        const variation=Math.abs(Number(f.id)||i),height=.58+(variation*37%71)/110,angle=variation*2.399963,color=this._flowerPalette[variation%this._flowerPalette.length];
+        const gold=f.value===3||f.kind==='golden',variation=Math.abs(Number(f.id)||i),height=.58+(variation*37%71)/110,angle=variation*2.399963,color=gold?0xffc54a:this._flowerPalette[variation%this._flowerPalette.length];
         this.flowers.push({height,x:f.x,z:f.z,id:f.id,flower:f});
         this._matrix.position.set(f.x,height/2,f.z);this._matrix.rotation.set(0,0,0);this._matrix.scale.set(.014,height,.014);this._matrix.updateMatrix();this.flowerStems.setMatrixAt(i,this._matrix.matrix);
         for(let j=0;j<2;j++){
           const a=angle+j*Math.PI;orient(a);this._matrix.position.set(f.x,height*(.27+j*.21),f.z);this._matrix.scale.set(.55,.28,.45);this._matrix.updateMatrix();this.flowerLeaves.setMatrixAt(i*2+j,this._matrix.matrix);
         }
         for(let j=0;j<8;j++){
-          const a=angle+j*Math.PI/4;orient(a);this._matrix.position.set(f.x,height,f.z);this._matrix.scale.set(.68,.36,.7);this._matrix.updateMatrix();this.flowerPetals.setMatrixAt(i*8+j,this._matrix.matrix);this.flowerPetals.setColorAt(i*8+j,new T.Color(color));
+          const a=angle+j*Math.PI/4;orient(a);this._matrix.position.set(f.x,height,f.z);this._matrix.scale.set(gold?.78:.68,gold?.42:.36,gold?.78:.7);this._matrix.updateMatrix();this.flowerPetals.setMatrixAt(i*8+j,this._matrix.matrix);this.flowerPetals.setColorAt(i*8+j,new T.Color(color));
         }
-        this._matrix.position.set(f.x,height+.025,f.z);this._matrix.rotation.set(0,0,0);this._matrix.scale.set(.105,.058,.105);this._matrix.updateMatrix();this.flowerCenters.setMatrixAt(i,this._matrix.matrix);
+        this._matrix.position.set(f.x,height+.025,f.z);this._matrix.rotation.set(0,0,0);this._matrix.scale.set(gold?.13:.105,gold?.073:.058,gold?.13:.105);this._matrix.updateMatrix();this.flowerCenters.setMatrixAt(i,this._matrix.matrix);this.flowerCenters.setColorAt(i,new T.Color(gold?'#e89525':'#a58a35'));
       });
       const count=this.flowers.length;
       for(const [mesh,n] of [[this.flowerStems,count],[this.flowerLeaves,count*2],[this.flowerPetals,count*8],[this.flowerCenters,count]]){mesh.count=n;mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;mesh.computeBoundingSphere();}
@@ -1368,8 +1440,10 @@ globalThis.GardenFlight=(()=>{
         actor.lastX=p.x;actor.lastZ=p.z;
         const hidden=p.hiddenFor>0,height=this._eyeHeight(p)+Math.sin(time*3.2+i)*.025;
         actor.root.position.set(p.x,height,p.z);actor.shadow.position.set(p.x,.055,p.z);
-        const flap=hidden||p.folded?1.38:.25+Math.sin(time*12.5+i*.6)*.58;
-        actor.wings[0].rotation.z=flap;actor.wings[1].rotation.z=-flap;
+        actor.foldAmount=T.MathUtils.damp(actor.foldAmount,hidden||p.folded?1:0,12,Math.max(0,dt));
+        const flap=T.MathUtils.lerp(.25+Math.sin(time*12.5+i*.6)*.58,1.48,actor.foldAmount);
+        // Mirrored wings rotate in opposite directions to close above the back.
+        actor.wings[0].rotation.z=-flap;actor.wings[1].rotation.z=flap;
         actor.drop.visible=!!p.bag;actor.drop.scale.set(.12,.17+Math.sin(time*4)*.02,.12);
         for(const [id,tool] of Object.entries(actor.worldTools))tool.visible=id===p.held;
         actor.shield.visible=p.immunity>0;actor.shield.rotation.y=time*.4;
@@ -1397,10 +1471,10 @@ globalThis.GardenFlight=(()=>{
       const selected=allFlowers.length<=240?allFlowers:allFlowers.map(f=>({f,d:(f.x-(local?.x||0))**2+(f.z-(local?.z||0))**2})).sort((a,b)=>a.d-b.d||String(a.f.id).localeCompare(String(b.f.id))).slice(0,240).map(entry=>entry.f).sort((a,b)=>String(a.id).localeCompare(String(b.id)));
       this._layoutFlowers(selected);
       this.flowers.forEach((actor,i)=>{
-        const f=selected[i],ripe=!f.done;actor.flower=f;
-        this._matrix.position.set(f.x,actor.height+.18+Math.sin(time*3+i)*.025,f.z);this._matrix.rotation.set(0,time,0);this._matrix.scale.set(ripe?.035:0,ripe?.055:0,ripe?.035:0);this._matrix.updateMatrix();this.flowerNectar.setMatrixAt(i,this._matrix.matrix);
+        const f=selected[i],ripe=!f.done,gold=f.value===3||f.kind==='golden';actor.flower=f;
+        this._matrix.position.set(f.x,actor.height+(gold?.23:.18)+Math.sin(time*3+i)*.025,f.z);this._matrix.rotation.set(0,time,0);this._matrix.scale.set(ripe?(gold?.06:.035):0,ripe?(gold?.085:.055):0,ripe?(gold?.06:.035):0);this._matrix.updateMatrix();this.flowerNectar.setMatrixAt(i,this._matrix.matrix);this.flowerNectar.setColorAt(i,this._color.set(gold?'#fff0b3':'#ffffff'));
       });
-      this.flowerNectar.count=this.flowers.length;this.flowerNectar.instanceMatrix.needsUpdate=true;this.flowerNectar.computeBoundingSphere();
+      this.flowerNectar.count=this.flowers.length;this.flowerNectar.instanceMatrix.needsUpdate=true;if(this.flowerNectar.instanceColor)this.flowerNectar.instanceColor.needsUpdate=true;this.flowerNectar.computeBoundingSphere();
       const gathering=selected.find(f=>f.id===local?.activeFlower&&!f.done&&(f.progress||0)>.005)||selected.find(f=>!f.done&&(f.progress||0)>.005);
       this.collectRing.visible=!!gathering;
       if(gathering){this.collectRing.position.set(gathering.x,.025,gathering.z);this.collectRing.geometry.setDrawRange(0,Math.floor(Math.min(1,gathering.progress||0)*48)*6);}
@@ -1506,7 +1580,7 @@ globalThis.GardenNetwork=(()=>{
  let target=null,boostHeld=false,keys=new Set(),frame=0,last=performance.now(),clock=0,uiClock=0,netClock=0,qualityClock=0,frameAverage=.02;
  let isNetwork=false,localIndex=0,room=null,awarded=false,seenEvents=new Set(),pausedByVisibility=false,toastTimer,lastRoundId='',wantsRoom=false;
  const claimedRounds=new Set(profile.claimedRounds||[]);
- const look={yaw:-1.28,pitch:-.08},stick={forward:0,right:0};let honeyAction='',honeyStartedAt=0,lookPointer=null,cameraView='first',storageSignature='',movementYaw=null,lastTravel={x:0,z:0},progressClock=0,checkpoint=null,widgetCheckpoint=null,checkpointGeneration=0;
+ const look={yaw:-1.28,pitch:-.08},stick={forward:0,right:0};let honeyAction='',honeyStartedAt=0,lookPointer=null,cameraView='first',storageSignature='',turnHeld=0,lastTravel={x:0,z:0},progressClock=0,checkpoint=null,widgetCheckpoint=null,checkpointGeneration=0;
  try{const saved=JSON.parse(localStorage.getItem('nectar-garden-progress-v1')||'null');if(saved&&saved.state?.players?.length===1&&C?.restore(saved,R).mode==='playing')checkpoint=saved;}catch{}
  function restoreWidgetProgress(packed){if(!packed||!C?.decode)return;C.decode(packed).then(saved=>{if(view!=='home'||saved.state?.players?.length!==1||C.restore(saved,R).mode!=='playing')return;checkpoint=saved;widgetCheckpoint=packed;$('.ng-resume').hidden=false;}).catch(()=>{});}
  function saveProgress(){if(isNetwork||state.players.length!==1||state.mode!=='playing'||!C)return;checkpoint=C.capture(state);checkpoint.look={...look};$('.ng-resume').hidden=false;try{localStorage.setItem('nectar-garden-progress-v1',JSON.stringify(checkpoint));}catch{}if(window.openai?.setWidgetState&&C.encode){const generation=++checkpointGeneration;C.encode(checkpoint).then(packed=>{if(generation!==checkpointGeneration||packed.length>14000)return;widgetCheckpoint=packed;window.openai.setWidgetState({modelContent:{game:'蜜语花园',skin:profile.skin,coins:profile.coins},privateContent:{profile,checkpoint:packed}})?.catch(()=>{});}).catch(()=>{});}}
@@ -1520,14 +1594,18 @@ globalThis.GardenNetwork=(()=>{
   try{window.openai?.setWidgetState?.({modelContent:{game:'蜜语花园',skin:profile.skin,coins:profile.coins},privateContent:{profile,checkpoint:widgetCheckpoint}})?.catch(()=>{});}catch{}
   $$('[data-coins]').forEach(el=>el.textContent=profile.coins);
  }
- function setMusicButton(){const b=$('[data-action="music"]');b.textContent=profile.music?'♫ 音乐开':'♫ 音乐关';b.setAttribute('aria-pressed',String(profile.music));}
+ function setMusicButton(){$$('[data-action="music"]').forEach(b=>{b.textContent=b.classList.contains('ng-sound')?(profile.music?'♫':'♩'):(profile.music?'♫ 音乐开':'♫ 音乐关');b.setAttribute('aria-pressed',String(profile.music));b.setAttribute('aria-label',profile.music?'关闭音乐':'开启音乐');});}
+ function syncFullscreen(){const full=!!(document.fullscreenElement||document.webkitFullscreenElement);$$('[data-action="fullscreen"]').forEach(b=>{b.textContent=full?'退出全屏':'全屏';b.setAttribute('aria-pressed',String(full));});}
+ function enterFullscreen(){if(document.fullscreenElement||document.webkitFullscreenElement)return;const request=root.requestFullscreen||root.webkitRequestFullscreen;if(request)try{Promise.resolve(request.call(root)).catch(()=>{});}catch{}}
+ function toggleFullscreen(){if(document.fullscreenElement||document.webkitFullscreenElement){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(exit)try{Promise.resolve(exit.call(document)).catch(()=>{});}catch{}}else{enterFullscreen();if(!root.requestFullscreen&&!root.webkitRequestFullscreen)toast('已铺满页面。也可用浏览器“添加到主屏幕”游玩。');}}
+ document.addEventListener('fullscreenchange',syncFullscreen);document.addEventListener('webkitfullscreenchange',syncFullscreen);
  function gesture(){if(profile.music)music.start().catch(()=>{});}
  function syncInventory(){const p=state.players[localIndex];if(!p?.stash)return;let dirty=false;for(const i of P.items){const count=(p.stash[i.id]||0)+(p[i.id]||0);if(profile[i.id]!==count){profile[i.id]=count;dirty=true;}}if(dirty)save();}
- function resetInput(){movementYaw=null;lastTravel={x:0,z:0};keys.clear();target=null;boostHeld=false;honeyAction='';stick.forward=stick.right=0;lookPointer=null;const nub=$('.ng-stick-nub');if(nub)nub.style.transform='';}
+ function resetInput(){turnHeld=0;lastTravel={x:0,z:0};keys.clear();target=null;boostHeld=false;honeyAction='';stick.forward=stick.right=0;lookPointer=null;const nub=$('.ng-stick-nub');if(nub)nub.style.transform='';}
  function openDialog(name,html){dialog=name;body.innerHTML=html;$('.ng-dialog-wrap').hidden=false;$('.ng-dialog').scrollTop=0;}
  function closeDialog(){dialog='';$('.ng-dialog-wrap').hidden=true;}
  function setView(name){view=name;root.dataset.view=name;$('.ng-home').hidden=name!=='home';$('.ng-hud').hidden=!['playing','paused','dead','won'].includes(name);$('.ng-bottom').hidden=name!=='playing';$('.ng-activity').hidden=true;$('.ng-reticle').hidden=$('.ng-navigation').hidden=$('.ng-flight-controls').hidden=$('.ng-held-label').hidden=name!=='playing';$('.ng-storage-panel').hidden=!['home','playing'].includes(name);}
- function choose(){gesture();openDialog('choose',`<h2>今天，挑战哪片花园？</h2><p>各自回自己的小屋存蜜，一起完成目标。超难采蜜0.1秒，其余1秒，存蜜均1秒。</p><div class="ng-difficulty">${levelNames.map((n,i)=>`<button type="button" data-start="${i+1}"><span><strong>${['❀','❁','✿','✦'][i]} ${n}</strong><small>${counts[i]}人追捕 · ${i===3?'极速 · 采蜜0.1秒 · ':'无限加速 · '}${i===0?'慢慢追':i===1?'稍快一点':i===2?'更机灵的追捕':'最多追捕者'} · ${i===3?'101～119':'5～9'}格蜂蜜</small></span><span class="ng-reward">+${rewards[i]}金币</span></button>`).join('')}</div>`);}
+ function choose(){gesture();openDialog('choose',`<h2>今天，挑战哪片花园？</h2><p>可连续采多朵再回家整包存蜜。金色花一次3滴，8秒内3连采获得顺风。超难采蜜0.1秒，其余1秒。</p><div class="ng-difficulty">${levelNames.map((n,i)=>`<button type="button" data-start="${i+1}"><span><strong>${['❀','❁','✿','✦'][i]} ${n}</strong><small>${counts[i]}人追捕 · ${i===3?'极速 · 采蜜0.1秒 · ':'无限加速 · '}${i===0?'慢慢追':i===1?'稍快一点':i===2?'更机灵的追捕':'最多追捕者'} · ${i===3?'101～119':'5～9'}格蜂蜜</small></span><span class="ng-reward">+${rewards[i]}金币</span></button>`).join('')}</div>`);}
  function chooseMap(level){selectedLevel=level;openDialog('maps',`<h2>选择你的花园</h2><p>每张地图都能一直向远处飞，花草会继续出现。</p><div class="ng-map-grid">${Object.entries(mapNames).map(([id,name])=>`<button type="button" class="ng-map-card" data-map="${id}"><canvas width="220" height="126" aria-label="${name}的实际3D场景预览"></canvas><strong>${name}</strong></button>`).join('')}</div>`);const prior=state.map;scene.update(state,.016,{mode:'home',skin:profile.skin,localIndex:0,time:clock,look,cameraView:'follow'});for(const [id] of Object.entries(mapNames)){scene.setBiome?.(id);scene.camera.position.set(9,7,15);scene.camera.lookAt(0,1,3);scene.camera.updateMatrixWorld(true);scene.render();const preview=$(`[data-map="${id}"] canvas`);preview.getContext('2d').drawImage(canvas,0,0,220,126);}scene.setBiome?.(prior||'meadow');}
  function skinShop(){gesture();openDialog('skins',`<h2>蝴蝶皮肤</h2><p>16种翅膀，选一只你喜欢的。金币 <b data-coins>${profile.coins}</b></p><div class="ng-skin-grid">${P.skins.map(s=>`<button type="button" class="ng-skin-card" data-skin="${s.id}" aria-pressed="${profile.skin===s.id}" aria-label="${s.name}，${s.note}，${profile.owned.includes(s.id)?'已拥有':s.price+'金币'}"><canvas width="136" height="104" data-thumb="${s.id}"></canvas><span>${s.name}</span><small>${profile.skin===s.id?'正在穿戴':profile.owned.includes(s.id)?'已拥有 · 穿戴':s.price+' 金币'}</small></button>`).join('')}</div>`);
   $$('[data-thumb]').forEach(c=>globalThis.drawSkinThumbnail?.(c,c.dataset.thumb));
@@ -1537,7 +1615,7 @@ globalThis.GardenNetwork=(()=>{
  function equip(id){if(isNetwork){GardenNetwork.equip(id);return;}if(R.equip(state,id,localIndex)){syncInventory();music.effect('click');openHouse();updateHUD();}else toast('需要在小草屋里拿取有库存的道具。');}
  function start(level=selectedLevel,map=selectedMap){clearProgress();gesture();wantsRoom=false;if(isNetwork){globalThis.GardenNetwork?.leave();isNetwork=false;room=null;}
   selectedLevel=level;selectedMap=map;localIndex=0;state=R.create(level,{...profile},{map:selectedMap,target:R.targetFor(level)});awarded=false;seenEvents.clear();resetInput();cameraView='first';look.yaw=-1.28;look.pitch=-.08;closeDialog();setView('playing');
-  scene.setSkin?.(profile.skin);music.resume().catch(()=>{});toast('飞到花旁按“采蜜”，回屋按“存入蜂巢”。');updateHUD();
+  scene.setSkin?.(profile.skin);music.resume().catch(()=>{});toast('Q/E左前/右前，F向上合翅。开启连采，多采几朵再回家！');updateHUD();
  }
  function home(){wantsRoom=false;if(isNetwork){GardenNetwork.leave();isNetwork=false;room=null;lastRoundId='';}
   if(view!=='home'){R.returnTools(state,localIndex);syncInventory();saveProgress();}resetInput();cameraView='first';look.yaw=-1.28;look.pitch=-.08;closeDialog();state=R.create(selectedLevel,{...profile},{target:6});localIndex=0;setView('home');music.resume().catch(()=>{});scene.setSkin?.(profile.skin);save();
@@ -1553,11 +1631,12 @@ globalThis.GardenNetwork=(()=>{
  function use(kind){if(view!=='playing')return;gesture();target=null;const method={slow:'slow',fold:'fold',energy:'refill',decoy:'decoy'}[kind];if(isNetwork){GardenNetwork[method]?.();return;}
   const ok=R[method]?.(state,localIndex);if(!ok){toast(kind==='energy'?'顺风还在持续，或树枝上没有风之露珠。':'先回小屋，把需要的道具取到树枝上。');return;}events();updateHUD();
  }
- function beginHoney(kind){if(view!=='playing'||dialog||honeyAction===kind)return;const p=state.players[localIndex];if(kind==='collect'&&(p.bag||!state.flowers.some(f=>!f.done&&Math.hypot(f.x-p.x,f.z-p.z)<.85))){toast('先飞到开着的花朵旁，再按采蜜。');return;}if(kind==='deposit'&&(!p.bag||!R.isSafe(p))){toast('带着一滴蜜回到小草屋，就能存进五边形蜜框。');return;}resetInput();honeyAction=kind;honeyStartedAt=performance.now();gesture();updateHUD();}
+ function beginHoney(kind){if(view!=='playing'||dialog )return;if(honeyAction===kind){honeyAction='';updateHUD();return;}const p=state.players[localIndex];if(kind==='collect'&&p.bag>=state.target-state.nectar){toast('已经带够本关需要的蜜，回家存入就能完成！');return;}if(kind==='deposit'&&(!p.bag||!R.isSafe(p))){toast('带着花蜜回到小草屋，就能存进五边形蜜框。');return;}resetInput();honeyAction=kind;honeyStartedAt=performance.now();gesture();updateHUD();}
  function eventKey(e){return `${e.time}:${e.type}:${e.player??''}`;}
  function events(){for(const e of state.eventDetails||[]){const key=eventKey(e);if(seenEvents.has(key))continue;seenEvents.add(key);const own=e.player===localIndex;
-   if(e.type==='collect'&&own){music.effect('collect');toast('采到一滴蜜！回小屋按“存入蜂巢”。');target=null;honeyAction='';}
-   else if(e.type==='deposit'){music.effect('deposit');if(own){honeyAction='';toast('一格五边形蜜框装满啦！');}}
+   if(e.type==='collect'&&own){music.effect('collect');const p=state.players[localIndex];toast(`采到花蜜 · 背包 ${p.bag} 滴${p.streak>1?' · '+p.streak+'连采':''}，还可以接着采！`);}
+   else if(e.type==='deposit'){music.effect('deposit');if(own){honeyAction='';toast('整包花蜜已经存好，继续去探索花田！');}}
+   else if(e.type==='chain'&&own){music.effect('shield');toast('连采顺风！3秒加速，去下一朵花！');}
    else if(e.type==='shield'&&own){music.effect('shield');toast('泡泡护盾挡住了一次抓捕，快飞走！');}
    else if(e.type==='slow'){music.effect('slow');toast('冰露花粉：追捕者变慢12秒。');}
    else if(e.type==='hide'&&own){music.effect('shield');toast('合翅隐藏10秒。保持不动，移动会显形。');}
@@ -1572,25 +1651,26 @@ globalThis.GardenNetwork=(()=>{
   const viewButton=$('[data-action="view"]');viewButton.textContent=cameraView==='first'?'第一视角 ↔':'第二视角 ↔';viewButton.setAttribute('aria-label',cameraView==='first'?'切换到跟随蝴蝶的第二视角':'切换到蝴蝶第一视角');
   $('[data-bank]').textContent=`${isNetwork?'团队 ':''}${state.nectar} / ${state.target||state.flowers.length}`;
   $('.ng-level').textContent=`${levelNames[state.level-1]} · ${state.hunters.length}人追捕${isNetwork?' · '+state.players.length+'只蝴蝶':''}`;
-  $('.ng-bag').textContent=p.bag?'背包：🍯 一滴蜜':'背包：空';
+  $('.ng-bag').textContent=p.bag?`背包：🍯 ${p.bag}滴`:'背包：空';
   $('.ng-energy i').style.width=`${p.stamina*100}%`;
   const safe=R.isSafe(p),danger=Math.min(...state.hunters.map(h=>Math.hypot(h.x-p.x,h.z-p.z)));
   $('.ng-safe-status').textContent=p.hiddenFor>0?`隐藏中 ${Math.ceil(p.hiddenFor)}秒`:safe?'我的小屋 · 很安全':R.isSheltered(state,p)?'朋友的小屋 · 安全':p.immunity>0?'护盾保护中':danger<4?'捕蝶人靠近了！':p.bag?'回小屋按存蜜按钮':'到花旁按采蜜按钮';
   $('[data-action="house"]').disabled=!safe;
   const held=P.items.find(i=>i.id===p.held),useButton=$('[data-action="held"]');useButton.textContent=held?(p.held==='shields'?'护盾自动生效':'使用'+held.name):'树枝上没有道具';useButton.disabled=!held||p.held==='shields'||(p.held==='energy'&&p.surge>0);
   $('.ng-held-label').hidden=view!=='playing'||!held;$('.ng-held-label').textContent=held?'树枝上：'+held.name:'树枝上：空 · 回屋取道具';
-  const fold=$('[data-action="fold"]');fold.textContent=p.folded?(p.hiddenFor>0?'展开 · 隐藏'+Math.ceil(p.hiddenFor)+'秒':'展开翅膀'):['leaf','dry-leaf'].includes(p.skin)&&p.hideCooldown>0?'合翅 · 冷却'+Math.ceil(p.hideCooldown)+'秒':'合拢翅膀';
+  const fold=$('[data-action="fold"]');fold.textContent=p.folded?(p.hiddenFor>0?'展开 · 隐藏'+Math.ceil(p.hiddenFor)+'秒':'展开翅膀'):['leaf','dry-leaf'].includes(p.skin)&&p.hideCooldown>0?'合翅 · 冷却'+Math.ceil(p.hideCooldown)+'秒':'向上合翅';
   const readyFlower=state.flowers.some(f=>!f.done&&Math.hypot(f.x-p.x,f.z-p.z)<.85);
-  const collect=$('[data-action="collect"]'),deposit=$('[data-action="deposit"]');collect.disabled=!!p.bag||!readyFlower||honeyAction==='collect';deposit.disabled=!p.bag||!safe||honeyAction==='deposit';collect.textContent=honeyAction==='collect'?'采蜜中…':`采蜜 · ${R.collectTime(state)}秒`;deposit.textContent=honeyAction==='deposit'?'存入中…':'存入蜜框 · 1秒';
+  const collect=$('[data-action="collect"]'),deposit=$('[data-action="deposit"]');collect.disabled=p.bag>=state.target-state.nectar&&honeyAction!=='collect';deposit.disabled=!p.bag||!safe||honeyAction==='deposit';collect.textContent=honeyAction==='collect'?(readyFlower?'连采中 · 点我停':'连采已开 · 点我停'):`开启连采 · ${R.collectTime(state)}秒`;deposit.textContent=honeyAction==='deposit'?'整包存入中…':`整包存蜜${p.bag?' '+p.bag+'滴':''} · 1秒`;
   $$('[data-action="collect"],[data-action="deposit"]').forEach(b=>b.classList.toggle('is-active',b.dataset.action===honeyAction));
-  $('[data-house-direction]').textContent='小草屋 '+F.bearing(look,p,R.hutFor(p));
-  const nextFlower=state.flowers.filter(f=>!f.done).sort((a,b)=>Math.hypot(a.x-p.x,a.z-p.z)-Math.hypot(b.x-p.x,b.z-p.z))[0];$('[data-flower-direction]').textContent=p.bag?'带蜜回屋 · 按存蜜':nextFlower?'花朵 '+F.bearing(look,p,nextFlower):'等待花朵再开';
+  const home=R.hutFor(p);$('[data-house-direction]').textContent='小屋 '+F.bearing(look,p,home)+' '+Math.round(Math.hypot(home.x-p.x,home.z-p.z))+'m';
+  const nextFlower=state.flowers.filter(f=>!f.done).sort((a,b)=>Math.hypot(a.x-p.x,a.z-p.z)-Math.hypot(b.x-p.x,b.z-p.z))[0];const rich=state.flowers.filter(f=>!f.done&&f.value===3).sort((a,b)=>Math.hypot(a.x-p.x,a.z-p.z)-Math.hypot(b.x-p.x,b.z-p.z))[0];$('[data-flower-direction]').textContent=nextFlower?'花 '+F.bearing(look,p,nextFlower)+' '+Math.round(Math.hypot(nextFlower.x-p.x,nextFlower.z-p.z))+'m':'等待花开';$('[data-gold-direction]').textContent=rich?'金花×3 '+F.bearing(look,p,rich):'远处有金色花田';$('[data-chain]').textContent=p.surge>0?'顺风 '+Math.ceil(p.surge)+'秒':p.streak>0&&state.elapsed-p.lastCollectAt<=8?p.streak+'连采 · 8秒内续上':'3连采触发顺风';const enough=p.bag>=state.target-state.nectar;$('.ng-mission').textContent=safe&&p.bag?'到家了 · 按存蜜整包入库':enough?'花蜜已经够了 · 跟小屋箭头回家':honeyAction==='collect'?'连采已开启 · 停在花旁就会采蜜':'开启连采 → 多采几朵 → 回家整包存入';drawRadar(p);
   const active=p.activeFlower>=0?state.flowers.find(f=>f.id===p.activeFlower):null;
   const progress=p.deposit>0?p.deposit:active?(p.collectProgress||0)/R.collectTime(state):0;
-  $('.ng-activity').hidden=progress<=0||view!=='playing';$('.ng-activity span').textContent=p.deposit>0?'正在存入五边形蜜框 · 1秒':`正在采集花蜜 · ${R.collectTime(state)}秒`;$('.ng-activity i').style.width=`${Math.min(1,progress)*100}%`;
+  $('.ng-activity').hidden=progress<=0||view!=='playing';$('.ng-activity span').textContent=p.deposit>0?'整包存入五边形蜜框 · 1秒':`正在采集花蜜 · ${R.collectTime(state)}秒`;$('.ng-activity i').style.width=`${Math.min(1,progress)*100}%`;
   const boost=$('[data-action="boost"]');if(boost.dataset.level!==String(state.level)){boost.dataset.level=String(state.level);boost.innerHTML=('无限加速')+'<small>空格</small>';}$('.ng-energy>span').textContent=state.level===4?'超难 · 极速无限':'加速 · 无限使用';
   if(scene){const home=R.hutFor(p),h=scene.project(home.x,2.5,home.z);$('.ng-house-label').textContent='我的小草屋 · 安全区';$('.ng-house-label').hidden=!h.visible;$('.ng-house-label').style.left=h.x+'px';$('.ng-house-label').style.top=h.y+'px';$('.ng-target-label').hidden=true;}
  }
+ function drawRadar(p){const radar=$('.ng-radar');if(!radar?.getContext)return;const ctx=radar.getContext('2d'),size=radar.width,c=size/2,scale=c/24;ctx.clearRect(0,0,size,size);ctx.save();ctx.translate(c,c);ctx.beginPath();ctx.arc(0,0,c-2,0,Math.PI*2);ctx.fillStyle='#193d32b8';ctx.fill();ctx.clip();ctx.strokeStyle='#ffffff24';ctx.lineWidth=1;for(const radius of [c/2,c-3]){ctx.beginPath();ctx.arc(0,0,radius,0,Math.PI*2);ctx.stroke();}const point=(o,color,r)=>{const dx=o.x-p.x,dz=o.z-p.z,x=(Math.cos(look.yaw)*dx+Math.sin(look.yaw)*dz)*scale,y=(Math.cos(look.yaw)*dz-Math.sin(look.yaw)*dx)*scale;if(Math.hypot(x,y)>c-6)return;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();};for(const f of state.flowers)if(!f.done)point(f,f.value===3?'#ffd75d':'#e6d5ee',f.value===3?3.5:2);for(const h of state.huts||[R.hutFor(p)])point(h,'#8ce7cf',6);for(const h of state.hunters)point(h,'#ff7e68',5);for(const mate of state.players)if(mate!==p)point(mate,'#8cbcff',4);ctx.beginPath();ctx.moveTo(0,-7);ctx.lineTo(5,5);ctx.lineTo(-5,5);ctx.closePath();ctx.fillStyle='#fffbed';ctx.fill();ctx.restore();}
  function rooms(){gesture();wantsRoom=true;if(!globalThis.GardenNetwork||root.dataset.network!=='on'){
    openDialog('rooms',`<h2>房间联机</h2><p>本地联机版会自动生成四位数字房间码，朋友输入同一个码就能加入。</p><p>对话里的试玩窗口提供单人模式。联机请打开本地完整版。</p><button type="button" class="ng-main-button" data-action="choose">先玩单人花园</button>`);return;
   }
@@ -1616,24 +1696,25 @@ globalThis.GardenNetwork=(()=>{
   if(b.dataset.skin){if(P.selectSkin(profile,b.dataset.skin)){save();state.players[0].skin=profile.skin;scene.setSkin?.(profile.skin);music.effect('click');skinShop();}else toast('金币还不够，采蜜通关可以赚金币。');return;}
   if(b.dataset.buy){if(P.buyItem(profile,b.dataset.buy)){save();music.effect('click');itemShop();}else toast('金币还不够，或背包已经装满。');return;}
   if(b.hasAttribute('data-equip')){equip(b.dataset.equip);return;}
-  if(action==='choose')choose();else if(action==='skins')skinShop();else if(action==='items')itemShop();else if(action==='rooms')rooms();
+  if(action==='choose'){enterFullscreen();choose();}else if(action==='skins')skinShop();else if(action==='items')itemShop();else if(action==='rooms')rooms();
   else if(action==='music'){profile.music=!profile.music;music.setMuted(!profile.music);if(profile.music)gesture();setMusicButton();save();}
   else if(action==='close'){if(dialog==='pause')resume();else if(['result','network-pause','lobby','rooms'].includes(dialog))home();else closeDialog();}
   else if(action==='pause')pause();else if(action==='resume')resume();else if(action==='home'||action==='leave-room')home();
+  else if(action==='fullscreen'){toggleFullscreen();}
   else if(action==='view'){cameraView=cameraView==='first'?'follow':'first';target=null;lookPointer=null;updateHUD();}
-  else if(action==='continue'){continueGame();}
+  else if(action==='continue'){enterFullscreen();continueGame();}
   else if(action==='restart'){if(isNetwork){if(room?.host)GardenNetwork.restart();else toast('等房主点击重新开始。');}else start(state.level);}
   else if(action==='house')openHouse();else if(action==='fold')use('fold');else if(action==='collect'||action==='deposit')beginHoney(action);
   else if(action==='held'){const id=state.players[localIndex]?.held;const kind={slows:'slow',energy:'energy',decoys:'decoy'}[id];if(kind)use(kind);}
   else if(['slow','energy','decoy'].includes(action))use(action);
-  else if(action==='create-room')connectRoom(true);else if(action==='join-room')connectRoom(false);else if(action==='room-ready')GardenNetwork.ready();else if(action==='room-start')GardenNetwork.start();
+  else if(action==='create-room'){enterFullscreen();connectRoom(true);}else if(action==='join-room'){enterFullscreen();connectRoom(false);}else if(action==='room-ready')GardenNetwork.ready();else if(action==='room-start')GardenNetwork.start();
  });
  const boost=$('[data-action="boost"]');boost.addEventListener('pointerdown',e=>{e.preventDefault();boostHeld=true;boost.setPointerCapture(e.pointerId);gesture();});
  for(const name of ['pointerup','pointercancel','lostpointercapture'])boost.addEventListener(name,()=>boostHeld=false);
  function aim(e){if(view!=='playing'||dialog)return;const pick=scene.pick(e.clientX,e.clientY);let t=pick;
   // Large click targets make small flowers usable on phones.
   if(!state.players[localIndex]?.bag){const rect=canvas.getBoundingClientRect(),at=state.flowers.filter(f=>!f.done).map(f=>({f,p:scene.project(f.x,1.3,f.z)})).filter(a=>a.p.visible).map(a=>({f:a.f,d:Math.hypot(a.p.x-(e.clientX-rect.left),a.p.y-(e.clientY-rect.top))})).sort((a,b)=>a.d-b.d)[0];if(at&&at.d<30)t={x:at.f.x,z:at.f.z};}
-  if(!t)return;target=F.limitPoint(t,R.world);honeyAction='';gesture();
+  if(!t)return;target=F.limitPoint(t,R.world);if(honeyAction==='deposit')honeyAction='';gesture();
  }
  for(const event of ['contextmenu','selectstart'])root.addEventListener(event,e=>{
   if(!e.target.closest?.('input,textarea,select,[contenteditable]'))e.preventDefault();
@@ -1643,27 +1724,30 @@ globalThis.GardenNetwork=(()=>{
  canvas.addEventListener('pointerup',e=>{if(lookPointer?.id!==e.pointerId)return;const click=!lookPointer.moved&&lookPointer.button!==2;lookPointer=null;if(click)aim(e);});
  canvas.addEventListener('pointercancel',()=>lookPointer=null);
  const joystick=$('.ng-joystick');let stickPointer=null;
- function setStick(e){const r=joystick.getBoundingClientRect();let x=(e.clientX-r.x-r.width/2)/32,y=(e.clientY-r.y-r.height/2)/32;const n=Math.max(1,Math.hypot(x,y));x/=n;y/=n;stick.right=x;stick.forward=-y;$('.ng-stick-nub').style.transform=`translate(${x*25}px,${y*25}px)`;target=null;if(Math.hypot(x,y)>.1)honeyAction='';}
+ function setStick(e){const r=joystick.getBoundingClientRect();let x=(e.clientX-r.x-r.width/2)/32,y=(e.clientY-r.y-r.height/2)/32;const n=Math.max(1,Math.hypot(x,y));x/=n;y/=n;stick.right=x;stick.forward=-y;$('.ng-stick-nub').style.transform=`translate(${x*25}px,${y*25}px)`;target=null;if(Math.hypot(x,y)>.12&&honeyAction==='deposit')honeyAction='';}
  joystick.addEventListener('pointerdown',e=>{if(view!=='playing'||dialog)return;e.preventDefault();stickPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);setStick(e);gesture();});
  joystick.addEventListener('pointermove',e=>{if(e.pointerId===stickPointer)setStick(e);});
  for(const name of ['pointerup','pointercancel','lostpointercapture'])joystick.addEventListener(name,()=>{stickPointer=null;stick.forward=stick.right=0;$('.ng-stick-nub').style.transform='';});
- const gameKeys=new Set(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D',' ','Shift','q','Q','e','E','r','R','f','F','c','C','v','V','z','Z','Escape']);
+ for(const b of $$('[data-turn]')){b.addEventListener('pointerdown',e=>{if(view!=='playing'||dialog)return;e.preventDefault();b.setPointerCapture(e.pointerId);turnHeld=Number(b.dataset.turn);target=null;gesture();});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>turnHeld=0);}
+ const gameKeys=new Set(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D',' ','Shift','q','Q','e','E','r','R','f','F','c','C','v','V','z','Z','j','J','l','L','Escape']);
  window.addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||!gameKeys.has(e.key))return;if(!['playing','paused'].includes(view))return;if(dialog&&dialog!=='pause'){if(e.key==='Escape'&&dialog==='house'){e.preventDefault();closeDialog();}return;}e.preventDefault();if(e.key==='Escape'){if(view==='playing')pause();else if(view==='paused')resume();return;}
-  if(view!=='playing')return;gesture();if(!e.repeat){if(e.key.toLowerCase()==='q'){$('[data-action="held"]').click();}if(e.key.toLowerCase()==='e')use('fold');if(e.key.toLowerCase()==='r')use('energy');if(e.key.toLowerCase()==='f')use('decoy');if(e.key.toLowerCase()==='c')beginHoney('collect');if(e.key.toLowerCase()==='v')beginHoney('deposit');if(e.key.toLowerCase()==='z')openHouse();}keys.add(e.key.toLowerCase());if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d'].includes(e.key.toLowerCase())){target=null;honeyAction='';}
+  if(view!=='playing')return;gesture();if(!e.repeat){if(e.key.toLowerCase()==='f')use('fold');if(e.key.toLowerCase()==='r')use('energy');if(e.key.toLowerCase()==='c')beginHoney('collect');if(e.key.toLowerCase()==='v')beginHoney('deposit');if(e.key.toLowerCase()==='z')openHouse();}keys.add(e.key.toLowerCase());if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d','q','e','j','l'].includes(e.key.toLowerCase())){target=null;if(honeyAction==='deposit')honeyAction='';}
  });
- window.addEventListener('keyup',e=>{keys.delete(e.key.toLowerCase());if(!keys.size)movementYaw=null;});
+ window.addEventListener('keyup',e=>{keys.delete(e.key.toLowerCase());});
  // Key events reach the game after any of its native buttons has focus.
  window.addEventListener('blur',()=>{resetInput();if(view==='playing')pause();});
  document.addEventListener('visibilitychange',()=>{saveProgress();resetInput();if(document.hidden){pausedByVisibility=true;music.pause();if(view==='playing'&&!isNetwork)pause('等你回来再飞');if(isNetwork)GardenNetwork.input({x:0,z:0});}else{last=performance.now();if(pausedByVisibility&&view==='home')gesture();pausedByVisibility=false;}});
  window.addEventListener('pagehide',()=>{saveProgress();music.pause();if(isNetwork)GardenNetwork.suspend();});
- function input(at=performance.now()){if(dialog)return{x:0,z:0,collect:false,deposit:false};const forward=(keys.has('w')||keys.has('arrowup')?1:0)-(keys.has('s')||keys.has('arrowdown')?1:0)+stick.forward,right=(keys.has('d')||keys.has('arrowright')?1:0)-(keys.has('a')||keys.has('arrowleft')?1:0)+stick.right;const held=Math.hypot(forward,right)>.01;if(held&&movementYaw===null)movementYaw=look.yaw;if(!held)movementYaw=null;let{x,z}=F.movement({yaw:movementYaw??look.yaw},{forward,right});
+ function flightAxes(){return{forward:(keys.has('w')||keys.has('arrowup')?1:0)-(keys.has('s')||keys.has('arrowdown')?1:0)+(keys.has('q')||keys.has('e')?1:0)+stick.forward,right:(keys.has('d')||keys.has('arrowright')?1:0)-(keys.has('a')||keys.has('arrowleft')?1:0)+(keys.has('e')?1:0)-(keys.has('q')?1:0)+stick.right,turn:(keys.has('l')?1:0)-(keys.has('j')?1:0)+turnHeld};}
+ function input(at=performance.now()){if(dialog)return{x:0,z:0,collect:false,deposit:false};const axes=F.steer(look,flightAxes()),{forward,right}=axes;let{x,z}=F.movement(look,{forward,right});
   if(target&&!x&&!z){const p=state.players[localIndex];const dx=target.x-p.x,dz=target.z-p.z,d=Math.hypot(dx,dz);if(d<.12)target=null;else{const gain=Math.min(1,d/.5);x=dx/d*gain;z=dz/d*gain;}}
-  lastTravel={x,z};if(Math.hypot(x,z)>.01)honeyAction='';return{x,z,boost:boostHeld||keys.has(' ')||keys.has('shift'),collect:honeyAction==='collect'&&at>=honeyStartedAt,deposit:honeyAction==='deposit'&&at>=honeyStartedAt};
+  lastTravel={x,z};if(Math.hypot(x,z)>.01&&honeyAction==='deposit')honeyAction='';return{x,z,boost:boostHeld||keys.has(' ')||keys.has('shift'),collect:honeyAction==='collect'&&at>=honeyStartedAt,deposit:honeyAction==='deposit'&&at>=honeyStartedAt};
  }
  function animate(now){frame=requestAnimationFrame(animate);if(document.hidden){last=now;return;}const elapsed=Math.min(1.5,Math.max(0,(now-last)/1000)),dt=Math.min(.05,elapsed);last=now;clock+=elapsed;uiClock+=elapsed;
+  if(view==='playing'&&!dialog)F.steer(look,flightAxes(),elapsed);
   if(view==='playing'){if(isNetwork){netClock+=elapsed;if(netClock>=1/30){netClock=0;GardenNetwork.input(input());}}else{let remaining=elapsed;while(remaining>1e-6&&state.mode==='playing'){const step=Math.min(.025,remaining);R.tick(state,step,input(now-remaining*1000));remaining-=step;}events();if(state.mode==='dead')result(false);else if(state.mode==='won')result(true);}}
-  if(view==='playing'){F.follow(look,lastTravel.x,lastTravel.z,Math.min(.25,elapsed));progressClock+=elapsed;if(progressClock>=1){progressClock=0;saveProgress();}}
-  qualityClock+=elapsed;frameAverage=frameAverage*.96+elapsed*.04;if(qualityClock>3&&frameAverage>.038){qualityClock=0;const ratio=scene.renderer.getPixelRatio();if(ratio>.71)scene.renderer.setPixelRatio(Math.max(.7,ratio*.8));if(frameAverage>.08)globalThis.GardenQuality?.configure(scene,true);}
+  if(view==='playing'){if(target&&!lookPointer)F.follow(look,lastTravel.x,lastTravel.z,Math.min(.25,elapsed));progressClock+=elapsed;if(progressClock>=1){progressClock=0;saveProgress();}}
+  qualityClock+=elapsed;if(elapsed<.25)frameAverage=frameAverage*.96+elapsed*.04;if(qualityClock>6&&frameAverage>.045&&scene.quality!=='software'){qualityClock=0;const ratio=scene.renderer.getPixelRatio();if(ratio>.86)scene.renderer.setPixelRatio(Math.max(.85,ratio*.85));}
   scene.update(state,dt,{mode:view,skin:profile.skin,localIndex,time:clock,target,look,cameraView});scene.render();if(uiClock>.08){uiClock=0;updateHUD();}
  }
  try{scene=new GardenScene(canvas);globalThis.GardenQuality?.configure(scene);attachNetwork();setView('home');$('.ng-resume').hidden=!checkpoint;restoreWidgetProgress(window.openai?.widgetState?.privateContent?.checkpoint);$$('[data-coins]').forEach(el=>el.textContent=profile.coins);setMusicButton();

@@ -3,10 +3,10 @@
 window.GAMES = [
   {
     id: "butterfly",
-    file: "games/butterfly.html?v=20261024hall1",
+    file: "games/butterfly.html?v=20261025flight2",
     emoji: "🦋",
     name: "蜜语花园",
-    desc: "化身蝴蝶飞过花海，采蜜回草屋，四位房间码邀请伙伴一同冒险",
+    desc: "全页花海自由飞，连采金花整包回家，四位房间码邀请伙伴冒险",
     tags: ["3D", "采蜜", "多人联机", "手机"],
   },
   {

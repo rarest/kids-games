@@ -20,7 +20,7 @@ test('Butterfly is reachable from the hall, plays with native controls and retur
   const before=await b.evaluate('({x:GardenGame.state.player.x,z:GardenGame.state.player.z})');await b.call('Input.dispatchKeyEvent',{type:'keyDown',key:'ArrowDown',code:'ArrowDown',windowsVirtualKeyCode:40});await sleep(250);await b.call('Input.dispatchKeyEvent',{type:'keyUp',key:'ArrowDown',code:'ArrowDown',windowsVirtualKeyCode:40});
   const played=await b.evaluate('({x:GardenGame.state.player.x,z:GardenGame.state.player.z,map:GardenGame.state.map,view:GardenGame.view,look:GardenGame.look})');assert.equal(played.map,'forest');assert.equal(played.view,'playing');assert.ok(Math.hypot(played.x-before.x,played.z-before.z)>.1,'native arrow input moves the butterfly');
   if(evidence){await fs.mkdir(evidence,{recursive:true});const shot=await b.call('Page.captureScreenshot',{format:'png'});await fs.writeFile(resolve(evidence,'hall-butterfly-play.png'),Buffer.from(shot.data,'base64'));await fs.writeFile(resolve(evidence,'hall-butterfly.json'),JSON.stringify({origin:b.origin,...state,played,errors:b.errors},null,2));}
-  await tap('.ng-hall-link');
+  await tap('.ng-hud [data-action="home"]');await tap('.ng-hall-link');
   for(let i=0;i<100;i++){if(await b.evaluate(`!!window.GAMES&&document.querySelectorAll('.card').length===window.GAMES.length`))break;await sleep(50);}
   assert.equal(await b.evaluate(`!!window.GAMES&&document.querySelectorAll('.card').length===window.GAMES.length`),true);console.log(JSON.stringify({origin:b.origin,...state,played}));
  }finally{b.close();}

@@ -3,11 +3,11 @@
   "files": [
     {
       "name": "index.html",
-      "sha256": "6e5d548a41fd6684a8fb0e825a2458ae9625a21ccc2a053cc4c7fa00c7ae2856"
+      "sha256": "2f83a16903e726f9cfed18989ea00073f54cb367e0f7c2775fadf8a56dcf0c88"
     },
     {
       "name": "rules.js",
-      "sha256": "1615d19ae4011dbf087a3b0641c372f9eba997f1cacca43db3992e9355e7d310"
+      "sha256": "27c731c514c9b0b6891ad3dbd0fadc476e6164735c7ad0e3e0ef8bf8ffb0221c"
     },
     {
       "name": "server.cjs",
@@ -15,11 +15,11 @@
     },
     {
       "name": "checkpoint.js",
-      "sha256": "66b493084483b0b160a20f8af421ffc28dd628b5e2e4e925fe43dd1d1a377364"
+      "sha256": "5c229f5b59dcc81aa3da629a7225f263e40908609800e3dfe188bc72d502d046"
     }
   ],
   "publicPage": {
     "path": "games/butterfly.html",
-    "sha256": "3eca44ef3f727ea3685cbdc6d8e446503dab5fc1f37a36515e7d07576654c3cf"
+    "sha256": "257c13dd9c96e251bcc2abb602e97b5bd1c0622d90da4666b8fb3cdc18594ddb"
   }
 }
