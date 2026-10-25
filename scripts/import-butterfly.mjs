@@ -4,7 +4,7 @@ import {resolve,join} from 'node:path';
 if(!process.argv[2])throw Error('Usage: node scripts/import-butterfly.mjs SOURCE_DIR [SITE_DIR]');
 const source=resolve(process.argv[2]);
 const dest=resolve(process.argv[3]||new URL('../',import.meta.url).pathname);
-const names=['index.html','rules.js','server.cjs','checkpoint.js'];
+const names=['index.html','rules.js','server.cjs','checkpoint.js','vegetation.js'];
 const content=await Promise.all(names.map(name=>readFile(join(source,name))));
 let html=content[0].toString();
 if(!html.includes('GARDEN_WS_PATH'))throw Error('Source must support GARDEN_WS_PATH before public import');

@@ -3,23 +3,27 @@
   "files": [
     {
       "name": "index.html",
-      "sha256": "863276d0cc7153912ed449f146270b1571217967b4f7edd5c03a9c84ea05eab7"
+      "sha256": "a53ee3a4f8fc1af34e73ec6b9aa2fa804e4b215c994f7430e13c24b00b07306b"
     },
     {
       "name": "rules.js",
-      "sha256": "27c731c514c9b0b6891ad3dbd0fadc476e6164735c7ad0e3e0ef8bf8ffb0221c"
+      "sha256": "91969f722d7eb3645c3d6f7e982486cabf2325b4638a15716821a2bba3184cfb"
     },
     {
       "name": "server.cjs",
-      "sha256": "ee7c3abec997182fc8c34f6b700abcaf8c1144441a57ed60ece9816da7c5912a"
+      "sha256": "dac516016da5b0d968888d843cc9bd4f296350e6cf2ae7a12230db85d126a7b3"
     },
     {
       "name": "checkpoint.js",
-      "sha256": "5c229f5b59dcc81aa3da629a7225f263e40908609800e3dfe188bc72d502d046"
+      "sha256": "48787f38ceb7653b64fe4269043b6f77052781069c73de5f906c28e24b504e6b"
+    },
+    {
+      "name": "vegetation.js",
+      "sha256": "b22d6b57e7e0ae2984ca409e2edd4ad30c28e422974a5effdedc5e961d921fc4"
     }
   ],
   "publicPage": {
     "path": "games/butterfly.html",
-    "sha256": "04e02d5ad1c2eb71c23429171721f775d1f7c24bb0621fb3fa37c14100e85433"
+    "sha256": "59ed7f4d7cb5d97cb3acf7d3f24548cc2514dc6769139cf290264817e8c3a028"
   }
 }

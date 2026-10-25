@@ -24,6 +24,7 @@ globalThis.GardenCheckpoint=(()=>{
     else if(typeof dest[key]==='boolean'){if(typeof value!=='boolean')fail();dest[key]=value;}
     else if(typeof dest[key]==='string'){if(typeof value!=='string'||value.length>64)fail();dest[key]=value;}
    }
+   if(p.altitude!==undefined)dest.altitude=num(p.altitude,rules.flight?.min??.4,rules.flight?.max??18);
    integer(dest.bag,0,199);integer(dest.streak,0,1e9);num(dest.stamina,0,1);num(dest.deposit,0,1);num(dest.collectProgress,0,1);integer(dest.activeFlower,-1,saved.flowers.length-1);
    if(!rules.world.infinite&&Math.hypot(dest.x/rules.world.x,dest.z/rules.world.z)>1.001)fail();
    for(const key of items){dest.stash[key]=integer(p.stash[key],0,99);integer(dest[key],0,1);if(dest.stash[key]+dest[key]>99)fail();}

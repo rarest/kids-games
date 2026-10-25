@@ -14,7 +14,10 @@ try{
  b.send({type:'join',code:created.room.code,name:'公开验收队友'});const joined=await b.next('room');assert.equal(joined.room.players.length,2);assert.equal(joined.room.code,created.room.code);
  b.send({type:'ready'});await a.next('room',v=>v.room.players.length===2&&v.room.players.every(p=>p.ready));a.send({type:'start'});
  const [startA,startB]=await Promise.all([a.next('start'),b.next('start')]);assert.equal(startA.epoch,startB.epoch);assert.equal(startA.state.players.length,2);assert.deepEqual(startA.state,startB.state);
+ a.send({type:'input',input:{rise:1}});const risen=await b.next('state',v=>v.state.mode==='playing'&&v.state.players[0].altitude>2.1);a.send({type:'input',input:{rise:0}});
+ b.send({type:'input',input:{rise:1}});const guestRisen=await a.next('state',v=>v.state.mode==='playing'&&v.state.players[1].altitude>2.1);b.send({type:'input',input:{rise:0}});
+ const hover=await b.next('state',v=>v.state.elapsed>guestRisen.state.elapsed+.15);const later=await b.next('state',v=>v.state.elapsed>hover.state.elapsed+.2);assert.equal(later.state.players[0].altitude,hover.state.players[0].altitude);assert.equal(later.state.players[1].altitude,hover.state.players[1].altitude);
  const initial=startA.state.players[0];a.send({type:'input',input:{x:1,z:0,boost:true}});
  const moved=await b.next('state',v=>v.state.mode==='playing'&&Math.abs(v.state.players[0].x-initial.x)>.1);a.send({type:'input',input:{x:0,z:0}});
- console.log(JSON.stringify({origin,endpoint:endpoint.href,code:created.room.code,maxPlayers:created.room.maxPlayers,players:moved.state.players.length,epoch:moved.epoch,mode:moved.state.mode,hostMovedSeenByGuest:true},null,2));
+ console.log(JSON.stringify({origin,endpoint:endpoint.href,code:created.room.code,maxPlayers:created.room.maxPlayers,players:moved.state.players.length,epoch:moved.epoch,mode:moved.state.mode,hostMovedSeenByGuest:true,bothPlayersRiseAndHoverSynced:true},null,2));
 }finally{for(const p of[a,b]){if(p.ws.readyState===1)p.send({type:'leave'});p.ws.close();}}
