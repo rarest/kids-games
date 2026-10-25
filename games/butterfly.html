@@ -205,6 +205,59 @@
 @media(max-width:560px){#nectar-garden .ng-mission{top:auto;bottom:calc(270px + env(safe-area-inset-bottom,0px));max-width:90%;width:max-content;font-size:10px;padding:6px 10px}#nectar-garden .ng-radar{top:186px;right:10px;width:86px;height:86px}#nectar-garden .ng-navigation{max-width:calc(100% - 20px);gap:4px}#nectar-garden .ng-navigation span{font-size:9px;padding:4px 6px}}
 @media(max-height:520px) and (min-width:561px){#nectar-garden .ng-mission{top:auto;bottom:116px;max-width:50%;font-size:10px;padding:5px 8px}#nectar-garden .ng-radar{width:78px;height:78px;top:113px;right:15px}#nectar-garden .ng-navigation{max-width:calc(100% - 150px)}}
 #nectar-garden .ng-panel{max-height:calc(100% - 32px);overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+/* Touch tablets need their own thumb zones, including desktop-mode iPad Safari. */
+#nectar-garden{height:var(--ng-viewport-height,100dvh)}
+@media (min-width:600px) and (max-width:1600px) and (any-pointer:coarse){
+ #nectar-garden{--ng-pad:clamp(18px,2.5vw,32px);--ng-stick:clamp(128px,14vw,150px);--ng-safe-bottom:max(24px,env(safe-area-inset-bottom,0px));font-size:16px}
+ #nectar-garden .ng-hud{top:max(20px,env(safe-area-inset-top));left:max(var(--ng-pad),env(safe-area-inset-left));right:max(var(--ng-pad),env(safe-area-inset-right));gap:18px}
+ #nectar-garden .ng-hud-main{max-width:40%;padding:12px 16px;gap:6px 12px;min-height:54px}
+ #nectar-garden .ng-level{font-size:12px}#nectar-garden .ng-honey{font-size:20px}#nectar-garden .ng-bag{font-size:14px}
+ #nectar-garden .ng-hud-actions{grid-template-columns:repeat(3,auto);gap:8px}
+ #nectar-garden .ng-hud-actions button{min-width:44px;min-height:44px;font-size:13px;padding:10px 12px}
+ #nectar-garden .ng-navigation{left:var(--ng-pad);top:134px;max-width:calc(100% - 2 * var(--ng-pad));gap:6px;font-size:12px}
+ #nectar-garden .ng-navigation span{padding:5px 9px}
+ #nectar-garden .ng-storage-panel{left:var(--ng-pad);top:178px}
+ #nectar-garden .ng-storage-title{font-size:12px}
+ #nectar-garden .ng-radar{right:var(--ng-pad);top:178px;width:120px;height:120px}
+ #nectar-garden .ng-toast{top:322px;max-width:60%;font-size:14px}
+ #nectar-garden .ng-held-label{right:var(--ng-pad);top:310px;font-size:12px;max-width:35%}
+ #nectar-garden .ng-bottom{display:block;height:0;left:var(--ng-pad);right:var(--ng-pad);bottom:var(--ng-safe-bottom)}
+ #nectar-garden .ng-energy{display:block;position:absolute;bottom:0;left:calc(var(--ng-stick) + 20px);min-width:0;width:clamp(120px,17vw,180px);padding:10px 12px;font-size:12px}
+ #nectar-garden .ng-skills{position:absolute;right:0;bottom:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:clamp(252px,30vw,340px);max-width:none;gap:10px}
+ #nectar-garden .ng-skills button{min-height:52px;font-size:14px;padding:12px 8px;line-height:1.3}
+ #nectar-garden .ng-skills small{display:none}
+ #nectar-garden .ng-joystick{left:var(--ng-pad);bottom:var(--ng-safe-bottom);width:var(--ng-stick);height:var(--ng-stick)}
+ #nectar-garden .ng-stick-nub{width:58px;height:58px;font-size:13px}
+ #nectar-garden .ng-turn-controls{left:var(--ng-pad);bottom:calc(var(--ng-safe-bottom) + var(--ng-stick) + 16px);width:var(--ng-stick);display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ #nectar-garden .ng-turn-controls button{min-width:44px;min-height:48px;padding:8px 4px;font-size:13px}
+ #nectar-garden .ng-honey-actions{right:var(--ng-pad);bottom:calc(var(--ng-safe-bottom) + 148px);width:clamp(252px,30vw,340px);max-width:none;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+ #nectar-garden .ng-honey-actions button{min-height:56px;padding:10px 6px;font-size:14px;line-height:1.3}
+ #nectar-garden .ng-mission{top:auto;bottom:calc(var(--ng-safe-bottom) + 220px);max-width:60%;width:max-content;font-size:13px;padding:8px 12px}
+ #nectar-garden .ng-activity{bottom:calc(var(--ng-safe-bottom) + 270px)}
+ #nectar-garden .ng-panel{top:28px;left:var(--ng-pad);width:min(420px,calc(100% - 2 * var(--ng-pad)));max-width:none;padding:28px}
+ #nectar-garden .ng-home h1{font-size:34px}#nectar-garden .ng-home p{font-size:15px}
+ #nectar-garden .ng-home button,#nectar-garden .ng-top button{min-height:44px;font-size:15px}
+ #nectar-garden .ng-dialog-wrap{padding:max(24px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left))}
+ #nectar-garden .ng-dialog{max-width:720px;padding:30px;max-height:100%;font-size:16px}
+ #nectar-garden .ng-dialog button{min-width:44px;min-height:44px}
+ #nectar-garden .ng-dialog h2{font-size:27px;margin-right:48px}#nectar-garden .ng-dialog p{font-size:15px}
+ #nectar-garden .ng-close{width:44px;height:44px;top:14px;right:14px;font-size:24px}
+ #nectar-garden .ng-skin-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+ #nectar-garden .ng-map-grid{gap:18px}#nectar-garden .ng-map-card strong{font-size:16px}
+ #nectar-garden .ng-room-row input{min-height:48px;font-size:18px}
+ #nectar-garden .ng-footer>span:first-child{display:none}
+}
+@media (min-width:600px) and (max-width:1600px) and (orientation:landscape) and (any-pointer:coarse){
+ #nectar-garden .ng-hud-actions{grid-template-columns:repeat(5,auto)}
+ #nectar-garden .ng-hud-main{max-width:34%}
+ #nectar-garden .ng-navigation{top:88px;max-width:65%}
+ #nectar-garden .ng-storage-panel{top:130px}
+ #nectar-garden .ng-radar{top:130px}
+ #nectar-garden .ng-toast{top:146px}
+ #nectar-garden .ng-held-label{top:262px}
+ #nectar-garden .ng-panel{top:20px;width:min(420px,45%);padding:22px}
+ #nectar-garden .ng-home h1{font-size:30px}
+}
 
 </style>
 <div id="nectar-garden" class="ng-game" data-network="on">
@@ -1601,7 +1654,7 @@ globalThis.GardenNetwork=(()=>{
  document.addEventListener('fullscreenchange',syncFullscreen);document.addEventListener('webkitfullscreenchange',syncFullscreen);
  function gesture(){if(profile.music)music.start().catch(()=>{});}
  function syncInventory(){const p=state.players[localIndex];if(!p?.stash)return;let dirty=false;for(const i of P.items){const count=(p.stash[i.id]||0)+(p[i.id]||0);if(profile[i.id]!==count){profile[i.id]=count;dirty=true;}}if(dirty)save();}
- function resetInput(){turnHeld=0;lastTravel={x:0,z:0};keys.clear();target=null;boostHeld=false;honeyAction='';stick.forward=stick.right=0;lookPointer=null;const nub=$('.ng-stick-nub');if(nub)nub.style.transform='';}
+ function resetInput(){stickPointer=null;turnHeld=0;lastTravel={x:0,z:0};keys.clear();target=null;boostHeld=false;honeyAction='';stick.forward=stick.right=0;lookPointer=null;const nub=$('.ng-stick-nub');if(nub)nub.style.transform='';}
  function openDialog(name,html){dialog=name;body.innerHTML=html;$('.ng-dialog-wrap').hidden=false;$('.ng-dialog').scrollTop=0;}
  function closeDialog(){dialog='';$('.ng-dialog-wrap').hidden=true;}
  function setView(name){view=name;root.dataset.view=name;$('.ng-home').hidden=name!=='home';$('.ng-hud').hidden=!['playing','paused','dead','won'].includes(name);$('.ng-bottom').hidden=name!=='playing';$('.ng-activity').hidden=true;$('.ng-reticle').hidden=$('.ng-navigation').hidden=$('.ng-flight-controls').hidden=$('.ng-held-label').hidden=name!=='playing';$('.ng-storage-panel').hidden=!['home','playing'].includes(name);}
@@ -1724,7 +1777,7 @@ globalThis.GardenNetwork=(()=>{
  canvas.addEventListener('pointerup',e=>{if(lookPointer?.id!==e.pointerId)return;const click=!lookPointer.moved&&lookPointer.button!==2;lookPointer=null;if(click)aim(e);});
  canvas.addEventListener('pointercancel',()=>lookPointer=null);
  const joystick=$('.ng-joystick');let stickPointer=null;
- function setStick(e){const r=joystick.getBoundingClientRect();let x=(e.clientX-r.x-r.width/2)/32,y=(e.clientY-r.y-r.height/2)/32;const n=Math.max(1,Math.hypot(x,y));x/=n;y/=n;stick.right=x;stick.forward=-y;$('.ng-stick-nub').style.transform=`translate(${x*25}px,${y*25}px)`;target=null;if(Math.hypot(x,y)>.12&&honeyAction==='deposit')honeyAction='';}
+ function setStick(e){const r=joystick.getBoundingClientRect(),radius=Math.max(24,r.width*.32),nub=$('.ng-stick-nub'),travel=Math.max(8,Math.min(radius,(r.width-(nub.clientWidth||49))/2-4));let x=(e.clientX-r.x-r.width/2)/radius,y=(e.clientY-r.y-r.height/2)/radius;const n=Math.max(1,Math.hypot(x,y));x/=n;y/=n;stick.right=x;stick.forward=-y;nub.style.transform=`translate(${x*travel}px,${y*travel}px)`;target=null;if(Math.hypot(x,y)>.12&&honeyAction==='deposit')honeyAction='';}
  joystick.addEventListener('pointerdown',e=>{if(view!=='playing'||dialog)return;e.preventDefault();stickPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);setStick(e);gesture();});
  joystick.addEventListener('pointermove',e=>{if(e.pointerId===stickPointer)setStick(e);});
  for(const name of ['pointerup','pointercancel','lostpointercapture'])joystick.addEventListener(name,()=>{stickPointer=null;stick.forward=stick.right=0;$('.ng-stick-nub').style.transform='';});
@@ -1751,7 +1804,10 @@ globalThis.GardenNetwork=(()=>{
   scene.update(state,dt,{mode:view,skin:profile.skin,localIndex,time:clock,target,look,cameraView});scene.render();if(uiClock>.08){uiClock=0;updateHUD();}
  }
  try{scene=new GardenScene(canvas);globalThis.GardenQuality?.configure(scene);attachNetwork();setView('home');$('.ng-resume').hidden=!checkpoint;restoreWidgetProgress(window.openai?.widgetState?.privateContent?.checkpoint);$$('[data-coins]').forEach(el=>el.textContent=profile.coins);setMusicButton();
-  const observer=new ResizeObserver(()=>{scene.resize(stage.clientWidth,stage.clientHeight);updateHUD();});observer.observe(stage);scene.resize(stage.clientWidth,stage.clientHeight);
+  function syncViewport(){const viewport=window.visualViewport;if(viewport&&Math.abs(viewport.scale-1)<.01&&viewport.height>0)root.style?.setProperty('--ng-viewport-height',Math.round(viewport.height)+'px');}
+  syncViewport();window.visualViewport?.addEventListener('resize',syncViewport);window.addEventListener('resize',syncViewport);
+  let landscape=stage.clientWidth>=stage.clientHeight;
+  const observer=new ResizeObserver(()=>{const next=stage.clientWidth>=stage.clientHeight;if(next!==landscape){const collect=honeyAction==='collect';resetInput();if(collect)honeyAction='collect';landscape=next;if(isNetwork)GardenNetwork.input({x:0,z:0});}scene.resize(stage.clientWidth,stage.clientHeight);updateHUD();});observer.observe(stage);scene.resize(stage.clientWidth,stage.clientHeight);
   $('.ng-load').hidden=true;requestAnimationFrame(animate);
   window.GardenGame={get state(){return state;},get profile(){return profile;},get view(){return view;},get scene(){return scene;},get look(){return{...look};},get savedProgress(){return checkpoint;},music,start,home};
   window.addEventListener('openai:set_globals',event=>{if(view==='home')restoreWidgetProgress(event.detail?.globals?.widgetState?.privateContent?.checkpoint);const p=event.detail?.globals?.widgetState?.privateContent?.profile;if(p&&view==='home'){profile=P.restore(p);music.setMuted(!profile.music);state.players[0].skin=profile.skin;scene.setSkin?.(profile.skin);setMusicButton();$$('[data-coins]').forEach(el=>el.textContent=profile.coins);}});
