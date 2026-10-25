@@ -11,3 +11,11 @@
 旧版单滴存档与新背包均可恢复；既有线上存档已用新规则只读恢复验证。发布只更新蝴蝶运行指纹，不操作其余游戏服务。
 
 验收记录在主源products/butterfly-garden/evidence：upgrade-unit.log（91项）、upgrade-import.log（6项）、wings.browser.mjs（4项实际Chromium）、review-buttons.json（6尺寸按钮遮挡检查）、upgrade-hall-local.log（游戏厅真实入口/移动/返回）、upgrade-native.json（实际全屏/操控/完整采蜜旅程）。公开发布后另留upgrade-public日志与版本哈希。
+
+## 平板横竖屏补充
+
+触屏平板（600–1600 CSS像素宽）独立布局，包含桌面模式iPad：摇杆128–150像素，所有操作按钮至少44×44像素；左下飞行/转向，右下2×2道具与独立采存蜜，状态栏在横屏单行、竖屏两行。游戏内提示与雷达避让按钮。菜单和商店在旋转、较短视口中仍可滚动操作。
+
+以visualViewport更新可见页面高度，旋转时修正相机比例、清除旧指针与移动输入，保留连采及现有游戏状态。摇杆有效半径随控件尺寸变化。
+
+`node tests/butterfly-tablet-browser.mjs` 验证10种平板尺寸、44px触点/九点命中、无遮挡、退出浏览器全屏后布局、旋转中残留触摸、进度保留和商店旋转；`GAMES_TEST_ORIGIN=https://games.nblord.com` 可验证公网同一入口。结果位于output/butterfly-tablet。
