@@ -87,7 +87,7 @@ function createServer(options={}){
     if(room.members.length<2)return fail('WAIT_PLAYERS','等待至少一位真实队友加入');
     if(room.members.some(x=>x.ws?.readyState!==1))return fail('OFFLINE','有队友断线，等待重新连接');
     if(data.type==='start'&&room.members.some(x=>!x.ready))return fail('NOT_READY','等待队友点击准备');start(room);
-   }else if(data.type==='input')m.input={x:Number.isFinite(data.input?.x)?Math.max(-1,Math.min(1,data.input.x)):0,z:Number.isFinite(data.input?.z)?Math.max(-1,Math.min(1,data.input.z)):0,boost:!!data.input?.boost,collect:!!data.input?.collect,deposit:!!data.input?.deposit};
+   }else if(data.type==='input')m.input={x:Number.isFinite(data.input?.x)?Math.max(-1,Math.min(1,data.input.x)):0,z:Number.isFinite(data.input?.z)?Math.max(-1,Math.min(1,data.input.z)):0,rise:Number.isFinite(data.input?.rise)?Math.max(-1,Math.min(1,data.input.rise)):0,boost:!!data.input?.boost,collect:!!data.input?.collect,deposit:!!data.input?.deposit};
    else if(data.type==='equip'&&room.state&&!room.paused)rules.equip(room.state,data.id,room.members.indexOf(m));
    else if(data.type==='slow'&&room.state&&!room.paused)rules.slow(room.state,room.members.indexOf(m));
    else if(data.type==='fold'&&room.state&&!room.paused)rules.fold(room.state,room.members.indexOf(m));

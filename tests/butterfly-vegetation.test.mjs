@@ -18,8 +18,9 @@ class Vector3 {
  copy(other){return this.set(other.x,other.y,other.z);}
 }
 class Geometry {
- setAttribute(){return this;}
- setIndex(){return this;}
+ constructor(...parameters){this.parameters=parameters;this.attributes={};}
+ setAttribute(name,attribute){this.attributes[name]=attribute;return this;}
+ setIndex(index){this.index=index;return this;}
  computeVertexNormals(){}
  rotateX(){return this;}
 }
@@ -34,10 +35,11 @@ class InstancedMesh {
  setColorAt(){this.instanceColor??={};}
  computeBoundingSphere(){this.boundingSphere={center:new Vector3()};}
 }
-class Material {constructor(options){Object.assign(this,options);}}
+class Material {constructor(options){Object.assign(this,options);}clone(){return new Material({...this});}}
 class Texture {constructor(){this.repeat={set(){}};}}
-const THREE={Vector3,Object3D,Color,InstancedMesh,BufferGeometry:Geometry,Float32BufferAttribute:class{},CircleGeometry:Geometry,SphereGeometry:Geometry,IcosahedronGeometry:Geometry,CylinderGeometry:Geometry,CanvasTexture:Texture,MeshStandardMaterial:Material};
-const canvasContext={fillRect(){},beginPath(){},ellipse(){},fill(){}};
+class Float32BufferAttribute {constructor(array,itemSize){this.array=new Float32Array(array);this.itemSize=itemSize;this.count=array.length/itemSize;}}
+const THREE={Vector3,Object3D,Color,InstancedMesh,BufferGeometry:Geometry,Float32BufferAttribute,CircleGeometry:Geometry,SphereGeometry:Geometry,IcosahedronGeometry:Geometry,CylinderGeometry:Geometry,CanvasTexture:Texture,MeshStandardMaterial:Material};
+const canvasContext={fillRect(){},beginPath(){},moveTo(){},bezierCurveTo(){},quadraticCurveTo(){},stroke(){},ellipse(){},fill(){}};
 const context=vm.createContext({document:{createElement:()=>({getContext:()=>canvasContext})}});
 // Expose the actual cell filler only in this VM so 126 cases do not regenerate
 // the other 48 cells each time. The published source and function body stay intact.
@@ -48,9 +50,9 @@ vm.runInContext(rulesSource,context);
 const vegetation=context.GardenVegetation;
 const homes=JSON.parse(JSON.stringify(context.GardenRules.create(1,{}, {players:64}).huts));
 
-function world(quality){
- const owner={quality,scene:{children:[],add(mesh){this.children.push(mesh);}},decorChunks:[],houses:[{home:homes[0]}],renderer:{shadowMap:{}},meadowCounts:{},pbr:{bladeGeometry:new Geometry(),palette:{grass:['#779944'],flowers:['#eebbcc']}},materials:{grass:new Material(),leaf:new Material(),petal:new Material(),honey:new Material(),bark:new Material()}};
- const plants=vegetation.create(THREE,owner);
+function world(quality,T=THREE,forestScale=1){
+ const owner={quality,_forestScale:forestScale,scene:{children:[],add(mesh){this.children.push(mesh);}},decorChunks:[],houses:[{home:homes[0]}],renderer:{shadowMap:{}},meadowCounts:{},pbr:{bladeGeometry:new T.BufferGeometry(),palette:{grass:['#779944'],flowers:['#eebbcc']}},materials:Object.fromEntries(['grass','leaf','petal','honey','bark'].map(name=>[name,new T.MeshStandardMaterial()]))};
+ const plants=vegetation.create(T,owner);
  return {owner,plants};
 }
 function coordinates(mesh){
@@ -115,4 +117,54 @@ test('all 63 late joins preserve existing grass outside the new house in both qu
   }
  }
  assert.equal(cases,126);
+});
+
+test('published tree bodies follow rendered trunks, branch axes and crown vertices in both biome scales',()=>{
+ // Use the exact bundled THREE matrices and vertex data for this CPU-only
+ // comparison. The lightweight transform stubs above intentionally omit rotation.
+ const threeSource=scripts.find(script=>script.includes('REVISION')&&script.includes('WebGLRenderer'));
+ assert.ok(threeSource,'published HTML must bundle its THREE implementation');
+ const threeContext=vm.createContext({console:{warn(){}}});
+ vm.runInContext(threeSource,threeContext);
+ const T=threeContext.THREE,matrix=new T.Matrix4(),point=new T.Vector3();
+ const near=(actual,expected,label)=>assert.ok(Math.hypot(actual.x-expected.x,actual.y-expected.y,actual.z-expected.z)<1e-4,label);
+ function covers(body,p){
+  if(body.shape==='capsule'){
+   const dx=body.bx-body.ax,dy=body.by-body.ay,dz=body.bz-body.az,length=dx*dx+dy*dy+dz*dz;
+   const t=length?Math.max(0,Math.min(1,((p.x-body.ax)*dx+(p.y-body.ay)*dy+(p.z-body.az)*dz)/length)):0;
+   return Math.hypot(p.x-body.ax-dx*t,p.y-body.ay-dy*t,p.z-body.az-dz*t)<=body.radius+.025;
+  }
+  const co=Math.cos(body.angle),si=Math.sin(body.angle),dx=p.x-body.x,dz=p.z-body.z,lx=dx*co-dz*si,lz=dx*si+dz*co;
+  const t=body.shape==='cone'?(p.y-body.yMin)/(body.yMax-body.yMin):(p.y-body.y)/body.ry;
+  const rings=body.rings;
+  if(t<rings[0][0]-1e-6||t>rings.at(-1)[0]+1e-6)return false;
+  for(let i=1;i<rings.length;i++)if(t<=rings[i][0]+1e-6){
+   const [a,ar]=rings[i-1],[b,br]=rings[i],amount=ar+(br-ar)*(t-a)/(b-a);
+   // Crown vertices have a documented ten-percent radial wobble. Their solid
+   // envelope must still follow the same lobes, tiers, scale and world rotation.
+   return Math.hypot(lx/(body.rx*Math.max(0,amount)+.0001),lz/(body.rz*Math.max(0,amount)+.0001))<=1.101;
+  }return false;
+ }
+ for(const scale of [1,.65]){
+  const {plants}=world('full',T,scale);plants.update({x:0,z:6});
+  for(const species of ['oak','birch','pine','willow']){
+   const tree=plants.snapshot().find(tree=>tree.species===species);
+   assert.ok(tree,`${species} must have a rendered instance`);
+   const bodies=vegetation.treeCollidersNear(tree.x,tree.z,scale,homes.slice(0,1)).filter(body=>body.treeKey===tree.key);
+   const timber=bodies.filter(body=>body.kind==='trunk'||body.kind==='branch');
+   assert.equal(timber.length,4,'one trunk and three branches share the rendered tree');
+   for(const [i,body]of timber.entries()){
+    plants.bark.getMatrixAt(tree.trunkIndex+i,matrix);
+    near(point.set(0,0,0).applyMatrix4(matrix),{x:(body.ax+body.bx)/2,y:(body.ay+body.by)/2,z:(body.az+body.bz)/2},`${species} timber midpoint`);
+    near(point.set(0,.5,0).applyMatrix4(matrix),{x:body.bx,y:body.by,z:body.bz},`${species} timber endpoint`);
+   }
+   const crown=plants.canopies[species],positions=crown.geometry.attributes.position,crowns=bodies.filter(body=>body.kind==='crown');
+   crown.getMatrixAt(tree.canopyIndex,matrix);
+   for(let i=0;i<positions.count;i++){
+    point.fromBufferAttribute(positions,i).applyMatrix4(matrix);
+    assert.ok(crowns.some(body=>covers(body,point)),`${species} crown vertex ${i} disagrees with collision at scale ${scale}`);
+   }
+   assert.equal(vegetation.treeCollidersNear(tree.x,tree.z,scale,[tree]).filter(body=>body.treeKey===tree.key).length,0,'a house-cleared tree cannot retain shared collision bodies');
+  }
+ }
 });

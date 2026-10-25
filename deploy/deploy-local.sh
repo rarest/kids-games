@@ -38,7 +38,7 @@ const files={
  shooter:['server.mjs','core.js','snapshot.js'],
  rescue:['server.mjs','net-codec.js','core.js','bosses.js','campaign.js','levels.js'],
  racing:['server.mjs','core.js','routes.js','contact.js','hazards.js'],
- butterfly:['server.cjs','rules.js','checkpoint.js','package.json'],
+ butterfly:['server.cjs','rules.js','checkpoint.js','vegetation.js','package.json'],
 }[game];
 const paths=[`deploy/${game}-coop.service`,...files.map(file=>`${game}/${file}`)];
 const contents=paths.map(path=>{

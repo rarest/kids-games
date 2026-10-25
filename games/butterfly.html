@@ -259,6 +259,18 @@
  #nectar-garden .ng-home h1{font-size:30px}
 }
 
+/* One persistent return guide; its arrow rotates relative to the camera. */
+#nectar-garden .ng-mission{display:flex;align-items:center;justify-content:center;gap:10px}
+#nectar-garden .ng-home-arrow{display:inline-block;font-size:30px;font-weight:800;line-height:1;width:24px;flex:0 0 24px;color:#ffe6a7;transform-origin:center;filter:drop-shadow(0 1px 3px #092b29)}
+#nectar-garden .ng-home-arrow[hidden]{display:none}
+#nectar-garden .ng-mission.is-returning{border:1px solid #ffdf8c8c;background:#193d32eb}
+
+#nectar-garden .ng-rise-controls{position:absolute;left:18px;bottom:274px;display:flex;gap:6px;pointer-events:auto}
+#nectar-garden .ng-rise-controls button{min-width:56px;min-height:44px;padding:6px 8px;background:#fffbedde;border:1px solid #fffbed;border-radius:12px;touch-action:none;font-size:12px;color:#234e41}
+@media(max-width:560px){#nectar-garden .ng-rise-controls{left:12px;bottom:calc(266px + env(safe-area-inset-bottom,0px));gap:6px}#nectar-garden .ng-rise-controls button{min-width:44px;padding:4px;font-size:10px}#nectar-garden .ng-mission{bottom:calc(324px + env(safe-area-inset-bottom,0px));max-width:90%}}
+@media(max-height:520px) and (min-width:561px){#nectar-garden .ng-rise-controls{left:120px;bottom:72px}}
+@media(min-width:600px) and (max-width:1600px) and (any-pointer:coarse){#nectar-garden .ng-rise-controls{left:var(--ng-pad);bottom:calc(var(--ng-safe-bottom) + var(--ng-stick) + 80px);width:var(--ng-stick);display:grid;grid-template-columns:1fr 1fr;gap:8px}#nectar-garden .ng-rise-controls button{min-width:44px;min-height:48px;font-size:13px;padding:8px 4px}}
+
 </style>
 <div id="nectar-garden" class="ng-game" data-network="on">
   <div class="ng-top">
@@ -266,11 +278,11 @@
     <div class="ng-top-actions"><span class="ng-coins">✦ <b data-coins>200</b></span><button type="button" data-action="music" aria-pressed="true">♫ 音乐开</button><button type="button" data-action="fullscreen" aria-pressed="false">全屏</button></div>
   </div>
   <div class="ng-stage">
-    <canvas class="ng-world" aria-label="蝴蝶第一视角：方向键或WASD前后左右，Q和E左前右前，J和L转向，摇杆飞行，按采蜜与存蜜按钮，回草屋拿取道具。"></canvas>
+    <canvas class="ng-world" aria-label="跟随蝴蝶：方向键或WASD前后左右，Q和E左前右前，J和L转向，T和G上升下降，触屏右侧上下拖动升降，摇杆飞行，按采蜜与存蜜按钮，回草屋拿取道具。"></canvas>
     <div class="ng-vignette"></div>
     <div class="ng-hud" hidden>
       <div class="ng-hud-main"><span class="ng-level">春日花园</span><strong class="ng-honey">🍯 <span data-bank>0 / 6</span></strong><span class="ng-bag">背包：空</span></div>
-      <div class="ng-hud-actions"><button type="button" data-action="view" aria-label="切换到跟随蝴蝶的第二视角">第一视角 ↔</button><button type="button" class="ng-sound" data-action="music" aria-label="关闭音乐">♫</button><button type="button" data-action="fullscreen" aria-pressed="false">全屏</button><button type="button" data-action="pause">暂停</button><button type="button" data-action="home">主页</button></div>
+      <div class="ng-hud-actions"><button type="button" data-action="view" aria-label="切换到蝴蝶第一人称">跟随蝴蝶 ↔</button><button type="button" class="ng-sound" data-action="music" aria-label="关闭音乐">♫</button><button type="button" data-action="fullscreen" aria-pressed="false">全屏</button><button type="button" data-action="pause">暂停</button><button type="button" data-action="home">主页</button></div>
     </div>
     <div class="ng-home ng-panel">
       <span class="ng-kicker">花开了，一起去冒险吧</span>
@@ -286,11 +298,12 @@
     <div class="ng-world-label ng-target-label" hidden></div>
     <div class="ng-reticle" hidden aria-hidden="true">·</div>
     <div class="ng-navigation" hidden><span data-house-direction>小草屋 ↑</span><span data-flower-direction>花朵 ↑</span><span data-gold-direction>金花×3 ↑</span><span data-chain>3连采触发顺风</span></div>
-    <div class="ng-mission" aria-live="polite"></div><canvas class="ng-radar" width="200" height="200" aria-label="附近地图：绿色小屋、红色追捕者、金色高收益花，前方在上"></canvas>
+    <div class="ng-mission" aria-live="polite"><span class="ng-home-arrow" aria-hidden="true" hidden>↑</span><span class="ng-mission-text"></span></div><canvas class="ng-radar" width="200" height="200" aria-label="附近地图：北方在上，金色屋顶是自己的家，边缘箭头指出远处小屋，红色为追捕者"></canvas>
     <div class="ng-storage-panel" hidden><span class="ng-storage-title">五边形储蜜框 · <b data-storage-count>0 / 6</b></span><div class="ng-storage-grid" role="img" aria-label="五边形储蜜格"></div></div>
     <div class="ng-flight-controls" hidden>
       <button type="button" class="ng-joystick" aria-label="飞行摇杆，按住向想飞的方向拖动"><span class="ng-stick-nub">飞行</span></button>
       <div class="ng-turn-controls" aria-label="转动视角"><button type="button" data-turn="-1" aria-label="向左转动视角">↶ 左转</button><button type="button" data-turn="1" aria-label="向右转动视角">右转 ↷</button></div>
+      <div class="ng-rise-controls" aria-label="飞行高度"><button type="button" data-rise="1" aria-label="按住上升，电脑T键">↑ 上升</button><button type="button" data-rise="-1" aria-label="按住下降，电脑G键">↓ 下降</button></div>
       <div class="ng-honey-actions"><button type="button" data-action="collect">采蜜 · 1秒</button><button type="button" data-action="deposit">存入蜜框 · 1秒</button></div>
     </div>
     <div class="ng-activity" hidden><span></span><div><i></i></div></div>
@@ -301,7 +314,7 @@
     <div class="ng-held-label" hidden>树枝上：空</div>
     <div class="ng-load">正在唤醒花园…</div>
   </div>
-  <div class="ng-footer"><span>方向键/WASD移动 · Q/E左前/右前 · J/L转向 · 空格加速 · F合翅 · C采蜜 · V存蜜</span><a class="ng-hall-link" href="/">回到小火箭游戏厅</a><span class="ng-local">第一视角 · 全页花园</span></div>
+  <div class="ng-footer"><span>方向键/WASD移动 · Q/E左前/右前 · J/L转向 · T/G升降 · 空格加速 · F合翅 · C采蜜 · V存蜜</span><a class="ng-hall-link" href="/">回到小火箭游戏厅</a><span class="ng-local">跟随蝴蝶 · 全页花园</span></div>
 </div>
 <script>
 console.warn('Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation'),
@@ -314,8 +327,141 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 
 </script>
 <script>
+/* Fixed world cells: rendering slots may be reused, living plants never follow the camera. */
+globalThis.GardenVegetation=(()=>{
+ const cellSize=32,radius=3,speciesNames=['oak','birch','pine','willow'];
+ const speciesSpecs={oak:{top:7,spread:3},birch:{top:8.6,spread:1.35},pine:{top:8.2,spread:2.3},willow:{top:6.2,spread:3}};
+ const crownLobes={oak:[[-.55,5.65,0,1.9,1.05,1.55,1],[1.05,5.15,.15,1.65,1,1.45,4],[-1.7,4.75,.35,1.2,.95,1.2,2],[.15,5.9,-1.1,1.6,1.1,1.4,7],[.35,4.8,1.3,1.9,.95,1.5,9],[-.1,6.15,.35,1.6,.85,1.3,5]],birch:[[-.18,6.4,0,1.1,2.2,.86,2],[.6,5.9,.12,.78,1.6,.74,3],[-.65,5.3,-.12,.65,1.5,.76,6],[.05,7.7,.05,.62,.9,.59,9]],willow:[[-.65,5.45,0,1.8,.7,1.7,2],[.85,5.35,.2,1.9,.75,1.6,6],[0,5.75,-.15,1.5,.45,1.6,4]]};
+ function hash(x,z,salt=0){let h=Math.imul(Math.round(x*1000)^salt,73856093)^Math.imul(Math.round(z*1000),19349663);h=Math.imul(h^(h>>>16),2246822519);return(h^(h>>>13))>>>0;}
+ function flowerStyle(f){const seed=hash(f.x,f.z,7143);return{height:.62+(seed%71)/110,angle:(seed%65536)/65536*Math.PI*2,palette:seed%6,phase:(seed%8192)/8192*Math.PI*2};}
+ function randomFor(cx,cz){let seed=hash(cx,cz,783);return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
+ function treesInCell(cx,cz){const rand=randomFor(cx,cz),out=[];for(let n=0;n<2;n++){const x=cx*cellSize+6+rand()*20,z=cz*cellSize+6+rand()*20,scale=.8+rand()*.65;if(Math.hypot(x,z-6)<18)continue;out.push({key:cx+','+cz+':'+n,x,z,scale,angle:rand()*Math.PI*2,species:speciesNames[hash(x,z,309)%4]});}return out;}
+ function treeStructure(tree){const s=tree.scale,name=tree.species,birch=name==='birch',height=(birch?6.8:name==='pine'?6.9:name==='willow'?4.55:4.8)*s;
+  return{height,trunkRadius:(birch?.13:.29)*s,branches:Array.from({length:3},(_,j)=>{const a=tree.angle+j*2.094;return{x:tree.x+Math.sin(a)*(birch?.27:name==='pine'?.24:.62)*s,y:height*(name==='pine'?.56:.75)+j*.20*s,z:tree.z+Math.cos(a)*(birch?.27:name==='pine'?.24:.62)*s,radius:(birch?.046:name==='pine'?.07:.10)*s,length:(birch?1.35:name==='pine'?1.25:2)*s,rx:.72*Math.cos(a),rz:-.72*Math.sin(a)};})};
+ }
+ function treeCollidersNear(x,z,forestScale=1,homes=[]){const out=[],cx=Math.floor(x/cellSize),cz=Math.floor(z/cellSize);
+  for(let a=cx-1;a<=cx+1;a++)for(let b=cz-1;b<=cz+1;b++)for(const tree of treesInCell(a,b)){
+   if(Math.hypot(x-tree.x,z-tree.z)>12||homes.some(h=>Math.hypot(tree.x-h.x,tree.z-h.z)<4))continue;
+   const structure=treeStructure(tree),meta={treeKey:tree.key,species:tree.species},scale=tree.scale,co=Math.cos(tree.angle),si=Math.sin(tree.angle),world=(lx,ly,lz)=>({x:tree.x+(lx*co+lz*si)*scale*forestScale,y:ly*scale,z:tree.z+(-lx*si+lz*co)*scale*forestScale});
+   out.push({...meta,kind:'trunk',shape:'capsule',ax:tree.x,ay:0,az:tree.z,bx:tree.x,by:structure.height,bz:tree.z,radius:structure.trunkRadius});
+   for(const branch of structure.branches){const half=branch.length/2,dx=-Math.sin(branch.rz)*half,dy=Math.cos(branch.rx)*Math.cos(branch.rz)*half,dz=Math.sin(branch.rx)*Math.cos(branch.rz)*half;out.push({...meta,kind:'branch',shape:'capsule',ax:branch.x-dx,ay:branch.y-dy,az:branch.z-dz,bx:branch.x+dx,by:branch.y+dy,bz:branch.z+dz,radius:branch.radius});}
+   if(tree.species==='pine')for(let tier=0;tier<5;tier++){
+    const p=world(Math.sin(tier*2.3)*.12,2+tier*1.07,Math.cos(tier*2.3)*.10),r=(2.25-tier*.37)*scale*forestScale;
+    out.push({...meta,kind:'crown',shape:'cone',x:p.x,z:p.z,yMin:p.y,yMax:p.y+1.92*scale,rx:r,rz:r*.9,angle:tree.angle,rings:[[0,1],[.18,.8],[1,0]]});
+   }else for(const [lx,ly,lz,rx,ry,rz]of crownLobes[tree.species]){const p=world(lx,ly,lz);out.push({...meta,kind:'crown',shape:'ellipsoid',...p,rx:rx*scale*forestScale,ry:ry*scale,rz:rz*scale*forestScale,angle:tree.angle,rings:[[-1,0],[-.4,.9],[.38,1],[1,0]]});}
+   if(tree.species==='willow')for(let j=0;j<11;j++)for(let strand=0;strand<3;strand++){
+    const angle=j*Math.PI*2/11+strand*.09,cos=Math.cos(angle),sin=Math.sin(angle),length=2.5+(j%3)*.30+strand*.12,baseY=5.4+(j%2)*.25;
+    let previous=world(cos*1.6,baseY,sin*1.6);
+    for(let row=1;row<4;row++){const t=row/3,r=1.6+Math.sin(t*Math.PI*.72)*1.25,next=world(cos*r,baseY-t*length,sin*r),width=(.19+strand*.025)*(1-(t-1/3)*.85);out.push({...meta,kind:'crown',shape:'capsule',ax:previous.x,ay:previous.y,az:previous.z,bx:next.x,by:next.y,bz:next.z,radius:width*scale*forestScale});previous=next;}
+   }
+  }return out;
+ }
+ // A crown landing is deliberately inside the outer foliage. Both server and
+ // renderer use these world coordinates; no THREE or DOM is needed to query it.
+ function perchAt(x,z,forestScale=1,homes=[]){let best=null;const cx=Math.floor(x/cellSize),cz=Math.floor(z/cellSize);
+  for(let a=cx-1;a<=cx+1;a++)for(let b=cz-1;b<=cz+1;b++)for(const tree of treesInCell(a,b)){
+   if(homes.some(h=>Math.hypot(tree.x-h.x,tree.z-h.z)<4))continue;
+   const spec=speciesSpecs[tree.species],r=spec.spread*tree.scale*forestScale*.65,dx=x-tree.x,dz=z-tree.z;if(Math.hypot(dx,dz)>r)continue;
+   const co=Math.cos(tree.angle),si=Math.sin(tree.angle),lx=(dx*co-dz*si)/(tree.scale*forestScale),lz=(dx*si+dz*co)/(tree.scale*forestScale);let top=-Infinity;
+   if(tree.species==='pine'){
+    for(let tier=0;tier<5;tier++){const width=2.25-tier*.37,base=2+tier*1.07,d=Math.hypot(lx-Math.sin(tier*2.3)*.12,(lz-Math.cos(tier*2.3)*.10)/.9)/width;
+     if(d<=1)top=Math.max(top,base+1.92*(d<.8?1-d/.8*.82:(1-d)/.2*.18));}
+   }else for(const [x0,y0,z0,rx,ry,rz]of crownLobes[tree.species]){const d=Math.hypot((lx-x0)/rx,(lz-z0)/rz);if(d<=1)top=Math.max(top,y0+ry*(1-.62*d));}
+   if(!Number.isFinite(top))continue;const y=top*tree.scale;if(!best||y>best.y)best={y,species:tree.species,key:tree.key,x:tree.x,z:tree.z,radius:r};
+  }return best;
+ }
+ // Smooth world-space growth patches: widths/heights vary together over several
+ // metres, with tiny gaps between the thickets. No random stream is consumed.
+ function growthAt(x,z){const ax=x/7,az=z/7,ix=Math.floor(ax),iz=Math.floor(az),u=ax-ix,v=az-iz,s=u*u*(3-2*u),t=v*v*(3-2*v),n=(a,b)=>(hash(a,b,172)%1000)/999;return(n(ix,iz)*(1-s)+n(ix+1,iz)*s)*(1-t)+(n(ix,iz+1)*(1-s)+n(ix+1,iz+1)*s)*t;}
+ function create(T,owner){
+  const scene=owner.scene,slots=[],records=[],matrix=new T.Object3D(),color=new T.Color(),faded=new WeakSet();let signature='',treeSnapshot=[];
+  function geometry(p,uv,index,colors){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));if(colors)g.setAttribute('color',new T.Float32BufferAttribute(colors,3));g.setIndex(index);g.computeVertexNormals();return g;}
+  function cards(cover=false){const p=[],uv=[],index=[];for(let j=0;j<3;j++){const a=j*Math.PI/3,c=Math.cos(a),s=Math.sin(a),i=p.length/3;p.push(-c*.5,0,-s*.5,c*.5,0,s*.5,c*.5,1,s*.5,-c*.5,1,-s*.5);uv.push(0,0,1,0,1,1,0,1);index.push(i,i+1,i+2,i,i+2,i+3);}if(cover){
+    // One upright fern and one horizontal trefoil carpet use a single atlas.
+    return geometry([-.5,0,0,.5,0,0,.5,1,0,-.5,1,0,-.58,.045,-.55,.58,.045,-.55,.58,.045,.55,-.58,.045,.55],[0,0,.5,0,.5,1,0,1,.5,0,1,0,1,1,.5,1],[0,1,2,0,2,3,4,6,5,4,7,6]);
+   }return geometry(p,uv,index);}
+  function painted(paint){const canvas=document.createElement('canvas');canvas.width=canvas.height=256;paint(canvas.getContext('2d'));const map=new T.CanvasTexture(canvas);map.colorSpace=T.SRGBColorSpace;return map;}
+  const tuftMap=painted(ctx=>{const rand=randomFor(81,49);for(let i=0;i<8;i++){const base=70+rand()*116,tip=16+rand()*220,top=12+rand()*115,w=8+rand()*9;ctx.fillStyle=['#c2c6a8','#e1e4c8','#f0f0d5','#b1bc97'][i%4];ctx.beginPath();ctx.moveTo(base-w,256);ctx.bezierCurveTo(base-w,165,tip-w,top+50,tip,top);ctx.bezierCurveTo(tip+w*.3,top+58,base+w,184,base+w,256);ctx.fill();ctx.strokeStyle='rgba(250,255,212,.35)';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(base,251);ctx.quadraticCurveTo(base,164,tip,top+9);ctx.stroke();}});
+  const coverMap=painted(ctx=>{
+   ctx.strokeStyle='#dbe0c4';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(60,251);ctx.quadraticCurveTo(75,145,60,18);ctx.stroke();
+   for(let i=0;i<10;i++)for(const side of [-1,1]){const y=233-i*20,w=26*Math.sin((i+1)/12*Math.PI)+3;ctx.fillStyle=i%2?'#e0e5c9':'#b3c09a';ctx.beginPath();ctx.ellipse(62+side*w*.52,y-5,w*.6,4.8,-side*.55,0,Math.PI*2);ctx.fill();}
+   for(let i=0;i<5;i++){const x=158+(i*31%67),y=40+(i*53%160);for(let j=0;j<3;j++){const a=j*2.094;ctx.fillStyle=['#becba3','#e1e7c7','#afc292'][j];ctx.beginPath();ctx.ellipse(x+Math.cos(a)*12,y+Math.sin(a)*12,12,10,a,0,Math.PI*2);ctx.fill();}ctx.fillStyle='#91a47d';ctx.beginPath();ctx.ellipse(x,y,3,3,0,0,Math.PI*2);ctx.fill();}
+  });
+  const grassMaterial=new T.MeshStandardMaterial({color:'#ffffff',map:tuftMap,roughness:1,side:T.DoubleSide,alphaTest:.44}),coverMaterial=new T.MeshStandardMaterial({color:'#ffffff',map:coverMap,roughness:1,side:T.DoubleSide,alphaTest:.44});
+  grassMaterial.name='meadow:multi-blade-tufts';coverMaterial.name='meadow:fern-and-clover';
+  const petalGeo=geometry([0,0,0,-.28,.5,.09,.28,.5,.09,0,1,.22,-.009,0,-1,.009,0,-1,.009,0,0,-.009,0,0,0,0,-.48,.15,.05,-.30,0,.02,-.34],[.5,0,0,.5,1,.5,.5,1,.5,.1,.5,.1,.5,.9,.5,.9,.5,.3,.5,.5,.5,.5],[0,2,1,1,2,3,4,5,6,4,6,7,8,9,10],[1,1,1,1,1,1,1,1,1,1,1,1,.20,.42,.12,.20,.42,.12,.20,.42,.12,.20,.42,.12,.28,.48,.16,.28,.48,.16,.28,.48,.16]);
+  const petalMaterial=owner.materials.petal.clone();petalMaterial.vertexColors=true;petalMaterial.side=T.DoubleSide;
+  const smallSphere=new T.IcosahedronGeometry(1,0),barkGeo=new T.CylinderGeometry(.64,1,1,8),pollen=owner.pbr.pollen||owner.materials.honey;
+  const canopyMap=painted(ctx=>{ctx.fillStyle='#ddddcf';ctx.fillRect(0,0,256,256);const rand=randomFor(27,91);for(let i=0;i<1100;i++){ctx.fillStyle=['#b2bba3','#eeeeD8','#cbd2b9','#f1f1de'][i%4];ctx.beginPath();ctx.ellipse(rand()*256,rand()*256,2+rand()*6,1+rand()*3,rand()*6.28,0,Math.PI*2);ctx.fill();}});
+  canopyMap.wrapS=canopyMap.wrapT=T.RepeatWrapping;canopyMap.repeat.set(2,2);
+  const canopyMaterial=new T.MeshStandardMaterial({color:'#ffffff',map:canopyMap,roughness:.97,side:T.DoubleSide});
+  const barkMaterial=new T.MeshStandardMaterial({color:'#ffffff',roughness:1,map:painted(ctx=>{ctx.fillStyle='#e4e1d7';ctx.fillRect(0,0,256,256);const rand=randomFor(91,23);for(let i=0;i<130;i++){ctx.fillStyle=i%3?'#858278':'#3f443b';ctx.fillRect(rand()*256,rand()*256,3+rand()*26,1+rand()*4);}})});
+  // Each species is one shared merged crown. Wide branching oak, narrow birch,
+  // separated pine tiers and hanging willow fans retain their own silhouettes.
+  function crown(species){const p=[],uv=[],index=[];
+   function loft(x,y,z,rx,ry,rz,rings,seed,segments=7){const start=p.length/3;for(let row=0;row<rings.length;row++){const [h,r]=rings[row];for(let col=0;col<segments;col++){const a=col/segments*Math.PI*2+.17*row,wobble=1+.10*Math.sin(col*2.1+seed+row*.6);p.push(x+Math.cos(a)*rx*r*wobble,y+h*ry,z+Math.sin(a)*rz*r*wobble);uv.push(col/segments,row/(rings.length-1));}}for(let row=0;row<rings.length-1;row++)for(let col=0;col<segments;col++){const a=start+row*segments+col,b=start+row*segments+(col+1)%segments,c=a+segments,d=b+segments;index.push(a,b,c,c,b,d);}}
+   const lobe=(x,y,z,rx,ry,rz,seed)=>loft(x,y,z,rx,ry,rz,[[-1,0],[-.4,.9],[.38,1],[1,0]],seed,7);
+   if(species!=='pine')for(const args of crownLobes[species])lobe(...args);
+   if(species==='pine'){
+    for(let j=0;j<5;j++){const r=2.25-j*.37;loft(Math.sin(j*2.3)*.12,2.0+j*1.07,Math.cos(j*2.3)*.10,r,1.92,r*.9,[[0,1],[.18,.80],[1,0]],j,10);}
+   }else if(species==='willow'){
+    for(let j=0;j<11;j++)for(let strand=0;strand<3;strand++){const a=j*Math.PI*2/11+strand*.09,co=Math.cos(a),si=Math.sin(a),tanX=-si,tanZ=co,length=2.5+(j%3)*.30+strand*.12,baseY=5.4+(j%2)*.25,start=p.length/3;
+     for(let row=0;row<4;row++){const t=row/3,r=1.6+Math.sin(t*Math.PI*.72)*1.25,w=(.19+strand*.025)*(1-t*.85),h=baseY-t*length;for(const side of [-1,1]){p.push(co*r+tanX*w*side,h,si*r+tanZ*w*side);uv.push((side+1)/2,t);}}
+     for(let row=0;row<3;row++){const a=start+row*2;index.push(a,a+1,a+2,a+2,a+1,a+3);}
+    }
+   }const g=geometry(p,uv,index);g.userData={species,silhouette:true};return g;
+  }
+  function mesh(geometry,material,count,kind){const m=new T.InstancedMesh(geometry,material,count);m.count=0;m.castShadow=kind==='trees'||kind==='bark';m.receiveShadow=kind!=='trees';m.userData.worldAnchored=true;scene.add(m);const record={mesh:m,kind,center:new T.Vector3(),worldAnchored:true};records.push(record);owner.decorChunks.push(record);return m;}
+  const tuftGeo=cards(),coverGeo=cards(true);
+  for(let i=0;i<49;i++)slots.push({key:'',grass:mesh(tuftGeo,grassMaterial,900,'grass'),clover:mesh(coverGeo,coverMaterial,450,'clover'),petal:mesh(petalGeo,petalMaterial,1050,'petal'),center:mesh(smallSphere,pollen,210,'centers')});
+  const bark=mesh(barkGeo,barkMaterial,392,'bark'),canopies=Object.fromEntries(speciesNames.map(name=>{const m=mesh(crown(name),canopyMaterial,98,'trees');m.name='forest:'+name;m.userData.species=name;return[name,m];})),canopy=canopies.oak;
+  function set(m,i,x,y,z,sx,sy,sz,rx=0,ry=0,rz=0,c){matrix.position.set(x,y,z);matrix.rotation.set(rx,ry,rz);matrix.scale.set(sx,sy,sz);matrix.updateMatrix();m.setMatrixAt(i,matrix.matrix);if(c)m.setColorAt(i,color.set(c));}
+  function flush(m,n){m.count=n;m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.computeBoundingSphere();const rec=records.find(r=>r.mesh===m);rec.center.copy(m.boundingSphere?.center||new T.Vector3());}
+  function fade(material,end){if(faded.has(material))return;faded.add(material);const previous=material.onBeforeCompile;material.onBeforeCompile=shader=>{previous?.(shader);shader.vertexShader='varying vec3 vGardenPosition;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>\nvec4 gardenVertex=vec4(transformed,1.0);\n#ifdef USE_INSTANCING\ngardenVertex=instanceMatrix*gardenVertex;\n#endif\nvGardenPosition=(modelMatrix*gardenVertex).xyz;`);shader.fragmentShader='varying vec3 vGardenPosition;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <dithering_fragment>',`float gardenFade=1.0-smoothstep(${end-8}.0,${end}.0,distance(cameraPosition.xz,vGardenPosition.xz));\nfloat gardenNoise=fract(sin(dot(floor(vGardenPosition.xz*70.0),vec2(12.9898,78.233)))*43758.5453);\nif(gardenFade<gardenNoise)discard;\n#include <dithering_fragment>`);};material.customProgramCacheKey=()=>`garden-cell-fade-${end}`;material.needsUpdate=true;}
+  function fill(slot,cx,cz,homes){const rand=randomFor(cx,cz),gx=cx*cellSize,gz=cz*cellSize,soft=owner.quality==='software';let g=0,c=0,p=0,n=0;
+   for(let i=0;i<900;i++){
+    // Always consume exactly six values, including candidates inside new homes.
+    const x=gx+rand()*cellSize,z=gz+rand()*cellSize,height=.19+rand()*.33,angle=rand()*Math.PI*2,width=.55+rand()*.7,flowerHeight=.17+rand()*.22;
+    const clearance=homes.reduce((d,h)=>Math.min(d,Math.hypot(x-h.x,z-h.z)),Infinity);if(clearance<1.6)continue;
+    const growth=growthAt(x,z),spread=Math.min(width*(1.25+growth*1.5),Math.max(.08,(clearance-1.5)*1.8)),h=height*(.85+growth*1.5);
+    if(!soft||hash(x,z,33)%100<45)set(slot.grass,g++,x,.004,z,spread,h,spread,0,angle,0,owner.pbr.palette.grass[hash(Math.floor(x/3),Math.floor(z/3),9)%owner.pbr.palette.grass.length]);
+    if(i%6===0&&(!soft||hash(x,z,41)%100<45))for(let j=0;j<3;j++){const a=angle+j*2.094,r=.08+j*.045;set(slot.clover,c++,x+Math.cos(a)*r,.012,z+Math.sin(a)*r,.27+growth*.28,.18+growth*.30,.27+growth*.28,0,a,0,['#789459','#8fa966','#a0b979'][hash(x,z,7)%3]);}
+    if(i%13===0&&(!soft||hash(x,z,61)%100<55))for(let bloom=0;bloom<3;bloom++){
+     const seed=hash(x,z,81+bloom),a=angle+bloom*2.39,r=bloom===0?0:.17+(seed%41)/100,fx=x+Math.cos(a)*r,fz=z+Math.sin(a)*r;
+     if(homes.some(home=>Math.hypot(fx-home.x,fz-home.z)<1.6))continue;
+     const flowerH=flowerHeight*(1.1+growth*1.2)+(seed%19)/100,col=owner.pbr.palette.flowers[hash(Math.floor(x/4),Math.floor(z/4),24)%owner.pbr.palette.flowers.length],size=.17+(seed%11)/100;
+     for(let j=0;j<5;j++)set(slot.petal,p++,fx,flowerH,fz,size,size,flowerH,-Math.PI/2,angle+j*Math.PI*.4,0,col);set(slot.center,n++,fx,flowerH+.014,fz,.036,.024,.036);
+    }
+   }
+   for(const [m,count]of [[slot.grass,g],[slot.clover,c],[slot.petal,p],[slot.center,n]])flush(m,count);slot.key=cx+','+cz;slot.cx=cx;slot.cz=cz;
+  }
+  function forest(cells){let b=0;const counts={oak:0,birch:0,pine:0,willow:0};treeSnapshot=[];const forestScale=owner._forestScale||1;
+   for(const [cx,cz]of cells)for(const tree of treesInCell(cx,cz)){
+    if((owner.houses||[]).some(h=>Math.hypot(tree.x-h.home.x,tree.z-h.home.z)<4))continue;
+    const s=tree.scale,name=tree.species,birch=name==='birch',pine=name==='pine',structure=treeStructure(tree),index=counts[name]++;
+    treeSnapshot.push({...tree,trunkIndex:b,canopyIndex:index});set(bark,b++,tree.x,structure.height*.5,tree.z,structure.trunkRadius,structure.height,structure.trunkRadius,0,tree.angle,0,birch?'#fffdf0':pine?'#7b6c50':'#84704e');
+    for(const branch of structure.branches)set(bark,b++,branch.x,branch.y,branch.z,branch.radius,branch.length,branch.radius,branch.rx,0,branch.rz,birch?'#e8e5cf':'#887351');
+    const tint={oak:['#64834b','#78934f','#839a58'],birch:['#8fa65b','#a7b56c','#93a859'],pine:['#456d4d','#557d57','#3e684b'],willow:['#83995b','#93a965','#758e55']}[name][hash(tree.x,tree.z,111)%3];
+    set(canopies[name],index,tree.x,0,tree.z,s*forestScale,s,s*forestScale,0,tree.angle,0,tint);
+   }
+   flush(bark,b);for(const name of speciesNames)flush(canopies[name],counts[name]);owner.meadowCounts.trees=treeSnapshot.length;owner.meadowCounts.treeSpecies=counts;owner.meadowCounts.canopyLeaves=treeSnapshot.length;
+  }
+  function update(local,force=false){const cx=Math.floor(local.x/cellSize),cz=Math.floor(local.z/cellSize),homes=(owner.houses||[]).map(h=>h.home);if(!homes.length)homes.push({x:0,z:6});const next=cx+','+cz+'|'+owner.biome+'|'+owner.quality+'|'+homes.map(h=>h.x+','+h.z).join(';');if(force||next!==signature){const cells=[];for(let x=cx-radius;x<=cx+radius;x++)for(let z=cz-radius;z<=cz+radius;z++)cells.push([x,z]);const need=new Set(cells.map(([x,z])=>x+','+z)),free=slots.filter(s=>!need.has(s.key));for(const [x,z]of cells){const key=x+','+z;let slot=slots.find(s=>s.key===key);if(!slot)slot=free.pop();if(force||next.split('|').slice(2).join('|')!==signature.split('|').slice(2).join('|')||slot.key!==key)fill(slot,x,z,homes);}forest(cells);signature=next;owner.renderer.shadowMap.needsUpdate=true;}
+   for(const slot of slots){const dx=Math.max(slot.cx*cellSize-local.x,0,local.x-(slot.cx+1)*cellSize),dz=Math.max(slot.cz*cellSize-local.z,0,local.z-(slot.cz+1)*cellSize),distance=Math.hypot(dx,dz);slot.grass.visible=slot.clover.visible=distance<34;slot.petal.visible=slot.center.visible=distance<50;fade(slot.grass.material,32);fade(slot.clover.material,32);fade(slot.petal.material,48);fade(slot.center.material,48);}
+  }
+  return{update,snapshot:()=>treeSnapshot.map(t=>({...t})),slots,records,bark,canopy,canopies};
+ }
+ return{hash,flowerStyle,treesInCell,perchAt,treeCollidersNear,growthAt,speciesSpecs,cellSize,create};
+})();
+if(typeof module!=='undefined')module.exports=globalThis.GardenVegetation;
+
+</script>
+<script>
 /* Shared deterministic rules for local play and the authoritative LAN server. */
 globalThis.GardenRules = (() => {
+  const vegetation=typeof module!=='undefined'?require('./vegetation.js'):globalThis.GardenVegetation;
+  const flight={min:.4,max:18,speed:3,hunterReach:5.4,perchOffset:.12};
+  const roofProfile=[[0,.95],[.22,.90],[.50,.77],[.83,.51],[1.17,.16],[1.50,-.21],[1.81,-.56],[2.05,-.78],[2.18,-.88]];
   const world={x:40,z:32,playerRadius:.12,infinite:true};
   const hut={x:0,z:6,radius:2.2,hunterExclusion:3.35,wallOuter:1.14,wallInner:.81,wallSplit:.98,doorHalf:.55,doorStart:6.35,modelScale:.6};
   const layouts=[[-4,3],[4,2],[-7,-2],[6,-3],[-3,-6],[2,-7],[8,1],[-8,2],[0,-3],[5,-6],[-9,-.2],[.2,-7.8]];
@@ -339,19 +485,75 @@ globalThis.GardenRules = (() => {
     return {kind:golden?'golden':'ordinary',value:golden?3:1};
   }
   const hutFor=p=>p?.home||hut;
-  const isSafe=p=>distance(p,hutFor(p))<=hut.radius;
-  const isSheltered=(s,p)=>(s.huts||[hut]).some(home=>distance(p,home)<=hut.radius);
+  const isSafe=p=>distance(p,hutFor(p))<=hut.radius&&(!Number.isFinite(p.altitude)||p.altitude<=1.55);
+  const isSheltered=(s,p)=>altitudeOf(s,p)<=1.55&&(s.huts||[hut]).some(home=>distance(p,home)<=hut.radius);
+  // Match scene._eyeHeight for players and old saves that have never used rise.
+  function altitudeOf(s,p){
+    if(Number.isFinite(p.altitude))return p.altitude;if(p.hiddenFor>0)return .4;
+    const d=Math.min(...(s.huts||[hut]).map(home=>distance(p,home)));if(d<=1.35)return .78;if(d>=2)return 1.45;const t=(d-1.35)/.65;return .78+.67*t*t*(3-2*t);
+  }
+  function roofAt(x,z,home=hut){
+    const r=Math.hypot(x-home.x,z-home.z)/hut.modelScale;if(r>2.18)return null;
+    for(let i=1;i<roofProfile.length;i++){const [right,high]=roofProfile[i],[left,low]=roofProfile[i-1];if(r<=right)return (3+low+(high-low)*(r-left)/(right-left))*hut.modelScale;}return null;
+  }
+  function surfacesAt(s,p){
+    const surfaces=(s.huts||[hut]).map(home=>roofAt(p.x,p.z,home)).filter(y=>y!==null);
+    const plants=vegetation||globalThis.GardenVegetation,scale={meadow:1,forest:.65,sunset:.92,moon:.84}[s.map]||1;
+    const crown=plants?.perchAt?.(p.x,p.z,scale,s.huts||[hut]);if(crown)surfaces.push(crown.y);return surfaces;
+  }
+  const forestScale=s=>({meadow:1,forest:.65,sunset:.92,moon:.84}[s.map]||1);
+  function treeBodies(s,p){return (vegetation||globalThis.GardenVegetation)?.treeCollidersNear?.(p.x,p.z,forestScale(s),s.huts||[hut])||[];}
+  function section(body,p,y,r){
+    if(body.shape==='capsule'){
+      const dx=body.bx-body.ax,dy=body.by-body.ay,dz=body.bz-body.az,len=dx*dx+dy*dy+dz*dz,t=len?Math.max(0,Math.min(1,((p.x-body.ax)*dx+(y-body.ay)*dy+(p.z-body.az)*dz)/len)):0;
+      const cy=body.ay+dy*t,rr=(body.radius+r)**2-(y-cy)**2;if(rr<=0)return null;const radius=Math.sqrt(rr);return{x:body.ax+dx*t,z:body.az+dz*t,rx:radius,rz:radius,angle:0};
+    }
+    let amount;
+    if(body.shape==='cone'){
+      const t=(y-body.yMin)/(body.yMax-body.yMin);if(t<0||t>1)return null;const rings=body.rings||[[0,1],[1,0]];
+      for(let i=1;i<rings.length;i++)if(t<=rings[i][0]){const [a,ar]=rings[i-1],[b,br]=rings[i];amount=ar+(br-ar)*(t-a)/(b-a);break;}
+    }else{
+      const t=(y-body.y)/body.ry;if(t<=-1||t>=1)return null;
+      const rings=body.rings||[[-1,0],[-.4,.9],[.38,1],[1,0]];
+      for(let i=1;i<rings.length;i++)if(t<=rings[i][0]){const [a,ar]=rings[i-1],[b,br]=rings[i];amount=ar+(br-ar)*(t-a)/(b-a);break;}
+    }
+    return{x:body.x,z:body.z,rx:body.rx*amount+r,rz:body.rz*amount+r,angle:body.angle||0};
+  }
+  function pushTree(p,c,apply){
+    const co=Math.cos(c.angle),si=Math.sin(c.angle),dx=p.x-c.x,dz=p.z-c.z,lx=dx*co-dz*si,lz=dx*si+dz*co,n=Math.hypot(lx/c.rx,lz/c.rz);
+    if(n>=1-1e-8)return false;if(apply){const x=n>1e-9?lx/n:c.rx,z=n>1e-9?lz/n:0;p.x=c.x+x*co+z*si;p.z=c.z-x*si+z*co;}return true;
+  }
+  function treeBlocked(bodies,p,y,r){return bodies.some(body=>{const c=section(body,p,y,r);return c&&pushTree(p,c,false);});}
+  function rise(s,p,input,dt){
+    const amount=Math.max(-1,Math.min(1,finite(input)));if(!amount)return;
+    const before=altitudeOf(s,p);let after=Math.max(flight.min,Math.min(flight.max,before+amount*flight.speed*dt));
+    for(const y of surfacesAt(s,p)){const top=y+flight.perchOffset,bottom=y-flight.perchOffset;
+      if(amount<0&&before>=top-1e-8&&after<top)after=Math.max(after,top);
+      if(amount>0&&before<=bottom+1e-8&&after>bottom)after=Math.min(after,bottom);
+    }
+    const bodies=treeBodies(s,p);if(!treeBlocked(bodies,p,before,world.playerRadius)&&treeBlocked(bodies,p,after,world.playerRadius)){let clear=before,blocked=after;for(let i=0;i<14;i++){const mid=(clear+blocked)/2;if(treeBlocked(bodies,p,mid,world.playerRadius))blocked=mid;else clear=mid;}after=clear;}
+    p.altitude=after;
+  }
   const housePositions=[];
   for(let row=-6;row<=6;row++)for(let col=-6;col<=6;col++){const x=(col+(Math.abs(row)%2)*.5)*7.2,z=6+row*6.3;if((x/36)**2+(z/28)**2<1)housePositions.push({x,z});}
   housePositions.sort((a,b)=>Math.hypot(a.x,a.z-6)-Math.hypot(b.x,b.z-6)||a.x-b.x||a.z-b.z);
   function clearHouseFlowers(s){let seed=0;for(const f of s.flowers){if(s.huts.every(h=>distance(f,h)>=3))continue;for(;seed<12000;seed++){const angle=seed*2.3999632297,r=Math.sqrt((((seed*73)%997)+.5)/997),point={x:Math.cos(angle)*38*r,z:Math.sin(angle)*30*r};if(s.huts.every(h=>distance(point,h)>=3)&&s.flowers.every(other=>other===f||distance(point,other)>=1.15)){f.x=point.x;f.z=point.z;seed++;break;}}}}
   const collectTime=s=>s.level===4?.1:1;
   const mapIds=['meadow','forest','sunset','moon'];
+  // Stable per-tile scatter. Keep a margin so adjacent tiles cannot overlap.
+  function flowersInTile(tx,tz,base){
+    let seed=(Math.imul(tx^8717,73856093)^Math.imul(tz^9277,19349663))>>>0;
+    const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;},points=[];
+    for(let attempt=0;attempt<1024&&points.length<16;attempt++){
+      const point={x:tx*24+.65+random()*22.7,z:tz*24+.65+random()*22.7};
+      if(points.every(other=>distance(point,other)>=1.15)&&base.every(other=>distance(point,other)>=1.15))points.push(point);
+    }return points;
+  }
   function growMeadow(s){
     const key=s.players.map(p=>Math.floor(p.x/24)+','+Math.floor(p.z/24)).join(';');if(s.flowerKey===key)return;s.flowerKey=key;
     const old=s.flowers,active=s.players.map(p=>old.find(f=>f.id===p.activeFlower));s.flowers=old.filter((f,i)=>i<192||s.players.some(p=>distance(f,p)<60));
     const existing=new Set(s.flowers.map(f=>f.tile).filter(Boolean));
-    for(const p of s.players){if(Math.abs(p.x)<24&&Math.abs(p.z)<20)continue;const cx=Math.floor(p.x/24),cz=Math.floor(p.z/24);for(let tx=cx-1;tx<=cx+1;tx++)for(let tz=cz-1;tz<=cz+1;tz++){const tile=tx+','+tz;if(existing.has(tile))continue;existing.add(tile);for(let n=0;n<16;n++){const seed=Math.abs(Math.sin(tx*17.3+tz*73.1+n*2.399)),x=tx*24+(n%4)*6+2+seed*2,z=tz*24+Math.floor(n/4)*6+2+(1-seed)*2;if(s.huts.every(h=>distance({x,z},h)>=3))s.flowers.push({x,z,tile,id:0,done:false,progress:0,regrow:0,...flowerType({x,z},s.huts)});}}}
+    for(const p of s.players){if(Math.abs(p.x)<24&&Math.abs(p.z)<20)continue;const cx=Math.floor(p.x/24),cz=Math.floor(p.z/24);for(let tx=cx-1;tx<=cx+1;tx++)for(let tz=cz-1;tz<=cz+1;tz++){const tile=tx+','+tz;if(existing.has(tile))continue;existing.add(tile);for(const {x,z} of flowersInTile(tx,tz,s.flowers.slice(0,192))){if(s.huts.every(h=>distance({x,z},h)>=3))s.flowers.push({x,z,tile,id:0,done:false,progress:0,regrow:0,...flowerType({x,z},s.huts)});}}}
     if(s.flowers.length>8192){const keep=new Set(active.filter(Boolean)),base=s.flowers.slice(0,192),near=s.flowers.slice(192).map(f=>({f,score:keep.has(f)?-1:Math.min(...s.players.map(p=>(p.x-f.x)**2+(p.z-f.z)**2))})).sort((a,b)=>a.score-b.score);s.flowers=base.concat(near.slice(0,8000).map(a=>a.f));}
     s.flowers.forEach((f,id)=>{f.id=id;});s.players.forEach((p,i)=>{p.activeFlower=active[i]?s.flowers.indexOf(active[i]):-1;if(p.activeFlower<0)p.collectProgress=0;});
   }
@@ -401,9 +603,14 @@ globalThis.GardenRules = (() => {
     p.x=home.x+dx/d*radius;p.z=home.z+dz/d*radius;
   }
   function move(s,p,dx,dz,r,hunter=false){
-    const steps=Math.max(1,Math.ceil(Math.hypot(dx,dz)/.08));
+    const steps=Math.max(1,Math.ceil(Math.hypot(dx,dz)/.08)),bodies=treeBodies(s,p);
     for(let i=0;i<steps;i++){const previous={x:p.x,z:p.z};p.x+=dx/steps;p.z+=dz/steps;bound(p,hunter?0:r);
-      for(let k=0;k<3;k++){for(const o of s.obstacles)project(p,o,o.radius+r);for(const home of s.huts||[hut]){if(hunter)project(p,home,hut.hunterExclusion);else hutWall(p,previous,home);}bound(p,hunter?0:r);}
+      for(let k=0;k<3;k++){for(const o of s.obstacles)project(p,o,o.radius+r);for(const home of s.huts||[hut]){if(hunter)project(p,home,hut.hunterExclusion);else if(!Number.isFinite(p.altitude))hutWall(p,previous,home);else{
+        const roof=roofAt(p.x,p.z,home),priorRoof=roofAt(previous.x,previous.z,home),height=p.altitude;
+        if(roof!==null){const above=priorRoof===null?height>=roof+flight.perchOffset:height>=priorRoof+flight.perchOffset-1e-8;
+          if(above&&height<roof+flight.perchOffset-1e-8||!above&&height>roof-flight.perchOffset&&height<roof+flight.perchOffset){p.x=previous.x;p.z=previous.z;}
+        }if(height<1.38)hutWall(p,previous,home);
+      }}for(const body of bodies){const c=section(body,p,hunter?2.4:altitudeOf(s,p),hunter?.6:r);if(c)pushTree(p,c,true);}bound(p,hunter?0:r);}
     }
   }
   function separateHunters(s){
@@ -412,6 +619,8 @@ globalThis.GardenRules = (() => {
         const a=s.hunters[i],b=s.hunters[j];let dx=b.x-a.x,dz=b.z-a.z,d=Math.hypot(dx,dz);if(d>=1.12)continue;
         if(d<1e-8){const angle=(i*7+j)*2.399963;dx=Math.cos(angle);dz=Math.sin(angle);d=1;}else{dx/=d;dz/=d;}
         const push=(1.12-(Math.hypot(b.x-a.x,b.z-a.z)))*.5;move(s,a,-dx*push,-dz*push,.55,true);move(s,b,dx*push,dz*push,.55,true);
+        // Remove only the closing velocity; keep tangential travel for smooth sliding.
+        const closing=(a.vx-b.vx)*dx+(a.vz-b.vz)*dz;if(closing>0){a.vx-=dx*closing*.5;a.vz-=dz*closing*.5;b.vx+=dx*closing*.5;b.vz+=dz*closing*.5;}
       }
       for(const h of s.hunters)move(s,h,0,0,.55,true);
     }
@@ -422,12 +631,15 @@ globalThis.GardenRules = (() => {
     for(let i=0;i<s.players.length;i++){
       const p=s.players[i],a=input.inputs?input.inputs[i]||{}:i===0?input:{};
       p.surge=Math.max(0,p.surge-dt);const wasHidden=p.hiddenFor>0;p.immunity=Math.max(0,p.immunity-dt);p.hiddenFor=Math.max(0,p.hiddenFor-dt);p.hideCooldown=Math.max(0,p.hideCooldown-dt);if(p.hiddenFor<1e-8)p.hiddenFor=0;if(wasHidden&&p.hiddenFor===0)p.folded=false;if(p.hideCooldown<1e-8)p.hideCooldown=0;let x=finite(a.x),z=finite(a.z),n=Math.hypot(x,z);if(n>1){x/=n;z/=n;}
-      const moving=Math.hypot(x,z)>.01,boosted=!!a.boost&&moving;
+      const moving=Math.hypot(x,z)>.01||Math.abs(finite(a.rise))>.01,boosted=!!a.boost&&Math.hypot(x,z)>.01;
+      if(Math.abs(finite(a.rise))>0&&!Number.isFinite(p.altitude))p.altitude=altitudeOf(s,p);
       if(moving){p.hiddenFor=0;p.folded=false;}
       p.stamina=1;
-      const speed=(boosted?(s.level===4?12:7.6):4.3)*(p.surge>0?1.35:1);move(s,p,x*speed*dt,z*speed*dt,world.playerRadius);
+      const speed=(boosted?(s.level===4?12:7.6):4.3)*(p.surge>0?1.35:1);move(s,p,x*speed*dt,z*speed*dt,world.playerRadius);rise(s,p,a.rise,dt);
+      const dense=(vegetation||globalThis.GardenVegetation)?.growthAt?.(p.x,p.z)>=.58;
+      p.coverStill=!moving&&altitudeOf(s,p)<=.8&&dense?(p.coverStill||0)+dt:0;p.inCover=p.coverStill>=.6-1e-8;
       if(a.deposit&&!moving&&isSafe(p)&&p.bag&&s.nectar<s.target){p.deposit+=dt;if(p.deposit>=1-1e-8){const amount=Math.min(p.bag,s.target-s.nectar);p.bag-=amount;p.deposit=0;s.nectar+=amount;p.nectar+=amount;event(s,'deposit',i);}}else p.deposit=0;
-      const f=a.collect&&!moving&&p.bag<s.target-s.nectar?s.flowers.find(f=>!f.done&&distance(f,p)<.85):null;
+      const f=a.collect&&!moving&&altitudeOf(s,p)<=2.1&&p.bag<s.target-s.nectar?s.flowers.find(f=>!f.done&&distance(f,p)<.85):null;
       if(f){if(p.activeFlower!==f.id)p.collectProgress=0;p.activeFlower=f.id;p.collectProgress+=dt;f.progress=Math.max(f.progress,p.collectProgress/collectTime(s));
         if(p.collectProgress>=collectTime(s)-1e-8){f.done=true;f.regrow=8;f.progress=1;p.bag+=Math.min(f.value,s.target-s.nectar-p.bag);p.activeFlower=-1;p.collectProgress=0;p.streak=p.streak>0&&s.elapsed-p.lastCollectAt<=8+1e-8?p.streak+1:1;p.lastCollectAt=s.elapsed;event(s,'collect',i);if(p.streak>=3){p.surge=Math.max(p.surge,3);event(s,'chain',i);}}
       }else{p.activeFlower=-1;p.collectProgress=0;}
@@ -435,27 +647,34 @@ globalThis.GardenRules = (() => {
     if(s.nectar>=s.target){s.mode='won';returnTools(s);event(s,'won');return;}
     if(s.grace>0){separateHunters(s);return;}
     for(const h of s.hunters){
-      const visible=s.players.filter(p=>p.hiddenFor<=0);const targets=visible.filter(p=>!isSheltered(s,p));const choices=targets.length?targets:visible;
+      const visible=s.players.filter(p=>p.hiddenFor<=0&&(!p.inCover||distance(h,p)<1.8));const targets=visible.filter(p=>!isSheltered(s,p));const choices=targets.length?targets:visible;
       const target=s.decoy||(choices.length?choices.reduce((best,p)=>distance(h,p)<distance(h,best)?p:best,choices[0]):{x:Math.cos(s.elapsed*.18+h.id)*7,z:Math.sin(s.elapsed*.18+h.id)*5-1});
       let tx=target.x,tz=target.z;
-      const protectedHome=(s.huts||[hut]).find(home=>distance(target,home)<=hut.radius);if(protectedHome){const d=distance(h,protectedHome)||1;tx=protectedHome.x+(h.x-protectedHome.x)/d*3.8;tz=protectedHome.z+(h.z-protectedHome.z)/d*3.8;}
+      const count=s.hunters.length,sector=Math.PI/2+h.id*Math.PI*2/count;
+      if(count>1&&!s.decoy){tx+=Math.cos(sector)*1.2;tz+=Math.sin(sector)*1.2;}
+      const protectedHome=(s.huts||[hut]).find(home=>distance(target,home)<=hut.radius);if(protectedHome){const angle=count>1?sector:Math.atan2(h.z-protectedHome.z,h.x-protectedHome.x);tx=protectedHome.x+Math.cos(angle)*3.8;tz=protectedHome.z+Math.sin(angle)*3.8;}
       let dx=tx-h.x,dz=tz-h.z,d=Math.hypot(dx,dz),hs=([2.1,2.65,3.15,3.5][s.level-1])*(s.slowed>0?.38:1);
       // A small tangential detour lets pursuers walk around circular obstacles.
       for(const o of s.obstacles){const od=distance(h,o);if(od<o.radius+1.15&&dx*(o.x-h.x)+dz*(o.z-h.z)>0){const side=(h.id%2?1:-1);dx+=(h.z-o.z)*side*2.4;dz-=(h.x-o.x)*side*2.4;d=Math.hypot(dx,dz);break;}}
-      const ease=1-Math.exp(-dt*4);h.vx+=((d>.2?dx/d*hs:0)-h.vx)*ease;h.vz+=((d>.2?dz/d*hs:0)-h.vz)*ease;
+      // Assign stable approach points and anticipate neighbours before contact.
+      let vx=d>.03?dx/d*hs*Math.min(1,(d-.03)/.8):0,vz=d>.03?dz/d*hs*Math.min(1,(d-.03)/.8):0;
+      for(const other of s.hunters){if(other===h)continue;let ax=h.x-other.x,az=h.z-other.z,ad=Math.hypot(ax,az);if(ad>1e-6&&ad<1.8){const pressure=(1.8-ad)/.68*hs*.7;vx+=ax/ad*pressure;vz+=az/ad*pressure;}}
+      for(const home of s.huts||[hut]){const ax=h.x-home.x,az=h.z-home.z,ad=Math.hypot(ax,az),gx=tx-h.x,gz=tz-h.z,length=gx*gx+gz*gz,t=length?Math.max(0,Math.min(1,-(ax*gx+az*gz)/length)):0,clearance=Math.hypot(ax+gx*t,az+gz*t);if(ad<4.4&&clearance<3.5&&vx*ax+vz*az<0){const turn=Math.sin(Math.atan2(tz-home.z,tx-home.x)-Math.atan2(az,ax))>=0?1:-1,pressure=(4.4-ad)*hs;vx+=(-az/ad*turn+ax/ad)*pressure;vz+=(ax/ad*turn+az/ad)*pressure;}}
+      const magnitude=Math.hypot(vx,vz);if(magnitude>hs){vx*=hs/magnitude;vz*=hs/magnitude;}
+      const ease=1-Math.exp(-dt*5);h.vx+=(vx-h.vx)*ease;h.vz+=(vz-h.vz)*ease;
       move(s,h,h.vx*dt,h.vz*dt,.55,true);
     }
     separateHunters(s);
     for(const h of s.hunters){
-      for(let i=0;i<s.players.length;i++){const p=s.players[i];if(!isSheltered(s,p)&&p.hiddenFor<=0&&p.immunity<=0&&distance(p,h)<1.4){
+      for(let i=0;i<s.players.length;i++){const p=s.players[i];if(!isSheltered(s,p)&&p.hiddenFor<=0&&p.immunity<=0&&altitudeOf(s,p)<=flight.hunterReach&&distance(p,h)<1.4){
         if(p.shields>0){consume(p,'shields');p.immunity=3.5;event(s,'shield',i);const a=Math.atan2(h.z-p.z,h.x-p.x);move(s,h,Math.cos(a)*2.8,Math.sin(a)*2.8,.55,true);}
         else if(i===0){s.mode='dead';returnTools(s);event(s,'dead',i);return;}
-        else{const home=hutFor(p);Object.assign(p,{x:home.x,z:home.z+2.1,bag:0,deposit:0,collectProgress:0,activeFlower:-1,hiddenFor:0,folded:false,immunity:3.5,lastCollectAt:0,streak:0});event(s,'respawn',i);}
+        else{const home=hutFor(p);Object.assign(p,{x:home.x,z:home.z+2.1,bag:0,deposit:0,collectProgress:0,activeFlower:-1,hiddenFor:0,folded:false,immunity:3.5,lastCollectAt:0,streak:0});delete p.altitude;event(s,'respawn',i);}
       }}
     }
   }
   function tick(s,delta,input={}){if(s.mode!=='playing')return;let remaining=Math.min(.1,Math.max(0,finite(delta)));while(remaining>1e-9&&s.mode==='playing'){const dt=Math.min(.02,remaining);step(s,dt,input);remaining-=dt;}}
-  return {create,addPlayer,tick,slow,hide,fold,refill,decoy,equip,returnTools,isSafe,isSheltered,hutFor,collectTime,hut,world,targetFor,mapIds,flowerType};
+  return {create,addPlayer,tick,slow,hide,fold,refill,decoy,equip,returnTools,isSafe,isSheltered,hutFor,collectTime,hut,world,targetFor,mapIds,flowerType,altitudeOf,roofAt,flight};
 })();
 if(typeof module!=='undefined')module.exports=globalThis.GardenRules;
 
@@ -487,6 +706,7 @@ globalThis.GardenCheckpoint=(()=>{
     else if(typeof dest[key]==='boolean'){if(typeof value!=='boolean')fail();dest[key]=value;}
     else if(typeof dest[key]==='string'){if(typeof value!=='string'||value.length>64)fail();dest[key]=value;}
    }
+   if(p.altitude!==undefined)dest.altitude=num(p.altitude,rules.flight?.min??.4,rules.flight?.max??18);
    integer(dest.bag,0,199);integer(dest.streak,0,1e9);num(dest.stamina,0,1);num(dest.deposit,0,1);num(dest.collectProgress,0,1);integer(dest.activeFlower,-1,saved.flowers.length-1);
    if(!rules.world.infinite&&Math.hypot(dest.x/rules.world.x,dest.z/rules.world.z)>1.001)fail();
    for(const key of items){dest.stash[key]=integer(p.stash[key],0,99);integer(dest[key],0,1);if(dest.stash[key]+dest[key]>99)fail();}
@@ -1021,38 +1241,6 @@ globalThis.GardenFlight=(()=>{
 
 </script>
 <script>
-/* Fixed world cells: rendering slots may be reused, living plants never follow the camera. */
-globalThis.GardenVegetation=(()=>{
- const cellSize=32,radius=3;
- function hash(x,z,salt=0){let h=Math.imul(Math.round(x*1000)^salt,73856093)^Math.imul(Math.round(z*1000),19349663);h=Math.imul(h^(h>>>16),2246822519);return(h^(h>>>13))>>>0;}
- function flowerStyle(f){const seed=hash(f.x,f.z,7143);return{height:.62+(seed%71)/110,angle:(seed%65536)/65536*Math.PI*2,palette:seed%6,phase:(seed%8192)/8192*Math.PI*2};}
- function randomFor(cx,cz){let seed=hash(cx,cz,783);return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
- function treesInCell(cx,cz){const rand=randomFor(cx,cz),out=[];for(let n=0;n<2;n++){const x=cx*cellSize+6+rand()*20,z=cz*cellSize+6+rand()*20,scale=.8+rand()*.65;if(Math.hypot(x,z-6)<18)continue;out.push({key:cx+','+cz+':'+n,x,z,scale,angle:rand()*Math.PI*2});}return out;}
- function create(T,owner){
-  const scene=owner.scene,slots=[],records=[],matrix=new T.Object3D(),color=new T.Color(),faded=new WeakSet();let signature='',treeSnapshot=[];
-  const petalGeo=new T.BufferGeometry();petalGeo.setAttribute('position',new T.Float32BufferAttribute([0,0,0,-.28,.5,.09,.28,.5,.09,0,1,.22],3));petalGeo.setAttribute('uv',new T.Float32BufferAttribute([.5,0,0,.5,1,.5,.5,1],2));petalGeo.setIndex([0,2,1,1,2,3]);petalGeo.computeVertexNormals();
-  const coverGeo=new T.CircleGeometry(1,7);coverGeo.rotateX(-Math.PI/2);
-  const smallSphere=new T.SphereGeometry(1,6,4),canopyGeo=new T.IcosahedronGeometry(1,1),barkGeo=new T.CylinderGeometry(.64,1,1,8);
-  const canvas=document.createElement('canvas');canvas.width=canvas.height=128;const ctx=canvas.getContext('2d');ctx.fillStyle='#e1e1e1';ctx.fillRect(0,0,128,128);const leafRand=randomFor(27,91);for(let i=0;i<550;i++){ctx.fillStyle=['#bebebe','#eeeeee','#d2d2d2','#f7f7f7'][i%4];ctx.beginPath();ctx.ellipse(leafRand()*128,leafRand()*128,2+leafRand()*4,1+leafRand()*2,leafRand()*6.28,0,Math.PI*2);ctx.fill();}const canopyMap=new T.CanvasTexture(canvas);canopyMap.colorSpace=T.SRGBColorSpace;canopyMap.wrapS=canopyMap.wrapT=T.RepeatWrapping;canopyMap.repeat.set(2,2);
-  const canopyMaterial=new T.MeshStandardMaterial({color:'#ffffff',map:canopyMap,roughness:.97}),pollen=owner.pbr.pollen||owner.materials.honey;
-  function mesh(geometry,material,count,kind){const m=new T.InstancedMesh(geometry,material,count);m.count=0;m.castShadow=kind==='trees'||kind==='bark';m.receiveShadow=kind!=='trees';m.userData.worldAnchored=true;scene.add(m);const record={mesh:m,kind,center:new T.Vector3(),worldAnchored:true};records.push(record);owner.decorChunks.push(record);return m;}
-  for(let i=0;i<49;i++)slots.push({key:'',grass:mesh(owner.pbr.bladeGeometry,owner.materials.grass,900,'grass'),clover:mesh(coverGeo,owner.materials.leaf,450,'clover'),petal:mesh(petalGeo,owner.materials.petal,350,'petal'),center:mesh(smallSphere,pollen,70,'centers')});
-  const bark=mesh(barkGeo,owner.materials.bark,392,'bark'),canopy=mesh(canopyGeo,canopyMaterial,588,'trees');
-  function set(m,i,x,y,z,sx,sy,sz,rx=0,ry=0,rz=0,c){matrix.position.set(x,y,z);matrix.rotation.set(rx,ry,rz);matrix.scale.set(sx,sy,sz);matrix.updateMatrix();m.setMatrixAt(i,matrix.matrix);if(c)m.setColorAt(i,color.set(c));}
-  function flush(m,n){m.count=n;m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.computeBoundingSphere();const rec=records.find(r=>r.mesh===m);rec.center.copy(m.boundingSphere?.center||new T.Vector3());}
-  function fade(material,end){if(faded.has(material))return;faded.add(material);const previous=material.onBeforeCompile;material.onBeforeCompile=shader=>{previous?.(shader);shader.vertexShader='varying vec3 vGardenPosition;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>\nvec4 gardenVertex=vec4(transformed,1.0);\n#ifdef USE_INSTANCING\ngardenVertex=instanceMatrix*gardenVertex;\n#endif\nvGardenPosition=(modelMatrix*gardenVertex).xyz;`);shader.fragmentShader='varying vec3 vGardenPosition;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <dithering_fragment>',`float gardenFade=1.0-smoothstep(${end-8}.0,${end}.0,distance(cameraPosition.xz,vGardenPosition.xz));\nfloat gardenNoise=fract(sin(dot(floor(vGardenPosition.xz*70.0),vec2(12.9898,78.233)))*43758.5453);\nif(gardenFade<gardenNoise)discard;\n#include <dithering_fragment>`);};material.customProgramCacheKey=()=>`garden-cell-fade-${end}`;material.needsUpdate=true;}
-  function fill(slot,cx,cz,homes){const rand=randomFor(cx,cz),gx=cx*cellSize,gz=cz*cellSize,soft=owner.quality==='software';let g=0,c=0,p=0,n=0;for(let i=0;i<900;i++){const x=gx+rand()*cellSize,z=gz+rand()*cellSize,height=.19+rand()*.33,angle=rand()*Math.PI*2,width=.55+rand()*.7,flowerHeight=.17+rand()*.22;if(homes.some(h=>Math.hypot(x-h.x,z-h.z)<1.6))continue;if(!soft||hash(x,z,33)%100<45)set(slot.grass,g++,x,.004,z,width,height,width,0,angle,0,owner.pbr.palette.grass[i%owner.pbr.palette.grass.length]);if(i%6===0&&(!soft||hash(x,z,41)%100<45))for(let j=0;j<3;j++){const a=j*2.094;set(slot.clover,c++,x+Math.cos(a)*.06,.02,z+Math.sin(a)*.06,.052,.015,.075,0,a,0,['#789459','#8fa966','#a0b979'][i%3]);}if(i%13===0&&(!soft||hash(x,z,61)%100<55)){const h=flowerHeight,col=owner.pbr.palette.flowers[i%owner.pbr.palette.flowers.length];for(let j=0;j<5;j++)set(slot.petal,p++,x,h,z,.19,.15,.19,-Math.PI/2,j*Math.PI*.4,0,col);set(slot.center,n++,x,h+.014,z,.038,.023,.038);}}for(const [m,count]of [[slot.grass,g],[slot.clover,c],[slot.petal,p],[slot.center,n]])flush(m,count);slot.key=cx+','+cz;slot.cx=cx;slot.cz=cz;}
-  function forest(cells){let b=0,c=0;treeSnapshot=[];const scale=owner._forestScale||1;for(const [cx,cz]of cells)for(const tree of treesInCell(cx,cz)){if((owner.houses||[]).some(h=>Math.hypot(tree.x-h.home.x,tree.z-h.home.z)<4))continue;const s=tree.scale,height=5.4*s;treeSnapshot.push({...tree,trunkIndex:b});set(bark,b++,tree.x,height*.5,tree.z,.25*s,height,.25*s,0,tree.angle,0);for(let j=0;j<3;j++){const a=tree.angle+j*2.094;set(bark,b++,tree.x+Math.sin(a)*.5*s,height*.72+j*.28,tree.z+Math.cos(a)*.5*s,.10*s,2.1*s,.10*s,.5*Math.cos(a),0,-.5*Math.sin(a));}for(let j=0;j<6;j++){const a=j*2.4,r=j===0?0:1.0*s;set(canopy,c++,tree.x+Math.cos(a)*r,height+(j%3)*.6*s,tree.z+Math.sin(a)*r,1.65*s*scale,1.45*s,1.5*s*scale,.1,a,.1,['#5b8149','#6e9256','#799b5d','#527644'][j%4]);}}flush(bark,b);flush(canopy,c);owner.meadowCounts.trees=treeSnapshot.length;owner.meadowCounts.canopyLeaves=c;}
-  function update(local,force=false){const cx=Math.floor(local.x/cellSize),cz=Math.floor(local.z/cellSize),homes=(owner.houses||[]).map(h=>h.home);if(!homes.length)homes.push({x:0,z:6});const next=cx+','+cz+'|'+owner.biome+'|'+owner.quality+'|'+homes.map(h=>h.x+','+h.z).join(';');if(force||next!==signature){const cells=[];for(let x=cx-radius;x<=cx+radius;x++)for(let z=cz-radius;z<=cz+radius;z++)cells.push([x,z]);const need=new Set(cells.map(([x,z])=>x+','+z)),free=slots.filter(s=>!need.has(s.key));for(const [x,z]of cells){const key=x+','+z;let slot=slots.find(s=>s.key===key);if(!slot)slot=free.pop();if(force||next.split('|').slice(2).join('|')!==signature.split('|').slice(2).join('|')||slot.key!==key)fill(slot,x,z,homes);}forest(cells);signature=next;owner.renderer.shadowMap.needsUpdate=true;}
-   for(const slot of slots){const dx=Math.max(slot.cx*cellSize-local.x,0,local.x-(slot.cx+1)*cellSize),dz=Math.max(slot.cz*cellSize-local.z,0,local.z-(slot.cz+1)*cellSize),distance=Math.hypot(dx,dz);slot.grass.visible=slot.clover.visible=distance<34;slot.petal.visible=slot.center.visible=distance<50;fade(slot.grass.material,32);fade(slot.clover.material,32);fade(slot.petal.material,48);fade(slot.center.material,48);} }
-  return{update,snapshot:()=>treeSnapshot.map(t=>({...t})),slots,records,bark,canopy};
- }
- return{hash,flowerStyle,treesInCell,cellSize,create};
-})();
-if(typeof module!=='undefined')module.exports=globalThis.GardenVegetation;
-
-</script>
-<script>
 /* Shared procedural model geometry. No assets, animation loop, or view-model edits. */
 (() => {
   'use strict';
@@ -1117,24 +1305,35 @@ if(typeof module!=='undefined')module.exports=globalThis.GardenVegetation;
     let butterflyBody;
     function butterflyAnatomy() {
       if(butterflyBody)return butterflyBody;
-      const b=assembly(),shell='#564239',trim='#b99866',eye='#322e25';
-      b.ball(shell,[0,.026,-.18],[.084,.077,.15]);
-      b.ball('#7f6551',[0,.04,-.26],[.071,.071,.075]);
-      for(let i=0;i<8;i++){const radius=.057-i*.0046;b.ball(i%2?'#80664c':shell,[0,.005,.005+i*.038],[radius,.047-i*.0028,.038]);}
-      b.ball(shell,[0,.035,-.35],[.075,.064,.074]);
+      const b=assembly(),shell='#35322c',trim='#b8a477',eye='#293a39';
+      b.ball(shell,[0,.026,-.18],[.073,.073,.15]);
+      b.ball('#665d47',[0,.04,-.26],[.067,.067,.075]);
+      for(let i=0;i<8;i++){const radius=.051-i*.0042;b.ball(i%2?'#77715a':shell,[0,.005,.005+i*.038],[radius,.043-i*.0025,.038]);}
+      b.ball(shell,[0,.035,-.35],[.065,.061,.071]);
+      const lens=new T.IcosahedronGeometry(1,0),facetColors=['#283c37','#3b5144','#51614d','#6c7557','#465b4c'];
       for(const side of [-1,1]){
-        b.ball(eye,[side*.058,.05,-.385],[.033,.037,.027]);
-        b.ball('#b99a68',[side*.067,.067,-.404],[.009,.01,.005]);
-        b.curve([[side*.025,.075,-.394],[side*.066,.12,-.48],[side*.126,.15,-.53],[side*.158,.145,-.535]],.006,shell);
-        b.ball(trim,[side*.158,.145,-.535],[.016,.011,.024]);
-        for(let i=0;i<3;i++){
-          const z=-.24+i*.085;
-          b.curve([[side*.04,-.01,z],[side*(.09+i*.012),-.07,z+.027],[side*(.155+i*.016),-.115,z-.035]],.0045,shell,6);
+        b.ball(eye,[side*.061,.053,-.385],[.040,.044,.035]);
+        // Small raised lenses wrap the eye surface; all merge into one body mesh.
+        for(let row=-3;row<=3;row++)for(let column=0;column<11;column++){
+          const latitude=row*.25,angle=(column+(row%2)*.5)/11*Math.PI*2,dx=Math.cos(latitude)*Math.cos(angle),dy=Math.sin(latitude),dz=Math.cos(latitude)*Math.sin(angle);
+          if(dx*side<-.1&&dz>-.3)continue;
+          b.add(lens,facetColors[(column+row*row)%facetColors.length],[side*.061+dx*.040,.053+dy*.044,-.385+dz*.035],[.0043,.0044,.0035]);
         }
-        // Short thoracic hairs make the body read as velvet in close views.
-        for(let i=0;i<6;i++)b.rod([side*.049,.05,-.27+i*.026],[side*.075,.074,-.27+i*.026],.0025,trim);
+        b.curve([[side*.025,.083,-.397],[side*.057,.148,-.49],[side*.117,.218,-.605],[side*.172,.235,-.684]],.0043,shell,18);
+        b.ball('#514a37',[side*.174,.236,-.686],[.010,.012,.028]);
+        b.ball(trim,[side*.178,.241,-.704],[.006,.007,.009]);
+        for(let i=0;i<3;i++){
+          const z=-.255+i*.083,endZ=[-.292,-.13,.052][i];
+          const hip=[side*.047,-.012,z],knee=[side*(.103+i*.019),-.073,z+.028],ankle=[side*(.185+i*.016),-.143,endZ+.038],toe=[side*(.225+i*.016),-.179,endZ];
+          b.rod(hip,knee,.0048,shell);b.ball('#897d5b',knee,[.006,.006,.006]);
+          b.rod(knee,ankle,.0036,shell);b.rod(ankle,toe,.0026,'#8c805e');
+          const tip=[toe[0]+side*.014,toe[1]-.009,toe[2]-.024];b.rod(toe,tip,.0018,shell);
+        }
+        for(let i=0;i<14;i++){const z=-.29+i*.013;b.rod([side*.046,.045,z],[side*(.064+(i%3)*.004),.071+(i%2)*.009,z+.008],.0018,trim);}
+        for(let i=0;i<4;i++)b.ball('#d3cdb0',[side*.027,.064,-.30+i*.031],[.006,.004,.008]);
       }
-      const spiral=[];for(let i=0;i<=20;i++){const t=i/20,angle=t*Math.PI*3.2;spiral.push([0,-.008-Math.sin(angle)*(.032-t*.02),-.419-Math.cos(angle)*(.032-t*.02)]);}b.curve(spiral,.004,'#a18059',24);
+      lens.dispose();
+      const spiral=[];for(let i=0;i<=24;i++){const t=i/24,angle=t*Math.PI*3.2;spiral.push([0,-.008-Math.sin(angle)*(.032-t*.02),-.419-Math.cos(angle)*(.032-t*.02)]);}b.curve(spiral,.0035,'#a18a60',24);
       butterflyBody=b.finish();butterflyBody.userData.anatomy={legs:6,antennae:2,compoundEyes:2,abdomenSegments:8,proboscis:true};return butterflyBody;
     }
     function setButterflySkin(actor,id) {const g=wingGeometry(id);for(const pivot of actor.wings)pivot.children[0].geometry=g;actor.root.userData.wingSilhouette=g.userData.silhouette;}
@@ -1339,43 +1538,64 @@ if(typeof module!=='undefined')module.exports=globalThis.GardenVegetation;
   }
   function paintWing(ctx,id) {
     const p=PALETTES[id]||PALETTES.sun;
+    const leaf=id==='leaf'||id==='dry-leaf',morpho=['blue','ice','night'].includes(id),monarch=['sun','gold','sunset','coral'].includes(id);
+    const ink=leaf?p[2]:id==='swallow'?'#171d23':id==='pearl'?'#39413d':'#24252a';
+    const ellipse=(x,y,rx,ry,angle,color)=>{ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(x,y,rx,ry,angle,0,Math.PI*2);ctx.fill();};
+    const line=(points,width,color)=>{ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(...points[0]);for(const point of points.slice(1))ctx.lineTo(...point);ctx.stroke();};
     ctx.save();wingPath(ctx,id);ctx.clip();
-    let gradient=ctx.createLinearGradient(26,145,224,66);
-    gradient.addColorStop(0,p[1]);gradient.addColorStop(.65,p[0]);gradient.addColorStop(1,p[2]);
-    if(id==='rainbow') { gradient=ctx.createLinearGradient(0,20,210,225);['#fc8b8e','#ffcd6a','#9edf9d','#71ceec','#ba8ee3'].forEach((c,i)=>gradient.addColorStop(i/4,c)); }
-    if(id==='sunset') { gradient=ctx.createLinearGradient(0,12,0,238);gradient.addColorStop(0,'#ffe49a');gradient.addColorStop(.45,'#f68a75');gradient.addColorStop(1,'#a468b5'); }
-    ctx.fillStyle=gradient;ctx.fillRect(0,0,256,256);
-    if(id==='swallow') {
-      ctx.fillStyle=p[2];ctx.fillRect(0,0,256,256);
-      for(let i=0;i<5;i++){ctx.fillStyle=i%2?'#fff7da':'#e2e8da';ctx.beginPath();ctx.ellipse(66+i*29,83-i*5,12,31,-.62,0,Math.PI*2);ctx.fill();}
-      for(let i=0;i<4;i++){ctx.fillStyle='#f8f2da';ctx.beginPath();ctx.ellipse(88+i*23,163+i*3,12,20,-.4,0,Math.PI*2);ctx.fill();}
-      ctx.fillStyle='#6aaabd';ctx.beginPath();ctx.arc(166,190,11,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='#eb9c6f';ctx.beginPath();ctx.arc(136,187,7,0,Math.PI*2);ctx.fill();
+    let gradient=ctx.createLinearGradient(32,136,225,62);
+    if(morpho){
+      const colors=id==='ice'?['#d0fff3','#48cbdc','#164c72']:id==='night'?['#82b5d2','#31589e','#192d51']:['#8de9ec','#167ed8','#123d96'];
+      colors.forEach((color,i)=>gradient.addColorStop(i/2,color));
+    }else if(monarch){
+      const colors=id==='gold'?['#ffdc71','#d99a25','#b05a1d']:id==='coral'?['#ffb17b','#e35c38','#ac382b']:id==='sunset'?['#ffcd83','#e8803c','#b94f36']:['#ffc16c','#ed8526','#d45e1a'];
+      colors.forEach((color,i)=>gradient.addColorStop(i/2,color));
+    }else{gradient.addColorStop(0,p[1]);gradient.addColorStop(.65,p[0]);gradient.addColorStop(1,p[2]);}
+    if(id==='rainbow'){gradient=ctx.createLinearGradient(0,30,220,215);['#cfa35c','#c9ca8a','#69ad9a','#789bb9','#aa83a6'].forEach((color,i)=>gradient.addColorStop(i/4,color));}
+    ctx.fillStyle=id==='swallow'?ink:gradient;ctx.fillRect(0,0,256,256);
+    if(leaf){
+      // A single midrib and alternating branch veins follow a real leaf blade.
+      ctx.lineCap='round';line([[24,138],[221,29]],3,ink);
+      for(let i=0;i<7;i++){const x=47+i*23,y=125-i*12.8;line([[x,y],[x+7,y-25-i*1.3]],1.2,ink);line([[x,y],[x+30,y+23-i*.4]],1.2,ink);}
+      ctx.globalAlpha=.16;
+      for(let i=0;i<58;i++)ellipse(43+(i*43)%177,36+(i*37)%157,1+(i%4)*1.5,.7+(i%3),i*.7,ink);
+      ctx.globalAlpha=1;
+      if(id==='dry-leaf'){ctx.globalAlpha=.2;for(let i=0;i<15;i++)ellipse(52+(i*43)%158,43+(i*37)%145,5+(i%3)*3,3,i, '#684431');ctx.globalAlpha=1;}
+      ctx.strokeStyle=ink;ctx.lineWidth=3;wingPath(ctx,id);ctx.stroke();
+    }else{
+      // Dark margins, scalloped submarginal lunules and branching veins.
+      ctx.strokeStyle=ink;ctx.lineWidth=id==='swallow'?30:morpho?25:monarch?27:17;wingPath(ctx,id);ctx.stroke();
+      if(monarch||id==='pearl'){
+        ctx.fillStyle=ink;ctx.beginPath();ctx.moveTo(177,27);ctx.bezierCurveTo(194,60,200,90,220,115);ctx.lineTo(255,75);ctx.lineTo(232,15);ctx.closePath();ctx.fill();
+      }
+      const ends=[[92,45],[139,27],[186,30],[224,63],[232,96],[199,124],[184,153],[191,182],[168,210],[132,216],[95,204],[64,181]];
+      ctx.strokeStyle=ink;ctx.lineWidth=monarch?3.6:morpho?1.5:2.3;ctx.globalAlpha=morpho?.65:.95;
+      for(const [x,y]of ends){ctx.beginPath();ctx.moveTo(22,128);ctx.quadraticCurveTo(76,112+(y-125)*.25,x,y);ctx.stroke();}
+      ctx.globalAlpha=1;
+      ctx.beginPath();ctx.moveTo(22,128);ctx.bezierCurveTo(73,109,115,117,165,141);ctx.lineWidth=monarch?4.8:2.8;ctx.stroke();
+      if(id==='swallow'){
+        // Cream windows sit between black veins; tails stay dark with blue/red lunules.
+        const cells=[[[46,105],[81,68],[91,82],[70,111]],[[88,65],[122,45],[128,65],[99,89]],[[132,43],[166,34],[166,55],[137,68]],[[177,39],[202,47],[197,67],[174,60]],[[106,103],[134,82],[157,87],[146,115]],[[153,116],[169,89],[192,91],[184,121]],[[63,146],[89,152],[100,179],[84,185]],[[96,157],[124,164],[127,198],[109,201]],[[135,164],[157,159],[173,178],[153,198]]];
+        for(const cell of cells){ctx.fillStyle='#f2efdc';ctx.beginPath();ctx.moveTo((cell[0][0]+cell.at(-1)[0])/2,(cell[0][1]+cell.at(-1)[1])/2);for(let i=0;i<cell.length;i++){const next=cell[(i+1)%cell.length];ctx.quadraticCurveTo(...cell[i],(cell[i][0]+next[0])/2,(cell[i][1]+next[1])/2);}ctx.closePath();ctx.fill();}
+        for(const [x,y]of [[67,91],[111,50],[158,30],[210,67],[213,103],[188,158],[182,186],[134,212],[100,199]])ellipse(x,y,3,5,-.4,'#f7f4e7');
+        for(const [x,y]of [[104,187],[130,200],[157,198],[179,186]])ellipse(x,y,7,3.7,-.4,'#80b7c2');
+        ellipse(158,195,5.5,5.5,0,'#cb744e');ellipse(158,195,2.5,2.5,0,ink);
+      }else if(!morpho&&!monarch&&id!=='pearl'){
+        // Peacock / pansy inspired eyespots follow one transverse band.
+        ctx.strokeStyle=p[1];ctx.lineWidth=9;ctx.globalAlpha=.65;ctx.beginPath();ctx.moveTo(83,58);ctx.bezierCurveTo(149,63,174,109,158,133);ctx.moveTo(75,161);ctx.quadraticCurveTo(110,185,166,184);ctx.stroke();ctx.globalAlpha=1;
+        for(const [x,y,r]of [[170,83,15],[141,181,12]]){ellipse(x,y,r,r*.87,-.3,ink);ellipse(x,y,r*.76,r*.64,-.3,'#c9a96d');ellipse(x,y,r*.50,r*.48,0,'#373944');ellipse(x-2,y-2,r*.24,r*.22,0,p[1]);}
+      }else if(id==='pearl'){
+        ellipse(156,86,7,10,-.45,ink);ellipse(122,174,5,7,-.45,ink);
+      }
+      if(id!=='swallow'){
+        const dots=[[188,43],[205,54],[219,75],[219,95],[203,112],[181,156],[186,178],[169,199],[146,207],[122,205],[99,194],[78,177]];
+        for(const [x,y]of dots)ellipse(x,y,monarch?2.3:2,monarch?3.6:2.6,-.5,morpho?'#bfd4db':'#f8edcf');
+        if(monarch)for(const [x,y]of [[201,61],[210,83],[193,106],[176,184],[149,200],[121,197],[98,185]])ellipse(x,y,1.3,1.7,-.5,'#fff8e4');
+      }
     }
-    ctx.strokeStyle=p[2];ctx.lineWidth=id==='sun'?13:7;wingPath(ctx,id);ctx.stroke();
-    ctx.lineWidth=2.6;ctx.globalAlpha=.55;
-    for(const [x,y] of [[117,30],[182,45],[230,88],[183,136],[187,185],[137,219]]){
-      ctx.beginPath();ctx.moveTo(22,128);ctx.quadraticCurveTo(74,119,x,y);ctx.stroke();
-    }
-    ctx.globalAlpha=1;
-    if(id==='leaf'||id==='dry-leaf') {
-      ctx.strokeStyle=p[2];ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(24,138);ctx.lineTo(221,29);ctx.stroke();
-      ctx.lineWidth=2;
-      for(let i=0;i<6;i++){let x=54+i*25,y=121-i*14;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+8,y-34);ctx.moveTo(x,y);ctx.lineTo(x+39,y+27);ctx.stroke();}
-      if(id==='dry-leaf'){ctx.globalAlpha=.3;ctx.fillStyle='#684b39';for(let i=0;i<12;i++){ctx.beginPath();ctx.ellipse(61+(i*43)%150,51+(i*37)%143,8+(i%3)*4,5,i,0,7);ctx.fill();}ctx.globalAlpha=1;}
-    } else if(id==='coral') {
-      ctx.fillStyle='#4f3741';for(const [x,y,r] of [[96,79,16],[171,72,17],[157,121,12],[109,173,17],[160,184,12]]){ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();}
-    } else if(id==='violet'||id==='rose'||id==='gray') {
-      for(const [x,y,r] of [[166,87,23],[138,178,17]]){ctx.fillStyle=p[1];ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.fillStyle=p[2];ctx.beginPath();ctx.arc(x,y,r*.6,0,7);ctx.fill();ctx.fillStyle=id==='violet'?'#e7be7a':p[0];ctx.beginPath();ctx.arc(x-2,y-2,r*.28,0,7);ctx.fill();}
-    } else if(id==='night') {
-      ctx.fillStyle='#fff6cd';for(let i=0;i<25;i++){const x=45+(i*47)%175,y=36+(i*31)%165;ctx.beginPath();ctx.arc(x,y,i%4===0?2.8:1.4,0,7);ctx.fill();}
-      ctx.strokeStyle='#c0c6ec';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(88,81);ctx.lineTo(135,65);ctx.lineTo(174,110);ctx.lineTo(135,162);ctx.stroke();
-    } else {
-      ctx.fillStyle=id==='gold'?'#fff3b5':id==='ice'?'#f1ffff':p[1];
-      for(let i=0;i<9;i++){const a=-1.15+i*.30;ctx.beginPath();ctx.ellipse(126+79*Math.cos(a),125+76*Math.sin(a),id==='sun'?4:5,7,a,0,7);ctx.fill();}
-      if(id==='blue'||id==='ice'){ctx.strokeStyle=p[1];ctx.lineWidth=12;ctx.globalAlpha=.55;ctx.beginPath();ctx.moveTo(50,122);ctx.quadraticCurveTo(123,73,193,69);ctx.stroke();ctx.globalAlpha=1;}
-      if(id==='pearl'){ctx.fillStyle='#a8b2b7';ctx.beginPath();ctx.arc(155,80,8,0,7);ctx.arc(135,178,6,0,7);ctx.fill();}
-    }
+    // Fine overlapping scale glints are baked once into the cached canvas.
+    ctx.globalAlpha=.09;ctx.strokeStyle=leaf?'#f3e9bb':'#fff5da';ctx.lineWidth=.45;
+    ctx.beginPath();for(let i=0;i<1600;i++){const x=27+(i*47.13)%205,y=27+(i*29.77)%188;ctx.moveTo(x,y);ctx.lineTo(x+1.1,y-.45);}ctx.stroke();ctx.globalAlpha=1;
     ctx.restore();
   }
   function drawSkinThumbnail(canvas,id='sun') {
@@ -1636,7 +1856,7 @@ if(typeof module!=='undefined')module.exports=globalThis.GardenVegetation;
     }
     _butterfly(id,index) {
       const root=new T.Group();root.scale.setScalar(.4);this.scene.add(root);
-      const material=new T.MeshStandardMaterial({map:this._wingTexture(id),transparent:true,alphaTest:.23,side:T.DoubleSide,forceSinglePass:true,roughness:.7,metalness:.03});
+      const material=new T.MeshStandardMaterial({map:this._wingTexture(id),transparent:true,alphaTest:.23,side:T.DoubleSide,forceSinglePass:true,roughness:.62,metalness:.08});
       const wingGeo=new T.PlaneGeometry(.83,1.42);wingGeo.translate(.415,0,0);wingGeo.rotateX(-Math.PI/2);
       const wings=[];for(const side of [-1,1]){const pivot=new T.Group();pivot.position.set(side*.045,.035,0);const wing=new T.Mesh(wingGeo,material);wing.scale.x=side;pivot.add(wing);root.add(pivot);wings.push(pivot);}
       this._mesh(this.geo.sphere,this.materials.body,root,0,0,0,.055,.05,.36);this._mesh(this.geo.sphere,this.materials.body,root,0,.015,-.35,.075,.065,.075);
@@ -1667,6 +1887,7 @@ if(typeof module!=='undefined')module.exports=globalThis.GardenVegetation;
       const actor={root,arms,legs,net,shadow,heading:0};modelKit?.enhanceHunter(actor,index);return actor;
     }
     _eyeHeight(p) {
+      if(Number.isFinite(p.altitude))return p.altitude;
       if(p.hiddenFor>0)return .4;
       const d=Math.min(...this.houses.map(h=>Math.hypot(p.x-h.home.x,p.z-h.home.z)));if(d<=1.35)return .78;if(d>=2)return 1.45;const t=(d-1.35)/.65;
       return .78+.67*t*t*(3-2*t);
@@ -1676,21 +1897,39 @@ if(typeof module!=='undefined')module.exports=globalThis.GardenVegetation;
       if(signature===this._flowerLayout)return;
       this._flowerLayout=signature;this.flowers=[];
       const basis=new T.Matrix4();
-      const orient=angle=>{
-        const x=V(-Math.cos(angle),0,Math.sin(angle)),y=V(Math.sin(angle),.16,Math.cos(angle)).normalize(),z=x.clone().cross(y).normalize();
+      const orient=(angle,lift=.16)=>{
+        const x=V(-Math.cos(angle),0,Math.sin(angle)),y=V(Math.sin(angle),lift,Math.cos(angle)).normalize(),z=x.clone().cross(y).normalize();
         basis.makeBasis(x,y,z);this._matrix.quaternion.setFromRotationMatrix(basis);
       };
       flowers.slice(0,240).forEach((f,i)=>{
-        const gold=f.value===3||f.kind==='golden',style=GardenVegetation.flowerStyle(f),height=style.height,angle=style.angle,color=gold?0xffc54a:this._flowerPalette[style.palette];
-        this.flowers.push({height,phase:style.phase,x:f.x,z:f.z,id:f.id,flower:f});
-        this._matrix.position.set(f.x,height/2,f.z);this._matrix.rotation.set(0,0,0);this._matrix.scale.set(.014,height,.014);this._matrix.updateMatrix();this.flowerStems.setMatrixAt(i,this._matrix.matrix);
+        const gold=f.value===3||f.kind==='golden',style=GardenVegetation.flowerStyle(f),seed=GardenVegetation.hash(f.x,f.z,9281);
+        const flowerSpecies=gold?'golden':['daisy','tulip','lavender','rose'][seed%4],height=style.height,angle=style.angle;
+        const palette=flowerSpecies==='lavender'?3:flowerSpecies==='daisy'?((seed>>>2)%2?0:4):flowerSpecies==='rose'?((seed>>>2)%2?2:5):style.palette;
+        const color=gold?0xffc54a:this._flowerPalette[palette];
+        const stemHeight=height+(flowerSpecies==='lavender'?.40:0),centerHeight=height+({daisy:.025,tulip:.18,lavender:.43,rose:.09,golden:.04}[flowerSpecies]);
+        const nectarHeight=height+({daisy:.18,tulip:.53,lavender:.57,rose:.30,golden:.29}[flowerSpecies]);
+        this.flowers.push({height:stemHeight,centerHeight,nectarHeight,flowerSpecies,phase:style.phase,x:f.x,z:f.z,id:f.id,flower:f});
+        this._matrix.position.set(f.x,stemHeight/2,f.z);this._matrix.rotation.set(0,0,0);this._matrix.scale.set(.014,stemHeight,.014);this._matrix.updateMatrix();this.flowerStems.setMatrixAt(i,this._matrix.matrix);
         for(let j=0;j<2;j++){
-          const a=angle+j*Math.PI;orient(a);this._matrix.position.set(f.x,height*(.27+j*.21),f.z);this._matrix.scale.set(.55,.28,.45);this._matrix.updateMatrix();this.flowerLeaves.setMatrixAt(i*2+j,this._matrix.matrix);
+          const a=angle+j*Math.PI;orient(a);this._matrix.position.set(f.x,height*(.27+j*.21),f.z);this._matrix.scale.set(flowerSpecies==='lavender'?.30:.55,.28,.45);this._matrix.updateMatrix();this.flowerLeaves.setMatrixAt(i*2+j,this._matrix.matrix);
         }
+        // All forms share eight curved-petal slots: shape comes from growth direction and layering.
         for(let j=0;j<8;j++){
-          const a=angle+j*Math.PI/4;orient(a);this._matrix.position.set(f.x,height,f.z);this._matrix.scale.set(gold?.78:.68,gold?.42:.36,gold?.78:.7);this._matrix.updateMatrix();this.flowerPetals.setMatrixAt(i*8+j,this._matrix.matrix);this.flowerPetals.setColorAt(i*8+j,new T.Color(color));
+          const jitter=GardenVegetation.hash(f.x,f.z,9401+j)%101/100-.5,variation=1+jitter*.15;
+          let a=angle+j*Math.PI/4,lift=.05,y=height,radius=.018,sx=.48,sy=.56,sz=.14;
+          if(flowerSpecies==='tulip'){
+            a=angle+(j%6)*Math.PI/3;lift=1.55;y=height+(j>=6?.035:0);radius=.015;sx=j>=6?.36:.68;sy=j>=6?.36:.52;sz=.25;
+          }else if(flowerSpecies==='lavender'){
+            a=angle+(j%2)*Math.PI+Math.floor(j/2)*1.18;lift=.5;y=height+.015+Math.floor(j/2)*.115;radius=.012;sx=.30;sy=.17;sz=.26;
+          }else if(flowerSpecies==='rose'){
+            const inner=j>=5;a=angle+(inner?(j-5)*Math.PI*2/3+.55:j*Math.PI*2/5);lift=inner?.85:.22;y=height+(inner?.075:0);radius=inner?.012:.035;sx=inner?.74:.88;sy=inner?.26:.34;sz=inner?.38:.48;
+          }else if(gold){
+            lift=.12;sx=.65;sy=.68;sz=.21;radius=.03;
+          }
+          a+=jitter*.10;orient(a,lift+jitter*.04);this._matrix.position.set(f.x+Math.sin(a)*radius,y+jitter*.012,f.z+Math.cos(a)*radius);this._matrix.scale.set(sx*variation,sy*variation,sz);this._matrix.updateMatrix();this.flowerPetals.setMatrixAt(i*8+j,this._matrix.matrix);this.flowerPetals.setColorAt(i*8+j,this._color.set(color));
         }
-        this._matrix.position.set(f.x,height+.025,f.z);this._matrix.rotation.set(0,0,0);this._matrix.scale.set(gold?.13:.105,gold?.073:.058,gold?.13:.105);this._matrix.updateMatrix();this.flowerCenters.setMatrixAt(i,this._matrix.matrix);this.flowerCenters.setColorAt(i,new T.Color(gold?'#e89525':'#a58a35'));
+        const spike=flowerSpecies==='lavender',cup=flowerSpecies==='tulip';
+        this._matrix.position.set(f.x,centerHeight,f.z);this._matrix.rotation.set(0,0,0);this._matrix.scale.set(spike?.037:gold?.16:cup?.074:.105,spike?.073:gold?.068:cup?.085:.050,spike?.037:gold?.16:cup?.074:.105);this._matrix.updateMatrix();this.flowerCenters.setMatrixAt(i,this._matrix.matrix);this.flowerCenters.setColorAt(i,this._color.set(gold?'#b57a20':spike?'#ad93cd':'#c7a341'));
       });
       const count=this.flowers.length;
       for(const [mesh,n] of [[this.flowerStems,count],[this.flowerLeaves,count*2],[this.flowerPetals,count*8],[this.flowerCenters,count]]){mesh.count=n;mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;mesh.computeBoundingSphere();}
@@ -1794,7 +2033,7 @@ if(typeof module!=='undefined')module.exports=globalThis.GardenVegetation;
       this._layoutFlowers(selected);
       this.flowers.forEach((actor,i)=>{
         const f=selected[i],ripe=!f.done,gold=f.value===3||f.kind==='golden';actor.flower=f;
-        this._matrix.position.set(f.x,actor.height+(gold?.23:.18)+Math.sin(time*3+actor.phase)*.015,f.z);this._matrix.rotation.set(0,time,0);this._matrix.scale.set(ripe?(gold?.06:.035):0,ripe?(gold?.085:.055):0,ripe?(gold?.06:.035):0);this._matrix.updateMatrix();this.flowerNectar.setMatrixAt(i,this._matrix.matrix);this.flowerNectar.setColorAt(i,this._color.set(gold?'#fff0b3':'#ffffff'));
+        this._matrix.position.set(f.x,actor.nectarHeight+Math.sin(time*3+actor.phase)*.015,f.z);this._matrix.rotation.set(0,time,0);this._matrix.scale.set(ripe?(gold?.06:.035):0,ripe?(gold?.085:.055):0,ripe?(gold?.06:.035):0);this._matrix.updateMatrix();this.flowerNectar.setMatrixAt(i,this._matrix.matrix);this.flowerNectar.setColorAt(i,this._color.set(gold?'#fff0b3':'#ffffff'));
       });
       this.flowerNectar.count=this.flowers.length;this.flowerNectar.instanceMatrix.needsUpdate=true;if(this.flowerNectar.instanceColor)this.flowerNectar.instanceColor.needsUpdate=true;this.flowerNectar.computeBoundingSphere();
       const gathering=selected.find(f=>f.id===local?.activeFlower&&!f.done&&(f.progress||0)>.005)||selected.find(f=>!f.done&&(f.progress||0)>.005);
@@ -1855,12 +2094,7 @@ globalThis.GardenQuality=(()=>{
    for(let row=0;row<3;row++)for(let col=0;col<2;col++){const a=row*3+col,b=a+3;indices.push(a,a+1,b,b,a+1,b+1);}
    const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(indices);g.computeVertexNormals();g.computeBoundingSphere();return g;
   }
-  const petal=tissue(),leaf=tissue(true),pollen=new T.IcosahedronGeometry(1,0),canopy=new T.IcosahedronGeometry(1,0),clover=new T.PlaneGeometry(1,1);
-  clover.rotateX(-Math.PI/2);
-  // Radial normals soften low-poly crown shading while keeping a complete silhouette.
-  const cp=canopy.attributes.position,cn=canopy.attributes.normal;
-  for(let i=0;i<cp.count;i++){const length=Math.hypot(cp.getX(i),cp.getY(i),cp.getZ(i));cn.setXYZ(i,cp.getX(i)/length,cp.getY(i)/length,cp.getZ(i)/length);}
-  cn.needsUpdate=true;
+  const petal=tissue(),leaf=tissue(true),pollen=new T.IcosahedronGeometry(1,0);
   const grass=new Set((owner.decorChunks||[]).filter(c=>c.kind==='grass').map(c=>c.mesh));
   const matrix=new T.Matrix4(),color=new T.Color();
   for(const mesh of grass){
@@ -1882,12 +2116,12 @@ globalThis.GardenQuality=(()=>{
    else if(o.geometry===owner.pbr.leafGeometry)o.geometry=leaf;
    o.material=Array.isArray(o.material)?o.material.map(diffuse):diffuse(o.material);
   });
-  // Reduce triangles, never a fraction of a plant or the first N canopy instances.
-  if(owner.vegetation?.canopy)owner.vegetation.canopy.geometry=canopy;
-  for(const slot of owner.vegetation?.slots||[]){slot.clover.geometry=clover;slot.center.geometry=pollen;}
+  // Tuft cards, fern carpets and the four merged tree silhouettes are already
+  // cheaper than the old full meshes. Keep their actual shapes at this quality.
+  for(const slot of owner.vegetation?.slots||[])slot.center.geometry=pollen;
   for(const name of ['flowerCenters','flowerNectar'])if(owner[name])owner[name].geometry=pollen;
   owner.softwareMaterials=materials;owner.softwareGeometry=blade;
-  owner.softwareGeometries=[blade,petal,leaf,pollen,canopy,clover];return true;
+  owner.softwareGeometries=[blade,petal,leaf,pollen];return true;
  }
  return{configure};
 })();
@@ -1946,13 +2180,13 @@ globalThis.GardenNetwork=(()=>{
  let target=null,boostHeld=false,keys=new Set(),frame=0,last=performance.now(),clock=0,uiClock=0,netClock=0,qualityClock=0,frameAverage=.02;
  let isNetwork=false,localIndex=0,room=null,awarded=false,seenEvents=new Set(),pausedByVisibility=false,toastTimer,lastRoundId='',wantsRoom=false;
  const claimedRounds=new Set(profile.claimedRounds||[]);
- const look={yaw:-1.28,pitch:-.08},stick={forward:0,right:0};let honeyAction='',honeyStartedAt=0,lookPointer=null,cameraView='first',storageSignature='',turnHeld=0,lastTravel={x:0,z:0},progressClock=0,checkpoint=null,widgetCheckpoint=null,checkpointGeneration=0;
+ const look={yaw:-1.28,pitch:-.08},stick={forward:0,right:0};let honeyAction='',honeyStartedAt=0,lookPointer=null,cameraView='follow',storageSignature='',turnHeld=0,riseHeld=0,riseGesture=0,lastTravel={x:0,z:0},progressClock=0,checkpoint=null,widgetCheckpoint=null,checkpointGeneration=0;
  try{const saved=JSON.parse(localStorage.getItem('nectar-garden-progress-v1')||'null');if(saved&&saved.state?.players?.length===1&&C?.restore(saved,R).mode==='playing')checkpoint=saved;}catch{}
  function restoreWidgetProgress(packed){if(!packed||!C?.decode)return;C.decode(packed).then(saved=>{if(view!=='home'||saved.state?.players?.length!==1||C.restore(saved,R).mode!=='playing')return;checkpoint=saved;widgetCheckpoint=packed;$('.ng-resume').hidden=false;}).catch(()=>{});}
  function saveProgress(){if(isNetwork||state.players.length!==1||state.mode!=='playing'||!C)return;checkpoint=C.capture(state);checkpoint.look={...look};$('.ng-resume').hidden=false;try{localStorage.setItem('nectar-garden-progress-v1',JSON.stringify(checkpoint));}catch{}if(window.openai?.setWidgetState&&C.encode){const generation=++checkpointGeneration;C.encode(checkpoint).then(packed=>{if(generation!==checkpointGeneration||packed.length>14000)return;widgetCheckpoint=packed;window.openai.setWidgetState({modelContent:{game:'蜜语花园',skin:profile.skin,coins:profile.coins},privateContent:{profile,checkpoint:packed}})?.catch(()=>{});}).catch(()=>{});}}
 
  function clearProgress(){checkpoint=null;widgetCheckpoint=null;checkpointGeneration++;try{localStorage.removeItem('nectar-garden-progress-v1');}catch{}$('.ng-resume').hidden=true;}
- function continueGame(){if(!checkpoint)return;try{state=C.restore(checkpoint,R);}catch{clearProgress();toast('这份进度暂时无法读取，请重新开始。');return;}wantsRoom=false;globalThis.GardenNetwork?.leave();isNetwork=false;room=null;localIndex=0;selectedLevel=state.level;const p=state.players[0];for(const key of ['shields','slows','energy','decoys']){if(profile[key]<p[key]){p[key]=0;if(p.held===key)p.held='';}p.stash[key]=Math.max(0,profile[key]-p[key]);}p.skin=profile.skin;awarded=false;seenEvents=new Set((state.eventDetails||[]).map(eventKey));resetInput();cameraView='first';look.yaw=Number.isFinite(checkpoint.look?.yaw)?checkpoint.look.yaw:-1.28;look.pitch=-.08;closeDialog();setView('playing');gesture();music.resume().catch(()=>{});updateHUD();}
+ function continueGame(){if(!checkpoint)return;try{state=C.restore(checkpoint,R);}catch{clearProgress();toast('这份进度暂时无法读取，请重新开始。');return;}wantsRoom=false;globalThis.GardenNetwork?.leave();isNetwork=false;room=null;localIndex=0;selectedLevel=state.level;const p=state.players[0];for(const key of ['shields','slows','energy','decoys']){if(profile[key]<p[key]){p[key]=0;if(p.held===key)p.held='';}p.stash[key]=Math.max(0,profile[key]-p[key]);}p.skin=profile.skin;awarded=false;seenEvents=new Set((state.eventDetails||[]).map(eventKey));resetInput();cameraView='follow';look.yaw=Number.isFinite(checkpoint.look?.yaw)?checkpoint.look.yaw:-1.28;look.pitch=-.08;closeDialog();setView('playing');gesture();music.resume().catch(()=>{});updateHUD();}
  const music=new GardenAudio();music.setMuted(!profile.music);
  let scene;
  function toast(text){$('.ng-toast').textContent=text;$('.ng-toast').classList.add('is-on');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('.ng-toast').classList.remove('is-on'),2600);}
@@ -1967,7 +2201,7 @@ globalThis.GardenNetwork=(()=>{
  document.addEventListener('fullscreenchange',syncFullscreen);document.addEventListener('webkitfullscreenchange',syncFullscreen);
  function gesture(){if(profile.music)music.start().catch(()=>{});}
  function syncInventory(){const p=state.players[localIndex];if(!p?.stash)return;let dirty=false;for(const i of P.items){const count=(p.stash[i.id]||0)+(p[i.id]||0);if(profile[i.id]!==count){profile[i.id]=count;dirty=true;}}if(dirty)save();}
- function resetInput(){stickPointer=null;turnHeld=0;lastTravel={x:0,z:0};keys.clear();target=null;boostHeld=false;honeyAction='';stick.forward=stick.right=0;lookPointer=null;const nub=$('.ng-stick-nub');if(nub)nub.style.transform='';}
+ function resetInput(){stickPointer=null;turnHeld=0;riseHeld=0;riseGesture=0;lastTravel={x:0,z:0};keys.clear();target=null;boostHeld=false;honeyAction='';stick.forward=stick.right=0;lookPointer=null;const nub=$('.ng-stick-nub');if(nub)nub.style.transform='';}
  function openDialog(name,html){dialog=name;body.innerHTML=html;$('.ng-dialog-wrap').hidden=false;$('.ng-dialog').scrollTop=0;}
  function closeDialog(){dialog='';$('.ng-dialog-wrap').hidden=true;}
  function setView(name){view=name;root.dataset.view=name;$('.ng-home').hidden=name!=='home';$('.ng-hud').hidden=!['playing','paused','dead','won'].includes(name);$('.ng-bottom').hidden=name!=='playing';$('.ng-activity').hidden=true;$('.ng-reticle').hidden=$('.ng-navigation').hidden=$('.ng-flight-controls').hidden=$('.ng-held-label').hidden=name!=='playing';$('.ng-storage-panel').hidden=!['home','playing'].includes(name);}
@@ -1980,11 +2214,11 @@ globalThis.GardenNetwork=(()=>{
  function openHouse(){const p=state.players[localIndex];if(view!=='playing'||!R.isSafe(p)){toast('先飞回小草屋，再从架上取道具。');return;}resetInput();gesture();openDialog('house',`<h2>你的小草屋 · 道具架</h2><p>买好的道具存放在这里。细树枝一次托一件，用完再来取。</p><div class="ng-house-tools">${P.items.map(i=>`<div><span class="ng-item-icon">${i.icon}</span><strong>${i.name}</strong><p>${i.note}</p><small>屋内存放 ${p.stash?.[i.id]||0} 个${p.held===i.id?' · 树枝上带着1个':''}</small><button type="button" data-equip="${p.held===i.id?'':i.id}" ${p.held!==i.id&&!p.stash?.[i.id]?'disabled':''}>${p.held===i.id?'放回架上':'取到树枝上'}</button></div>`).join('')}</div>`);}
  function equip(id){if(isNetwork){GardenNetwork.equip(id);return;}if(R.equip(state,id,localIndex)){syncInventory();music.effect('click');openHouse();updateHUD();}else toast('需要在小草屋里拿取有库存的道具。');}
  function start(level=selectedLevel,map=selectedMap){clearProgress();gesture();wantsRoom=false;if(isNetwork){globalThis.GardenNetwork?.leave();isNetwork=false;room=null;}
-  selectedLevel=level;selectedMap=map;localIndex=0;state=R.create(level,{...profile},{map:selectedMap,target:R.targetFor(level)});awarded=false;seenEvents.clear();resetInput();cameraView='first';look.yaw=-1.28;look.pitch=-.08;closeDialog();setView('playing');
-  scene.setSkin?.(profile.skin);music.resume().catch(()=>{});toast('Q/E左前/右前，F向上合翅。开启连采，多采几朵再回家！');updateHUD();
+  selectedLevel=level;selectedMap=map;localIndex=0;state=R.create(level,{...profile},{map:selectedMap,target:R.targetFor(level)});awarded=false;seenEvents.clear();resetInput();cameraView='follow';look.yaw=-1.28;look.pitch=-.08;closeDialog();setView('playing');
+  scene.setSkin?.(profile.skin);music.resume().catch(()=>{});toast('T/G上升下降，Q/E斜飞，F合翅。连采多朵，再整包带回家！');updateHUD();
  }
  function home(){wantsRoom=false;if(isNetwork){GardenNetwork.leave();isNetwork=false;room=null;lastRoundId='';}
-  if(view!=='home'){R.returnTools(state,localIndex);syncInventory();saveProgress();}resetInput();cameraView='first';look.yaw=-1.28;look.pitch=-.08;closeDialog();state=R.create(selectedLevel,{...profile},{target:6});localIndex=0;setView('home');music.resume().catch(()=>{});scene.setSkin?.(profile.skin);save();
+  if(view!=='home'){R.returnTools(state,localIndex);syncInventory();saveProgress();}resetInput();cameraView='follow';look.yaw=-1.28;look.pitch=-.08;closeDialog();state=R.create(selectedLevel,{...profile},{target:6});localIndex=0;setView('home');music.resume().catch(()=>{});scene.setSkin?.(profile.skin);save();
  }
  function pause(reason='花园休息一下'){if(view!=='playing')return;resetInput();if(isNetwork){GardenNetwork.input({x:0,z:0});toast('联机仍在继续；返回后注意追捕者。');return;}
   setView('paused');music.pause();openDialog('pause',`<div class="ng-result"><span class="ng-result-mark">❀</span><h2>${reason}</h2><p>蝴蝶和追捕者都已暂停。</p><button type="button" class="ng-main-button" data-action="resume">继续飞行</button><button type="button" class="ng-secondary" data-action="home">回到主页</button></div>`);
@@ -2014,13 +2248,13 @@ globalThis.GardenNetwork=(()=>{
  }
  function updateHUD(){const p=state.players[localIndex]||state.players[0];if(!p)return;
   const personal=p.nectar??state.nectar;const signature=state.target+':'+personal;if(storageSignature!==signature){storageSignature=signature;const panel=$('.ng-storage-panel'),grid=$('.ng-storage-grid'),count=state.target||6,large=count>12,cols=large?12:count;panel.classList.toggle('is-large',large);panel.style.width=(large?148:Math.min(210,count*18+16))+'px';grid.style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;grid.innerHTML=Array.from({length:count},(_,i)=>`<i class="ng-honey-cell${i<personal?' is-full':''}" aria-hidden="true"></i>`).join('');grid.setAttribute('aria-label',`五边形储蜜格，已装满${personal}格，共${count}格`);$('[data-storage-count]').textContent=`${personal} / ${count}`;}
-  const viewButton=$('[data-action="view"]');viewButton.textContent=cameraView==='first'?'第一视角 ↔':'第二视角 ↔';viewButton.setAttribute('aria-label',cameraView==='first'?'切换到跟随蝴蝶的第二视角':'切换到蝴蝶第一视角');
+  const viewButton=$('[data-action="view"]');viewButton.textContent=cameraView==='first'?'蝴蝶眼睛 ↔':'跟随蝴蝶 ↔';viewButton.setAttribute('aria-label',cameraView==='first'?'切换到能看到蝴蝶的第三人称':'切换到蝴蝶第一人称');
   $('[data-bank]').textContent=`${isNetwork?'团队 ':''}${state.nectar} / ${state.target||state.flowers.length}`;
   $('.ng-level').textContent=`${levelNames[state.level-1]} · ${state.hunters.length}人追捕${isNetwork?' · '+state.players.length+'只蝴蝶':''}`;
   $('.ng-bag').textContent=p.bag?`背包：🍯 ${p.bag}滴`:'背包：空';
   $('.ng-energy i').style.width=`${p.stamina*100}%`;
   const safe=R.isSafe(p),danger=Math.min(...state.hunters.map(h=>Math.hypot(h.x-p.x,h.z-p.z)));
-  $('.ng-safe-status').textContent=p.hiddenFor>0?`隐藏中 ${Math.ceil(p.hiddenFor)}秒`:safe?'我的小屋 · 很安全':R.isSheltered(state,p)?'朋友的小屋 · 安全':p.immunity>0?'护盾保护中':danger<4?'捕蝶人靠近了！':p.bag?'回小屋按存蜜按钮':'到花旁按采蜜按钮';
+  $('.ng-safe-status').textContent=p.hiddenFor>0?`隐藏中 ${Math.ceil(p.hiddenFor)}秒`:p.inCover?'花丛隐蔽 · 靠近仍会被发现':safe?'我的小屋 · 很安全':R.isSheltered(state,p)?'朋友的小屋 · 安全':p.immunity>0?'护盾保护中':danger<4?'捕蝶人靠近了！':p.bag?'回小屋按存蜜按钮':'到花旁按采蜜按钮';
   $('[data-action="house"]').disabled=!safe;
   const held=P.items.find(i=>i.id===p.held),useButton=$('[data-action="held"]');useButton.textContent=held?(p.held==='shields'?'护盾自动生效':'使用'+held.name):'树枝上没有道具';useButton.disabled=!held||p.held==='shields'||(p.held==='energy'&&p.surge>0);
   $('.ng-held-label').hidden=view!=='playing'||!held;$('.ng-held-label').textContent=held?'树枝上：'+held.name:'树枝上：空 · 回屋取道具';
@@ -2029,14 +2263,34 @@ globalThis.GardenNetwork=(()=>{
   const collect=$('[data-action="collect"]'),deposit=$('[data-action="deposit"]');collect.disabled=p.bag>=state.target-state.nectar&&honeyAction!=='collect';deposit.disabled=!p.bag||!safe||honeyAction==='deposit';collect.textContent=honeyAction==='collect'?(readyFlower?'连采中 · 点我停':'连采已开 · 点我停'):`开启连采 · ${R.collectTime(state)}秒`;deposit.textContent=honeyAction==='deposit'?'整包存入中…':`整包存蜜${p.bag?' '+p.bag+'滴':''} · 1秒`;
   $$('[data-action="collect"],[data-action="deposit"]').forEach(b=>b.classList.toggle('is-active',b.dataset.action===honeyAction));
   const home=R.hutFor(p);$('[data-house-direction]').textContent='小屋 '+F.bearing(look,p,home)+' '+Math.round(Math.hypot(home.x-p.x,home.z-p.z))+'m';
-  const nextFlower=state.flowers.filter(f=>!f.done).sort((a,b)=>Math.hypot(a.x-p.x,a.z-p.z)-Math.hypot(b.x-p.x,b.z-p.z))[0];const rich=state.flowers.filter(f=>!f.done&&f.value===3).sort((a,b)=>Math.hypot(a.x-p.x,a.z-p.z)-Math.hypot(b.x-p.x,b.z-p.z))[0];$('[data-flower-direction]').textContent=nextFlower?'花 '+F.bearing(look,p,nextFlower)+' '+Math.round(Math.hypot(nextFlower.x-p.x,nextFlower.z-p.z))+'m':'等待花开';$('[data-gold-direction]').textContent=rich?'金花×3 '+F.bearing(look,p,rich):'远处有金色花田';$('[data-chain]').textContent=p.surge>0?'顺风 '+Math.ceil(p.surge)+'秒':p.streak>0&&state.elapsed-p.lastCollectAt<=8?p.streak+'连采 · 8秒内续上':'3连采触发顺风';const enough=p.bag>=state.target-state.nectar;$('.ng-mission').textContent=safe&&p.bag?'到家了 · 按存蜜整包入库':enough?'花蜜已经够了 · 跟小屋箭头回家':honeyAction==='collect'?'连采已开启 · 停在花旁就会采蜜':'开启连采 → 多采几朵 → 回家整包存入';drawRadar(p);
+  const nextFlower=state.flowers.filter(f=>!f.done).sort((a,b)=>Math.hypot(a.x-p.x,a.z-p.z)-Math.hypot(b.x-p.x,b.z-p.z))[0];const rich=state.flowers.filter(f=>!f.done&&f.value===3).sort((a,b)=>Math.hypot(a.x-p.x,a.z-p.z)-Math.hypot(b.x-p.x,b.z-p.z))[0];$('[data-flower-direction]').textContent=nextFlower?'花 '+F.bearing(look,p,nextFlower)+' '+Math.round(Math.hypot(nextFlower.x-p.x,nextFlower.z-p.z))+'m':'等待花开';$('[data-gold-direction]').textContent=rich?'金花×3 '+F.bearing(look,p,rich):'远处有金色花田';$('[data-chain]').textContent=p.surge>0?'顺风 '+Math.ceil(p.surge)+'秒':p.streak>0&&state.elapsed-p.lastCollectAt<=8?p.streak+'连采 · 8秒内续上':'3连采触发顺风';const altitude=R.altitudeOf?.(state,p)||1.45,homeBelow=Math.hypot(home.x-p.x,home.z-p.z)<2.2&&altitude>1.55;const enough=p.bag>=state.target-state.nectar,arrow=$('.ng-home-arrow'),mission=$('.ng-mission-text'),carrying=p.bag>0&&!safe;
+  arrow.hidden=!carrying;arrow.textContent=homeBelow?'↓':'↑';$('.ng-mission').classList.toggle('is-returning',carrying);
+  if(carrying){const a=Math.atan2(home.x-p.x,-(home.z-p.z))-look.yaw;arrow.style.transform=`rotate(${homeBelow?0:Math.atan2(Math.sin(a),Math.cos(a))*180/Math.PI}deg)`;}
+  mission.textContent=homeBelow&&p.bag?'小屋在脚下 · 沿屋檐下降进门存蜜':safe&&p.bag?'到家了 · 按存蜜整包入库':p.bag?`已采${p.bag}滴 · 小屋${Math.round(Math.hypot(home.x-p.x,home.z-p.z))}m${enough?' · 回家通关':' · 可继续采'}`:honeyAction==='collect'?'连采已开启 · 停在花旁就会采蜜':'开启连采 → 多采几朵 → 回家整包存入';drawRadar(p);
   const active=p.activeFlower>=0?state.flowers.find(f=>f.id===p.activeFlower):null;
   const progress=p.deposit>0?p.deposit:active?(p.collectProgress||0)/R.collectTime(state):0;
   $('.ng-activity').hidden=progress<=0||view!=='playing';$('.ng-activity span').textContent=p.deposit>0?'整包存入五边形蜜框 · 1秒':`正在采集花蜜 · ${R.collectTime(state)}秒`;$('.ng-activity i').style.width=`${Math.min(1,progress)*100}%`;
-  const boost=$('[data-action="boost"]');if(boost.dataset.level!==String(state.level)){boost.dataset.level=String(state.level);boost.innerHTML=('无限加速')+'<small>空格</small>';}$('.ng-energy>span').textContent=state.level===4?'超难 · 极速无限':'加速 · 无限使用';
+  const boost=$('[data-action="boost"]');if(boost.dataset.level!==String(state.level)){boost.dataset.level=String(state.level);boost.innerHTML=('无限加速')+'<small>空格</small>';}$('.ng-energy>span').textContent=altitude>1.6?'高度 '+altitude.toFixed(1)+'m · 松手悬停':state.level===4?'超难 · 极速无限':'加速 · 无限使用';
   if(scene){const home=R.hutFor(p),h=scene.project(home.x,2.5,home.z);$('.ng-house-label').textContent='我的小草屋 · 安全区';$('.ng-house-label').hidden=!h.visible;$('.ng-house-label').style.left=h.x+'px';$('.ng-house-label').style.top=h.y+'px';$('.ng-target-label').hidden=true;}
  }
- function drawRadar(p){const radar=$('.ng-radar');if(!radar?.getContext)return;const ctx=radar.getContext('2d'),size=radar.width,c=size/2,scale=c/24;ctx.clearRect(0,0,size,size);ctx.save();ctx.translate(c,c);ctx.beginPath();ctx.arc(0,0,c-2,0,Math.PI*2);ctx.fillStyle='#193d32b8';ctx.fill();ctx.clip();ctx.strokeStyle='#ffffff24';ctx.lineWidth=1;for(const radius of [c/2,c-3]){ctx.beginPath();ctx.arc(0,0,radius,0,Math.PI*2);ctx.stroke();}const point=(o,color,r)=>{const dx=o.x-p.x,dz=o.z-p.z,x=(Math.cos(look.yaw)*dx+Math.sin(look.yaw)*dz)*scale,y=(Math.cos(look.yaw)*dz-Math.sin(look.yaw)*dx)*scale;if(Math.hypot(x,y)>c-6)return;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();};for(const f of state.flowers)if(!f.done)point(f,f.value===3?'#ffd75d':'#e6d5ee',f.value===3?3.5:2);for(const h of state.huts||[R.hutFor(p)])point(h,'#8ce7cf',6);for(const h of state.hunters)point(h,'#ff7e68',5);for(const mate of state.players)if(mate!==p)point(mate,'#8cbcff',4);ctx.beginPath();ctx.moveTo(0,-7);ctx.lineTo(5,5);ctx.lineTo(-5,5);ctx.closePath();ctx.fillStyle='#fffbed';ctx.fill();ctx.restore();}
+ function drawRadar(p){
+  const radar=$('.ng-radar');if(!radar?.getContext)return;const ctx=radar.getContext('2d'),size=radar.width,c=size/2,scale=c/30,home=R.hutFor(p);
+  ctx.clearRect(0,0,size,size);ctx.save();ctx.translate(c,c);ctx.beginPath();ctx.arc(0,0,c-2,0,Math.PI*2);ctx.fillStyle='#173e34e8';ctx.fill();ctx.clip();
+  ctx.strokeStyle='#ffffff20';ctx.lineWidth=1;for(const radius of [c/2,c-4]){ctx.beginPath();ctx.arc(0,0,radius,0,Math.PI*2);ctx.stroke();}
+  ctx.beginPath();ctx.moveTo(-c,0);ctx.lineTo(c,0);ctx.moveTo(0,-c);ctx.lineTo(0,c);ctx.stroke();
+  const xy=o=>({x:(o.x-p.x)*scale,y:(o.z-p.z)*scale});
+  const point=(o,color,r)=>{const {x,y}=xy(o);if(Math.hypot(x,y)>c-10)return;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();};
+  for(const f of state.flowers)if(!f.done)point(f,f.value===3?'#ffd75d':'#b6c4b4',f.value===3?3:1.4);
+  for(const h of state.hunters)point(h,'#ff7e68',4.5);for(const mate of state.players)if(mate!==p)point(mate,'#8cbcff',4);
+  const house=(h,own)=>{let {x,y}=xy(h);const d=Math.hypot(x,y),off=d>c-17;if(off){if(!own)return;const ratio=(c-17)/d;x*=ratio;y*=ratio;}
+   if(own&&Math.hypot(x,y)>16){ctx.save();ctx.setLineDash([3,5]);ctx.strokeStyle='#ffe4a58a';ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(x,y);ctx.stroke();ctx.restore();}
+   ctx.save();ctx.translate(x,y);ctx.lineWidth=2;ctx.fillStyle=own?'#ffdb87':'#89d9bb';ctx.strokeStyle='#173e34';ctx.beginPath();ctx.moveTo(-7,-1);ctx.lineTo(0,-8);ctx.lineTo(7,-1);ctx.lineTo(5,-1);ctx.lineTo(5,7);ctx.lineTo(-5,7);ctx.lineTo(-5,-1);ctx.closePath();ctx.fill();ctx.stroke();
+   if(own){ctx.fillStyle='#173e34';ctx.fillRect(-1.5,2,3,5);if(off){ctx.rotate(Math.atan2(y,x)+Math.PI/2);ctx.beginPath();ctx.moveTo(0,-14);ctx.lineTo(-3,-10);ctx.lineTo(3,-10);ctx.closePath();ctx.fillStyle='#ffdb87';ctx.fill();}}ctx.restore();};
+  for(const h of state.huts||[home])if(h!==home&&(h.x!==home.x||h.z!==home.z))house(h,false);house(home,true);
+  ctx.save();ctx.rotate(look.yaw);ctx.beginPath();ctx.moveTo(0,-9);ctx.lineTo(5,6);ctx.lineTo(0,3);ctx.lineTo(-5,6);ctx.closePath();ctx.fillStyle='#fffbed';ctx.fill();ctx.strokeStyle='#173e34';ctx.stroke();ctx.restore();
+  ctx.fillStyle='#fffbed';ctx.font='bold 13px sans-serif';ctx.textAlign='center';ctx.fillText('北',0,-c+16);ctx.font='10px sans-serif';ctx.fillStyle='#ffdb87';ctx.fillText('⌂ 我的家',0,c-12);ctx.restore();
+ }
+
  function rooms(){gesture();wantsRoom=true;if(!globalThis.GardenNetwork||root.dataset.network!=='on'){
    openDialog('rooms',`<h2>房间联机</h2><p>本地联机版会自动生成四位数字房间码，朋友输入同一个码就能加入。</p><p>对话里的试玩窗口提供单人模式。联机请打开本地完整版。</p><button type="button" class="ng-main-button" data-action="choose">先玩单人花园</button>`);return;
   }
@@ -2085,19 +2339,20 @@ globalThis.GardenNetwork=(()=>{
  for(const event of ['contextmenu','selectstart'])root.addEventListener(event,e=>{
   if(!e.target.closest?.('input,textarea,select,[contenteditable]'))e.preventDefault();
  });
- canvas.addEventListener('pointerdown',e=>{if(view==='playing'&&!dialog){e.preventDefault();canvas.setPointerCapture(e.pointerId);lookPointer={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,moved:false,button:e.button};gesture();}});
- canvas.addEventListener('pointermove',e=>{if(view!=='playing'||!lookPointer||lookPointer.id!==e.pointerId)return;const p=lookPointer,dx=e.clientX-p.x,dy=e.clientY-p.y;if(Math.hypot(e.clientX-p.startX,e.clientY-p.startY)>=1||p.moved){p.moved=true;F.turn(look,dx,dy);target=null;}p.x=e.clientX;p.y=e.clientY;});
- canvas.addEventListener('pointerup',e=>{if(lookPointer?.id!==e.pointerId)return;const click=!lookPointer.moved&&lookPointer.button!==2;lookPointer=null;if(click)aim(e);});
- canvas.addEventListener('pointercancel',()=>lookPointer=null);
+ canvas.addEventListener('pointerdown',e=>{if(view==='playing'&&!dialog){e.preventDefault();canvas.setPointerCapture(e.pointerId);lookPointer={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,moved:false,button:e.button,flightSwipe:e.pointerType==='touch'&&e.clientX>canvas.getBoundingClientRect().left+canvas.getBoundingClientRect().width*.45};gesture();}});
+ canvas.addEventListener('pointermove',e=>{if(view!=='playing'||!lookPointer||lookPointer.id!==e.pointerId)return;const p=lookPointer,dx=e.clientX-p.x,dy=e.clientY-p.y;if(Math.hypot(e.clientX-p.startX,e.clientY-p.startY)>=1||p.moved){p.moved=true;F.turn(look,dx,p.flightSwipe?0:dy);if(p.flightSwipe){const travel=p.startY-e.clientY;riseGesture=Math.abs(travel)<10?0:Math.max(-1,Math.min(1,travel/70));}target=null;}p.x=e.clientX;p.y=e.clientY;});
+ canvas.addEventListener('pointerup',e=>{if(lookPointer?.id!==e.pointerId)return;const click=!lookPointer.moved&&lookPointer.button!==2;lookPointer=null;riseGesture=0;if(click)aim(e);});
+ for(const event of ['pointercancel','lostpointercapture'])canvas.addEventListener(event,()=>{lookPointer=null;riseGesture=0;});
  const joystick=$('.ng-joystick');let stickPointer=null;
  function setStick(e){const r=joystick.getBoundingClientRect(),radius=Math.max(24,r.width*.32),nub=$('.ng-stick-nub'),travel=Math.max(8,Math.min(radius,(r.width-(nub.clientWidth||49))/2-4));let x=(e.clientX-r.x-r.width/2)/radius,y=(e.clientY-r.y-r.height/2)/radius;const n=Math.max(1,Math.hypot(x,y));x/=n;y/=n;stick.right=x;stick.forward=-y;nub.style.transform=`translate(${x*travel}px,${y*travel}px)`;target=null;if(Math.hypot(x,y)>.12&&honeyAction==='deposit')honeyAction='';}
  joystick.addEventListener('pointerdown',e=>{if(view!=='playing'||dialog)return;e.preventDefault();stickPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);setStick(e);gesture();});
  joystick.addEventListener('pointermove',e=>{if(e.pointerId===stickPointer)setStick(e);});
  for(const name of ['pointerup','pointercancel','lostpointercapture'])joystick.addEventListener(name,()=>{stickPointer=null;stick.forward=stick.right=0;$('.ng-stick-nub').style.transform='';});
  for(const b of $$('[data-turn]')){b.addEventListener('pointerdown',e=>{if(view!=='playing'||dialog)return;e.preventDefault();b.setPointerCapture(e.pointerId);turnHeld=Number(b.dataset.turn);target=null;gesture();});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>turnHeld=0);}
- const gameKeys=new Set(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D',' ','Shift','q','Q','e','E','r','R','f','F','c','C','v','V','z','Z','j','J','l','L','Escape']);
+ for(const b of $$('[data-rise]')){b.addEventListener('pointerdown',e=>{if(view!=='playing'||dialog)return;e.preventDefault();b.setPointerCapture(e.pointerId);riseHeld=Number(b.dataset.rise);target=null;if(honeyAction==='deposit')honeyAction='';gesture();});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>riseHeld=0);}
+ const gameKeys=new Set(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D',' ','Shift','q','Q','e','E','r','R','f','F','c','C','v','V','z','Z','j','J','l','L','t','T','g','G','PageUp','PageDown','Escape']);
  window.addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||!gameKeys.has(e.key))return;if(!['playing','paused'].includes(view))return;if(dialog&&dialog!=='pause'){if(e.key==='Escape'&&dialog==='house'){e.preventDefault();closeDialog();}return;}e.preventDefault();if(e.key==='Escape'){if(view==='playing')pause();else if(view==='paused')resume();return;}
-  if(view!=='playing')return;gesture();if(!e.repeat){if(e.key.toLowerCase()==='f')use('fold');if(e.key.toLowerCase()==='r')use('energy');if(e.key.toLowerCase()==='c')beginHoney('collect');if(e.key.toLowerCase()==='v')beginHoney('deposit');if(e.key.toLowerCase()==='z')openHouse();}keys.add(e.key.toLowerCase());if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d','q','e','j','l'].includes(e.key.toLowerCase())){target=null;if(honeyAction==='deposit')honeyAction='';}
+  if(view!=='playing')return;gesture();if(!e.repeat){if(e.key.toLowerCase()==='f')use('fold');if(e.key.toLowerCase()==='r')use('energy');if(e.key.toLowerCase()==='c')beginHoney('collect');if(e.key.toLowerCase()==='v')beginHoney('deposit');if(e.key.toLowerCase()==='z')openHouse();}keys.add(e.key.toLowerCase());if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d','q','e','j','l','t','g','pageup','pagedown'].includes(e.key.toLowerCase())){target=null;if(honeyAction==='deposit')honeyAction='';}
  });
  window.addEventListener('keyup',e=>{keys.delete(e.key.toLowerCase());});
  // Key events reach the game after any of its native buttons has focus.
@@ -2107,7 +2362,7 @@ globalThis.GardenNetwork=(()=>{
  function flightAxes(){return{forward:(keys.has('w')||keys.has('arrowup')?1:0)-(keys.has('s')||keys.has('arrowdown')?1:0)+(keys.has('q')||keys.has('e')?1:0)+stick.forward,right:(keys.has('d')||keys.has('arrowright')?1:0)-(keys.has('a')||keys.has('arrowleft')?1:0)+(keys.has('e')?1:0)-(keys.has('q')?1:0)+stick.right,turn:(keys.has('l')?1:0)-(keys.has('j')?1:0)+turnHeld};}
  function input(at=performance.now()){if(dialog)return{x:0,z:0,collect:false,deposit:false};const axes=F.steer(look,flightAxes()),{forward,right}=axes;let{x,z}=F.movement(look,{forward,right});
   if(target&&!x&&!z){const p=state.players[localIndex];const dx=target.x-p.x,dz=target.z-p.z,d=Math.hypot(dx,dz);if(d<.12)target=null;else{const gain=Math.min(1,d/.5);x=dx/d*gain;z=dz/d*gain;}}
-  lastTravel={x,z};if(Math.hypot(x,z)>.01&&honeyAction==='deposit')honeyAction='';return{x,z,boost:boostHeld||keys.has(' ')||keys.has('shift'),collect:honeyAction==='collect'&&at>=honeyStartedAt,deposit:honeyAction==='deposit'&&at>=honeyStartedAt};
+  lastTravel={x,z};if(Math.hypot(x,z)>.01&&honeyAction==='deposit')honeyAction='';return{x,z,rise:Math.max(-1,Math.min(1,riseHeld+riseGesture+(keys.has('t')||keys.has('pageup')?1:0)-(keys.has('g')||keys.has('pagedown')?1:0))),boost:boostHeld||keys.has(' ')||keys.has('shift'),collect:honeyAction==='collect'&&at>=honeyStartedAt,deposit:honeyAction==='deposit'&&at>=honeyStartedAt};
  }
  function animate(now){frame=requestAnimationFrame(animate);if(document.hidden){last=now;return;}const elapsed=Math.min(1.5,Math.max(0,(now-last)/1000)),dt=Math.min(.05,elapsed);last=now;clock+=elapsed;uiClock+=elapsed;
   if(view==='playing'&&!dialog)F.steer(look,flightAxes(),elapsed);

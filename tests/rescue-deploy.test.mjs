@@ -167,12 +167,13 @@ test('game and platform deployment preserve unchanged rooms and retry failed pha
   await t.test('butterfly bootstrap and updates preserve all existing rooms',async()=>{
    await mkdir(join(repo,'butterfly'),{recursive:true});
    for(const file of ['butterfly-coop.service','butterfly-coop.conf'])await copyFile(new URL(`deploy/${file}`,source),join(repo,'deploy',file));
-   for(const file of ['server.cjs','rules.js','checkpoint.js','package.json'])await writeFile(join(repo,'butterfly',file),'// butterfly runtime\n');
+   for(const file of ['server.cjs','rules.js','checkpoint.js','vegetation.js','package.json'])await writeFile(join(repo,'butterfly',file),'// butterfly runtime\n');
    await clear();await change('butterfly/source-manifest.json','{}');execute();out=await calls();
    assert.match(out,/restart butterfly-coop/);noGameRestart(out);assert.doesNotMatch(out,/restart games-platform|npm ci/);assert.match(out,/openresty -s reload/);
    assert.match(out,/rsync [^\n]*--exclude butterfly[^\n]*--exclude tests[^\n]*--exclude scripts/);
    await clear();execute();assert.doesNotMatch(await calls(),/restart|npm ci|openresty/,'butterfly deploy is idempotent');
    await clear();await change('butterfly/rules.js','// changed butterfly rules\n');execute();out=await calls();assert.match(out,/restart butterfly-coop/);noGameRestart(out);assert.doesNotMatch(out,/restart games-platform|npm ci|openresty/);
+   await clear();await change('butterfly/vegetation.js','// updated authoritative tree colliders\n');execute();out=await calls();assert.match(out,/restart butterfly-coop/);noGameRestart(out);assert.doesNotMatch(out,/restart games-platform|npm ci|openresty/);
    await mkdir(join(repo,'games'),{recursive:true});await clear();await change('games/butterfly.html','<h1>browser only update</h1>');execute();assert.doesNotMatch(await calls(),/restart|npm ci|openresty/,'butterfly browser updates preserve all rooms');
   });
  } finally {await rm(dir,{recursive:true,force:true});}
