@@ -311,7 +311,7 @@
       <div class="ng-energy"><span>飞行能量</span><div><i></i></div><small class="ng-safe-status">草屋里很安全</small></div>
       <div class="ng-skills"><button type="button" data-action="house">⌂ 小屋道具</button><button type="button" data-action="held">使用道具</button><button type="button" data-action="fold">向上合翅</button><button type="button" class="ng-boost" data-action="boost">加速飞行 <small>空格</small></button></div>
     </div>
-    <div class="ng-held-label" hidden>树枝上：空</div>
+    <div class="ng-held-label" hidden>前足：空</div>
     <div class="ng-load">正在唤醒花园…</div>
   </div>
   <div class="ng-footer"><span>方向键/WASD移动 · Q/E左前/右前 · J/L转向 · T/G升降 · 空格加速 · F合翅 · C采蜜 · V存蜜</span><a class="ng-hall-link" href="/">回到小火箭游戏厅</a><span class="ng-local">跟随蝴蝶 · 全页花园</span></div>
@@ -1323,6 +1323,7 @@ globalThis.GardenFlight=(()=>{
         b.ball('#514a37',[side*.174,.236,-.686],[.010,.012,.028]);
         b.ball(trim,[side*.178,.241,-.704],[.006,.007,.009]);
         for(let i=0;i<3;i++){
+          if(side===1&&i===0)continue; // The articulated right foreleg replaces this leg.
           const z=-.255+i*.083,endZ=[-.292,-.13,.052][i];
           const hip=[side*.047,-.012,z],knee=[side*(.103+i*.019),-.073,z+.028],ankle=[side*(.185+i*.016),-.143,endZ+.038],toe=[side*(.225+i*.016),-.179,endZ];
           b.rod(hip,knee,.0048,shell);b.ball('#897d5b',knee,[.006,.006,.006]);
@@ -1336,11 +1337,36 @@ globalThis.GardenFlight=(()=>{
       const spiral=[];for(let i=0;i<=24;i++){const t=i/24,angle=t*Math.PI*3.2;spiral.push([0,-.008-Math.sin(angle)*(.032-t*.02),-.419-Math.cos(angle)*(.032-t*.02)]);}b.curve(spiral,.0035,'#a18a60',24);
       butterflyBody=b.finish();butterflyBody.userData.anatomy={legs:6,antennae:2,compoundEyes:2,abdomenSegments:8,proboscis:true};return butterflyBody;
     }
+    let forelegGeometry;
+    function createForeleg() {
+      if(!forelegGeometry){
+        const upper=assembly(),lower=assembly(),tarsus=assembly();
+        upper.rod([0,0,0],[.056,-.061,.028],.0048,'#35322c');upper.ball('#897d5b',[.056,-.061,.028],[.006,.006,.006]);
+        lower.rod([0,0,0],[.082,-.070,-.027],.0036,'#35322c');lower.ball('#897d5b',[.082,-.070,-.027],[.0048,.0048,.0048]);
+        tarsus.rod([0,0,0],[.04,-.036,-.038],.0026,'#8c805e');
+        tarsus.curve([[.04,-.036,-.038],[.052,-.045,-.059],[.060,-.040,-.067],[.057,-.033,-.066]],.0018,'#35322c',8);
+        forelegGeometry=[upper.finish(),lower.finish(),tarsus.finish()];
+      }
+      const root=new T.Group();root.name='butterfly:right-foreleg';root.position.set(.047,-.012,-.255);
+      const upper=new T.Group(),lower=new T.Group(),tarsus=new T.Group(),toolMount=new T.Group();
+      upper.name='foreleg:upper';lower.name='foreleg:lower';tarsus.name='foreleg:tarsus';toolMount.name='foreleg:tool-mount';
+      root.add(upper);upper.add(lower);lower.position.set(.056,-.061,.028);lower.add(tarsus);tarsus.position.set(.082,-.070,-.027);tarsus.add(toolMount);toolMount.position.set(.054,-.045,-.062);toolMount.scale.setScalar(.52);
+      for(const [i,pivot]of [upper,lower,tarsus].entries()){
+        mesh(forelegGeometry[i],['foreleg:upper-bone','foreleg:lower-bone','foreleg:tarsal-bone'][i],pivot);
+      }
+      root.upper=upper;root.lower=lower;root.tarsus=tarsus;root.toolMount=toolMount;root.userData.gripAmount=0;
+      return root;
+    }
+    function poseForeleg(root,amount) {
+      root.userData.gripAmount=amount;
+      root.rotation.set(0,amount*.70,amount*.64);
+      root.lower.rotation.y=amount*.10;root.tarsus.rotation.z=-amount*.16;
+    }
     function setButterflySkin(actor,id) {const g=wingGeometry(id);for(const pivot of actor.wings)pivot.children[0].geometry=g;actor.root.userData.wingSilhouette=g.userData.silhouette;}
     function enhanceButterfly(actor,id) {
       if(!actor.root.getObjectByName('butterfly:anatomy')){
         // Original body/head/antenna follow the two wing pivots. Keep references
-        // and worldTwig intact; only their low-detail predecessors are hidden.
+        // and animated foreleg intact; only their low-detail predecessors are hidden.
         for(const child of actor.root.children.slice(2,5))child.visible=false;
         mesh(butterflyAnatomy(),'butterfly:anatomy',actor.root);
       }
@@ -1424,7 +1450,7 @@ globalThis.GardenFlight=(()=>{
       if(!netDetails){const n=assembly();n.add(new T.CylinderGeometry(.048,.048,.32,10),'#6d6650',[0,0,-.12],[1,1,1],[Math.PI/2,0,0]);n.add(new T.CylinderGeometry(.047,.047,.09,10),'#d6c5a0',[0,0,-1.38],[1,1,1],[Math.PI/2,0,0]);for(let i=0;i<12;i++){const a=i/12*Math.PI*2;n.ball('#cfbd8b',[Math.cos(a)*.55,Math.sin(a)*.55,-1.6],[.043,.043,.03]);}netDetails=n.finish();}
       mesh(netDetails,'hunter:net-bindings',actor.net);actor.root.userData.model='friendly-safari-collector';return actor;
     }
-    const kit={enhanceButterfly,setButterflySkin,enhanceHut,enhanceHunter};kits.set(T,kit);return kit;
+    const kit={enhanceButterfly,setButterflySkin,createForeleg,poseForeleg,enhanceHut,enhanceHunter};kits.set(T,kit);return kit;
   }
   globalThis.GardenModels={createKit};
 })();
@@ -1832,17 +1858,12 @@ globalThis.GardenFlight=(()=>{
       const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=Math.min(8,this.renderer.capabilities.getMaxAnisotropy());this._textures.set(id,texture);return texture;
     }
     _firstPersonHand() {
-      const root=new T.Group();root.position.set(.31,-.27,-.53);this.camera.add(root);this.viewModel=root;
-      const wood=mat('#705444');
-      const segment=(a,b,r,material=wood)=>{
-        const delta=V(...b).sub(V(...a));const mesh=this._mesh(this.geo.cylinder,material,root,...V(...a).add(V(...b)).multiplyScalar(.5).toArray(),r,delta.length(),r);
-        mesh.quaternion.setFromUnitVectors(V(0,1,0),delta.normalize());return mesh;
-      };
-      segment([.14,-.24,.25],[.04,-.07,.07],.011);
-      segment([.04,-.07,.07],[0,0,-.055],.009);
-      this.branchStripe=mat('#dca16f');segment([.004,-.007,-.043],[0,0,-.055],.010,this.branchStripe);
+      const root=modelKit.createForeleg();root.position.set(.24,-.19,-.43);root.name='first-person:right-foreleg';this.camera.add(root);this.viewModel=root;
+      // The same articulated leg is used in both views; only its framing differs.
+      const collar=mat('#897d5b');this.branchStripe=collar;
+      this._mesh(this.geo.sphere,collar,root.tarsus,0,0,0,.0048,.0048,.0048);
       this.handTools={};
-      for(const id of ['shields','slows','energy','decoys']){const group=new T.Group();group.name='held:'+id;group.position.set(0,.04,-.055);group.visible=false;root.add(group);this.handTools[id]=group;}
+      for(const id of ['shields','slows','energy','decoys']){const group=new T.Group();group.name='held:'+id;group.position.set(0,.045,0);group.visible=false;root.toolMount.add(group);this.handTools[id]=group;}
       this._mesh(this.geo.sphere,mat('#b6e5ca',{transparent:true,opacity:.55,metalness:.15,roughness:.3}),this.handTools.shields,0,.055,0,.125,.14,.085);
       this._mesh(new T.TorusGeometry(.105,.012,6,24),mat('#f1d692'),this.handTools.shields,0,.055,.055);
       this._mesh(this.geo.cylinder,mat('#7ebedb',{metalness:.1,roughness:.3}),this.handTools.slows,0,.04,0,.067,.17,.067);
@@ -1852,7 +1873,10 @@ globalThis.GardenFlight=(()=>{
       this._mesh(this.geo.cylinder,this.materials.stem.clone(),this.handTools.decoys,0,.015,0,.012,.20,.012);
       for(let i=0;i<5;i++){const a=i*Math.PI*2/5;this._mesh(this.geo.sphere,mat('#eaa9c7'),this.handTools.decoys,Math.cos(a)*.055,.12+Math.sin(a)*.055,0,.045,.05,.025);}
       this._mesh(this.geo.sphere,this.materials.honey.clone(),this.handTools.decoys,0,.12,.02,.03,.03,.02);
-      root.traverse(object=>{if(object.isMesh){object.renderOrder=1000;object.material.depthTest=false;object.material.depthWrite=false;}});
+      const viewMaterials=new Map();
+      root.traverse(object=>{if(object.isMesh){const source=object.material;if(!viewMaterials.has(source))viewMaterials.set(source,source.clone());object.material=viewMaterials.get(source);object.renderOrder=1000;object.material.depthTest=false;object.material.depthWrite=false;}});
+      this.branchStripe=viewMaterials.get(collar);
+
     }
     _butterfly(id,index) {
       const root=new T.Group();root.scale.setScalar(.4);this.scene.add(root);
@@ -1864,9 +1888,12 @@ globalThis.GardenFlight=(()=>{
       const drop=this._mesh(this.geo.sphere,this.materials.honey,root,0,-.15,.19,.12,.17,.12);drop.visible=false;
       const shield=this._mesh(this.geo.sphere,new T.MeshBasicMaterial({color:'#d0f5e8',transparent:true,opacity:.13,wireframe:true}),root,0,0,0,.92,.64,.92);shield.visible=false;
       const shadow=this._mesh(this.geo.sphere,this.materials.shadow,this.scene,0,.06,0,.6,.025,.37);
-      const worldTwig=this.viewModel.clone(true),worldTools={};worldTwig.position.set(.12,-.02,-.05);worldTwig.rotation.set(0,0,0);worldTwig.scale.setScalar(.6);worldTwig.visible=true;
-      worldTwig.traverse(object=>{if(object.name.startsWith('held:'))worldTools[object.name.slice(5)]=object;if(object.isMesh){object.material=object.material.clone();object.material.depthTest=true;object.material.depthWrite=true;object.renderOrder=0;}});root.add(worldTwig);
-      const actor={root,wings,material,drop,shield,shadow,worldTwig,worldTools,skin:id,heading:0,lastX:null,lastZ:null,foldAmount:0,index};modelKit?.enhanceButterfly(actor,id);return actor;
+      const foreleg=modelKit.createForeleg(),worldTwig=foreleg,worldTools={};root.add(foreleg);
+      for(const [id,source]of Object.entries(this.handTools)){
+        const tool=source.clone(true);tool.visible=false;tool.traverse(object=>{if(object.isMesh){object.material=object.material.clone();object.material.depthTest=true;object.material.depthWrite=true;object.renderOrder=0;}});
+        foreleg.toolMount.add(tool);worldTools[id]=tool;
+      }
+      const actor={root,wings,material,drop,shield,shadow,foreleg,worldTwig,worldTools,skin:id,heading:0,lastX:null,lastZ:null,foldAmount:0,index};modelKit?.enhanceButterfly(actor,id);return actor;
     }
     _hunter(index) {
       const root=new T.Group();this.scene.add(root);
@@ -1981,10 +2008,11 @@ globalThis.GardenFlight=(()=>{
         }else{
           this.camera.position.copy(eye);this.camera.rotation.set(this.look.pitch,-this.look.yaw,0,'YXZ');
         }
-        this.camera.updateMatrixWorld(true);this._eyeInitialized=true;this.viewModel.visible=this.cameraView==='first';
-        this.viewModel.position.set((this.width<600?.18:.31)+Math.sin(time*6)*.003*speed,-.27+Math.cos(time*12)*.004*speed,-.53);
-        this.viewModel.rotation.z=Math.sin(time*6)*.012*speed;
+        this.camera.updateMatrixWorld(true);this._eyeInitialized=true;
+        this.viewModel.position.set(Math.min(.24,this.camera.aspect*.27-.12)+Math.sin(time*6)*.003*speed,-.19+Math.cos(time*12)*.004*speed,-.43);
         this.heldTool=this.handTools[local.held]?local.held:'';this.viewModel.userData.held=this.heldTool;
+        modelKit.poseForeleg(this.viewModel,T.MathUtils.damp(this.viewModel.userData.gripAmount,this.heldTool?1:0,12,Math.max(0,dt)));
+        this.viewModel.visible=this.cameraView==='first'&&(!!this.heldTool||this.viewModel.userData.gripAmount>.02);
         for(const [id,tool] of Object.entries(this.handTools))tool.visible=id===this.heldTool;
         if(local.stash)for(const [id,tool] of Object.entries(this.storedTools))tool.visible=(local.stash[id]||0)>0;
         const handSkin=options.skin||local.skin||this.skin||'sun';
@@ -2007,6 +2035,7 @@ globalThis.GardenFlight=(()=>{
         actor.wings[0].rotation.z=-flap;actor.wings[1].rotation.z=flap;
         actor.drop.visible=!!p.bag;actor.drop.scale.set(.12,.17+Math.sin(time*4)*.02,.12);
         for(const [id,tool] of Object.entries(actor.worldTools))tool.visible=id===p.held;
+        modelKit.poseForeleg(actor.foreleg,T.MathUtils.damp(actor.foreleg.userData.gripAmount,actor.worldTools[p.held]?1:0,12,Math.max(0,dt)));
         actor.shield.visible=p.immunity>0;actor.shield.rotation.y=time*.4;
         actor.shadow.scale.set(hidden?.4:.58,.025,hidden?.26:.36);
         if(i===localIndex&&this.cameraView!=='follow'){actor.root.visible=false;actor.shadow.visible=false;}
@@ -2211,7 +2240,7 @@ globalThis.GardenNetwork=(()=>{
   $$('[data-thumb]').forEach(c=>globalThis.drawSkinThumbnail?.(c,c.dataset.thumb));
  }
  function itemShop(){gesture();openDialog('items',`<h2>花园道具商店</h2><p>买好的道具会放进你的小草屋。金币 <b data-coins>${profile.coins}</b></p><div class="ng-item-grid">${P.items.map(i=>`<div class="ng-item-card"><span class="ng-item-icon">${i.icon}</span><strong>${i.name}</strong><p>${i.note}</p><small>拥有 ${profile[i.id]} 个 · 回屋拿取</small><button type="button" data-buy="${i.id}">${i.price} 金币 · 买一个</button></div>`).join('')}</div>`);}
- function openHouse(){const p=state.players[localIndex];if(view!=='playing'||!R.isSafe(p)){toast('先飞回小草屋，再从架上取道具。');return;}resetInput();gesture();openDialog('house',`<h2>你的小草屋 · 道具架</h2><p>买好的道具存放在这里。细树枝一次托一件，用完再来取。</p><div class="ng-house-tools">${P.items.map(i=>`<div><span class="ng-item-icon">${i.icon}</span><strong>${i.name}</strong><p>${i.note}</p><small>屋内存放 ${p.stash?.[i.id]||0} 个${p.held===i.id?' · 树枝上带着1个':''}</small><button type="button" data-equip="${p.held===i.id?'':i.id}" ${p.held!==i.id&&!p.stash?.[i.id]?'disabled':''}>${p.held===i.id?'放回架上':'取到树枝上'}</button></div>`).join('')}</div>`);}
+ function openHouse(){const p=state.players[localIndex];if(view!=='playing'||!R.isSafe(p)){toast('先飞回小草屋，再从架上取道具。');return;}resetInput();gesture();openDialog('house',`<h2>你的小草屋 · 道具架</h2><p>买好的道具存放在这里。前足一次托一件道具，用完再来取。</p><div class="ng-house-tools">${P.items.map(i=>`<div><span class="ng-item-icon">${i.icon}</span><strong>${i.name}</strong><p>${i.note}</p><small>屋内存放 ${p.stash?.[i.id]||0} 个${p.held===i.id?' · 前足托着1个':''}</small><button type="button" data-equip="${p.held===i.id?'':i.id}" ${p.held!==i.id&&!p.stash?.[i.id]?'disabled':''}>${p.held===i.id?'放回架上':'取到前足上'}</button></div>`).join('')}</div>`);}
  function equip(id){if(isNetwork){GardenNetwork.equip(id);return;}if(R.equip(state,id,localIndex)){syncInventory();music.effect('click');openHouse();updateHUD();}else toast('需要在小草屋里拿取有库存的道具。');}
  function start(level=selectedLevel,map=selectedMap){clearProgress();gesture();wantsRoom=false;if(isNetwork){globalThis.GardenNetwork?.leave();isNetwork=false;room=null;}
   selectedLevel=level;selectedMap=map;localIndex=0;state=R.create(level,{...profile},{map:selectedMap,target:R.targetFor(level)});awarded=false;seenEvents.clear();resetInput();cameraView='follow';look.yaw=-1.28;look.pitch=-.08;closeDialog();setView('playing');
@@ -2229,7 +2258,7 @@ globalThis.GardenNetwork=(()=>{
   openDialog('result',`<div class="ng-result"><span class="ng-result-mark">${won?'🍯':'🦋'}</span><h2>${won?'花蜜装满啦！':'被捕蝶网抓住了'}</h2><p>${won?`你把${state.target}滴花蜜安全带回了家。<br>通关奖励 <strong>+${award||rewards[state.level-1]} 金币</strong>`:`这次带回了 ${state.nectar} / ${state.target} 滴蜜。<br>本局奖励 <strong>+50 金币</strong><br>试试加速转弯，或回小屋拿道具。`}</p><button type="button" class="ng-main-button" data-action="restart">${isNetwork&&!room?.host?'等待房主重新开始':'重新开始'}</button><button type="button" class="ng-secondary" data-action="home">主页</button></div>`);
  }
  function use(kind){if(view!=='playing')return;gesture();target=null;const method={slow:'slow',fold:'fold',energy:'refill',decoy:'decoy'}[kind];if(isNetwork){GardenNetwork[method]?.();return;}
-  const ok=R[method]?.(state,localIndex);if(!ok){toast(kind==='energy'?'顺风还在持续，或树枝上没有风之露珠。':'先回小屋，把需要的道具取到树枝上。');return;}events();updateHUD();
+  const ok=R[method]?.(state,localIndex);if(!ok){toast(kind==='energy'?'顺风还在持续，或前足没有托着风之露珠。':'先回小屋，把需要的道具取到前足上。');return;}events();updateHUD();
  }
  function beginHoney(kind){if(view!=='playing'||dialog )return;if(honeyAction===kind){honeyAction='';updateHUD();return;}const p=state.players[localIndex];if(kind==='collect'&&p.bag>=state.target-state.nectar){toast('已经带够本关需要的蜜，回家存入就能完成！');return;}if(kind==='deposit'&&(!p.bag||!R.isSafe(p))){toast('带着花蜜回到小草屋，就能存进五边形蜜框。');return;}resetInput();honeyAction=kind;honeyStartedAt=performance.now();gesture();updateHUD();}
  function eventKey(e){return `${e.time}:${e.type}:${e.player??''}`;}
@@ -2256,8 +2285,8 @@ globalThis.GardenNetwork=(()=>{
   const safe=R.isSafe(p),danger=Math.min(...state.hunters.map(h=>Math.hypot(h.x-p.x,h.z-p.z)));
   $('.ng-safe-status').textContent=p.hiddenFor>0?`隐藏中 ${Math.ceil(p.hiddenFor)}秒`:p.inCover?'花丛隐蔽 · 靠近仍会被发现':safe?'我的小屋 · 很安全':R.isSheltered(state,p)?'朋友的小屋 · 安全':p.immunity>0?'护盾保护中':danger<4?'捕蝶人靠近了！':p.bag?'回小屋按存蜜按钮':'到花旁按采蜜按钮';
   $('[data-action="house"]').disabled=!safe;
-  const held=P.items.find(i=>i.id===p.held),useButton=$('[data-action="held"]');useButton.textContent=held?(p.held==='shields'?'护盾自动生效':'使用'+held.name):'树枝上没有道具';useButton.disabled=!held||p.held==='shields'||(p.held==='energy'&&p.surge>0);
-  $('.ng-held-label').hidden=view!=='playing'||!held;$('.ng-held-label').textContent=held?'树枝上：'+held.name:'树枝上：空 · 回屋取道具';
+  const held=P.items.find(i=>i.id===p.held),useButton=$('[data-action="held"]');useButton.textContent=held?(p.held==='shields'?'护盾自动生效':'使用'+held.name):'前足没有道具';useButton.disabled=!held||p.held==='shields'||(p.held==='energy'&&p.surge>0);
+  $('.ng-held-label').hidden=view!=='playing'||!held;$('.ng-held-label').textContent=held?'前足：'+held.name:'前足：空 · 回屋取道具';
   const fold=$('[data-action="fold"]');fold.textContent=p.folded?(p.hiddenFor>0?'展开 · 隐藏'+Math.ceil(p.hiddenFor)+'秒':'展开翅膀'):['leaf','dry-leaf'].includes(p.skin)&&p.hideCooldown>0?'合翅 · 冷却'+Math.ceil(p.hideCooldown)+'秒':'向上合翅';
   const readyFlower=state.flowers.some(f=>!f.done&&Math.hypot(f.x-p.x,f.z-p.z)<.85);
   const collect=$('[data-action="collect"]'),deposit=$('[data-action="deposit"]');collect.disabled=p.bag>=state.target-state.nectar&&honeyAction!=='collect';deposit.disabled=!p.bag||!safe||honeyAction==='deposit';collect.textContent=honeyAction==='collect'?(readyFlower?'连采中 · 点我停':'连采已开 · 点我停'):`开启连采 · ${R.collectTime(state)}秒`;deposit.textContent=honeyAction==='deposit'?'整包存入中…':`整包存蜜${p.bag?' '+p.bag+'滴':''} · 1秒`;
