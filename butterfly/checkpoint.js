@@ -20,17 +20,17 @@ globalThis.GardenCheckpoint=(()=>{
    if(!p||typeof p!=='object'||!p.stash)fail();const dest=s.players[index];
    for(const key of Object.keys(dest)){
     if(['id','home','stash'].includes(key))continue;
-    const value=p[key];if(typeof dest[key]==='number')dest[key]=num(value,['x','z','activeFlower'].includes(key)?-1e9:0);
+    const value=p[key]===undefined&&['lastCollectAt','streak'].includes(key)?0:p[key];if(typeof dest[key]==='number')dest[key]=num(value,['x','z','activeFlower'].includes(key)?-1e9:0);
     else if(typeof dest[key]==='boolean'){if(typeof value!=='boolean')fail();dest[key]=value;}
     else if(typeof dest[key]==='string'){if(typeof value!=='string'||value.length>64)fail();dest[key]=value;}
    }
-   integer(dest.bag,0,1);num(dest.stamina,0,1);num(dest.deposit,0,1);num(dest.collectProgress,0,1);integer(dest.activeFlower,-1,saved.flowers.length-1);
+   integer(dest.bag,0,199);integer(dest.streak,0,1e9);num(dest.stamina,0,1);num(dest.deposit,0,1);num(dest.collectProgress,0,1);integer(dest.activeFlower,-1,saved.flowers.length-1);
    if(!rules.world.infinite&&Math.hypot(dest.x/rules.world.x,dest.z/rules.world.z)>1.001)fail();
    for(const key of items){dest.stash[key]=integer(p.stash[key],0,99);integer(dest[key],0,1);if(dest.stash[key]+dest[key]>99)fail();}
    if(!['',...items].includes(dest.held))fail();for(const key of items)if(dest[key]!==Number(dest.held===key))fail();
   });
   if(!Array.isArray(saved.flowers)||saved.flowers.length<192||saved.flowers.length>12000||!Array.isArray(saved.hunters)||saved.hunters.length!==s.hunters.length)fail();
-  s.flowers=saved.flowers.map((f,index)=>{if(!f||f.id!==index||typeof f.done!=='boolean'||f.tile!==undefined&&(typeof f.tile!=='string'||f.tile.length>64))fail();return{x:num(f.x,-1e9,1e9),z:num(f.z,-1e9,1e9),id:index,done:f.done,regrow:num(f.regrow,0,8),progress:num(f.progress,0,1),...(f.tile?{tile:f.tile}:{})};});
+  s.flowers=saved.flowers.map((f,index)=>{if(!f||f.id!==index||typeof f.done!=='boolean'||f.tile!==undefined&&(typeof f.tile!=='string'||f.tile.length>64))fail();const flower={x:num(f.x,-1e9,1e9),z:num(f.z,-1e9,1e9),id:index,done:f.done,regrow:num(f.regrow,0,8),progress:num(f.progress,0,1),...(f.tile?{tile:f.tile}:{})},type=rules.flowerType(flower,s.huts);if(f.kind!==undefined&&!['ordinary','golden'].includes(f.kind)||f.value!==undefined&&![1,3].includes(f.value)||f.kind!==undefined&&f.value!==undefined&&f.value!==(f.kind==='golden'?3:1))fail();return{...flower,...type};});
   saved.hunters.forEach((h,index)=>{if(!h||h.id!==s.hunters[index].id)fail();for(const key of ['x','z','vx','vz'])s.hunters[index][key]=num(h[key],-1e4,1e4);});
   if(!Array.isArray(saved.obstacles)||saved.obstacles.length>1000)fail();s.obstacles=saved.obstacles.map(o=>({x:num(o.x,-1e4,1e4),z:num(o.z,-1e4,1e4),radius:num(o.radius,0,100)}));
   if(saved.decoy!==null){if(!saved.decoy)fail();s.decoy={x:num(saved.decoy.x,-1e4,1e4),z:num(saved.decoy.z,-1e4,1e4),left:num(saved.decoy.left,0,8)};}

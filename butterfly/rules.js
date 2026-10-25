@@ -17,6 +17,11 @@ globalThis.GardenRules = (() => {
     addFlower(Math.cos(angle)*world.x*.965*radius,Math.sin(angle)*world.z*.965*radius);
   }
   const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+  function flowerType(f,homes=[hut]){
+    const x=Math.round(f.x*1000),z=Math.round(f.z*1000),point={x:x/1000,z:z/1000};
+    const golden=homes.every(home=>distance(point,home)>=14)&&Math.abs((x*73856093)^(z*19349663))%5===0;
+    return {kind:golden?'golden':'ordinary',value:golden?3:1};
+  }
   const hutFor=p=>p?.home||hut;
   const isSafe=p=>distance(p,hutFor(p))<=hut.radius;
   const isSheltered=(s,p)=>(s.huts||[hut]).some(home=>distance(p,home)<=hut.radius);
@@ -30,7 +35,7 @@ globalThis.GardenRules = (() => {
     const key=s.players.map(p=>Math.floor(p.x/24)+','+Math.floor(p.z/24)).join(';');if(s.flowerKey===key)return;s.flowerKey=key;
     const old=s.flowers,active=s.players.map(p=>old.find(f=>f.id===p.activeFlower));s.flowers=old.filter((f,i)=>i<192||s.players.some(p=>distance(f,p)<60));
     const existing=new Set(s.flowers.map(f=>f.tile).filter(Boolean));
-    for(const p of s.players){if(Math.abs(p.x)<24&&Math.abs(p.z)<20)continue;const cx=Math.floor(p.x/24),cz=Math.floor(p.z/24);for(let tx=cx-1;tx<=cx+1;tx++)for(let tz=cz-1;tz<=cz+1;tz++){const tile=tx+','+tz;if(existing.has(tile))continue;existing.add(tile);for(let n=0;n<16;n++){const seed=Math.abs(Math.sin(tx*17.3+tz*73.1+n*2.399)),x=tx*24+(n%4)*6+2+seed*2,z=tz*24+Math.floor(n/4)*6+2+(1-seed)*2;if(s.huts.every(h=>distance({x,z},h)>=3))s.flowers.push({x,z,tile,id:0,done:false,progress:0,regrow:0});}}}
+    for(const p of s.players){if(Math.abs(p.x)<24&&Math.abs(p.z)<20)continue;const cx=Math.floor(p.x/24),cz=Math.floor(p.z/24);for(let tx=cx-1;tx<=cx+1;tx++)for(let tz=cz-1;tz<=cz+1;tz++){const tile=tx+','+tz;if(existing.has(tile))continue;existing.add(tile);for(let n=0;n<16;n++){const seed=Math.abs(Math.sin(tx*17.3+tz*73.1+n*2.399)),x=tx*24+(n%4)*6+2+seed*2,z=tz*24+Math.floor(n/4)*6+2+(1-seed)*2;if(s.huts.every(h=>distance({x,z},h)>=3))s.flowers.push({x,z,tile,id:0,done:false,progress:0,regrow:0,...flowerType({x,z},s.huts)});}}}
     if(s.flowers.length>8192){const keep=new Set(active.filter(Boolean)),base=s.flowers.slice(0,192),near=s.flowers.slice(192).map(f=>({f,score:keep.has(f)?-1:Math.min(...s.players.map(p=>(p.x-f.x)**2+(p.z-f.z)**2))})).sort((a,b)=>a.score-b.score);s.flowers=base.concat(near.slice(0,8000).map(a=>a.f));}
     s.flowers.forEach((f,id)=>{f.id=id;});s.players.forEach((p,i)=>{p.activeFlower=active[i]?s.flowers.indexOf(active[i]):-1;if(p.activeFlower<0)p.collectProgress=0;});
   }
@@ -40,12 +45,12 @@ globalThis.GardenRules = (() => {
   function actor(inventory={},id=0){
     const stash=Object.fromEntries(itemIds.map(key=>[key,itemCount(inventory[key])]));
     const home={...housePositions[id],id};
-    return {id,home,x:home.x,z:home.z+2.1,nectar:0,bag:0,deposit:0,stamina:1,surge:0,immunity:0,stash,held:'',folded:false,shields:0,slows:0,energy:0,decoys:0,activeFlower:-1,collectProgress:0,skin:String(inventory.skin||'sun'),hiddenFor:0,hideCooldown:0};
+    return {id,home,x:home.x,z:home.z+2.1,nectar:0,bag:0,deposit:0,stamina:1,surge:0,immunity:0,stash,held:'',folded:false,shields:0,slows:0,energy:0,decoys:0,activeFlower:-1,collectProgress:0,skin:String(inventory.skin||'sun'),hiddenFor:0,hideCooldown:0,lastCollectAt:0,streak:0};
   }
-  function addPlayer(s,inventory={}){const p=actor(inventory,s.players.length);s.players.push(p);s.huts.push(p.home);clearHouseFlowers(s);for(const h of s.hunters)move(s,h,0,0,.55,true);return p;}
+  function addPlayer(s,inventory={}){const p=actor(inventory,s.players.length);s.players.push(p);s.huts.push(p.home);clearHouseFlowers(s);for(const f of s.flowers)Object.assign(f,flowerType(f,s.huts));for(const h of s.hunters)move(s,h,0,0,.55,true);return p;}
   function create(level=1,inventory={},options={}){
     level=Math.min(4,Math.max(1,Math.floor(level)||1));
-    const s={mode:'playing',level,map:mapIds.includes(options.map)?options.map:'meadow',target:Math.max(1,Math.min(199,Math.floor(options.target)||[6,8,10,112][level-1])),players:[actor(inventory)],hunters:[],flowers:layouts.map(([x,z],id)=>({x,z,id,done:false,progress:0,regrow:0})),obstacles:[],nectar:0,decoy:null,grace:3,slowed:0,elapsed:0,events:[],eventDetails:[]};
+    const s={mode:'playing',level,map:mapIds.includes(options.map)?options.map:'meadow',target:Math.max(1,Math.min(199,Math.floor(options.target)||[6,8,10,112][level-1])),players:[actor(inventory)],hunters:[],flowers:layouts.map(([x,z],id)=>({x,z,id,done:false,progress:0,regrow:0,...flowerType({x,z})})),obstacles:[],nectar:0,decoy:null,grace:3,slowed:0,elapsed:0,events:[],eventDetails:[]};
     s.huts=[s.players[0].home];
     const spawn=[[9,-5],[-9,-4],[7,0],[-7,-6],[3,-7],[-9,1],[0,-7.8],[-5,0]];
     for(let i=0;i<[1,1,1,5][level-1];i++)s.hunters.push({x:spawn[i][0],z:spawn[i][1],vx:0,vz:0,id:i});
@@ -105,10 +110,10 @@ globalThis.GardenRules = (() => {
       if(moving){p.hiddenFor=0;p.folded=false;}
       p.stamina=1;
       const speed=(boosted?(s.level===4?12:7.6):4.3)*(p.surge>0?1.35:1);move(s,p,x*speed*dt,z*speed*dt,world.playerRadius);
-      if(a.deposit&&!moving&&isSafe(p)&&p.bag&&s.nectar<s.target){p.deposit+=dt;if(p.deposit>=1-1e-8){p.bag=0;p.deposit=0;s.nectar=Math.min(s.target,s.nectar+1);p.nectar++;event(s,'deposit',i);}}else p.deposit=0;
-      const f=a.collect&&!moving&&!p.bag?s.flowers.find(f=>!f.done&&distance(f,p)<.85):null;
+      if(a.deposit&&!moving&&isSafe(p)&&p.bag&&s.nectar<s.target){p.deposit+=dt;if(p.deposit>=1-1e-8){const amount=Math.min(p.bag,s.target-s.nectar);p.bag-=amount;p.deposit=0;s.nectar+=amount;p.nectar+=amount;event(s,'deposit',i);}}else p.deposit=0;
+      const f=a.collect&&!moving&&p.bag<s.target-s.nectar?s.flowers.find(f=>!f.done&&distance(f,p)<.85):null;
       if(f){if(p.activeFlower!==f.id)p.collectProgress=0;p.activeFlower=f.id;p.collectProgress+=dt;f.progress=Math.max(f.progress,p.collectProgress/collectTime(s));
-        if(p.collectProgress>=collectTime(s)-1e-8){f.done=true;f.regrow=8;f.progress=1;p.bag=1;p.activeFlower=-1;p.collectProgress=0;event(s,'collect',i);}
+        if(p.collectProgress>=collectTime(s)-1e-8){f.done=true;f.regrow=8;f.progress=1;p.bag+=Math.min(f.value,s.target-s.nectar-p.bag);p.activeFlower=-1;p.collectProgress=0;p.streak=p.streak>0&&s.elapsed-p.lastCollectAt<=8+1e-8?p.streak+1:1;p.lastCollectAt=s.elapsed;event(s,'collect',i);if(p.streak>=3){p.surge=Math.max(p.surge,3);event(s,'chain',i);}}
       }else{p.activeFlower=-1;p.collectProgress=0;}
     }
     if(s.nectar>=s.target){s.mode='won';returnTools(s);event(s,'won');return;}
@@ -129,11 +134,11 @@ globalThis.GardenRules = (() => {
       for(let i=0;i<s.players.length;i++){const p=s.players[i];if(!isSheltered(s,p)&&p.hiddenFor<=0&&p.immunity<=0&&distance(p,h)<1.4){
         if(p.shields>0){consume(p,'shields');p.immunity=3.5;event(s,'shield',i);const a=Math.atan2(h.z-p.z,h.x-p.x);move(s,h,Math.cos(a)*2.8,Math.sin(a)*2.8,.55,true);}
         else if(i===0){s.mode='dead';returnTools(s);event(s,'dead',i);return;}
-        else{const home=hutFor(p);Object.assign(p,{x:home.x,z:home.z+2.1,bag:0,deposit:0,collectProgress:0,activeFlower:-1,hiddenFor:0,folded:false,immunity:3.5});event(s,'respawn',i);}
+        else{const home=hutFor(p);Object.assign(p,{x:home.x,z:home.z+2.1,bag:0,deposit:0,collectProgress:0,activeFlower:-1,hiddenFor:0,folded:false,immunity:3.5,lastCollectAt:0,streak:0});event(s,'respawn',i);}
       }}
     }
   }
   function tick(s,delta,input={}){if(s.mode!=='playing')return;let remaining=Math.min(.1,Math.max(0,finite(delta)));while(remaining>1e-9&&s.mode==='playing'){const dt=Math.min(.02,remaining);step(s,dt,input);remaining-=dt;}}
-  return {create,addPlayer,tick,slow,hide,fold,refill,decoy,equip,returnTools,isSafe,isSheltered,hutFor,collectTime,hut,world,targetFor,mapIds};
+  return {create,addPlayer,tick,slow,hide,fold,refill,decoy,equip,returnTools,isSafe,isSheltered,hutFor,collectTime,hut,world,targetFor,mapIds,flowerType};
 })();
 if(typeof module!=='undefined')module.exports=globalThis.GardenRules;
