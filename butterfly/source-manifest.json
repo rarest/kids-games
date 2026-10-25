@@ -3,7 +3,7 @@
   "files": [
     {
       "name": "index.html",
-      "sha256": "f643820f6cf443f45daa64a5ac8989f400aff26b8161c8623b3fb48b47083fdc"
+      "sha256": "863276d0cc7153912ed449f146270b1571217967b4f7edd5c03a9c84ea05eab7"
     },
     {
       "name": "rules.js",
@@ -20,6 +20,6 @@
   ],
   "publicPage": {
     "path": "games/butterfly.html",
-    "sha256": "34719ec60d532b7324b79a8e41f3025212c4c9cdfb4fa393a9cf72506c0cce65"
+    "sha256": "04e02d5ad1c2eb71c23429171721f775d1f7c24bb0621fb3fa37c14100e85433"
   }
 }

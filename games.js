@@ -3,7 +3,7 @@
 window.GAMES = [
   {
     id: "butterfly",
-    file: "games/butterfly.html?v=20261025tablet1",
+    file: "games/butterfly.html?v=20261025nature1",
     emoji: "🦋",
     name: "蜜语花园",
     desc: "全页花海自由飞，连采金花整包回家，四位房间码邀请伙伴冒险",
