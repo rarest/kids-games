@@ -2,6 +2,14 @@
    字段: id 稳定标识 | file 路径 | emoji 图标 | name 名称 | desc 一句话 | tags 标签(用于搜索/分类) */
 window.GAMES = [
   {
+    id: "cat-mouse",
+    file: "games/cat-mouse.html?v=20261107cat1",
+    emoji: "🐭",
+    name: "喵屋寻粮",
+    desc: "小老鼠躲开猫咪，从冰箱搬粮回窝，寻找藏起来的小宝物",
+    tags: ["3D", "探索", "猫鼠", "手机"],
+  },
+  {
     id: "butterfly",
     file: "games/butterfly.html?v=20261025foreleg1",
     emoji: "🦋",
